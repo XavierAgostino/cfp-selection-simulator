@@ -368,7 +368,7 @@ def visualize_bracket_html(
     first_round: List[BracketMatchup]
 ) -> str:
     """
-    Create HTML visualization of playoff bracket.
+    Create enhanced HTML visualization of playoff bracket with modern tournament-style layout.
 
     Parameters
     ----------
@@ -384,68 +384,394 @@ def visualize_bracket_html(
     """
     html = ["""
     <style>
+        * { box-sizing: border-box; }
+
         .bracket-container {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
             margin: 20px auto;
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .bracket-title {
+
+        .bracket-header {
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 30px;
+            color: white;
         }
-        .bracket-round {
+
+        .bracket-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .bracket-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .bracket-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin-bottom: 30px;
         }
-        .round-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0066cc;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #0066cc;
+
+        .bracket-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bye-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .bye-team {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .bye-team:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
         .matchup {
             background: white;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .bye-team {
-            background: #e8f4f8;
-            border-left: 4px solid #0066cc;
+
+        .matchup:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transform: translateX(5px);
         }
+
         .team-line {
             display: flex;
             align-items: center;
-            padding: 8px;
+            padding: 12px;
             margin: 4px 0;
+            border-radius: 8px;
+            background: #f8f9fa;
+            transition: background 0.2s;
         }
+
+        .team-line:hover {
+            background: #e9ecef;
+        }
+
         .seed {
             font-weight: bold;
-            color: #0066cc;
-            min-width: 50px;
+            color: white;
+            background: #667eea;
+            min-width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
         }
-        .team-name {
+
+        .team-info {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .team-details {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .record {
             font-weight: 600;
         }
-        .rank-badge {
-            background: #f0f0f0;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #666;
+
+        .conference {
+            font-style: italic;
         }
-        .vs-text {
+
+        .rank-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .vs-divider {
             text-align: center;
+            color: #cbd5e0;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .vs-divider::before,
+        .vs-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .vs-divider::before { left: 0; }
+        .vs-divider::after { right: 0; }
+
+        .location {
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px dashed #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bracket-notes {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid #48bb78;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .bracket-notes strong {
+            color: #2d3748;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .bracket-notes ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #4a5568;
+        }
+
+        .bracket-notes li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .champion-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: gold;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .bracket-grid {
+                grid-template-columns: 1fr;
+            }
+            .bye-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    """]
+
+    html.append('<div class="bracket-container">')
+
+    # Header
+    html.append('  <div class="bracket-header">')
+    html.append('    <div class="bracket-title">🏆 College Football Playoff Bracket</div>')
+    html.append('    <div class="bracket-subtitle">12-Team Playoff • 5 Automatic Bids + 7 At-Large</div>')
+    html.append('  </div>')
+
+    # Main grid with byes and first round
+    html.append('  <div class="bracket-grid">')
+
+    # Byes Section
+    html.append('    <div class="bracket-section">')
+    html.append('      <div class="section-title">⭐ First Round Byes</div>')
+    html.append('      <div class="bye-grid">')
+
+    for _, team in seeded_df[seeded_df['is_bye'] == True].iterrows():
+        wins = int(team.get('wins', 0))
+        losses = int(team.get('losses', 0))
+        conf = team.get('conference', 'N/A')
+
+        html.append('        <div class="bye-team">')
+        html.append('          <div class="team-line" style="background: transparent;">')
+        html.append(f'            <div class="seed" style="background: rgba(255,255,255,0.3);">#{team["seed"]}</div>')
+        html.append('            <div class="team-info">')
+        html.append(f'              <div class="team-name" style="color: white;">{team["team"]}</div>')
+        html.append(f'              <div class="team-details" style="color: rgba(255,255,255,0.9);">')
+        html.append(f'                <span class="record">{wins}-{losses}</span>')
+        html.append(f'                <span>•</span>')
+        html.append(f'                <span class="conference">{conf}</span>')
+        html.append('              </div>')
+        html.append('            </div>')
+        html.append(f'            <div class="rank-badge" style="background: rgba(255,255,255,0.2);">Rank #{team["rank"]}</div>')
+        html.append('          </div>')
+        html.append('        </div>')
+
+    html.append('      </div>')
+    html.append('    </div>')
+
+    # First Round Section
+    html.append('    <div class="bracket-section">')
+    html.append('      <div class="section-title">🏈 First Round (On-Campus)</div>')
+
+    for matchup in first_round:
+        team_high = seeded_df[seeded_df['seed'] == matchup.seed_high].iloc[0]
+        team_low = seeded_df[seeded_df['seed'] == matchup.seed_low].iloc[0]
+
+        wins_high = int(team_high.get('wins', 0))
+        losses_high = int(team_high.get('losses', 0))
+        conf_high = team_high.get('conference', 'N/A')
+
+        wins_low = int(team_low.get('wins', 0))
+        losses_low = int(team_low.get('losses', 0))
+        conf_low = team_low.get('conference', 'N/A')
+
+        html.append('      <div class="matchup">')
+
+        # Home team (higher seed)
+        html.append('        <div class="team-line">')
+        html.append(f'          <div class="seed">#{matchup.seed_high}</div>')
+        html.append('          <div class="team-info">')
+        html.append(f'            <div class="team-name">{matchup.team_high} 🏠</div>')
+        html.append(f'            <div class="team-details">')
+        html.append(f'              <span class="record">{wins_high}-{losses_high}</span>')
+        html.append(f'              <span>•</span>')
+        html.append(f'              <span class="conference">{conf_high}</span>')
+        html.append('            </div>')
+        html.append('          </div>')
+        html.append(f'          <div class="rank-badge">Rank #{team_high["rank"]}</div>')
+        html.append('        </div>')
+
+        html.append('        <div class="vs-divider">VS</div>')
+
+        # Away team (lower seed)
+        html.append('        <div class="team-line">')
+        html.append(f'          <div class="seed">#{matchup.seed_low}</div>')
+        html.append('          <div class="team-info">')
+        html.append(f'            <div class="team-name">{matchup.team_low}</div>')
+        html.append(f'            <div class="team-details">')
+        html.append(f'              <span class="record">{wins_low}-{losses_low}</span>')
+        html.append(f'              <span>•</span>')
+        html.append(f'              <span class="conference">{conf_low}</span>')
+        html.append('            </div>')
+        html.append('          </div>')
+        html.append(f'          <div class="rank-badge">Rank #{team_low["rank"]}</div>')
+        html.append('        </div>')
+
+        html.append(f'        <div class="location">📍 {matchup.location}</div>')
+        html.append('      </div>')
+
+    html.append('    </div>')
+    html.append('  </div>')  # End bracket-grid
+
+    # Quarterfinals Section
+    html.append('  <div class="bracket-section">')
+    html.append('    <div class="section-title">🎯 Quarterfinals (Bowl Games)</div>')
+
+    qf_matchups = [
+        (1, "Winner of 8/9"),
+        (2, "Winner of 7/10"),
+        (3, "Winner of 6/11"),
+        (4, "Winner of 5/12")
+    ]
+
+    for seed, winner_label in qf_matchups:
+        team_data = seeded_df[seeded_df['seed'] == seed].iloc[0]
+        wins = int(team_data.get('wins', 0))
+        losses = int(team_data.get('losses', 0))
+        conf = team_data.get('conference', 'N/A')
+
+        html.append('    <div class="matchup">')
+        html.append('      <div class="team-line">')
+        html.append(f'        <div class="seed">#{seed}</div>')
+        html.append('        <div class="team-info">')
+        html.append(f'          <div class="team-name">{team_data["team"]}</div>')
+        html.append(f'          <div class="team-details">')
+        html.append(f'            <span class="record">{wins}-{losses}</span>')
+        html.append(f'            <span>•</span>')
+        html.append(f'            <span class="conference">{conf}</span>')
+        html.append('          </div>')
+        html.append('        </div>')
+        html.append(f'        <div class="rank-badge">Rank #{team_data["rank"]}</div>')
+        html.append('      </div>')
+        html.append('      <div class="vs-divider">VS</div>')
+        html.append('      <div class="team-line">')
+        html.append('        <div class="team-info">')
+        html.append(f'          <div class="team-name" style="color: #a0aec0;">{winner_label}</div>')
+        html.append('        </div>')
+        html.append('      </div>')
+        html.append('      <div class="location">📍 Bowl Game (Neutral Site)</div>')
+        html.append('    </div>')
+
+    html.append('  </div>')
+
+    # Notes
+    html.append('  <div class="bracket-notes">')
+    html.append('    <strong>📋 Bracket Information</strong>')
+    html.append('    <ul>')
+    html.append('      <li><strong>Automatic Bids:</strong> Top 5 highest-ranked conference champions receive automatic playoff berths</li>')
+    html.append('      <li><strong>First-Round Byes:</strong> Top 4 conference champions (seeds 1-4) advance directly to quarterfinals</li>')
+    html.append('      <li><strong>Home Field Advantage:</strong> Seeds 5-8 host first-round games on their campus</li>')
+    html.append('      <li><strong>No Reseeding:</strong> Winners advance to predetermined quarterfinal matchups (fixed bracket)</li>')
+    html.append('      <li><strong>Selection Protocol:</strong> Rankings based on composite model (50% Resume + 30% Predictive + 10% SOR + 10% SOS)</li>')
+    html.append('    </ul>')
+    html.append('  </div>')
+
+    html.append('</div>')
+
+    return "\n".join(html)
             color: #999;
             font-weight: bold;
             margin: 5px 0;
