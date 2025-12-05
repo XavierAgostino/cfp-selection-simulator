@@ -6,29 +6,29 @@ appropriate weighting to account for the quality gap between Power 5 and
 Group of 5 conferences.
 """
 
-import pandas as pd
-import numpy as np
 from typing import Dict, List, Set
 
+import numpy as np
+import pandas as pd
 
 # Conference groupings (updated for 2024+ realignment)
 POWER_CONFERENCES = {
-    'SEC',
-    'Big Ten',
-    'Big 12',
-    'ACC',
-    'Pac-12'  # Historical, deprecated after 2023
+    "SEC",
+    "Big Ten",
+    "Big 12",
+    "ACC",
+    "Pac-12",  # Historical, deprecated after 2023
 }
 
 AUTONOMOUS_CONFERENCES = {
-    'American Athletic',
-    'Mountain West',
-    'Sun Belt',
-    'Mid-American',
-    'Conference USA'
+    "American Athletic",
+    "Mountain West",
+    "Sun Belt",
+    "Mid-American",
+    "Conference USA",
 }
 
-INDEPENDENT = {'FBS Independents', 'Independent'}
+INDEPENDENT = {"FBS Independents", "Independent"}
 
 
 def is_power_conference(conference: str) -> bool:
@@ -57,14 +57,14 @@ def get_conference_tier(conference: str) -> str:
         'P5', 'G5', or 'IND'
     """
     if pd.isna(conference):
-        return 'IND'
+        return "IND"
 
     if conference in POWER_CONFERENCES:
-        return 'P5'
+        return "P5"
     elif conference in AUTONOMOUS_CONFERENCES:
-        return 'G5'
+        return "G5"
     else:
-        return 'IND'
+        return "IND"
 
 
 def calculate_conference_strength(games_df: pd.DataFrame) -> Dict[str, float]:
@@ -81,12 +81,10 @@ def calculate_conference_strength(games_df: pd.DataFrame) -> Dict[str, float]:
     """
     conference_stats = {}
 
-    for conf in games_df['home_conference'].dropna().unique():
+    for conf in games_df["home_conference"].dropna().unique():
         conf_games = games_df[
-            ((games_df['home_conference'] == conf) &
-             (games_df['away_conference'] != conf)) |
-            ((games_df['away_conference'] == conf) &
-             (games_df['home_conference'] != conf))
+            ((games_df["home_conference"] == conf) & (games_df["away_conference"] != conf))
+            | ((games_df["away_conference"] == conf) & (games_df["home_conference"] != conf))
         ]
 
         if len(conf_games) == 0:
@@ -97,13 +95,13 @@ def calculate_conference_strength(games_df: pd.DataFrame) -> Dict[str, float]:
         losses = 0
 
         for _, game in conf_games.iterrows():
-            if game['home_conference'] == conf:
-                if game['home_score'] > game['away_score']:
+            if game["home_conference"] == conf:
+                if game["home_score"] > game["away_score"]:
                     wins += 1
                 else:
                     losses += 1
             else:
-                if game['away_score'] > game['home_score']:
+                if game["away_score"] > game["home_score"]:
                     wins += 1
                 else:
                     losses += 1
@@ -120,7 +118,7 @@ def apply_conference_adjustment(
     conference: str,
     games_df: pd.DataFrame,
     p5_boost: float = 1.05,
-    g5_penalty: float = 0.95
+    g5_penalty: float = 0.95,
 ) -> float:
     """
     Apply conference strength adjustment to team score.
@@ -140,17 +138,16 @@ def apply_conference_adjustment(
     """
     tier = get_conference_tier(conference)
 
-    if tier == 'P5':
+    if tier == "P5":
         return min(team_score * p5_boost, 1.0)
-    elif tier == 'G5':
+    elif tier == "G5":
         return team_score * g5_penalty
     else:
         return team_score
 
 
 def get_conference_champions(
-    rankings_df: pd.DataFrame,
-    conf_champ_col: str = 'conf_champ'
+    rankings_df: pd.DataFrame, conf_champ_col: str = "conf_champ"
 ) -> pd.DataFrame:
     """
     Extract conference champions from rankings.
@@ -162,9 +159,7 @@ def get_conference_champions(
     Returns:
         DataFrame of conference champions only
     """
-    return rankings_df[
-        rankings_df[conf_champ_col].astype(str).str.contains('Yes', na=False)
-    ].copy()
+    return rankings_df[rankings_df[conf_champ_col].astype(str).str.contains("Yes", na=False)].copy()
 
 
 def calculate_conference_depth(games_df: pd.DataFrame, top_n: int = 25) -> Dict[str, int]:
@@ -196,13 +191,13 @@ def format_conference_name(conf_champ_value: str) -> str:
     if pd.isna(conf_champ_value):
         return None
 
-    if 'Yes (' in str(conf_champ_value):
-        return str(conf_champ_value).split('(')[1].split(')')[0]
+    if "Yes (" in str(conf_champ_value):
+        return str(conf_champ_value).split("(")[1].split(")")[0]
 
     return None
 
 
-def add_conference_tiers(df: pd.DataFrame, conference_col: str = 'conference') -> pd.DataFrame:
+def add_conference_tiers(df: pd.DataFrame, conference_col: str = "conference") -> pd.DataFrame:
     """
     Add conference tier column to DataFrame.
 
@@ -214,5 +209,5 @@ def add_conference_tiers(df: pd.DataFrame, conference_col: str = 'conference') -
         DataFrame with added 'conf_tier' column
     """
     df = df.copy()
-    df['conf_tier'] = df[conference_col].apply(get_conference_tier)
+    df["conf_tier"] = df[conference_col].apply(get_conference_tier)
     return df

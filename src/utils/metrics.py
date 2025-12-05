@@ -9,9 +9,10 @@ This module implements:
 - Conference championship tracking
 """
 
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Tuple, Optional
 from scipy.stats import binom
 
 
@@ -19,7 +20,7 @@ def calculate_sor(
     team_record: Dict[str, int],
     opponent_ratings: List[float],
     baseline_rating: float = 0.75,
-    rating_scale: float = 0.25
+    rating_scale: float = 0.25,
 ) -> float:
     """
     Calculate Strength of Record (SOR).
@@ -43,8 +44,8 @@ def calculate_sor(
     float
         SOR score (lower is better record given schedule)
     """
-    wins = team_record['wins']
-    total_games = wins + team_record['losses']
+    wins = team_record["wins"]
+    total_games = wins + team_record["losses"]
 
     if total_games == 0:
         return 0.0
@@ -60,14 +61,14 @@ def calculate_sor(
     # Use Poisson Binomial Distribution to calculate P(X >= wins)
     # The Poisson Binomial is the correct distribution when each trial has
     # a different probability (each game has different opponent strength).
-    # 
+    #
     # For computational efficiency, we use approximations:
     # - Normal approximation for large samples (>=20 games)
     # - Binomial approximation for small samples (<20 games, typical for CFB)
     #
     # Exact Poisson Binomial computation is O(2^n) and computationally
     # infeasible for typical use cases. The approximations are highly accurate.
-    
+
     if len(win_probs) > 20:
         # Normal approximation to Poisson Binomial (accurate for large n)
         mu = sum(win_probs)
@@ -78,6 +79,7 @@ def calculate_sor(
             z_score = (wins - 0.5 - mu) / sigma  # Continuity correction
             # Convert to probability (complement of CDF)
             from scipy.stats import norm
+
             sor_prob = 1 - norm.cdf(z_score)
         else:
             sor_prob = 1.0 if wins >= mu else 0.0
@@ -98,7 +100,7 @@ def calculate_sos(
     opponents_records: List[Tuple[int, int]],
     opponents_opp_records: List[List[Tuple[int, int]]],
     include_oor: bool = True,
-    oor_weight: float = 0.33
+    oor_weight: float = 0.33,
 ) -> float:
     """
     Calculate Strength of Schedule (SOS).
@@ -160,8 +162,7 @@ def calculate_sos(
 
 
 def calculate_quality_wins(
-    opponent_ranks: List[int],
-    thresholds: Dict[str, int] = None
+    opponent_ranks: List[int], thresholds: Dict[str, int] = None
 ) -> Dict[str, int]:
     """
     Calculate quality wins at various thresholds.
@@ -180,7 +181,7 @@ def calculate_quality_wins(
         Count of quality wins at each threshold
     """
     if thresholds is None:
-        thresholds = {'top_5': 5, 'top_12': 12, 'top_25': 25}
+        thresholds = {"top_5": 5, "top_12": 12, "top_25": 25}
 
     quality_wins = {}
     for name, cutoff in thresholds.items():
@@ -190,8 +191,7 @@ def calculate_quality_wins(
 
 
 def identify_bad_losses(
-    loss_opponent_ranks: List[int],
-    threshold: int = 25
+    loss_opponent_ranks: List[int], threshold: int = 25
 ) -> Tuple[int, List[int]]:
     """
     Identify bad losses (losses to teams outside threshold).
@@ -212,9 +212,7 @@ def identify_bad_losses(
     return len(bad_loss_ranks), bad_loss_ranks
 
 
-def calculate_schedule_inequality_index(
-    conference_teams_sos: Dict[str, float]
-) -> float:
+def calculate_schedule_inequality_index(conference_teams_sos: Dict[str, float]) -> float:
     """
     Calculate schedule inequality within a conference.
 
@@ -245,7 +243,7 @@ def build_resume_dataframe(
     quality_wins: Dict[str, Dict[str, int]],
     bad_losses: Dict[str, int],
     conf_champions: Dict[str, str],
-    composite_ranks: Dict[str, int]
+    composite_ranks: Dict[str, int],
 ) -> pd.DataFrame:
     """
     Build comprehensive resume DataFrame for all teams.
@@ -273,23 +271,23 @@ def build_resume_dataframe(
         Resume view with columns: rank, team, record, sor_rank, sos_rank,
         vs_top_25_w_l, bad_losses, conf_champ
     """
-    # Rank SOR and SOS 
+    # Rank SOR and SOS
     # SOR: sor_score = -log10(prob), so HIGHER score = harder achievement = BETTER (rank 1 = best)
     # SOS: HIGHER score = tougher schedule = BETTER (rank 1 = best)
-    sor_ranks = pd.Series(sor_scores).rank(method='min', ascending=False).to_dict()
-    sos_ranks = pd.Series(sos_scores).rank(method='min', ascending=False).to_dict()
+    sor_ranks = pd.Series(sor_scores).rank(method="min", ascending=False).to_dict()
+    sos_ranks = pd.Series(sos_scores).rank(method="min", ascending=False).to_dict()
 
     resume_data = []
 
     for _, row in teams_data.iterrows():
-        team = row['team']
+        team = row["team"]
 
         # Build record string
         record = f"{row['wins']}-{row['losses']}"
 
         # Quality wins vs top 25
         qw = quality_wins.get(team, {})
-        top25_wins = qw.get('top_25', 0)
+        top25_wins = qw.get("top_25", 0)
 
         # Get losses to top 25 (need to calculate from game data)
         # For now, placeholder - should be calculated from actual games
@@ -298,23 +296,25 @@ def build_resume_dataframe(
         vs_top_25 = f"{top25_wins}-{top25_losses}"
 
         # Conference champion status
-        team_conf = row.get('conference', '')
+        team_conf = row.get("conference", "")
         is_champ = team_conf in conf_champions and conf_champions[team_conf] == team
         conf_champ_label = f"Yes ({team_conf})" if is_champ else "No"
 
-        resume_data.append({
-            'rank': composite_ranks.get(team, 999),
-            'team': team,
-            'record': record,
-            'sor_rank': int(sor_ranks.get(team, 999)),
-            'sos_rank': int(sos_ranks.get(team, 999)),
-            'vs_top_25': vs_top_25,
-            'bad_losses': bad_losses.get(team, 0),
-            'conf_champ': conf_champ_label
-        })
+        resume_data.append(
+            {
+                "rank": composite_ranks.get(team, 999),
+                "team": team,
+                "record": record,
+                "sor_rank": int(sor_ranks.get(team, 999)),
+                "sos_rank": int(sos_ranks.get(team, 999)),
+                "vs_top_25": vs_top_25,
+                "bad_losses": bad_losses.get(team, 0),
+                "conf_champ": conf_champ_label,
+            }
+        )
 
     resume_df = pd.DataFrame(resume_data)
-    resume_df = resume_df.sort_values('rank').reset_index(drop=True)
+    resume_df = resume_df.sort_values("rank").reset_index(drop=True)
 
     return resume_df
 
@@ -324,7 +324,7 @@ def compare_resume_vs_predictive(
     predictive_ranks: Dict[str, int],
     composite_ranks: Dict[str, int],
     composite_scores: Dict[str, float],
-    top_n: int = 25
+    top_n: int = 25,
 ) -> pd.DataFrame:
     """
     Create side-by-side comparison of resume vs predictive rankings.
@@ -350,25 +350,24 @@ def compare_resume_vs_predictive(
     comparison_data = []
 
     for team in composite_ranks.keys():
-        comparison_data.append({
-            'team': team,
-            'resume_rank': resume_ranks.get(team, 999),
-            'predictive_rank': predictive_ranks.get(team, 999),
-            'composite_rank': composite_ranks.get(team, 999),
-            'composite_score': composite_scores.get(team, 0.0)
-        })
+        comparison_data.append(
+            {
+                "team": team,
+                "resume_rank": resume_ranks.get(team, 999),
+                "predictive_rank": predictive_ranks.get(team, 999),
+                "composite_rank": composite_ranks.get(team, 999),
+                "composite_score": composite_scores.get(team, 0.0),
+            }
+        )
 
     comparison_df = pd.DataFrame(comparison_data)
-    comparison_df = comparison_df.sort_values('composite_rank').reset_index(drop=True)
+    comparison_df = comparison_df.sort_values("composite_rank").reset_index(drop=True)
 
     return comparison_df.head(top_n)
 
 
 def calculate_home_field_adjusted_mov(
-    margin: int,
-    is_home: bool,
-    is_neutral: bool,
-    hfa_points: float = 3.75
+    margin: int, is_home: bool, is_neutral: bool, hfa_points: float = 3.75
 ) -> float:
     """
     Calculate neutral-field margin of victory.
@@ -400,10 +399,7 @@ def calculate_home_field_adjusted_mov(
         return margin + hfa_points
 
 
-def cap_margin_of_victory(
-    margin: float,
-    cap: int = 28
-) -> float:
+def cap_margin_of_victory(margin: float, cap: int = 28) -> float:
     """
     Cap margin of victory to prevent blowout stat-padding.
 
