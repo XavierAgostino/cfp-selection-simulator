@@ -86,23 +86,23 @@ This directory contains Jupyter notebooks for interactive analysis and developme
 
 **Option 1: Complete Analysis (Recommended)**
 ```
-0. Configuration    → Configure season, weights, understand methodology
-1. Data Pipeline    → Fetch FBS game data
-2. Rankings         → Calculate resume (Colley, Win%) + predictive (Massey, Elo)
-3. Composite        → Combine with SOR/SOS, apply tie-breakers
-4. Resume Analysis  → Team sheets, quality wins, bad losses
-5. Playoff          → 12-team bracket with visual display
-6. Visualization    → Stability, errors, schedule inequality
+0. Configuration    - Configure season, weights, understand methodology
+1. Data Pipeline    - Fetch FBS game data
+2. Rankings         - Calculate resume (Colley, Win%) + predictive (Massey, Elo)
+3. Composite        - Combine with SOR/SOS, apply tie-breakers
+4. Resume Analysis  - Team sheets, quality wins, bad losses
+5. Playoff          - 12-team bracket with visual display
+6. Visualization    - Stability, errors, schedule inequality
 ```
 
 **Option 2: Quick Analysis (Experienced Users)**
 ```
-7. Quick Simulator → Streamlined end-to-end analysis
+7. Quick Simulator - Streamlined end-to-end analysis
 ```
 
 **Option 3: Historical Validation**
 ```
-8. Validation & Backtesting → Compare to actual CFP selections
+8. Validation & Backtesting - Compare to actual CFP selections
 ```
 
 ### Output File Organization

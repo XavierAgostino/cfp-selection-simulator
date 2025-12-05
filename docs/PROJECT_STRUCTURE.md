@@ -193,7 +193,7 @@ tests/
 
 ### 3. Development Workflow
 ```
-bin/setup.sh → docker-compose up → notebooks/ → tests/ → git commit
+bin/setup.sh - docker-compose up - notebooks/ - tests/ - git commit
 ```
 
 ### 4. Security

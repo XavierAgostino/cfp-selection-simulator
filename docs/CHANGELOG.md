@@ -32,7 +32,7 @@ All notable changes to the CFP Selection Simulator project.
 ### Changed
 
 #### Season Configuration
-- Updated all notebooks from **2024 → 2025 season** (2025-2026)
+- Updated all notebooks from **2024 to 2025 season** (2025-2026)
 - Updated **create_notebooks.py** to generate 2025 season notebooks
 - Updated cache week to **15** for 2025 season
 
@@ -43,12 +43,12 @@ All notable changes to the CFP Selection Simulator project.
 
 #### Conference Mappings
 - Fixed team name inconsistencies:
-  - "Pitt" → "Pittsburgh"
-  - "App State" → "Appalachian State"
-  - "USF" → "South Florida"
-  - "UMass" → "Massachusetts"
+  - "Pitt" to "Pittsburgh"
+  - "App State" to "Appalachian State"
+  - "USF" to "South Florida"
+  - "UMass" to "Massachusetts"
   - Added "Sam Houston State" (full name)
-  - "Southern Miss" → "Southern Mississippi"
+  - "Southern Miss" to "Southern Mississippi"
 
 ### Fixed
 
