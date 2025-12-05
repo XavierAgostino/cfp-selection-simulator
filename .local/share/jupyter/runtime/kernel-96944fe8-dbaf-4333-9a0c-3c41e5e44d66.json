@@ -1,0 +1,13 @@
+{
+  "shell_port": 51899,
+  "iopub_port": 55263,
+  "stdin_port": 43609,
+  "control_port": 55091,
+  "hb_port": 36891,
+  "ip": "127.0.0.1",
+  "key": "4421ae70-02a5b8686a38d0eb3fc92b70",
+  "transport": "tcp",
+  "signature_scheme": "hmac-sha256",
+  "kernel_name": "python3",
+  "jupyter_session": "/app/05_playoff_selection-39889034-c90c-4475-8024-78077d88f1c2.ipynb"
+}

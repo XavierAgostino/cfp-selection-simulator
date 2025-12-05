@@ -1,0 +1,13 @@
+{
+  "shell_port": 49709,
+  "iopub_port": 43715,
+  "stdin_port": 38759,
+  "control_port": 48109,
+  "hb_port": 51279,
+  "ip": "127.0.0.1",
+  "key": "16e8fa58-0374454c2ff023318c6a6b0f",
+  "transport": "tcp",
+  "signature_scheme": "hmac-sha256",
+  "kernel_name": "python3",
+  "jupyter_session": "/app/02_ranking_algorithms-c8ea6e03-3aa3-4e8d-901e-37c7ba47195a.ipynb"
+}
