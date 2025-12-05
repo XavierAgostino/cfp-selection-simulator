@@ -10,15 +10,17 @@ Implements:
 - Visual bracket display
 """
 
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
 
 
 @dataclass
 class PlayoffSelection:
     """Results of 12-team playoff selection."""
+
     playoff_teams: List[Dict]
     auto_bids: List[Dict]
     at_large_bids: List[Dict]
@@ -30,6 +32,7 @@ class PlayoffSelection:
 @dataclass
 class BracketMatchup:
     """Single playoff matchup."""
+
     round: str
     game_num: int
     seed_high: int
@@ -43,10 +46,10 @@ class BracketMatchup:
 
 def select_playoff_field(
     rankings_df: pd.DataFrame,
-    conference_col: str = 'conference',
-    conf_champ_col: str = 'conf_champ',
+    conference_col: str = "conference",
+    conf_champ_col: str = "conf_champ",
     n_auto_bids: int = 5,
-    n_at_large: int = 7
+    n_at_large: int = 7,
 ) -> PlayoffSelection:
     """
     Select 12-team playoff field using 5+7 protocol.
@@ -79,7 +82,7 @@ def select_playoff_field(
     total_teams = n_auto_bids + n_at_large
 
     # Ensure dataframe is sorted by rank
-    rankings_df = rankings_df.sort_values('rank').reset_index(drop=True)
+    rankings_df = rankings_df.sort_values("rank").reset_index(drop=True)
 
     # Step 1: Identify all conference champions
     champs_df = rankings_df[rankings_df[conf_champ_col].str.contains("Yes", na=False)].copy()
@@ -91,16 +94,16 @@ def select_playoff_field(
         n_at_large = total_teams - n_auto_bids
 
     # Step 2: Select top N conference champions for automatic bids
-    auto_bid_teams = champs_df.head(n_auto_bids).to_dict('records')
-    auto_bid_names = {team['team'] for team in auto_bid_teams}
+    auto_bid_teams = champs_df.head(n_auto_bids).to_dict("records")
+    auto_bid_names = {team["team"] for team in auto_bid_teams}
 
     audit_log.append(f"\nAutomatic bids (top {n_auto_bids} conference champions):")
     for i, team in enumerate(auto_bid_teams, 1):
         audit_log.append(f"  {i}. #{team['rank']} {team['team']} ({team[conf_champ_col]})")
 
     # Step 3: Select at-large teams (highest-ranked non-auto-bid teams)
-    eligible_at_large = rankings_df[~rankings_df['team'].isin(auto_bid_names)].copy()
-    at_large_teams = eligible_at_large.head(n_at_large).to_dict('records')
+    eligible_at_large = rankings_df[~rankings_df["team"].isin(auto_bid_names)].copy()
+    at_large_teams = eligible_at_large.head(n_at_large).to_dict("records")
 
     audit_log.append(f"\nAt-large bids ({n_at_large} spots):")
     for i, team in enumerate(at_large_teams, 1):
@@ -108,23 +111,29 @@ def select_playoff_field(
 
     # Step 4: Check if any auto-bid team is outside top 12
     all_selected = auto_bid_teams + at_large_teams
-    all_selected_sorted = sorted(all_selected, key=lambda x: x['rank'])
+    all_selected_sorted = sorted(all_selected, key=lambda x: x["rank"])
 
     champ_pulled_in = False
     displaced_team = None
 
     # Find if any champion is ranked below the 12th spot
     for team in auto_bid_teams:
-        if team['rank'] > total_teams:
+        if team["rank"] > total_teams:
             champ_pulled_in = True
             # Find who got displaced (would have been last at-large)
             if len(at_large_teams) > 0:
                 # The team that would have made it
-                would_be_12th = eligible_at_large.iloc[n_at_large - 1] if len(eligible_at_large) > n_at_large else None
+                would_be_12th = (
+                    eligible_at_large.iloc[n_at_large - 1]
+                    if len(eligible_at_large) > n_at_large
+                    else None
+                )
                 if would_be_12th is not None:
                     displaced_team = would_be_12th.to_dict()
                     audit_log.append(f"\nCHAMPION PULLED IN: #{team['rank']} {team['team']}")
-                    audit_log.append(f"DISPLACED: #{displaced_team['rank']} {displaced_team['team']}")
+                    audit_log.append(
+                        f"DISPLACED: #{displaced_team['rank']} {displaced_team['team']}"
+                    )
             break
 
     # Step 5: Final playoff field
@@ -132,7 +141,7 @@ def select_playoff_field(
 
     audit_log.append(f"\nFinal 12-team playoff field:")
     for i, team in enumerate(playoff_teams, 1):
-        status = "AUTO" if team['team'] in auto_bid_names else "AT-LARGE"
+        status = "AUTO" if team["team"] in auto_bid_names else "AT-LARGE"
         audit_log.append(f"  {i}. #{team['rank']} {team['team']} ({status})")
 
     return PlayoffSelection(
@@ -141,14 +150,11 @@ def select_playoff_field(
         at_large_bids=at_large_teams,
         displaced_team=displaced_team,
         champ_pulled_in=champ_pulled_in,
-        audit_log=audit_log
+        audit_log=audit_log,
     )
 
 
-def seed_playoff_teams(
-    playoff_teams: List[Dict],
-    auto_bid_teams: List[Dict]
-) -> pd.DataFrame:
+def seed_playoff_teams(playoff_teams: List[Dict], auto_bid_teams: List[Dict]) -> pd.DataFrame:
     """
     Seed 12-team playoff with top 4 conference champions receiving byes.
 
@@ -168,57 +174,61 @@ def seed_playoff_teams(
     DataFrame
         Seeded bracket with columns: seed, team, rank, conf_champ, is_bye
     """
-    auto_bid_names = {team['team'] for team in auto_bid_teams}
+    auto_bid_names = {team["team"] for team in auto_bid_teams}
 
     # Sort playoff teams by rank
-    sorted_teams = sorted(playoff_teams, key=lambda x: x['rank'])
+    sorted_teams = sorted(playoff_teams, key=lambda x: x["rank"])
 
     # Identify top 4 conference champions for byes
-    champs_in_playoff = [t for t in sorted_teams if t['team'] in auto_bid_names]
+    champs_in_playoff = [t for t in sorted_teams if t["team"] in auto_bid_names]
     top_4_champs = champs_in_playoff[:4]
-    top_4_names = {t['team'] for t in top_4_champs}
+    top_4_names = {t["team"] for t in top_4_champs}
 
     # Assign seeds 1-4 to top 4 champions
     seeded_teams = []
     seed = 1
 
     for team in top_4_champs:
-        seeded_teams.append({
-            'seed': seed,
-            'team': team['team'],
-            'rank': team['rank'],
-            'wins': team.get('wins', 0),
-            'losses': team.get('losses', 0),
-            'conference': team.get('conference', ''),
-            'conf_champ': team.get('conf_champ', ''),
-            'is_bye': True,
-            'composite_score': team.get('composite_score', 0.0)
-        })
+        seeded_teams.append(
+            {
+                "seed": seed,
+                "team": team["team"],
+                "rank": team["rank"],
+                "wins": team.get("wins", 0),
+                "losses": team.get("losses", 0),
+                "conference": team.get("conference", ""),
+                "conf_champ": team.get("conf_champ", ""),
+                "is_bye": True,
+                "composite_score": team.get("composite_score", 0.0),
+            }
+        )
         seed += 1
 
     # Assign seeds 5-12 to remaining teams by rank
-    remaining_teams = [t for t in sorted_teams if t['team'] not in top_4_names]
+    remaining_teams = [t for t in sorted_teams if t["team"] not in top_4_names]
 
     for team in remaining_teams:
-        is_champ = team['team'] in auto_bid_names
-        seeded_teams.append({
-            'seed': seed,
-            'team': team['team'],
-            'rank': team['rank'],
-            'wins': team.get('wins', 0),
-            'losses': team.get('losses', 0),
-            'conference': team.get('conference', ''),
-            'conf_champ': team.get('conf_champ', '') if is_champ else 'No',
-            'is_bye': False,
-            'composite_score': team.get('composite_score', 0.0)
-        })
+        is_champ = team["team"] in auto_bid_names
+        seeded_teams.append(
+            {
+                "seed": seed,
+                "team": team["team"],
+                "rank": team["rank"],
+                "wins": team.get("wins", 0),
+                "losses": team.get("losses", 0),
+                "conference": team.get("conference", ""),
+                "conf_champ": team.get("conf_champ", "") if is_champ else "No",
+                "is_bye": False,
+                "composite_score": team.get("composite_score", 0.0),
+            }
+        )
         seed += 1
 
     return pd.DataFrame(seeded_teams)
 
 
 def create_bracket_matchups(
-    seeded_df: pd.DataFrame
+    seeded_df: pd.DataFrame,
 ) -> Tuple[List[BracketMatchup], Dict[str, List[BracketMatchup]]]:
     """
     Create first-round matchups and complete bracket structure.
@@ -252,23 +262,23 @@ def create_bracket_matchups(
     matchups = [(5, 12), (6, 11), (7, 10), (8, 9)]
 
     for i, (seed_high, seed_low) in enumerate(matchups, 1):
-        team_high = seeded_df[seeded_df['seed'] == seed_high].iloc[0]
-        team_low = seeded_df[seeded_df['seed'] == seed_low].iloc[0]
+        team_high = seeded_df[seeded_df["seed"] == seed_high].iloc[0]
+        team_low = seeded_df[seeded_df["seed"] == seed_low].iloc[0]
 
         matchup = BracketMatchup(
             round="First Round",
             game_num=i,
             seed_high=seed_high,
             seed_low=seed_low,
-            team_high=team_high['team'],
-            team_low=team_low['team'],
+            team_high=team_high["team"],
+            team_low=team_low["team"],
             is_bye=False,
-            host_team=team_high['team'],
-            location=f"Campus of #{seed_high} seed"
+            host_team=team_high["team"],
+            location=f"Campus of #{seed_high} seed",
         )
         first_round.append(matchup)
 
-    all_rounds['first_round'] = first_round
+    all_rounds["first_round"] = first_round
 
     # Quarterfinals (placeholder - winners TBD)
     quarterfinals = []
@@ -276,26 +286,26 @@ def create_bracket_matchups(
         (1, "Winner 8/9", "8/9"),
         (2, "Winner 7/10", "7/10"),
         (3, "Winner 6/11", "6/11"),
-        (4, "Winner 5/12", "5/12")
+        (4, "Winner 5/12", "5/12"),
     ]
 
     for i, (seed, winner_label, game_ref) in enumerate(qf_matchups, 1):
-        team_seed = seeded_df[seeded_df['seed'] == seed].iloc[0]
+        team_seed = seeded_df[seeded_df["seed"] == seed].iloc[0]
 
         matchup = BracketMatchup(
             round="Quarterfinals",
             game_num=i,
             seed_high=seed,
             seed_low=0,  # TBD
-            team_high=team_seed['team'],
+            team_high=team_seed["team"],
             team_low=winner_label,
             is_bye=False,
             host_team=None,
-            location="Bowl Game (Neutral Site)"
+            location="Bowl Game (Neutral Site)",
         )
         quarterfinals.append(matchup)
 
-    all_rounds['quarterfinals'] = quarterfinals
+    all_rounds["quarterfinals"] = quarterfinals
 
     return first_round, all_rounds
 
@@ -303,7 +313,7 @@ def create_bracket_matchups(
 def visualize_bracket(
     seeded_df: pd.DataFrame,
     first_round: List[BracketMatchup],
-    title: str = "College Football Playoff Bracket"
+    title: str = "College Football Playoff Bracket",
 ) -> str:
     """
     Create ASCII art visualization of playoff bracket.
@@ -331,7 +341,7 @@ def visualize_bracket(
     # Byes (Seeds 1-4)
     lines.append("FIRST ROUND BYES:")
     lines.append("-" * 80)
-    for _, team in seeded_df[seeded_df['is_bye'] == True].iterrows():
+    for _, team in seeded_df[seeded_df["is_bye"] == True].iterrows():
         lines.append(f"  Seed #{team['seed']}: {team['team']:<30} (Rank #{team['rank']})")
     lines.append("")
 
@@ -363,10 +373,7 @@ def visualize_bracket(
     return "\n".join(lines)
 
 
-def visualize_bracket_html(
-    seeded_df: pd.DataFrame,
-    first_round: List[BracketMatchup]
-) -> str:
+def visualize_bracket_html(seeded_df: pd.DataFrame, first_round: List[BracketMatchup]) -> str:
     """
     Create enhanced HTML visualization of playoff bracket with modern tournament-style layout.
 
@@ -382,7 +389,8 @@ def visualize_bracket_html(
     str
         HTML bracket visualization
     """
-    html = ["""
+    html = [
+        """
     <style>
         * { box-sizing: border-box; }
 
@@ -621,15 +629,18 @@ def visualize_bracket_html(
             }
         }
     </style>
-    """]
+    """
+    ]
 
     html.append('<div class="bracket-container">')
 
     # Header
     html.append('  <div class="bracket-header">')
     html.append('    <div class="bracket-title">🏆 College Football Playoff Bracket</div>')
-    html.append('    <div class="bracket-subtitle">12-Team Playoff • 5 Automatic Bids + 7 At-Large</div>')
-    html.append('  </div>')
+    html.append(
+        '    <div class="bracket-subtitle">12-Team Playoff • 5 Automatic Bids + 7 At-Large</div>'
+    )
+    html.append("  </div>")
 
     # Main grid with byes and first round
     html.append('  <div class="bracket-grid">')
@@ -639,44 +650,52 @@ def visualize_bracket_html(
     html.append('      <div class="section-title">⭐ First Round Byes</div>')
     html.append('      <div class="bye-grid">')
 
-    for _, team in seeded_df[seeded_df['is_bye'] == True].iterrows():
-        wins = int(team.get('wins', 0))
-        losses = int(team.get('losses', 0))
-        conf = team.get('conference', 'N/A')
+    for _, team in seeded_df[seeded_df["is_bye"] == True].iterrows():
+        wins = int(team.get("wins", 0))
+        losses = int(team.get("losses", 0))
+        conf = team.get("conference", "N/A")
 
         html.append('        <div class="bye-team">')
         html.append('          <div class="team-line" style="background: transparent;">')
-        html.append(f'            <div class="seed" style="background: rgba(255,255,255,0.3);">#{team["seed"]}</div>')
+        html.append(
+            f'            <div class="seed" style="background: rgba(255,255,255,0.3);">#{team["seed"]}</div>'
+        )
         html.append('            <div class="team-info">')
-        html.append(f'              <div class="team-name" style="color: white;">{team["team"]}</div>')
-        html.append(f'              <div class="team-details" style="color: rgba(255,255,255,0.9);">')
+        html.append(
+            f'              <div class="team-name" style="color: white;">{team["team"]}</div>'
+        )
+        html.append(
+            f'              <div class="team-details" style="color: rgba(255,255,255,0.9);">'
+        )
         html.append(f'                <span class="record">{wins}-{losses}</span>')
-        html.append(f'                <span>•</span>')
+        html.append(f"                <span>•</span>")
         html.append(f'                <span class="conference">{conf}</span>')
-        html.append('              </div>')
-        html.append('            </div>')
-        html.append(f'            <div class="rank-badge" style="background: rgba(255,255,255,0.2);">Rank #{team["rank"]}</div>')
-        html.append('          </div>')
-        html.append('        </div>')
+        html.append("              </div>")
+        html.append("            </div>")
+        html.append(
+            f'            <div class="rank-badge" style="background: rgba(255,255,255,0.2);">Rank #{team["rank"]}</div>'
+        )
+        html.append("          </div>")
+        html.append("        </div>")
 
-    html.append('      </div>')
-    html.append('    </div>')
+    html.append("      </div>")
+    html.append("    </div>")
 
     # First Round Section
     html.append('    <div class="bracket-section">')
     html.append('      <div class="section-title">🏈 First Round (On-Campus)</div>')
 
     for matchup in first_round:
-        team_high = seeded_df[seeded_df['seed'] == matchup.seed_high].iloc[0]
-        team_low = seeded_df[seeded_df['seed'] == matchup.seed_low].iloc[0]
+        team_high = seeded_df[seeded_df["seed"] == matchup.seed_high].iloc[0]
+        team_low = seeded_df[seeded_df["seed"] == matchup.seed_low].iloc[0]
 
-        wins_high = int(team_high.get('wins', 0))
-        losses_high = int(team_high.get('losses', 0))
-        conf_high = team_high.get('conference', 'N/A')
+        wins_high = int(team_high.get("wins", 0))
+        losses_high = int(team_high.get("losses", 0))
+        conf_high = team_high.get("conference", "N/A")
 
-        wins_low = int(team_low.get('wins', 0))
-        losses_low = int(team_low.get('losses', 0))
-        conf_low = team_low.get('conference', 'N/A')
+        wins_low = int(team_low.get("wins", 0))
+        losses_low = int(team_low.get("losses", 0))
+        conf_low = team_low.get("conference", "N/A")
 
         html.append('      <div class="matchup">')
 
@@ -687,12 +706,12 @@ def visualize_bracket_html(
         html.append(f'            <div class="team-name">{matchup.team_high} 🏠</div>')
         html.append(f'            <div class="team-details">')
         html.append(f'              <span class="record">{wins_high}-{losses_high}</span>')
-        html.append(f'              <span>•</span>')
+        html.append(f"              <span>•</span>")
         html.append(f'              <span class="conference">{conf_high}</span>')
-        html.append('            </div>')
-        html.append('          </div>')
+        html.append("            </div>")
+        html.append("          </div>")
         html.append(f'          <div class="rank-badge">Rank #{team_high["rank"]}</div>')
-        html.append('        </div>')
+        html.append("        </div>")
 
         html.append('        <div class="vs-divider">VS</div>')
 
@@ -703,18 +722,18 @@ def visualize_bracket_html(
         html.append(f'            <div class="team-name">{matchup.team_low}</div>')
         html.append(f'            <div class="team-details">')
         html.append(f'              <span class="record">{wins_low}-{losses_low}</span>')
-        html.append(f'              <span>•</span>')
+        html.append(f"              <span>•</span>")
         html.append(f'              <span class="conference">{conf_low}</span>')
-        html.append('            </div>')
-        html.append('          </div>')
+        html.append("            </div>")
+        html.append("          </div>")
         html.append(f'          <div class="rank-badge">Rank #{team_low["rank"]}</div>')
-        html.append('        </div>')
+        html.append("        </div>")
 
         html.append(f'        <div class="location">📍 {matchup.location}</div>')
-        html.append('      </div>')
+        html.append("      </div>")
 
-    html.append('    </div>')
-    html.append('  </div>')  # End bracket-grid
+    html.append("    </div>")
+    html.append("  </div>")  # End bracket-grid
 
     # Quarterfinals Section
     html.append('  <div class="bracket-section">')
@@ -724,14 +743,14 @@ def visualize_bracket_html(
         (1, "Winner of 8/9"),
         (2, "Winner of 7/10"),
         (3, "Winner of 6/11"),
-        (4, "Winner of 5/12")
+        (4, "Winner of 5/12"),
     ]
 
     for seed, winner_label in qf_matchups:
-        team_data = seeded_df[seeded_df['seed'] == seed].iloc[0]
-        wins = int(team_data.get('wins', 0))
-        losses = int(team_data.get('losses', 0))
-        conf = team_data.get('conference', 'N/A')
+        team_data = seeded_df[seeded_df["seed"] == seed].iloc[0]
+        wins = int(team_data.get("wins", 0))
+        losses = int(team_data.get("losses", 0))
+        conf = team_data.get("conference", "N/A")
 
         html.append('    <div class="matchup">')
         html.append('      <div class="team-line">')
@@ -740,36 +759,48 @@ def visualize_bracket_html(
         html.append(f'          <div class="team-name">{team_data["team"]}</div>')
         html.append(f'          <div class="team-details">')
         html.append(f'            <span class="record">{wins}-{losses}</span>')
-        html.append(f'            <span>•</span>')
+        html.append(f"            <span>•</span>")
         html.append(f'            <span class="conference">{conf}</span>')
-        html.append('          </div>')
-        html.append('        </div>')
+        html.append("          </div>")
+        html.append("        </div>")
         html.append(f'        <div class="rank-badge">Rank #{team_data["rank"]}</div>')
-        html.append('      </div>')
+        html.append("      </div>")
         html.append('      <div class="vs-divider">VS</div>')
         html.append('      <div class="team-line">')
         html.append('        <div class="team-info">')
-        html.append(f'          <div class="team-name" style="color: #a0aec0;">{winner_label}</div>')
-        html.append('        </div>')
-        html.append('      </div>')
+        html.append(
+            f'          <div class="team-name" style="color: #a0aec0;">{winner_label}</div>'
+        )
+        html.append("        </div>")
+        html.append("      </div>")
         html.append('      <div class="location">📍 Bowl Game (Neutral Site)</div>')
-        html.append('    </div>')
+        html.append("    </div>")
 
-    html.append('  </div>')
+    html.append("  </div>")
 
     # Notes
     html.append('  <div class="bracket-notes">')
-    html.append('    <strong>📋 Bracket Information</strong>')
-    html.append('    <ul>')
-    html.append('      <li><strong>Automatic Bids:</strong> Top 5 highest-ranked conference champions receive automatic playoff berths</li>')
-    html.append('      <li><strong>First-Round Byes:</strong> Top 4 conference champions (seeds 1-4) advance directly to quarterfinals</li>')
-    html.append('      <li><strong>Home Field Advantage:</strong> Seeds 5-8 host first-round games on their campus</li>')
-    html.append('      <li><strong>No Reseeding:</strong> Winners advance to predetermined quarterfinal matchups (fixed bracket)</li>')
-    html.append('      <li><strong>Selection Protocol:</strong> Rankings based on composite model (50% Resume + 30% Predictive + 10% SOR + 10% SOS)</li>')
-    html.append('    </ul>')
-    html.append('  </div>')
+    html.append("    <strong>📋 Bracket Information</strong>")
+    html.append("    <ul>")
+    html.append(
+        "      <li><strong>Automatic Bids:</strong> Top 5 highest-ranked conference champions receive automatic playoff berths</li>"
+    )
+    html.append(
+        "      <li><strong>First-Round Byes:</strong> Top 4 conference champions (seeds 1-4) advance directly to quarterfinals</li>"
+    )
+    html.append(
+        "      <li><strong>Home Field Advantage:</strong> Seeds 5-8 host first-round games on their campus</li>"
+    )
+    html.append(
+        "      <li><strong>No Reseeding:</strong> Winners advance to predetermined quarterfinal matchups (fixed bracket)</li>"
+    )
+    html.append(
+        "      <li><strong>Selection Protocol:</strong> Rankings based on composite model (50% Resume + 30% Predictive + 10% SOR + 10% SOS)</li>"
+    )
+    html.append("    </ul>")
+    html.append("  </div>")
 
-    html.append('</div>')
+    html.append("</div>")
 
     return "\n".join(html)
 
@@ -780,7 +811,7 @@ def apply_tiebreaker(
     games_df: pd.DataFrame,
     sos_ranks: Dict[str, int],
     sor_ranks: Dict[str, int],
-    tolerance: float = 0.01
+    tolerance: float = 0.01,
 ) -> Tuple[str, str]:
     """
     Apply committee-style tie-breaker logic.
@@ -812,28 +843,30 @@ def apply_tiebreaker(
     tuple
         (winning team name, reason string)
     """
-    team_a_name = team_a['team']
-    team_b_name = team_b['team']
-    score_diff = abs(team_a['composite_score'] - team_b['composite_score'])
+    team_a_name = team_a["team"]
+    team_b_name = team_b["team"]
+    score_diff = abs(team_a["composite_score"] - team_b["composite_score"])
 
     # If scores aren't close, no tiebreaker needed
     if score_diff >= tolerance:
-        winner = team_a_name if team_a['composite_score'] > team_b['composite_score'] else team_b_name
+        winner = (
+            team_a_name if team_a["composite_score"] > team_b["composite_score"] else team_b_name
+        )
         return winner, f"Composite score difference ({score_diff:.3f})"
 
     # Step 1: Head-to-head
     h2h_games = games_df[
-        ((games_df['home_team'] == team_a_name) & (games_df['away_team'] == team_b_name)) |
-        ((games_df['home_team'] == team_b_name) & (games_df['away_team'] == team_a_name))
+        ((games_df["home_team"] == team_a_name) & (games_df["away_team"] == team_b_name))
+        | ((games_df["home_team"] == team_b_name) & (games_df["away_team"] == team_a_name))
     ]
 
     if not h2h_games.empty:
         # Find winner of head-to-head
         for _, game in h2h_games.iterrows():
-            if game['home_score'] > game['away_score']:
-                winner = game['home_team']
+            if game["home_score"] > game["away_score"]:
+                winner = game["home_team"]
             else:
-                winner = game['away_team']
+                winner = game["away_team"]
 
             if winner in [team_a_name, team_b_name]:
                 return winner, f"Head-to-head: {winner} defeated opponent"
@@ -847,7 +880,10 @@ def apply_tiebreaker(
 
     if sos_a != sos_b:
         winner = team_a_name if sos_a < sos_b else team_b_name
-        return winner, f"Strength of Schedule (SOS rank: {min(sos_a, sos_b)} vs {max(sos_a, sos_b)})"
+        return (
+            winner,
+            f"Strength of Schedule (SOS rank: {min(sos_a, sos_b)} vs {max(sos_a, sos_b)})",
+        )
 
     # Step 4: SOR rank
     sor_a = sor_ranks.get(team_a_name, 999)
@@ -858,5 +894,5 @@ def apply_tiebreaker(
         return winner, f"Strength of Record (SOR rank: {min(sor_a, sor_b)} vs {max(sor_a, sor_b)})"
 
     # Step 5: Final tiebreaker - composite score
-    winner = team_a_name if team_a['composite_score'] > team_b['composite_score'] else team_b_name
+    winner = team_a_name if team_a["composite_score"] > team_b["composite_score"] else team_b_name
     return winner, f"Composite score (marginal difference)"

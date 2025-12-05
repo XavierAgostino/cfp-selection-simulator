@@ -3,17 +3,17 @@ College Football Playoff selection and bracket logic.
 """
 
 from .bracket import (
-    select_playoff_field,
-    seed_playoff_teams,
+    apply_tiebreaker,
     create_bracket_matchups,
+    seed_playoff_teams,
+    select_playoff_field,
     visualize_bracket,
-    apply_tiebreaker
 )
 
 __all__ = [
-    'select_playoff_field',
-    'seed_playoff_teams',
-    'create_bracket_matchups',
-    'visualize_bracket',
-    'apply_tiebreaker'
+    "select_playoff_field",
+    "seed_playoff_teams",
+    "create_bracket_matchups",
+    "visualize_bracket",
+    "apply_tiebreaker",
 ]
