@@ -282,9 +282,10 @@ def calculate_composite_rankings(games_df: pd.DataFrame) -> pd.DataFrame:
     
     # ---- Full SOR/SOS implementation ----
     # First, build a provisional composite (resume + predictive only) to rate opponents on 0-1 scale
+    # Updated weights: 50% resume, 30% predictive (matches CFP emphasis on wins/losses)
     provisional_scores = {}
     for team in teams:
-        provisional_scores[team] = float(0.30 * resume_scores[team] + 0.40 * predictive_scores[team])
+        provisional_scores[team] = float(0.50 * resume_scores[team] + 0.30 * predictive_scores[team])
     
     # Normalize provisional scores to 0-1 for opponent ratings
     scaler_provisional = MinMaxScaler()
@@ -367,14 +368,16 @@ def calculate_composite_rankings(games_df: pd.DataFrame) -> pd.DataFrame:
     sor_norm = scaler.fit_transform(sor_arr).flatten()  # higher sor_score = better
     sos_norm = scaler.fit_transform(sos_arr).flatten()  # higher sos_score = tougher
     
-    # Calculate composite score with full weights
+    # Calculate composite score with updated weights
+    # Updated: 50% resume, 30% predictive, 10% SOR, 10% SOS
+    # This better reflects CFP committee's emphasis on wins/losses over predictive power
     composite_scores = {}
     for i, team in enumerate(teams):
         composite_scores[team] = (
-            0.30 * resume_norm[i] +
-            0.40 * predictive_norm[i] +
-            0.15 * sor_norm[i] +
-            0.15 * sos_norm[i]
+            0.50 * resume_norm[i] +
+            0.30 * predictive_norm[i] +
+            0.10 * sor_norm[i] +
+            0.10 * sos_norm[i]
         )
     
     # Create DataFrame

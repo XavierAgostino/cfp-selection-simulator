@@ -105,13 +105,14 @@ This simulator implements a critical separation between what teams have **accomp
 
 ### Ranking Algorithms
 
-| Algorithm | Type | Purpose | Weight |
-|-----------|------|---------|--------|
-| **Colley Matrix** | Resume | Win-loss evaluation (no MOV) | 20% |
-| **Massey Ratings** | Predictive | Power with capped MOV | 25% |
-| **Elo System** | Predictive | Dynamic game ratings | 20% |
-| **Strength of Record** | Resume | Schedule difficulty + context | 20% |
-| **Win Percentage** | Resume | Raw performance baseline | 15% |
+| Algorithm | Type | Purpose | Effective Weight |
+|-----------|------|---------|------------------|
+| **Colley Matrix** | Resume | Win-loss evaluation (no MOV) | 30% (60% of 50%) |
+| **Win Percentage** | Resume | Raw performance baseline | 20% (40% of 50%) |
+| **Massey Ratings** | Predictive | Power with capped MOV | 15% (50% of 30%) |
+| **Elo System** | Predictive | Dynamic game ratings | 15% (50% of 30%) |
+| **Strength of Record** | Context | Schedule-adjusted wins | 10% |
+| **Strength of Schedule** | Context | Opponent quality (with OOR) | 10% |
 
 ### Data Quality Features
 
@@ -153,15 +154,21 @@ The College Football Playoff selection process suffers from systematic issues af
 ### Ensemble Methodology
 
 ```
-Composite Score = α(Resume) + β(Power) + γ(Momentum) + δ(Difficulty)
+Composite Score = 0.50×Resume + 0.30×Predictive + 0.10×SOR + 0.10×SOS
+
+Where:
+  Resume = 0.60×Colley + 0.40×WinPct
+  Predictive = 0.50×Massey + 0.50×Elo
+  SOR = Strength of Record (schedule-adjusted accomplishment)
+  SOS = Strength of Schedule (opponent quality with OOR)
 ```
 
 This multi-faceted approach balances different evaluation philosophies:
 
-- **Resume-Based**: How good is the team's win-loss record?
-- **Power-Based**: How strong is the team fundamentally?
-- **Momentum-Based**: How is performance trending over time?
-- **Difficulty-Based**: How challenging was the schedule?
+- **Resume (50%)**: What teams have accomplished (wins/losses, quality wins)
+- **Predictive (30%)**: How strong teams are fundamentally (power ratings)
+- **SOR (10%)**: How impressive the record is given schedule difficulty
+- **SOS (10%)**: How challenging the schedule was (with opponent's opponent adjustment)
 
 ### Core Algorithms
 
@@ -523,6 +530,52 @@ Backtesting against **10 seasons** (2014-2023):
 - Multiple controversial decisions
 
 **Transparency Goal**: Identify and quantify systematic biases in committee selections.
+
+---
+
+## Known Limitations
+
+This simulator provides objective analysis but has inherent limitations:
+
+### Model Limitations
+
+| Limitation | Impact | Mitigation |
+|------------|--------|------------|
+| **No "Eye Test"** | Pure statistical model without subjective quality assessment | Conference tier adjustments (+3% P5, -3% G5) |
+| **No Injury Data** | Can't account for key player absences (e.g., FSU QB injury 2023) | Use most recent game data when available |
+| **Conference Blind** | Historically treated all conferences equally | Now includes P5/G5 tier adjustments |
+| **No Game Context** | Doesn't distinguish rivalry games, weather, etc. | MOV capping and HFA adjustments help |
+| **Static Weights** | Uses fixed 50/30/10/10 weighting | Weights optimized via historical backtesting |
+
+### Data Limitations
+
+- **Dependent on API**: Requires CollegeFootballData.com availability
+- **FBS-Only**: Excludes FCS opponents (may undervalue some schedules)
+- **Temporal Lag**: Games added to API within ~24 hours
+- **Early Season Noise**: Rankings unstable before Week 5 (by design)
+
+### Philosophical Limitations
+
+- **Backward-Looking**: Based on past performance, not future potential
+- **No Narrative**: Can't capture storylines, momentum shifts, coaching changes
+- **Committee Override**: CFP committee can (and does) apply subjective judgment
+- **Selection Protocol Constraint**: Bound by 5+7 automatic bid rules
+
+### Use Cases
+
+✅ **Good For:**
+- Objective baseline for comparison against committee rankings
+- Identifying statistical outliers and potential biases
+- Historical analysis and trend identification
+- Transparent, reproducible rankings methodology
+
+❌ **Not Suitable For:**
+- Replacing human judgment entirely
+- Predicting future game outcomes (use predictive-only rankings)
+- Capturing intangible factors (team culture, injury impact, etc.)
+- Real-time in-game adjustments
+
+**Bottom Line**: This simulator is a **complement to**, not a **replacement for**, informed human judgment.
 
 ---
 
