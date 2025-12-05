@@ -23,21 +23,38 @@ def get_api_key() -> str:
     return api_key.strip().strip('"').strip("'")
 
 
-def get_fbs_teams_list(year: int, teams_api: cfbd.TeamsApi) -> Set[str]:
+def get_fbs_teams_list(year: int, api_key: str = None) -> Set[str]:
     """
-    Fetch list of FBS teams for filtering.
+    Fetch list of FBS teams for filtering using requests library directly.
+    This matches the approach used in notebook 01_data_pipeline.ipynb.
 
     Args:
         year: Season year
-        teams_api: Configured CFBD TeamsApi instance
+        api_key: API key (loaded from env if not provided)
 
     Returns:
         Set of FBS team names
     """
+    if api_key is None:
+        api_key = get_api_key()
+    
+    # Use requests library directly (same as notebook 01)
+    url = "https://api.collegefootballdata.com/teams/fbs"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "accept": "application/json"
+    }
+    params = {"year": year}
+    
     try:
-        fbs_teams = teams_api.get_fbs_teams(year=year)
-        return set([team.school for team in fbs_teams])
-    except ApiException as e:
+        response = requests.get(url, headers=headers, params=params)
+        if response.status_code == 200:
+            teams_data = response.json()
+            fbs_team_names = set([team['school'] for team in teams_data])
+            return fbs_team_names
+        else:
+            raise Exception(f"Error fetching FBS teams: Status {response.status_code} - {response.text[:200]}")
+    except Exception as e:
         raise Exception(f"Error fetching FBS teams: {e}")
 
 
@@ -63,10 +80,8 @@ def fetch_season_games(
         api_key = get_api_key()
 
     if fbs_teams is None:
-        configuration = cfbd.Configuration()
-        configuration.api_key['Authorization'] = f'Bearer {api_key}'
-        teams_api = cfbd.TeamsApi(cfbd.ApiClient(configuration))
-        fbs_teams = get_fbs_teams_list(year, teams_api)
+        # Use requests library directly (same as notebook 01)
+        fbs_teams = get_fbs_teams_list(year, api_key)
 
     base_url = "https://api.collegefootballdata.com/games"
     headers = {

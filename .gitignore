@@ -68,12 +68,24 @@ data/processed/
 *.hdf5
 *.parquet
 
-# Output Files
-*.csv
-*.json
+# Output Files (keep output directory structure but ignore contents)
+data/output/rankings/*.csv
+data/output/rankings/*.json
+data/output/brackets/*.html
+data/output/brackets/*.json
+data/output/brackets/*.txt
+data/output/exports/*.csv
+data/output/exports/*.json
+data/output/visualizations/*.png
+data/output/visualizations/*.pdf
+
+# Root-level output files (from notebooks)
+/*.csv
+/*.json
 !docker/requirements.txt
 !pyproject.toml
 !package.json
+!data/config.json
 
 # Testing
 .coverage
