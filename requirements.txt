@@ -1,0 +1,42 @@
+# =============================================================================
+# CFP Selection Simulator - Requirements
+# =============================================================================
+
+# Core Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Mathematical Computing
+scipy>=1.10.0
+scikit-learn>=1.3.0
+
+# API Integration
+cfbd>=2.0.0
+requests>=2.31.0
+
+# Visualization
+matplotlib>=3.7.0
+plotly>=5.14.0
+seaborn>=0.12.0
+
+# Jupyter (for notebook development)
+jupyter>=1.0.0
+jupyterlab>=4.0.0
+ipykernel>=6.25.0
+ipython>=8.12.0
+
+# Development Tools
+python-dotenv>=1.0.0
+
+# Data Storage & Performance
+pyarrow>=14.0.0
+
+# Testing (optional, for development)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code Quality (optional, for development)
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.12.0
+mypy>=1.5.0

@@ -266,7 +266,6 @@ The configuration notebook (`00_configuration.ipynb`) provides:
 **Current Configuration**: 2025 season, Week 15, FBS teams only
 
 **Methodology Reference**: See `docs/METHODOLOGY.md` for comprehensive algorithm documentation
-
 ### Python API (Programmatic Use)
 
 ```python

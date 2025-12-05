@@ -1,0 +1,126 @@
+# =============================================================================
+# CFP Selection Simulator - Docker Compose Configuration
+# =============================================================================
+# Production-grade orchestration for development environment
+#
+# Usage:
+#   docker-compose up           # Start in foreground
+#   docker-compose up -d        # Start in background (detached)
+#   docker-compose down         # Stop and remove containers
+#   docker-compose logs -f      # Follow logs
+#   docker-compose restart      # Restart services
+#
+# =============================================================================
+
+version: '3.9'
+
+services:
+  # ===========================================================================
+  # Main Application Service - Jupyter Lab Environment
+  # ===========================================================================
+  app:
+    container_name: cfp-simulator-app
+    image: cfp-simulator:latest
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+
+    # -------------------------------------------------------------------------
+    # Port Mapping
+    # -------------------------------------------------------------------------
+    ports:
+      - "8888:8888"  # Jupyter Lab
+
+    # -------------------------------------------------------------------------
+    # Volume Mounts
+    # -------------------------------------------------------------------------
+    volumes:
+      # Mount entire project for live development
+      - .:/app:cached
+
+      # Persistent data cache
+      - data-cache:/app/data/cache
+
+      # Jupyter configuration
+      - jupyter-config:/home/cfpuser/.jupyter
+
+    # -------------------------------------------------------------------------
+    # Environment Configuration
+    # -------------------------------------------------------------------------
+    env_file:
+      - .env
+
+    environment:
+      # Python Configuration
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+
+      # Jupyter Configuration
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_PORT=8888
+
+      # Development Mode
+      - DEV_MODE=true
+
+    # -------------------------------------------------------------------------
+    # Interactive Terminal Support
+    # -------------------------------------------------------------------------
+    stdin_open: true
+    tty: true
+
+    # -------------------------------------------------------------------------
+    # Resource Limits
+    # -------------------------------------------------------------------------
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+
+    # -------------------------------------------------------------------------
+    # Health Check
+    # -------------------------------------------------------------------------
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    # -------------------------------------------------------------------------
+    # Restart Policy
+    # -------------------------------------------------------------------------
+    restart: unless-stopped
+
+    # -------------------------------------------------------------------------
+    # Network Configuration
+    # -------------------------------------------------------------------------
+    networks:
+      - cfp-network
+
+# =============================================================================
+# Volume Definitions
+# =============================================================================
+volumes:
+  data-cache:
+    driver: local
+    name: cfp-simulator-data-cache
+
+  jupyter-config:
+    driver: local
+    name: cfp-simulator-jupyter-config
+
+# =============================================================================
+# Network Definitions
+# =============================================================================
+networks:
+  cfp-network:
+    driver: bridge
+    name: cfp-simulator-network
+
