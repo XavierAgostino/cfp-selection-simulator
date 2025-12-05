@@ -272,7 +272,7 @@ docker-compose build --no-cache
 **Solution**:
 ```bash
 # Increase Docker Desktop memory limit
-# Docker Desktop → Settings → Resources → Memory
+# Docker Desktop - Settings - Resources - Memory
 # Set to 8GB or higher
 ```
 

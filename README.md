@@ -501,7 +501,7 @@ git push origin feature/your-feature-name
 ### Data Pipeline
 
 ```
-API Request → FBS Filtering → Data Validation → Caching → Analysis
+API Request - FBS Filtering - Data Validation - Caching - Analysis
 ```
 
 **Quality Assurance**:

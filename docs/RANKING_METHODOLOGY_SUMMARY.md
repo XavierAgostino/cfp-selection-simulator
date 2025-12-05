@@ -109,9 +109,9 @@ When teams have very close composite scores (< 0.01 difference):
 
 ## Key Features
 
-✅ **Resume vs Predictive Separation** - Balances "deserve to be in" vs "best team"
-✅ **Schedule-Adjusted** - Accounts for strength of schedule (SOR/SOS)
-✅ **MOV-Capped** - Prevents blowout stat-padding (28-point cap)
-✅ **HFA-Adjusted** - Neutralizes home field advantage (3.75 points)
-✅ **Mathematically Rigorous** - All formulas documented and reproducible
+- **Resume vs Predictive Separation** - Balances "deserve to be in" vs "best team"
+- **Schedule-Adjusted** - Accounts for strength of schedule (SOR/SOS)
+- **MOV-Capped** - Prevents blowout stat-padding (28-point cap)
+- **HFA-Adjusted** - Neutralizes home field advantage (3.75 points)
+- **Mathematically Rigorous** - All formulas documented and reproducible
 
