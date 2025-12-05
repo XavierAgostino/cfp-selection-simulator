@@ -71,24 +71,47 @@ jupyter lab
 
 ### Core Capabilities
 
+- **Resume vs Predictive Split**: Clear separation of accomplishment from power ratings
 - **FBS-Only Analysis**: Automatic filtering for Football Bowl Subdivision teams
-- **Multiple Ranking Systems**: Colley Matrix, Massey Ratings, Elo, Strength of Record
-- **Ensemble Modeling**: Weighted combination of ranking methodologies
-- **Playoff Selection**: Official CFP protocol with 12-team bracket generation
+- **Comprehensive Metrics**: SOR, SOS (with OOR), quality wins, bad losses
+- **12-Team Playoff Protocol**: Official 5+7 selection with visual bracket display
+- **Team Resume Sheets**: CFP committee-style detailed team analysis
 - **Historical Validation**: Backtesting against 2014-2023 CFP selections
+- **Tie-Breaker Logic**: Committee-style stepwise decision traces
 - **Data Caching**: Reproducible analysis with persistent data storage
 - **Docker Support**: Consistent environment across all platforms
-- **Test Coverage**: pytest-based testing infrastructure
+
+### Resume vs Predictive Rankings
+
+This simulator implements a critical separation between what teams have **accomplished** (resume) and how **good** they are (predictive power):
+
+**Resume Rankings** - What you've done:
+- Colley Matrix (win/loss only, no MOV)
+- Win Percentage
+- Strength of Record (SOR) - record quality given schedule
+- Strength of Schedule (SOS) - opponent difficulty including OOR
+- Quality Wins - victories vs Top 5/12/25 teams
+- Bad Losses - defeats to teams outside Top 25
+
+**Predictive Rankings** - How good you are:
+- Massey Ratings (MOV-capped at 28 points, HFA-adjusted)
+- Elo System (dynamic game-by-game updates)
+- Efficiency metrics (predictive power for future games)
+
+**Composite Rankings** - Balanced combination:
+- Weighted blend of resume + predictive components
+- No double-counting of schedule strength
+- Configurable weights via `00_configuration.ipynb`
 
 ### Ranking Algorithms
 
-| Algorithm | Purpose | Weight |
-|-----------|---------|--------|
-| **Colley Matrix** | Win-loss resume evaluation | 20% |
-| **Massey Ratings** | Predictive power with MOV | 25% |
-| **Elo System** | Dynamic game-by-game ratings | 20% |
-| **Strength of Record** | Schedule difficulty analysis | 20% |
-| **Win Percentage** | Raw performance metric | 15% |
+| Algorithm | Type | Purpose | Weight |
+|-----------|------|---------|--------|
+| **Colley Matrix** | Resume | Win-loss evaluation (no MOV) | 20% |
+| **Massey Ratings** | Predictive | Power with capped MOV | 25% |
+| **Elo System** | Predictive | Dynamic game ratings | 20% |
+| **Strength of Record** | Resume | Schedule difficulty + context | 20% |
+| **Win Percentage** | Resume | Raw performance baseline | 15% |
 
 ### Data Quality Features
 
@@ -233,20 +256,22 @@ pip install cfp-selection-simulator
 
 ### Jupyter Notebooks (Interactive Analysis)
 
-#### For New Users - Guided Setup
-
-Start with the configuration notebook to understand methodology and customize settings:
+#### Complete Notebook Sequence (00-08)
 
 ```bash
 # Start Jupyter Lab
 make start  # or: jupyter lab
 
 # Open notebooks in order:
-# 0. 00_configuration.ipynb      - Configure settings and learn methodology
-# 1. 01_data_pipeline.ipynb      - Fetch FBS game data
-# 2. 02_ranking_algorithms.ipynb - Generate rankings
-# 3. 03_composite_rankings.ipynb - Create composite scores
-# 4. 04_playoff_selection.ipynb  - Select playoff field
+00_configuration.ipynb       - Configure settings and learn methodology
+01_data_pipeline.ipynb       - Fetch and cache FBS game data
+02_ranking_algorithms.ipynb  - Resume + Predictive rankings (split)
+03_composite_rankings.ipynb  - SOR/SOS integration + composite scores
+04_resume_analysis.ipynb     - Team resume sheets with quality wins
+05_playoff_selection.ipynb   - 12-team bracket with visual display
+06_visualization_report.ipynb - Stability analysis and error metrics
+07_quick_simulator.ipynb     - Streamlined all-in-one analysis
+08_validation_backtesting.ipynb - Historical validation
 ```
 
 The configuration notebook (`00_configuration.ipynb`) provides:
@@ -256,16 +281,41 @@ The configuration notebook (`00_configuration.ipynb`) provides:
 - API connection validation
 - Comprehensive workflow guide
 
-#### For Experienced Users - Quick Analysis
+#### Output File Organization
 
-```bash
-# Streamlined analysis
-# 6. 06_quick_simulator.ipynb    - All-in-one simulator
+All outputs are organized into structured directories:
+
+```
+data/output/
+├── rankings/          # All ranking CSV files
+│   ├── colley_rankings_{year}_week{week}.csv
+│   ├── massey_rankings_{year}_week{week}.csv
+│   ├── elo_rankings_{year}_week{week}.csv
+│   ├── win_pct_rankings_{year}_week{week}.csv
+│   ├── resume_rankings_{year}_week{week}.csv
+│   ├── predictive_rankings_{year}_week{week}.csv
+│   └── composite_rankings_{year}_week{week}.csv
+│
+├── brackets/          # Playoff bracket outputs
+│   ├── playoff_bracket_{year}_week{week}.html
+│   ├── playoff_bracket_{year}_week{week}.json
+│   ├── playoff_bracket_{year}_week{week}.txt
+│   └── selection_audit_{year}_week{week}.txt
+│
+├── exports/           # Data exports for external use
+│   ├── team_sheets_{year}_week{week}.csv
+│   ├── top25_team_sheets_{year}_week{week}.json
+│   └── resume_vs_predictive_{year}_week{week}.csv
+│
+└── visualizations/    # Charts and graphs
+    ├── schedule_inequality_{year}.png
+    ├── ranking_stability_{year}.png
+    ├── prediction_errors_{year}.png
+    ├── home_field_advantage_{year}.png
+    └── composite_analysis_{year}_week{week}.png
 ```
 
 **Current Configuration**: 2025 season, Week 15, FBS teams only
-
-**Methodology Reference**: See `docs/METHODOLOGY.md` for comprehensive algorithm documentation
 ### Python API (Programmatic Use)
 
 ```python
@@ -322,8 +372,13 @@ cfp-selection-simulator/
 │   ├── status.sh              # Check environment status
 │   └── stop.sh                # Stop containers
 │
-├── data/                       # Data storage (gitignored)
-│   └── cache/                 # Cached API responses
+├── data/                       # Data storage
+│   ├── cache/                 # Cached API responses (parquet/CSV)
+│   └── output/                # Generated outputs (organized)
+│       ├── rankings/          # All ranking CSV files
+│       ├── brackets/          # Playoff brackets (HTML/JSON/TXT)
+│       ├── exports/           # External data exports
+│       └── visualizations/    # Charts and graphs (PNG)
 │
 ├── docker/                     # Docker configuration
 │   ├── Dockerfile             # Production-grade container image
@@ -338,14 +393,17 @@ cfp-selection-simulator/
 ├── lib/                        # Shared shell utilities
 │   └── utils.sh               # Common shell functions
 │
-├── notebooks/                  # Jupyter analysis notebooks
+├── notebooks/                  # Jupyter analysis notebooks (00-08)
 │   ├── README.md              # Notebook usage guide
-│   ├── 01_data_pipeline.ipynb
-│   ├── 02_ranking_algorithms.ipynb
-│   ├── 03_composite_rankings.ipynb
-│   ├── 04_playoff_selection.ipynb
-│   ├── 05_validation_backtesting.ipynb
-│   └── 06_quick_simulator.ipynb
+│   ├── 00_configuration.ipynb # User-friendly setup and methodology
+│   ├── 01_data_pipeline.ipynb # FBS data fetching and caching
+│   ├── 02_ranking_algorithms.ipynb # Resume + Predictive split
+│   ├── 03_composite_rankings.ipynb # SOR/SOS + composite scores
+│   ├── 04_resume_analysis.ipynb    # Team resume sheets
+│   ├── 05_playoff_selection.ipynb  # 12-team bracket with visual
+│   ├── 06_visualization_report.ipynb # Stability analysis
+│   ├── 07_quick_simulator.ipynb    # All-in-one streamlined
+│   └── 08_validation_backtesting.ipynb # Historical validation
 │
 ├── scripts/                    # Python utility scripts
 │   └── README.md              # Scripts documentation
@@ -354,11 +412,15 @@ cfp-selection-simulator/
 │   ├── __init__.py            # Package initialization
 │   ├── data/                  # Data fetching modules
 │   │   ├── __init__.py
-│   │   └── fetcher.py
+│   │   └── fetcher.py         # CFBD API data fetching
+│   ├── playoff/               # Playoff selection logic
+│   │   ├── __init__.py
+│   │   └── bracket.py         # 12-team bracket + visual display
 │   ├── rankings/              # Ranking algorithm implementations
 │   │   └── __init__.py
 │   └── utils/                 # Utility functions
-│       └── __init__.py
+│       ├── __init__.py
+│       └── metrics.py         # SOR, SOS, quality wins, bad losses
 │
 ├── tests/                      # Test suite
 │   ├── __init__.py
