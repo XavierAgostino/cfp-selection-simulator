@@ -36,7 +36,7 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/cfp-selection-simulator.git
+git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
 cd cfp-selection-simulator
 
 # 2. Configure environment
@@ -563,13 +563,13 @@ This simulator provides objective analysis but has inherent limitations:
 
 ### Use Cases
 
-✅ **Good For:**
+**Good For:**
 - Objective baseline for comparison against committee rankings
 - Identifying statistical outliers and potential biases
 - Historical analysis and trend identification
 - Transparent, reproducible rankings methodology
 
-❌ **Not Suitable For:**
+**Not Suitable For:**
 - Replacing human judgment entirely
 - Predicting future game outcomes (use predictive-only rankings)
 - Capturing intangible factors (team culture, injury impact, etc.)
@@ -603,9 +603,8 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 
 ## Contact & Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/cfp-selection-simulator/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/cfp-selection-simulator/discussions)
-- **Email**: your.email@example.com (for private inquiries)
+- **Issues**: [GitHub Issues](https://github.com/XavierAgostino/cfp-selection-simulator/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/XavierAgostino/cfp-selection-simulator/discussions)
 
 ---
 
@@ -613,50 +612,59 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 
 ### Version 1.x (Current - 2025 Season)
 
-- [x] FBS-only data pipeline
-- [x] Four ranking algorithms (Colley, Massey, Elo, SOR)
-- [x] Ensemble methodology
-- [x] 12-team playoff selection
-- [x] Docker development environment
-- [x] Comprehensive documentation
+**Completed:**
+- FBS-only data pipeline with API integration
+- Five ranking algorithms (Colley, Massey, Elo, Win%, SOR/SOS)
+- Ensemble composite methodology
+- Official 12-team playoff selection protocol
+- Interactive Plotly bracket visualizations
+- Docker containerized development environment
+- Comprehensive documentation and analysis reports
+- Historical validation backtesting framework
 
-### Version 2.x (Planned - Spring 2025)
+### Version 2.x (Planned - Spring 2026)
 
-- [ ] Complete Python package (installable via pip)
-- [ ] Expanded test coverage (>80%)
-- [ ] Additional ranking algorithms (SRS, FPI, S&P+)
-- [ ] Interactive web dashboard
-- [ ] Automated weekly updates
-- [ ] Conference championship predictions
+**In Development:**
+- Complete Python package (installable via pip)
+- Expanded test coverage (target >80%)
+- Additional ranking algorithms (SRS, FPI, S&P+)
+- Interactive web dashboard with live updates
+- Automated weekly rankings generation
+- Conference championship predictions
+- Enhanced visualization suite
 
-### Version 3.x (Future - 2026 Season)
+### Version 3.x (Future - 2027 Season)
 
-- [ ] Real-time rankings API
-- [ ] Scenario simulation engine
-- [ ] Machine learning optimization
-- [ ] Mobile application
-- [ ] Public data access
-- [ ] Media integration toolkit
+**Proposed Features:**
+- Real-time rankings API for public access
+- Scenario simulation engine ("What if" analysis)
+- Machine learning optimization for weight tuning
+- Mobile application for iOS/Android
+- Public data repository and API
+- Media integration toolkit for broadcasters
 
 ---
 
 ## Project Status
 
-**Current Version**: 1.0.0
-**Season**: 2025-2026 (Active Development)
-**Last Updated**: December 2024
-**Status**: [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+**Current Version**: 1.0.0  
+**Season**: 2025-2026 (Active Development)  
+**Last Updated**: December 2025  
+**Status**: Production Ready  
+**License**: MIT (Open Source)
 
 ---
 
 ## Disclaimer
 
-This project is an **independent academic endeavor** not affiliated with:
+This project is an **independent research endeavor** not affiliated with:
 - College Football Playoff (CFP)
 - National Collegiate Athletic Association (NCAA)
 - Any athletic conference or institution
 
 **Purpose**: Provide transparent, objective analysis as a complementary tool to human judgment, not as a replacement for the official selection committee.
+
+**Research Context**: This simulator is designed for academic research, sports analytics, and open-source collaboration. All methodologies are documented and reproducible to support transparent analysis of college football team performance.
 
 ---
 
@@ -664,6 +672,6 @@ This project is an **independent academic endeavor** not affiliated with:
 
 **"In a sport where every game carries championship implications, selection decisions must be grounded in transparent, consistent methodology."**
 
-Made with passion for college football analytics
+Built for open-source sports analytics research
 
 </div>

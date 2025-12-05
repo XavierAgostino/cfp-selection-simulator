@@ -6,6 +6,14 @@ This directory contains comprehensive documentation for the CFP Selection Simula
 
 ### Core Documentation
 
+- **[ANALYSIS_REPORT.md](ANALYSIS_REPORT.md)** - Comprehensive findings and research analysis
+  - 2025 season rankings breakdown
+  - Playoff selection analysis and controversies
+  - Resume vs Predictive divergence insights
+  - Historical validation results (2021-2023)
+  - Methodology strengths and limitations
+  - Alignment with project goals
+
 - **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Comprehensive project organization guide
   - Directory purposes
   - File organization
@@ -72,12 +80,13 @@ This directory contains comprehensive documentation for the CFP Selection Simula
 All documentation in this project follows these standards:
 
 - **Clear Structure**: Table of contents, headers, sections
-- **Professional Tone**: No emojis, formal language
-- **Code Examples**: Syntax-highlighted, tested
+- **Professional Tone**: Industry-standard technical writing
+- **Code Examples**: Syntax-highlighted, tested, reproducible
 - **Comprehensive**: Cover setup, usage, troubleshooting
 - **Up-to-date**: Maintained with each release
+- **Accessible**: Clear explanations for both technical and non-technical audiences
 
 ## Need Help?
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/cfp-selection-simulator/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/cfp-selection-simulator/discussions)
+- **Issues**: [GitHub Issues](https://github.com/XavierAgostino/cfp-selection-simulator/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/XavierAgostino/cfp-selection-simulator/discussions)
