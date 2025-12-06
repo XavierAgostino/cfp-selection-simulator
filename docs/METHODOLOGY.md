@@ -668,6 +668,144 @@ x = np.linalg.solve(A, b)
 
 ---
 
+## Conference Championship Simulation
+
+### Overview
+
+The simulator implements a sophisticated conference championship game simulation system to determine which two teams from each conference compete for the championship. This is critical for accurate playoff selection, as conference champions receive priority in the 12-team CFP format.
+
+### Tiebreaker Hierarchy ("Waterfall" Protocol)
+
+When multiple teams are tied in conference standings, the system applies a cascading series of tiebreakers:
+
+#### Step 1: Conference Win Percentage (Primary)
+- Teams sorted by conference wins divided by conference games played
+- Highest win percentage advances
+- Example: 7-2 (.778) beats 6-2 (.750)
+
+#### Step 2: Head-to-Head Records (Multi-Team Pools)
+- Calculate record ONLY against other tied teams
+- Formula: `Pool W-L% = Wins vs Pool / Games vs Pool`
+- Identifies "sweepers" (teams that beat everyone else in pool)
+- **Critical**: Only valid for balanced schedules where all tied teams played each other
+
+#### Step 3: Conference Strength of Schedule (Unbalanced Pools)
+- Applied when head-to-head is invalid (teams didn't all play each other)
+- Cumulative opponents' winning percentage within conference
+- Formula: `Conf SOS = Σ(Opponent Conf Wins) / Σ(Opponent Conf Games)`
+- Prevents advantage for teams that avoided tough conference opponents
+
+#### Step 4: Overall Record (Final Tiebreaker)
+- Total wins across all games (conference + non-conference)
+- Used as last resort when conference metrics identical
+
+#### Step 5: Composite Rank (Manual Override)
+- Applied only if all other metrics identical
+- Composite ranking from primary ranking system
+
+### Algorithm Flow
+
+```python
+def resolve_conference_seeds(teams, games_df):
+    # 1. Sort by conference win percentage
+    standings = teams.sort_by('conf_win_pct')
+    
+    # 2. Identify tied teams at top
+    tied_pool = standings.where('conf_win_pct' == top_pct)
+    
+    # 3. Check for sweeper
+    if any_team_beat_all_others(tied_pool):
+        return [sweeper, next_best]
+    
+    # 4. Check schedule balance
+    if is_balanced_schedule(tied_pool):
+        # Use head-to-head
+        return sort_by_pool_record(tied_pool)
+    else:
+        # Use conference SOS
+        return sort_by_conf_sos(tied_pool)
+```
+
+### Real-World Example: 2025 ACC Championship
+
+**Scenario:**
+- Virginia: 7-2 conference record (.778)
+- Miami: 6-2 conference record (.750), Conf SOS: 0.446
+- Duke: 6-2 conference record (.750), Conf SOS: 0.500
+- SMU: 6-2 conference record (.750), Conf SOS: 0.422
+- Georgia Tech: 6-2 conference record (.750), Conf SOS: 0.446
+- Pittsburgh: 6-2 conference record (.750), Conf SOS: 0.431
+
+**Resolution:**
+1. **Virginia advances** (highest conference win %)
+2. Five-team pool tied at 6-2 (.750)
+3. Unbalanced schedules detected (not all teams played each other)
+4. **Duke selected** via Conference SOS (0.500 beats Miami's 0.446)
+5. Championship Game: **Virginia vs Duke**
+
+**Why Duke Over Miami?**
+- Miami ranked #12 overall (Duke #39 overall)
+- Simple "highest-ranked" approach would incorrectly select Miami
+- Conference SOS reveals Duke faced tougher conference slate
+- Demonstrates superiority of strength-based tiebreakers
+
+### Conference SOS Calculation
+
+```python
+def calculate_conf_sos(team, conf_opponents, standings):
+    total_opp_wins = 0
+    total_opp_games = 0
+    
+    for opponent in conf_opponents:
+        opp_wins = standings[opponent]['conf_wins']
+        opp_games = standings[opponent]['conf_games']
+        total_opp_wins += opp_wins
+        total_opp_games += opp_games
+    
+    return total_opp_wins / total_opp_games if total_opp_games > 0 else 0
+```
+
+### Championship Game Simulation
+
+Once participants are determined, the simulator uses predictive scores to determine the winner:
+
+```python
+# Use predictive ratings (Massey + Elo average)
+team1_predictive = predictive_scores[team1]
+team2_predictive = predictive_scores[team2]
+
+# Higher predictive score wins
+winner = team1 if team1_predictive > team2_predictive else team2
+
+# Track upsets (lower-ranked team wins)
+is_upset = (winner_rank > loser_rank)
+```
+
+### Methodology Strengths
+
+1. **Handles Unbalanced Schedules**: Correctly resolves ties when teams haven't played each other
+2. **Rewards Schedule Strength**: Conference SOS prevents gaming by avoiding tough opponents
+3. **Scalable**: Works for 2-team, 3-team, 5+ team, or N-team tie scenarios
+4. **Data-Driven**: Uses actual game results, not subjective evaluation
+5. **Sweeper Detection**: Identifies dominant teams that beat all competitors
+6. **Balance Detection**: Distinguishes between round-robin and unbalanced pools
+
+### Limitations and Tradeoffs
+
+1. **Division Data Missing**: Real conferences use divisions (Atlantic/Coastal, East/West) not captured in game-by-game data
+2. **Protected Rivalries**: Cannot account for conference-specific scheduling quirks
+3. **Championship Game Predictive**: Uses rating systems to simulate game (allows upsets based on metrics)
+4. **No Subjective Override**: Algorithm cannot account for injuries, momentum, or "eye test"
+
+### Validation
+
+The tiebreaker system has been validated against known conference championship matchups and produces accurate results when:
+- Complete game data is available
+- Conference schedules are reasonably balanced
+- Teams have played sufficient conference games (8-9 minimum)
+
+---
+
 ## Glossary
 
 **FBS (Football Bowl Subdivision):** Top tier of NCAA Division I college football (approximately 130 teams).
@@ -692,9 +830,21 @@ x = np.linalg.solve(A, b)
 
 **Power Rating:** Estimate of team's fundamental strength (predictive ability).
 
+**Conference SOS:** Strength of schedule calculated only against conference opponents.
+
+**Sweeper:** Team that defeats all other teams in a tied pool.
+
+**Waterfall Protocol:** Cascading tiebreaker system where each criterion is applied sequentially.
+
 ---
 
 ## Version History
+
+**Version 1.1.0** (December 2024)
+- Added conference championship simulation methodology
+- Implemented advanced "waterfall" tiebreaker protocol
+- Conference SOS calculations for unbalanced schedules
+- Real-world validation examples
 
 **Version 1.0.0** (December 2024)
 - Initial methodology documentation
@@ -705,3 +855,4 @@ x = np.linalg.solve(A, b)
 ---
 
 *For questions or clarifications on methodology, please refer to project documentation or open an issue on the project repository.*
+
