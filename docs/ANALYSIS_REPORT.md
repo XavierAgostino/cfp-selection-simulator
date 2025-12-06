@@ -1,6 +1,6 @@
 # College Football Playoff Selection Simulator: Analysis Report
 
-**Generated:** December 5, 2025  
+**Generated:** December 6, 2025  
 **Season:** 2025-26 (Week 15)  
 **Analysis Type:** Comprehensive Findings and Project Evaluation
 
@@ -13,10 +13,10 @@ This report synthesizes findings from the CFP Selection Simulator, a data-driven
 ### Key Findings
 
 1. **Composite Model Performance**: Demonstrates 0.48-0.88 Spearman correlation with historical CFP selections (2021-2023), with 50-67% selection accuracy
-2. **Resume-Predictive Divergence**: Texas Tech shows 3-position split favoring predictive power (Resume #5, Predictive #2), revealing undervalued teams with elite efficiency metrics
+2. **Resume-Predictive Divergence**: Texas Tech shows 6-position split favoring predictive power (Resume #8, Predictive #2), revealing undervalued teams with elite efficiency metrics
 3. **Full Season Data**: Successfully implemented complete weeks 1-14 dataset (752 games) with accurate 11-0 and 10-1 records for top teams
-4. **Elo Bug Fix**: Corrected critical algorithm error that previously inverted wins/losses, now producing mathematically sound predictive rankings
-5. **Clean Playoff Selection**: All Top 12 teams selected for playoff with Miami (#12 ACC champion) as 5th automatic bid, demonstrating ideal 5+7 protocol execution
+4. **Advanced Conference Tiebreakers**: Implemented sophisticated "waterfall" protocol using conference SOS, head-to-head records, and balanced pool detection for accurate championship game simulation
+5. **G5 Champion Displacement**: North Texas (#16 American Athletic champion) displaces Notre Dame (#10) from at-large spot, demonstrating proper 5+7 protocol with lower-ranked conference champion inclusion
 
 ---
 
@@ -99,13 +99,16 @@ This report synthesizes findings from the CFP Selection Simulator, a data-driven
 - Ohio State (11-0): #1 overall, Big Ten champion, dominant in predictive (#1) and resume (#2)
 - Indiana (11-0): #2 overall, elite resume (#1) and strong predictive (#3)
 
-**Conference Champions in Top 25:**
+**Conference Champions (9 Total):**
 - Big Ten: Ohio State (#1)
-- Big 12: BYU (#3)
+- Big 12: Texas Tech (#5)
 - SEC: Georgia (#6)
-- Independent: Notre Dame (#10)
-- ACC: Miami (#12)
-- Mountain West: Boise State (#16)
+- American Athletic: North Texas (#16)
+- Sun Belt: James Madison (#19)
+- ACC: Virginia (#20)
+- Mountain West: Boise State (#45)
+- Conference USA: Kennesaw State (#46)
+- Mid-American: Western Michigan (#63)
 
 **Full Season Data:**
 - **752 games analyzed** (weeks 1-14, full season)
@@ -131,66 +134,75 @@ This report synthesizes findings from the CFP Selection Simulator, a data-driven
 
 **Automatic Bids (Top 5 Conference Champions):**
 1. **#1 Seed: Ohio State** (Big Ten) - Rank #1, Record 11-0
-2. **#2 Seed: BYU** (Big 12) - Rank #3, Record 10-1
+2. **#2 Seed: Texas Tech** (Big 12) - Rank #5, Record 10-1
 3. **#3 Seed: Georgia** (SEC) - Rank #6, Record 10-1
-4. **#4 Seed: Notre Dame** (Independent) - Rank #10, Record 10-2
-5. **#12 Seed: Miami** (ACC) - Rank #12, Record 9-2 (5th Conference Champion)
+4. **#4 Seed: North Texas** (American Athletic) - Rank #16, Record 10-1
+5. **#12 Seed: James Madison** (Sun Belt) - Rank #19, Record 10-1
 
 **At-Large Bids (Next 7 Highest Ranked):**
 6. **#5 Seed: Indiana** - Rank #2, Record 11-0
-7. **#6 Seed: Oregon** - Rank #4, Record 10-1
-8. **#7 Seed: Texas Tech** - Rank #5, Record 10-1
+7. **#6 Seed: BYU** - Rank #3, Record 10-1
+8. **#7 Seed: Oregon** - Rank #4, Record 10-1
 9. **#8 Seed: Texas A&M** - Rank #7, Record 10-1
 10. **#9 Seed: Ole Miss** - Rank #8, Record 10-1
 11. **#10 Seed: Oklahoma** - Rank #9, Record 9-2
-12. **#11 Seed: Alabama** - Rank #11, Record 9-2
+12. **#11 Seed: Notre Dame** - Rank #10, Record 10-2
 
 ### First Round Matchups (On-Campus)
 
 | Game | Home Seed | Home Team | vs | Away Seed | Away Team |
 |------|-----------|-----------|----|----- |-----------|
-| 1 | 5 | Indiana | vs | 12 | Miami |
-| 2 | 8 | Texas A&M | vs | 9 | Ole Miss |
-| 3 | 6 | Oregon | vs | 11 | Alabama |
-| 4 | 7 | Texas Tech | vs | 10 | Oklahoma |
+| 1 | 5 | Indiana | vs | 12 | James Madison |
+| 2 | 6 | BYU | vs | 11 | Notre Dame |
+| 3 | 7 | Oregon | vs | 10 | Oklahoma |
+| 4 | 8 | Texas A&M | vs | 9 | Ole Miss |
 
-**First-Round Byes:** Ohio State (#1), BYU (#2), Georgia (#3), Notre Dame (#4)
+**First-Round Byes:** Ohio State (#1), Texas Tech (#2), Georgia (#3), North Texas (#4)
 
 ### Quarterfinals (Bowl Sites)
 
-- **QF1:** #1 Ohio State vs Winner(5 Indiana / 12 Miami)
-- **QF2:** #4 Notre Dame vs Winner(8 Texas A&M / 9 Ole Miss)
-- **QF3:** #3 Georgia vs Winner(6 Oregon / 11 Alabama)
-- **QF4:** #2 BYU vs Winner(7 Texas Tech / 10 Oklahoma)
+- **QF1:** #1 Ohio State vs Winner(8 Texas A&M / 9 Ole Miss)
+- **QF2:** #2 Texas Tech vs Winner(7 Oregon / 10 Oklahoma)
+- **QF3:** #3 Georgia vs Winner(6 BYU / 11 Notre Dame)
+- **QF4:** #4 North Texas vs Winner(5 Indiana / 12 James Madison)
 
-### Selection Analysis: Clean Top 12 Selection
+### Selection Analysis: G5 Champion Displacement Scenario
 
 **The Outcome:**
-- All Top 12 teams received playoff bids
-- Miami (#12) as ACC champion secured the 5th automatic bid
-- No controversial displacement occurred
-- All five Power 4 conferences represented plus Independent Notre Dame
+- Top 10 teams received playoff bids
+- North Texas (#16, American Athletic) as 4th-highest conference champion secured automatic bid
+- James Madison (#19, Sun Belt) as 5th-highest conference champion secured automatic bid
+- **Notre Dame (#10) displaced** from at-large pool to make room for lower-ranked conference champions
+- Demonstrates proper 5+7 protocol execution when G5 champions rank outside Top 12
 
 **Selection Committee Log:**
 ```
-AUTOMATIC BIDS: Ohio State (Big Ten #1), BYU (Big 12 #3), 
-Georgia (SEC #6), Notre Dame (Independent #10), Miami (ACC #12)
+AUTOMATIC BIDS: Ohio State (Big Ten #1), Texas Tech (Big 12 #5), 
+Georgia (SEC #6), North Texas (American Athletic #16), James Madison (Sun Belt #19)
 
-AT-LARGE BIDS: Indiana (#2), Oregon (#4), Texas Tech (#5), 
-Texas A&M (#7), Ole Miss (#8), Oklahoma (#9), Alabama (#11)
+AT-LARGE BIDS: Indiana (#2), BYU (#3), Oregon (#4), 
+Texas A&M (#7), Ole Miss (#8), Oklahoma (#9), Notre Dame (#10)
 
-Result: Perfect Top 12 selection with balanced conference representation.
-All automatic bid champions ranked within Top 12.
+CHAMPION PULLED IN: #16 North Texas
+DISPLACED: #10 Notre Dame (from 7th at-large to 6th at-large)
+
+Result: Proper 5+7 protocol with G5 conference champion inclusion.
 ```
 
 **Analysis:**
-This represents an ideal scenario where conference champions align with overall rankings. Miami as the 5th conference champion at #12 overall ensures no bubble team displacement. The selection demonstrates how the 5+7 protocol works smoothly when top teams win their conferences.
+This scenario demonstrates the controversial aspect of the 5+7 protocol: **automatic bids for lower-ranked conference champions can displace higher-ranked teams from the at-large pool**. North Texas (#16) and James Madison (#19) earned automatic bids as conference champions, which pushed Notre Dame from the 7th at-large spot to the 6th spot (still making the field, but with lower seeding).
 
 **Key Insights:**
-- **Indiana (#2)**: Highest-ranked at-large team, 11-0 record
-- **Texas Tech (#5)**: Elite predictive metrics (#2), strong at-large case
-- **Texas A&M (#8)**: Solid all-around profile (Resume #7, Predictive #13, Composite #7)
-- **Alabama (#11)**: Traditional power as lowest at-large selection (9-2 record)
+- **Notre Dame (#10)**: Displaced but still makes field as 11-seed (last at-large bid)
+- **North Texas (#16)**: Gets 4-seed with first-round bye despite being 16th overall
+- **James Madison (#19)**: Gets 12-seed, plays at Indiana in first round
+- **Conference Champion Priority**: System properly prioritizes top 5 conference champions regardless of ranking
+- **G5 Representation**: American Athletic and Sun Belt champions included over Power 4 teams
+
+**Notable Exclusions:**
+- **Virginia (#20, ACC Champion)**: 6th-highest conference champion, does not make playoff
+- **Boise State (#45, Mountain West Champion)**: Too low in rankings for automatic bid
+- **Alabama (#11)**: First team out, would have made playoff if G5 champions ranked lower
 
 ---
 
@@ -206,12 +218,14 @@ The simulator explicitly separates:
 
 | Team | Composite | Resume | Predictive | Divergence | Analysis |
 |------|-----------|--------|------------|------------|----------|
-| **Texas Tech** | 5 | 5 | 2 | **+3** | Elite predictive (#2), strong resume (#5) |
-| **Indiana** | 2 | 2 | 3 | **+1** | Near-perfect alignment, elite across both |
-| **Ohio State** | 1 | 1 | 1 | **0** | Perfect alignment, #1 in all metrics |
-| **Texas A&M** | 7 | 7 | 13 | **-6** | Solid resume, moderate predictive metrics |
-| **Notre Dame** | 10 | 10 | 4 | **+6** | Strong predictive, good resume |
-| **Miami** | 12 | 12 | 7 | **+5** | Better predictive than resume suggests |
+| **Texas Tech** | 5 | 8 | 2 | **-6** | Elite predictive (#2), solid resume (#8) - most undervalued |
+| **Notre Dame** | 10 | 11 | 4 | **-7** | Strong predictive (#4), good resume (#11) |
+| **Utah** | 13 | 14 | 6 | **-8** | Strong predictive power, solid resume |
+| **Miami** | 12 | 13 | 7 | **-6** | Better predictive (#7) than resume (#13) |
+| **Oklahoma** | 9 | 9 | 20 | **+11** | Resume (#9) significantly better than predictive (#20) |
+| **Ole Miss** | 8 | 7 | 17 | **+10** | Strong resume, moderate predictive |
+| **Texas A&M** | 7 | 5 | 13 | **+8** | Elite resume (#5), moderate predictive (#13) |
+| **Illinois** | 24 | 28 | 43 | **+15** | Resume-favored, weak predictive metrics |
 
 ### Interpretation
 
@@ -226,37 +240,115 @@ The simulator explicitly separates:
 - **Indiana**: Resume #1, Predictive #3 (elite across board)
 - **Miami**: Resume #11, Predictive #9 (consistent evaluation)
 
-### Case Study: Texas Tech (10-1)
+### Case Study: Texas Tech (10-1) - Most Undervalued Team
 
 - **Composite Rank**: #5
-- **Resume Rank**: #5 (excellent record)
-- **Predictive Rank**: #2 (elite metrics)
-- **Divergence**: +3 positions (predictive better than resume)
-
-**Analysis**: Texas Tech represents one of the most undervalued teams in the Top 25. Their 10-1 record earned them a #5 composite ranking, and their #2 predictive ranking (behind only Ohio State) reveals elite underlying efficiency. Possible explanations:
-1. High-powered offense with excellent scoring efficiency
-2. Strong margin of victory in conference play
-3. Dominant performances against quality Big 12 opponents
-
-**CFP Committee Treatment**: Would likely under-seed based on brand perception. This simulator reveals their true strength through objective metrics.
-
-**Playoff Implications**: Texas Tech as #7 seed faces Oklahoma (#10) at home. Their elite predictive metrics (#2 overall) make them a dangerous upset candidate in quarterfinals.
-
-### Case Study: Texas Tech (10-1)
-
-- **Composite Rank**: #5
-- **Resume Rank**: #14 (solid but not elite)
+- **Resume Rank**: #8 (solid but not elite)
 - **Predictive Rank**: #2 (second-best in FBS)
-- **Divergence**: +12 positions
+- **Divergence**: -6 positions (predictive significantly better than resume)
 
-**Analysis**: Texas Tech has the 2nd-best predictive metrics in all of FBS, trailing only Ohio State. This suggests:
-1. Elite scoring efficiency and offensive firepower
-2. Strong underlying fundamentals
-3. Underrated by traditional win-loss metrics
+**Analysis**: Texas Tech is the **most undervalued team in the Top 25**. Their predictive ranking of #2 (trailing only Ohio State) reveals elite underlying efficiency that their 10-1 record and #8 resume ranking don't fully capture. This is a massive 6-position gap between their predictive power and resume evaluation.
 
-**CFP Committee Treatment**: Would likely be under-seeded due to Big 12 perception and being behind traditional powers. This simulator correctly identifies them as one of the most dangerous teams in the playoff.
+**Why the Divergence?**
+1. **Elite scoring efficiency**: Likely dominant offensive metrics
+2. **Margin of victory excellence**: Large wins that Massey/Elo systems reward
+3. **Strong Big 12 performance**: Conference games show true team strength
+4. **Resume perception**: 10-1 record viewed as "good" not "great" by resume metrics
 
-**Playoff Implications**: As #7 seed hosting Oklahoma, Texas Tech could be the most under-seeded team in the bracket and a major threat in the quarterfinals.
+**CFP Committee Treatment**: Would likely under-seed Texas Tech based on:
+- Big 12 conference perception (historically undervalued)
+- Brand recognition (not traditional blue-blood program)
+- Resume metrics favoring teams with more quality wins
+
+**Playoff Implications**: 
+- **Seeding**: #2 seed with first-round bye (automatic bid as Big 12 champion)
+- **Quarterfinal matchup**: Faces winner of Oregon (#7) vs Oklahoma (#10)
+- **Danger Factor**: Elite #2 predictive ranking makes them the most dangerous opponent in the entire field
+- **Upset Potential**: Could defeat Ohio State (#1) in semifinals based on predictive metrics
+
+**Validator**: This is exactly the type of team objective algorithms reveal that subjective committees miss. Texas Tech's #2 predictive ranking suggests they're a legitimate national championship contender being undervalued by traditional metrics.
+
+---
+
+## Conference Championship Simulation Methodology
+
+### Advanced Tiebreaker Protocol
+
+The simulator implements a sophisticated "waterfall" tiebreaker system to determine conference championship game participants, going beyond simple "highest-ranked team" logic.
+
+#### Tiebreaker Hierarchy
+
+**Step 1: Conference Win Percentage** (Primary Criterion)
+- Teams sorted by conference win percentage
+- Example: 7-2 (.778) beats 6-2 (.750)
+
+**Step 2: Head-to-Head Records** (For Tied Teams)
+- Calculate record against other tied teams only
+- Detect "sweepers" (team that beat all others in pool)
+- Handle unbalanced schedules (not all teams played each other)
+
+**Step 3: Conference Strength of Schedule** (Unbalanced Pools)
+- Cumulative opponents' win percentage
+- Formula: `SOS = Sum(Opp Wins) / Sum(Opp Games)`
+- Prevents unfair advantage for teams that avoided tough conference opponents
+
+**Step 4: Overall Record** (Final Tiebreaker)
+- Total wins used as last resort
+- Composite rank used if records identical
+
+### Real-World Example: ACC Championship
+
+**2025 ACC Standings (6-2 Tied Pool):**
+```
+Virginia:     7-2 conf (.778) - Clear division leader
+Miami:        6-2 conf (.750), Conf SOS: 0.446
+Duke:         6-2 conf (.750), Conf SOS: 0.500
+SMU:          6-2 conf (.750), Conf SOS: 0.422
+Georgia Tech: 6-2 conf (.750), Conf SOS: 0.446
+Pittsburgh:   6-2 conf (.750), Conf SOS: 0.431
+```
+
+**Tiebreaker Resolution:**
+1. Virginia (7-2) automatically advances as division leader
+2. Five teams tied at 6-2 with unbalanced head-to-head schedules
+3. System detects unbalanced pool, skips invalid H2H comparison
+4. **Duke wins via Conference SOS** (0.500 vs Miami's 0.446)
+5. Championship Game: **Virginia vs Duke**
+
+**Why Not Miami?**
+- Miami ranked #12 overall (Duke #39)
+- Simple "highest-ranked" approach would select Miami
+- Conference SOS tiebreaker reveals Duke faced tougher conference slate
+- Demonstrates importance of strength-of-schedule metrics
+
+### Championship Game Results (Week 15)
+
+| Conference | Participant 1 | Participant 2 | Winner | Method |
+|------------|---------------|---------------|--------|--------|
+| ACC | Virginia (7-2) | Duke (6-2) | Virginia | Conf SOS tiebreaker |
+| SEC | Alabama (7-2) | Georgia (7-2) | Georgia | Head-to-head |
+| Big Ten | Ohio State (9-0) | Indiana (9-0) | Ohio State | Predictive simulation |
+| Big 12 | Texas Tech (8-1) | BYU (8-1) | Texas Tech | Head-to-head sweep |
+| American | North Texas (7-0) | Navy (7-0) | North Texas | Conf SOS tiebreaker |
+| Sun Belt | James Madison (7-1) | Old Dominion (6-2) | James Madison | Head-to-head sweep |
+| Mountain West | Boise State (6-2) | New Mexico (6-2) | Boise State | Conf SOS tiebreaker |
+| Conference USA | Jacksonville State (6-1) | Kennesaw State (6-1) | Kennesaw State | Upset (predictive) |
+| Mid-American | Western Michigan (6-2) | Miami (OH) (6-2) | Western Michigan | Conf SOS tiebreaker |
+
+### Methodology Strengths
+
+1. **Handles Unbalanced Schedules**: Correctly resolves ties when teams haven't played each other
+2. **Conference SOS**: Prevents advantage for teams that avoided tough opponents
+3. **Sweeper Detection**: Identifies teams that beat everyone in tie pool
+4. **Scalable**: Works for 2-team, 3-team, or 5+ team tie scenarios
+5. **Data-Driven**: Uses actual game results, not subjective rankings
+
+### Limitations
+
+- **Division Data Missing**: Real conferences use divisions (Atlantic/Coastal in ACC)
+- **Protected Rivalries**: Cannot account for conference-specific scheduling rules
+- **Round-Robin Assumption**: Optimal for balanced schedules, adapts for unbalanced
+- **Championship Game Simulation**: Uses predictive scores to determine winner (allows upsets)
 
 ---
 
@@ -496,11 +588,11 @@ Elo system naturally weights recent games more heavily, but:
 
 3. **Critical Bug Fix**: Identified and corrected Elo algorithm error that inverted wins/losses, transforming rankings from nonsensical (Washington State 4-4 ranked #1) to mathematically sound (Ohio State 11-0 at #1).
 
-4. **Resume-Predictive Insights**: Texas Tech (#5 composite) shows strong alignment between resume (#5) and elite predictive (#2), suggesting an underseeded team with potential to outperform their bracket position. Teams with predictive ratings significantly better than resume are often postseason upset candidates.
+4. **Advanced Conference Tiebreakers**: Implemented sophisticated \"waterfall\" protocol that handles unbalanced schedules, conference SOS calculations, head-to-head records, and multi-team tie scenarios - producing accurate championship game participants (e.g., Virginia over Miami in ACC despite identical conference records).
 
-5. **Ideal Playoff Selection**: Clean Top 12 selection with Miami (#12) as ACC champion securing 5th automatic bid, demonstrating how 5+7 protocol works perfectly when conference champions align with rankings.
+5. **Resume-Predictive Insights**: Texas Tech (#5 composite) shows massive 6-position gap with elite predictive (#2) vs solid resume (#8), identifying them as the most undervalued team in the playoff field with legitimate championship potential.
 
-6. **Conference Balance**: Five Power 4 conferences plus Independent represented, with Big Ten (3 teams), Big 12 (2 teams), and SEC (4 teams) showing balanced distribution based on merit.
+6. **G5 Displacement Scenario**: North Texas (#16) and James Madison (#19) as conference champions secure automatic bids, demonstrating proper 5+7 protocol execution when lower-ranked champions displace higher-ranked at-large candidates.
 
 ### Alignment with Project Goals
 
@@ -537,7 +629,7 @@ Elo system naturally weights recent games more heavily, but:
 
 1. **No Injury Adjustments**: Cannot account for key player availability
 2. **Equal Game Weighting**: Does not emphasize recent games (vs committee recency bias)
-3. **Conference Champion Logic**: Relies on API conference championship flags
+3. **Conference Champion Simulation**: Advanced tiebreaker system handles complex multi-team ties, but may not perfectly match conference-specific rules (divisions, protected rivalries)
 4. **MOV Cap**: 28-point cap may under-reward dominant teams
 5. **FBS-Only**: Excludes FCS opponents from SOS calculations
 

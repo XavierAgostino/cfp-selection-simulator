@@ -72,9 +72,11 @@ jupyter lab
 ### Core Capabilities
 
 - **Resume vs Predictive Split**: Clear separation of accomplishment from power ratings
+- **Advanced Conference Tiebreakers**: Sophisticated "waterfall" protocol with conference SOS, head-to-head, and unbalanced schedule handling
 - **FBS-Only Analysis**: Automatic filtering for Football Bowl Subdivision teams
 - **Comprehensive Metrics**: SOR, SOS (with OOR), quality wins, bad losses
 - **12-Team Playoff Protocol**: Official 5+7 selection with visual bracket display
+- **Conference Championship Simulation**: Accurate multi-team tiebreaker resolution
 - **Team Resume Sheets**: CFP committee-style detailed team analysis
 - **Historical Validation**: Backtesting against 2014-2023 CFP selections
 - **Tie-Breaker Logic**: Committee-style stepwise decision traces
