@@ -249,7 +249,8 @@ def visualize_bracket_html(seeded_df: pd.DataFrame, first_round: List[BracketMat
     str
         HTML bracket visualization
     """
-    html = ["""
+    html = [
+        """
     <style>
         * { box-sizing: border-box; }
 
@@ -488,7 +489,8 @@ def visualize_bracket_html(seeded_df: pd.DataFrame, first_round: List[BracketMat
             }
         }
     </style>
-    """]
+    """
+    ]
 
     html.append('<div class="bracket-container">')
 

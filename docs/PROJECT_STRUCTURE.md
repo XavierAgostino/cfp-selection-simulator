@@ -1,5 +1,7 @@
 # Project Structure Overview
 
+> **Note:** For v2.0, prefer [project-structure.md](project-structure.md). This file is a legacy reference.
+
 ## Directory Organization
 
 ### Root Level (`/`)

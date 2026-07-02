@@ -1,5 +1,7 @@
 # Ranking Methodology Reference Guide
 
+> **Note:** For v2.0, prefer [research/model-methodology.md](research/model-methodology.md) and [research/metric-definitions.md](research/metric-definitions.md). This file is a detailed legacy reference.
+
 This document provides comprehensive technical documentation for the ranking algorithms used in the CFP Selection Simulator.
 
 ## Table of Contents

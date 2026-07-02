@@ -1,12 +1,10 @@
 # Research Documentation
 
-Supporting documentation for the CFP Selection Simulator v2.0.
+See **[index.md](index.md)** for the research documentation homepage.
 
-| Document | Description |
-|----------|-------------|
-| [cfp-format-history.md](cfp-format-history.md) | CFP format timeline (4-team, 2024, 2025+) |
-| [model-methodology.md](model-methodology.md) | Composite ranking approach |
-| [metric-definitions.md](metric-definitions.md) | SOR, SOS, résumé, predictive |
-| [historical-validation.md](historical-validation.md) | Backtest methodology and results |
-| [limitations-and-ethics.md](limitations-and-ethics.md) | Scope, limitations, responsible use |
-| [data-sources.md](data-sources.md) | CFBD API and caching |
+Quick links:
+
+- [CFP Format History](cfp-format-history.md)
+- [Model Methodology](model-methodology.md)
+- [Historical Validation](historical-validation.md)
+- [Case Studies](case-studies/)
