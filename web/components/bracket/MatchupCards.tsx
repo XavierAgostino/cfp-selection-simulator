@@ -1,6 +1,12 @@
+"use client";
+
 import { Card } from "@/components/ui/card";
 import { SeedBadge } from "@/components/team/SeedBadge";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
+import { TeamHoverCard } from "@/components/team/TeamHoverCard";
+import { MetricTooltip } from "@/components/explain/InfoTooltip";
+import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
+import type { ScoreMetricKey } from "@/lib/scoreBars";
 import { formatRecord, formatScore } from "@/lib/format";
 import type { BracketPayload, TeamSlot as TeamSlotData } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -24,21 +30,21 @@ export function MatchupCards({ bracket }: MatchupCardsProps) {
           </div>
           <div className="flex flex-col gap-2.5 px-4">
             <CompareBar
-              label="Composite"
+              metric="composite"
               a={game.team_a.composite_score}
               b={game.team_b.composite_score}
               colorA={game.team_a.primary_color}
               colorB={game.team_b.primary_color}
             />
             <CompareBar
-              label="Resume"
+              metric="resume"
               a={game.team_a.resume_score}
               b={game.team_b.resume_score}
               colorA={game.team_a.primary_color}
               colorB={game.team_b.primary_color}
             />
             <CompareBar
-              label="Predictive"
+              metric="predictive"
               a={game.team_a.predictive_score}
               b={game.team_b.predictive_score}
               colorA={game.team_a.primary_color}
@@ -61,41 +67,47 @@ function TeamHeader({
   team: TeamSlotData;
   align?: "left" | "right";
 }) {
+  const { openTeam } = useTeamDrawer();
   return (
-    <div
-      className={cn(
-        "flex min-w-0 items-center gap-2",
-        align === "right" && "flex-row-reverse text-right",
-      )}
-    >
-      <SeedBadge seed={team.seed} isBye={team.is_bye} />
-      <TeamLogoTile
-        team={team.team}
-        logoUrl={team.logo_url}
-        abbreviation={team.abbreviation}
-        primaryColor={team.primary_color}
-        size={30}
-      />
-      <div className="min-w-0">
-        <div className="truncate text-sm font-semibold text-foreground">
-          {team.team}
+    <TeamHoverCard team={team}>
+      <button
+        type="button"
+        onClick={() => openTeam(team.team)}
+        aria-label={`Open resume for ${team.team}`}
+        className={cn(
+          "flex min-w-0 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors duration-150 hover:bg-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+          align === "right" && "flex-row-reverse text-right",
+        )}
+      >
+        <SeedBadge seed={team.seed} isBye={team.is_bye} />
+        <TeamLogoTile
+          team={team.team}
+          logoUrl={team.logo_url}
+          abbreviation={team.abbreviation}
+          primaryColor={team.primary_color}
+          size={30}
+        />
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold text-foreground">
+            {team.team}
+          </div>
+          <div className="truncate text-[0.7rem] tabular-nums text-muted-foreground">
+            {formatRecord(team.record)}
+          </div>
         </div>
-        <div className="truncate text-[0.7rem] tabular-nums text-muted-foreground">
-          {formatRecord(team.record)}
-        </div>
-      </div>
-    </div>
+      </button>
+    </TeamHoverCard>
   );
 }
 
 function CompareBar({
-  label,
+  metric,
   a,
   b,
   colorA,
   colorB,
 }: {
-  label: string;
+  metric: ScoreMetricKey;
   a: number;
   b: number;
   colorA: string | null;
@@ -127,7 +139,7 @@ function CompareBar({
         {formatScore(b)}
       </span>
       <span className="w-16 shrink-0 text-right text-[0.65rem] uppercase tracking-wide text-muted-foreground">
-        {label}
+        <MetricTooltip metric={metric} />
       </span>
     </div>
   );

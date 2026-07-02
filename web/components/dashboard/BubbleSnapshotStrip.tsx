@@ -4,6 +4,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
+import { TeamHoverCard } from "@/components/team/TeamHoverCard";
+import { InfoTooltip } from "@/components/explain/InfoTooltip";
+import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
@@ -17,13 +20,15 @@ function BubbleMiniRow({
 }) {
   const { openTeam } = useTeamDrawer();
   return (
-    <button
-      type="button"
-      onClick={() => openTeam(team.team)}
-      className={`flex items-center gap-2 rounded-md px-2 py-1.5 transition-colors duration-150 hover:bg-secondary/60 ${
-        align === "right" ? "flex-row-reverse text-right" : "text-left"
-      }`}
-    >
+    <TeamHoverCard team={team}>
+      <button
+        type="button"
+        onClick={() => openTeam(team.team)}
+        aria-label={`Open resume for ${team.team}`}
+        className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 transition-colors duration-150 hover:bg-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
+          align === "right" ? "flex-row-reverse text-right" : "text-left"
+        }`}
+      >
       <TeamLogoTile
         team={team.team}
         logoUrl={team.logo_url}
@@ -34,10 +39,11 @@ function BubbleMiniRow({
       <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
         {team.team}
       </span>
-      <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-        {formatScore(team.composite_score)}
-      </span>
-    </button>
+        <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+          {formatScore(team.composite_score)}
+        </span>
+      </button>
+    </TeamHoverCard>
   );
 }
 
@@ -73,14 +79,24 @@ export function BubbleSnapshotStrip({
               <BubbleMiniRow key={team.team} team={team} align="left" />
             ))}
           </div>
-          <div
-            className="relative flex justify-center self-stretch"
-            aria-hidden
-          >
-            <div className="h-full w-px bg-gradient-to-b from-transparent via-tag-red-border to-transparent" />
-            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 whitespace-nowrap rounded border border-tag-red-border bg-tag-red-bg px-1.5 text-[0.6rem] font-semibold tracking-widest text-tag-red-text">
-              CUT LINE
-            </span>
+          <div className="relative flex justify-center self-stretch">
+            <div
+              className="h-full w-px bg-gradient-to-b from-transparent via-tag-red-border to-transparent"
+              aria-hidden
+            />
+            <InfoTooltip
+              title={METRIC_EXPLANATIONS.cut_line.label}
+              content={METRIC_EXPLANATIONS.cut_line.description}
+              side="top"
+            >
+              <span
+                tabIndex={0}
+                aria-label={`Cut line: ${METRIC_EXPLANATIONS.cut_line.description}`}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 cursor-help whitespace-nowrap rounded border border-tag-red-border bg-tag-red-bg px-1.5 text-[0.6rem] font-semibold tracking-widest text-tag-red-text outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              >
+                CUT LINE
+              </span>
+            </InfoTooltip>
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="px-2 pb-1 text-right text-xs font-semibold uppercase tracking-wide text-foreground">

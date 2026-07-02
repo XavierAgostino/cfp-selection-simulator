@@ -1,7 +1,10 @@
+"use client";
+
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { SeedBadge } from "@/components/team/SeedBadge";
 import { BidBadge } from "@/components/team/BidBadge";
 import { ConferenceBadge, ConferenceCaption } from "@/components/team/ConferenceBadge";
+import { TeamHoverCard } from "@/components/team/TeamHoverCard";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -12,17 +15,23 @@ interface TeamRowProps {
   className?: string;
 }
 
-/** Logo + seed + name + conference + bid badge + composite score, clickable to open the resume drawer. */
+/**
+ * Logo + seed + name + conference + bid badge + composite score. Clickable
+ * rows open the resume drawer (also the tap path on touch) and preview the
+ * full score breakdown on hover.
+ */
 export function TeamRow({ team, onClick, className }: TeamRowProps) {
   const Comp = onClick ? "button" : "div";
 
-  return (
+  const row = (
     <Comp
       onClick={onClick}
       type={onClick ? "button" : undefined}
+      aria-label={onClick ? `Open resume for ${team.team}` : undefined}
       className={cn(
         "flex w-full items-center gap-3 rounded-md border border-transparent px-3 py-2 text-left transition-colors duration-150",
-        onClick && "cursor-pointer hover:border-border hover:bg-card",
+        onClick &&
+          "cursor-pointer hover:border-border hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
         className,
       )}
     >
@@ -56,4 +65,7 @@ export function TeamRow({ team, onClick, className }: TeamRowProps) {
       </span>
     </Comp>
   );
+
+  if (!onClick) return row;
+  return <TeamHoverCard team={team}>{row}</TeamHoverCard>;
 }

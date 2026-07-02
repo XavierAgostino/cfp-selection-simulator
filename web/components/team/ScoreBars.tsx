@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import { formatScore } from "@/lib/format";
 import type { ScoreMetricKey } from "@/lib/scoreBars";
 import type { TeamResume } from "@/lib/types";
@@ -20,34 +21,14 @@ interface ScoreBarRowConfig {
   tooltip: string;
 }
 
-const ROWS: ScoreBarRowConfig[] = [
-  {
-    key: "composite",
-    label: "Composite",
-    tooltip:
-      "The overall ranking score. Weighted blend of resume, predictive, SOR, and SOS.",
-  },
-  {
-    key: "resume",
-    label: "Resume",
-    tooltip: "What a team earned: wins, losses, and quality of results this season.",
-  },
-  {
-    key: "predictive",
-    label: "Predictive",
-    tooltip: "Estimated true team strength, independent of who they have played.",
-  },
-  {
-    key: "sor",
-    label: "SOR",
-    tooltip: "Strength of Record. How impressive a team's record is given its schedule.",
-  },
-  {
-    key: "sos",
-    label: "SOS",
-    tooltip: "Strength of Schedule. How difficult a team's slate of opponents was.",
-  },
-];
+/** Labels/copy come from the central explain registry so terms read the same sitewide. */
+const ROWS: ScoreBarRowConfig[] = (
+  ["composite", "resume", "predictive", "sor", "sos"] as ScoreMetricKey[]
+).map((key) => ({
+  key,
+  label: METRIC_EXPLANATIONS[key].label,
+  tooltip: METRIC_EXPLANATIONS[key].description,
+}));
 
 interface ScoreBarsProps {
   resume: TeamResume;

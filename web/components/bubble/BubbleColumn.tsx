@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { BidBadge } from "@/components/team/BidBadge";
 import { ConferenceBadge, ConferenceCaption } from "@/components/team/ConferenceBadge";
+import { TeamHoverCard } from "@/components/team/TeamHoverCard";
+import { MetricTooltip } from "@/components/explain/InfoTooltip";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
@@ -73,12 +75,13 @@ export function BubbleColumn({
                 : "text-muted-foreground";
 
           return (
-            <button
-              key={team.team}
-              type="button"
-              onClick={() => openTeam(team.team)}
-              className="flex w-full items-center gap-3 rounded-md border border-transparent px-2 py-2 text-left transition-colors duration-150 hover:border-border hover:bg-secondary/40"
-            >
+            <TeamHoverCard key={team.team} team={team} isFirstOut={isFirstOut}>
+              <button
+                type="button"
+                onClick={() => openTeam(team.team)}
+                aria-label={`Open resume for ${team.team}`}
+                className="flex w-full items-center gap-3 rounded-md border border-transparent px-2 py-2 text-left transition-colors duration-150 hover:border-border hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              >
               <span className="w-6 shrink-0 text-center text-xs tabular-nums text-muted-foreground">
                 {team.rank}
               </span>
@@ -110,18 +113,21 @@ export function BubbleColumn({
                 bidType={isInField ? team.bid_type : null}
                 isFirstOut={isFirstOut}
               />
-              <div className="flex w-16 shrink-0 flex-col items-end">
-                <span className="text-xs tabular-nums text-foreground">
-                  {formatScore(team.composite_score)}
-                </span>
-                <span
-                  className={cn("text-[0.65rem] tabular-nums", deltaColor)}
-                  title="Composite score margin to the cut line"
-                >
-                  {deltaLabel}
-                </span>
-              </div>
-            </button>
+                <div className="flex w-16 shrink-0 flex-col items-end">
+                  <span className="text-xs tabular-nums text-foreground">
+                    {formatScore(team.composite_score)}
+                  </span>
+                  <MetricTooltip metric="cut_line">
+                    <span
+                      className={cn("text-[0.65rem] tabular-nums", deltaColor)}
+                      aria-label={`${deltaLabel} composite margin to the cut line`}
+                    >
+                      {deltaLabel}
+                    </span>
+                  </MetricTooltip>
+                </div>
+              </button>
+            </TeamHoverCard>
           );
         })}
       </CardContent>

@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
+import { TeamHoverCard } from "@/components/team/TeamHoverCard";
 import { rankingColumns } from "@/components/rankings/columns";
 import {
   TableToolbar,
@@ -177,29 +178,30 @@ export function RankingTable({ teams }: RankingTableProps) {
                 table.getRowModel().rows.map((row) => {
                   const team = row.original;
                   return (
-                    <TableRow
-                      key={row.id}
-                      tabIndex={0}
-                      role="button"
-                      aria-label={`Open resume for ${team.team}`}
-                      onClick={() => openTeam(team.team)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          openTeam(team.team);
-                        }
-                      }}
-                      className={cn(
-                        "cursor-pointer outline-none focus-visible:bg-secondary/60",
-                        team.in_field && "bg-secondary/20",
-                      )}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                      ))}
-                    </TableRow>
+                    <TeamHoverCard key={row.id} team={team}>
+                      <TableRow
+                        tabIndex={0}
+                        role="button"
+                        aria-label={`Open resume for ${team.team}`}
+                        onClick={() => openTeam(team.team)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openTeam(team.team);
+                          }
+                        }}
+                        className={cn(
+                          "cursor-pointer outline-none focus-visible:bg-secondary/60",
+                          team.in_field && "bg-secondary/20",
+                        )}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TeamHoverCard>
                   );
                 })
               )}

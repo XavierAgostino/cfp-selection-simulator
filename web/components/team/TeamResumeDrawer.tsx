@@ -13,6 +13,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ResumeContent } from "@/components/team/ResumeContent";
+import { useActiveRun } from "@/components/team/useActiveRun";
 import { useTeamResumes } from "@/components/team/useTeamResumes";
 
 export type TeamResumeDrawerProps = {
@@ -22,9 +23,9 @@ export type TeamResumeDrawerProps = {
 };
 
 /**
- * Team resume drawer, reachable from every page via useTeamDrawer(). Fetches
- * team-resumes.json client-side (cached in module state via useTeamResumes
- * so repeated opens across a browsing session are instant) and renders the
+ * Team resume drawer, reachable from every page via useTeamDrawer(). Reads
+ * the active run's team-resumes.json (cached per run via useTeamResumes so
+ * repeated opens across a browsing session are instant) and renders the
  * shared ResumeContent body.
  */
 export function TeamResumeDrawer({
@@ -32,7 +33,8 @@ export function TeamResumeDrawer({
   open,
   onOpenChange,
 }: TeamResumeDrawerProps) {
-  const state = useTeamResumes();
+  const stem = useActiveRun();
+  const state = useTeamResumes(stem);
   const resume = team && state.status === "ready" ? state.data.teams[team] : null;
 
   return (

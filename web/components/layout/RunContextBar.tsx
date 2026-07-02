@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { BadgeTooltip } from "@/components/explain/InfoTooltip";
 import { RulesetBadge } from "@/components/team/RulesetBadge";
 import { NewRunDialog } from "@/components/layout/NewRunDialog";
 import { RunSwitcher } from "@/components/layout/RunSwitcher";
@@ -82,11 +83,17 @@ export async function RunContextBar({ stem }: RunContextBarProps) {
 
         <div className="flex shrink-0 flex-col gap-2 sm:items-end">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={isLive ? "chip-red" : "chip-neutral"}>
-              {isLive ? "Live CFBD data" : "Sample data"}
-            </Badge>
+            <BadgeTooltip badge={isLive ? "live_data" : "sample_data"}>
+              <Badge variant={isLive ? "chip-red" : "chip-neutral"} tabIndex={0}>
+                {isLive ? "Live CFBD data" : "Sample data"}
+              </Badge>
+            </BadgeTooltip>
             {run.has_bracket ? (
-              <Badge variant="chip-neutral">Bracket ready</Badge>
+              <BadgeTooltip badge="bracket_ready">
+                <Badge variant="chip-neutral" tabIndex={0}>
+                  Bracket ready
+                </Badge>
+              </BadgeTooltip>
             ) : null}
             {runs.runs.length > 1 ? (
               <RunSwitcher

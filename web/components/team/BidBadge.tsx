@@ -1,5 +1,9 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
+import { BadgeTooltip } from "@/components/explain/InfoTooltip";
 import { bidTypeStyles, firstOutStyle, outStyle } from "@/lib/theme";
+import type { ExplainBadgeKey } from "@/lib/explain";
 import type { BidType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -10,21 +14,23 @@ interface BidBadgeProps {
   className?: string;
 }
 
-/** AUTO / AT-LARGE / FIRST OUT / OUT — label is self-explanatory; no tooltip needed. */
+/** AUTO / AT-LARGE / FIRST OUT / OUT status chip with its centralized explanation on hover. */
 export function BidBadge({ bidType, isFirstOut, className }: BidBadgeProps) {
   const style = bidType
     ? bidTypeStyles[bidType]
     : isFirstOut
       ? firstOutStyle
       : outStyle;
+  const badgeKey: ExplainBadgeKey = bidType ?? (isFirstOut ? "first_out" : "out");
 
   return (
-    <Badge
-      variant={style.variant}
-      className={cn("cursor-default text-[0.65rem] tracking-wide", className)}
-      title={style.description}
-    >
-      {style.label}
-    </Badge>
+    <BadgeTooltip badge={badgeKey}>
+      <Badge
+        variant={style.variant}
+        className={cn("cursor-default text-[0.65rem] tracking-wide", className)}
+      >
+        {style.label}
+      </Badge>
+    </BadgeTooltip>
   );
 }

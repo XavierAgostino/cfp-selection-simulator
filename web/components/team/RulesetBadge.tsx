@@ -1,4 +1,7 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
+import { InfoTooltip } from "@/components/explain/InfoTooltip";
 import type { Ruleset } from "@/lib/types";
 
 interface RulesetBadgeProps {
@@ -19,17 +22,19 @@ const rulesetCopy: Record<Ruleset, { label: string; description: string }> = {
   },
 };
 
-/** Ruleset label with native title for the full seeding explanation. */
+/** Ruleset label chip with the full seeding explanation on hover/focus. */
 export function RulesetBadge({ ruleset, className }: RulesetBadgeProps) {
   const copy = rulesetCopy[ruleset];
 
   return (
-    <Badge
-      variant="chip-neutral"
-      title={copy.description}
-      className={`cursor-default ${className ?? ""}`}
-    >
-      {copy.label}
-    </Badge>
+    <InfoTooltip title={copy.label} content={copy.description}>
+      <Badge
+        variant="chip-neutral"
+        tabIndex={0}
+        className={`cursor-default ${className ?? ""}`}
+      >
+        {copy.label}
+      </Badge>
+    </InfoTooltip>
   );
 }

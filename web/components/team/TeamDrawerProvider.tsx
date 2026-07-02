@@ -43,7 +43,11 @@ export function TeamDrawerProvider({
   return (
     <TeamDrawerContext.Provider value={value}>
       {children}
-      <TeamResumeDrawer team={team} open={open} onOpenChange={setOpen} />
+      {/* Suspense: the drawer reads useSearchParams (?run=) and this provider
+          wraps statically prerendered routes like the 404 page. */}
+      <React.Suspense fallback={null}>
+        <TeamResumeDrawer team={team} open={open} onOpenChange={setOpen} />
+      </React.Suspense>
     </TeamDrawerContext.Provider>
   );
 }

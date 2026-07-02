@@ -1,6 +1,7 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
+import { MetricTooltip } from "@/components/explain/InfoTooltip";
 import { ScoreBar } from "@/components/common/ScoreBar";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { BidBadge } from "@/components/team/BidBadge";
@@ -100,7 +101,11 @@ export const rankingColumns = [
   }),
   columnHelper.accessor("composite_score", {
     id: "composite",
-    header: () => <div className="text-right">Composite</div>,
+    header: () => (
+      <div className="text-right">
+        <MetricTooltip metric="composite" />
+      </div>
+    ),
     cell: (info) => (
       <ScoreCell value={info.getValue()} metric="composite" />
     ),
@@ -109,28 +114,44 @@ export const rankingColumns = [
   }),
   columnHelper.accessor("resume_score", {
     id: "resume",
-    header: () => <div className="text-right">Resume</div>,
+    header: () => (
+      <div className="text-right">
+        <MetricTooltip metric="resume" />
+      </div>
+    ),
     cell: (info) => <ScoreCell value={info.getValue()} metric="resume" />,
     sortingFn: "basic",
     size: 96,
   }),
   columnHelper.accessor("predictive_score", {
     id: "predictive",
-    header: () => <div className="text-right">Predictive</div>,
+    header: () => (
+      <div className="text-right">
+        <MetricTooltip metric="predictive" />
+      </div>
+    ),
     cell: (info) => <ScoreCell value={info.getValue()} metric="predictive" />,
     sortingFn: "basic",
     size: 96,
   }),
   columnHelper.accessor("sor", {
     id: "sor",
-    header: () => <div className="text-right">SOR</div>,
+    header: () => (
+      <div className="text-right">
+        <MetricTooltip metric="sor" />
+      </div>
+    ),
     cell: (info) => <ScoreCell value={info.getValue()} metric="sor" />,
     sortingFn: "basic",
     size: 96,
   }),
   columnHelper.accessor("sos", {
     id: "sos",
-    header: () => <div className="text-right">SOS</div>,
+    header: () => (
+      <div className="text-right">
+        <MetricTooltip metric="sos" />
+      </div>
+    ),
     cell: (info) => <ScoreCell value={info.getValue()} metric="sos" />,
     sortingFn: "basic",
     size: 96,
