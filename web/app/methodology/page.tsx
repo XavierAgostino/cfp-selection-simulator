@@ -13,7 +13,7 @@ async function loadLatest(): Promise<LatestPayload | null> {
   }
 }
 
-const DEFAULT_WEIGHTS = { resume: 0.5, predictive: 0.3, sor: 0.1, sos: 0.1 };
+const DEFAULT_WEIGHTS = { resume: 0.4, predictive: 0.3, sor: 0.2, sos: 0.1 };
 
 const WEIGHT_META: {
   key: keyof typeof DEFAULT_WEIGHTS;

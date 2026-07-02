@@ -11,13 +11,13 @@ Runs can be driven by YAML config files for reproducibility.
 ```yaml
 year: 2025
 week: 15
-start_week: 5
+start_week: 1
 fbs_only: true
 mode: composite
 weights:
-  resume: 0.50
+  resume: 0.40
   predictive: 0.30
-  sor: 0.10
+  sor: 0.20
   sos: 0.10
 ```
 
@@ -55,7 +55,7 @@ sroom run --config configs/2025.yaml --year 2025 --week 14 --sample
 |-------|------|-------------|
 | `year` | int | Season (≥ 2024 for 12-team selection) |
 | `week` | int | Last week included in analysis |
-| `start_week` | int | First week for CFBD fetch (default 5) |
+| `start_week` | int | First week for CFBD fetch (default 1 — full season) |
 | `fbs_only` | bool | FBS teams only |
 | `mode` | string | `composite` (v2.0 default) |
 | `weights` | object | Ranking component weights (must sum to 1.0) |
@@ -64,9 +64,9 @@ sroom run --config configs/2025.yaml --year 2025 --week 14 --sample
 
 | Key | Default | Component |
 |-----|---------|-----------|
-| `resume` | 0.50 | Colley + win% |
+| `resume` | 0.40 | Colley + win% |
 | `predictive` | 0.30 | Massey + Elo |
-| `sor` | 0.10 | Strength of Record |
+| `sor` | 0.20 | Strength of Record |
 | `sos` | 0.10 | Strength of Schedule |
 
 ---

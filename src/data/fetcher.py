@@ -3,6 +3,7 @@ Data fetching utilities for CollegeFootballData.com API.
 """
 
 import os
+import time
 from typing import Any, Dict, List, Optional, Set
 
 import pandas as pd
@@ -11,6 +12,33 @@ from dotenv import load_dotenv
 
 # cfbd must come via the compat shim (pydantic v1/v2 bridge) — never directly.
 from src.data._cfbd_compat import ApiException, cfbd
+
+_RETRY_STATUSES = {429, 500, 502, 503, 504}
+_MAX_RETRIES = 4
+
+
+def _get_with_retry(
+    url: str,
+    *,
+    headers: Dict[str, str],
+    params: Dict[str, Any],
+    timeout: int = 30,
+) -> requests.Response:
+    """GET with exponential backoff on CFBD rate limits (429) and 5xx errors.
+
+    Honors ``Retry-After`` when present. Raises for status after retries are
+    exhausted so callers keep their existing error handling.
+    """
+    delay = 2.0
+    for attempt in range(_MAX_RETRIES + 1):
+        response = requests.get(url, headers=headers, params=params, timeout=timeout)
+        if response.status_code not in _RETRY_STATUSES or attempt == _MAX_RETRIES:
+            return response
+        retry_after = response.headers.get("Retry-After")
+        wait = float(retry_after) if retry_after and retry_after.isdigit() else delay
+        time.sleep(min(wait, 90.0))
+        delay *= 2
+    return response  # unreachable, keeps type-checkers happy
 
 
 def get_api_key() -> str:
@@ -26,8 +54,7 @@ def get_api_key() -> str:
 
 def get_fbs_teams_list(year: int, api_key: str = None) -> Set[str]:
     """
-    Fetch list of FBS teams for filtering using requests library directly.
-    This matches the approach used in notebook 01_data_pipeline.ipynb.
+    Fetch list of FBS teams for filtering.
 
     Args:
         year: Season year
@@ -39,13 +66,12 @@ def get_fbs_teams_list(year: int, api_key: str = None) -> Set[str]:
     if api_key is None:
         api_key = get_api_key()
 
-    # Use requests library directly (same as notebook 01)
     url = "https://api.collegefootballdata.com/teams/fbs"
     headers = {"Authorization": f"Bearer {api_key}", "accept": "application/json"}
     params = {"year": year}
 
     try:
-        response = requests.get(url, headers=headers, params=params)
+        response = _get_with_retry(url, headers=headers, params=params)
         if response.status_code == 200:
             teams_data = response.json()
             fbs_team_names = set([team["school"] for team in teams_data])
@@ -77,7 +103,6 @@ def fetch_season_games(
         api_key = get_api_key()
 
     if fbs_teams is None:
-        # Use requests library directly (same as notebook 01)
         fbs_teams = get_fbs_teams_list(year, api_key)
 
     base_url = "https://api.collegefootballdata.com/games"
@@ -89,7 +114,7 @@ def fetch_season_games(
         params = {"year": year, "week": week, "seasonType": "regular", "division": "fbs"}
 
         try:
-            response = requests.get(base_url, headers=headers, params=params)
+            response = _get_with_retry(base_url, headers=headers, params=params)
             if response.status_code == 200:
                 all_games.extend(response.json())
         except Exception as e:
@@ -175,7 +200,7 @@ def fetch_conference_championship_games(
 
     for week in weeks:
         params = {"year": year, "week": week, "seasonType": "regular", "division": "fbs"}
-        response = requests.get(url, headers=headers, params=params, timeout=30)
+        response = _get_with_retry(url, headers=headers, params=params, timeout=30)
         response.raise_for_status()
         payload = response.json()
         if not isinstance(payload, list):
@@ -228,7 +253,7 @@ def fetch_team_records(year: int, api_key: Optional[str] = None) -> list[dict[st
     key = api_key or get_api_key()
     url = "https://api.collegefootballdata.com/records"
     headers = {"Authorization": f"Bearer {key}", "accept": "application/json"}
-    response = requests.get(url, headers=headers, params={"year": year}, timeout=30)
+    response = _get_with_retry(url, headers=headers, params={"year": year}, timeout=30)
     response.raise_for_status()
     payload = response.json()
     if not isinstance(payload, list):

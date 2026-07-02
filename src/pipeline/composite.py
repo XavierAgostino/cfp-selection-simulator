@@ -2,32 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
+from src.pipeline.weights import RankingWeights
 from src.rankings.algorithms import ColleyMatrix, EloRatings, MasseyRatings
 from src.selection.tiebreakers import resolve_rank_ties
 from src.utils.metrics import calculate_sor, calculate_sos
 
-
-@dataclass
-class RankingWeights:
-    resume: float = 0.50
-    predictive: float = 0.30
-    sor: float = 0.10
-    sos: float = 0.10
-
-    def validate(self) -> None:
-        total = self.resume + self.predictive + self.sor + self.sos
-        if not np.isclose(total, 1.0, atol=0.01):
-            raise ValueError(f"Ranking weights must sum to 1.0, got {total:.4f}")
-
-    def __post_init__(self) -> None:
-        self.validate()
+__all__ = ["RankingWeights", "calculate_composite_rankings"]
 
 
 def _win_percentages(games_df: pd.DataFrame, teams: List[str]) -> Dict[str, float]:
@@ -127,7 +113,8 @@ def calculate_composite_rankings(
     win_pct_norm = np.array([win_pcts.get(t, 0) for t in teams])
 
     resume_scores = {
-        teams[i]: float(0.6 * colley_norm[i] + 0.4 * win_pct_norm[i]) for i in range(len(teams))
+        teams[i]: float(w.colley_share * colley_norm[i] + (1 - w.colley_share) * win_pct_norm[i])
+        for i in range(len(teams))
     }
     predictive_scores = {
         teams[i]: float(0.5 * massey_norm[i] + 0.5 * elo_norm[i]) for i in range(len(teams))

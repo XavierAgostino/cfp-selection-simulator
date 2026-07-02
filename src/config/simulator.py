@@ -11,14 +11,14 @@ from typing import Literal, Optional
 import yaml
 
 from src.config.formats import PlayoffFormat, get_format_for_year
-from src.pipeline.composite import RankingWeights
+from src.pipeline.weights import RankingWeights
 
 
 @dataclass
 class SimulatorConfig:
     year: int
     week: int
-    start_week: int = 5
+    start_week: int = 1
     fbs_only: bool = True
     mode: Literal["composite"] = "composite"
     weights: RankingWeights = field(default_factory=RankingWeights)

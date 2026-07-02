@@ -42,7 +42,7 @@ def _resolve_config(
     year: Optional[int],
     week: Optional[int],
     config_path: Optional[Path],
-    start_week: int = 5,
+    start_week: int = 1,
 ) -> SimulatorConfig:
     if config_path:
         cfg = SimulatorConfig.from_yaml(config_path)
@@ -86,7 +86,7 @@ def doctor() -> None:
 @app.command()
 def fetch(
     year: int = typer.Option(..., help="Season year"),
-    start_week: int = typer.Option(5, help="First week to fetch"),
+    start_week: int = typer.Option(1, help="First week to fetch"),
     end_week: int = typer.Option(15, help="Last week to fetch"),
 ) -> None:
     """Fetch FBS game data from CFBD into data/cache/."""

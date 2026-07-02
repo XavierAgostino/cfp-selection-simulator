@@ -10,10 +10,14 @@ Default weights (`RankingWeights`):
 
 | Component | Weight | Source |
 |-----------|--------|--------|
-| Résumé | 50% | Colley (60%) + Win% (40%), normalized |
+| Résumé | 40% | Colley (60%) + Win% (40%), normalized |
 | Predictive | 30% | Massey (50%) + Elo (50%), normalized |
-| SOR | 10% | Strength of Record |
+| SOR | 20% | Strength of Record |
 | SOS | 10% | Strength of Schedule with OOR |
+
+Weights were selected by the 2014-2024 historical backtest (`make validate`):
+the SOR-heavy 40/30/20/10 mix matched or beat the previous 50/30/10/10
+defaults on committee-field overlap in every season.
 
 ## Algorithms
 

@@ -190,7 +190,13 @@ def export_run_api(
             config_hash=config.config_hash,
             generated_at=generated_at,
             assets_source="sample" if use_sample else "cache",
-            weights=asdict(config.weights),
+            # Only the four sum-to-1 component weights; colley_share is an
+            # internal resume mix, not a composite component.
+            weights={
+                k: v
+                for k, v in asdict(config.weights).items()
+                if k in ("resume", "predictive", "sor", "sos")
+            },
             counts={
                 "n_games": len(games_df) if games_df is not None else 0,
                 "n_teams": len(rankings_df),
