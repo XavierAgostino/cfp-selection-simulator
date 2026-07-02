@@ -11,8 +11,8 @@ export function ErrorState({
   description = "The selection engine hasn't produced this file yet. Run the exporter, or seed fixtures for local development.",
 }: ErrorStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-accent-amber/30 bg-accent-amber/5 px-6 py-20 text-center">
-      <div className="mb-1 flex h-12 w-12 items-center justify-center rounded-full border border-accent-amber/30 bg-accent-amber/10 text-accent-amber">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border bg-card px-6 py-20 text-center">
+      <div className="mb-1 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-secondary text-muted-foreground">
         <AlertTriangle className="h-5 w-5" />
       </div>
       <h2 className="text-base font-medium text-foreground">{title}</h2>

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTeamAssetsContext } from "@/components/team/TeamAssetsProvider";
 import { teamInitials } from "@/lib/format";
+import { resolveTeamVisual } from "@/lib/teamAssets";
 import { cn } from "@/lib/utils";
 
 interface TeamLogoTileProps {
@@ -15,8 +17,8 @@ interface TeamLogoTileProps {
 }
 
 /**
- * Renders a team's ESPN logo, falling back to a colored initials tile when
- * the logo is missing or fails to load (offline dev, bad URL, etc.).
+ * ESPN-style logo tile: full-color mark on a light circular surface.
+ * Falls back to team-assets.json and ESPN id map when logo_url is missing.
  */
 export function TeamLogoTile({
   team,
@@ -26,38 +28,57 @@ export function TeamLogoTile({
   size = 28,
   className,
 }: TeamLogoTileProps) {
+  const { assets } = useTeamAssetsContext();
+  const resolved = resolveTeamVisual(
+    team,
+    { logoUrl, abbreviation, primaryColor },
+    assets,
+  );
   const [errored, setErrored] = useState(false);
-  const showFallback = !logoUrl || errored;
+  const showFallback = !resolved.logoUrl || errored;
+  const frameSize = size + 6;
+  const imageSize = Math.max(size - 2, 16);
 
   if (showFallback) {
     return (
       <div
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-full text-[0.65rem] font-semibold text-white",
+          "flex shrink-0 items-center justify-center rounded-full border border-border bg-logo-surface text-[0.65rem] font-semibold text-foreground",
           className,
         )}
         style={{
-          width: size,
-          height: size,
-          backgroundColor: primaryColor ?? "#1F2937",
+          width: frameSize,
+          height: frameSize,
+          backgroundColor: resolved.primaryColor ?? undefined,
+          color: resolved.primaryColor ? "#ffffff" : undefined,
         }}
         aria-label={team}
         title={team}
       >
-        {teamInitials(team, abbreviation)}
+        {teamInitials(team, resolved.abbreviation)}
       </div>
     );
   }
 
   return (
-    <Image
-      src={logoUrl}
-      alt={team}
-      width={size}
-      height={size}
-      unoptimized
-      className={cn("shrink-0 object-contain", className)}
-      onError={() => setErrored(true)}
-    />
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-full border border-border bg-logo-surface p-1",
+        className,
+      )}
+      style={{ width: frameSize, height: frameSize }}
+      aria-label={team}
+      title={team}
+    >
+      <Image
+        src={resolved.logoUrl!}
+        alt=""
+        width={imageSize}
+        height={imageSize}
+        unoptimized
+        className="h-full w-full object-contain"
+        onError={() => setErrored(true)}
+      />
+    </div>
   );
 }

@@ -1,9 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import type { Ruleset } from "@/lib/types";
 
 interface RulesetBadgeProps {
@@ -15,7 +10,7 @@ const rulesetCopy: Record<Ruleset, { label: string; description: string }> = {
   "2025_plus": {
     label: "2025+ Straight Seeding",
     description:
-      "The top 12 teams by rank are seeded 1-12 in order, regardless of conference championship status. Only the four highest-ranked conference champions receive automatic bids; the top four overall seeds earn byes.",
+      "The top 12 teams by rank are seeded 1-12 in order. The four highest-ranked conference champions receive automatic bids; the top four overall seeds earn byes.",
   },
   "2024": {
     label: "2024 Champion Byes",
@@ -24,23 +19,17 @@ const rulesetCopy: Record<Ruleset, { label: string; description: string }> = {
   },
 };
 
-/** "2025+ Straight Seeding" / "2024 Champion Byes" — with a tooltip explaining the seeding rule. */
+/** Ruleset label with native title for the full seeding explanation. */
 export function RulesetBadge({ ruleset, className }: RulesetBadgeProps) {
   const copy = rulesetCopy[ruleset];
 
   return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <Badge
-            variant="outline"
-            className={`cursor-default border-border bg-secondary text-foreground ${className ?? ""}`}
-          >
-            {copy.label}
-          </Badge>
-        }
-      />
-      <TooltipContent>{copy.description}</TooltipContent>
-    </Tooltip>
+    <Badge
+      variant="chip-neutral"
+      title={copy.description}
+      className={`cursor-default ${className ?? ""}`}
+    >
+      {copy.label}
+    </Badge>
   );
 }

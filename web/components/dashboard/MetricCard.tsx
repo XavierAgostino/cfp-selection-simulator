@@ -18,12 +18,28 @@ interface MetricCardProps {
   sub?: ReactNode;
   tooltip?: string;
   className?: string;
+  /** Makes the whole card an interactive button (e.g. jump to a team's resume drawer). */
+  onClick?: () => void;
 }
 
 /** Label, big tabular value, optional sub-line and info tooltip — the dashboard's base building block. */
-export function MetricCard({ label, value, sub, tooltip, className }: MetricCardProps) {
-  return (
-    <Card className={cn("gap-2 border-border bg-card py-4", className)}>
+export function MetricCard({
+  label,
+  value,
+  sub,
+  tooltip,
+  className,
+  onClick,
+}: MetricCardProps) {
+  const card = (
+    <Card
+      className={cn(
+        "gap-2 border-border bg-card py-4",
+        onClick &&
+          "cursor-pointer transition-colors duration-150 hover:border-primary/30",
+        className,
+      )}
+    >
       <CardHeader className="flex flex-row items-center justify-between px-4">
         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
@@ -32,17 +48,23 @@ export function MetricCard({ label, value, sub, tooltip, className }: MetricCard
           <Tooltip>
             <TooltipTrigger
               render={
-                <span className="cursor-default text-muted-foreground/70">
+                <button
+                  type="button"
+                  className="inline-flex rounded-sm text-muted-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                  aria-label={`About ${label}`}
+                >
                   <Info className="h-3.5 w-3.5" />
-                </span>
+                </button>
               }
             />
-            <TooltipContent>{tooltip}</TooltipContent>
+            <TooltipContent side="top" className="max-w-[220px]">
+              {tooltip}
+            </TooltipContent>
           </Tooltip>
         ) : null}
       </CardHeader>
       <CardContent className="px-4">
-        <div className="font-mono text-2xl font-semibold tabular-nums text-foreground">
+        <div className="text-2xl font-semibold tabular-nums text-foreground">
           {value}
         </div>
         {sub ? (
@@ -50,5 +72,17 @@ export function MetricCard({ label, value, sub, tooltip, className }: MetricCard
         ) : null}
       </CardContent>
     </Card>
+  );
+
+  if (!onClick) return card;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="block w-full rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+    >
+      {card}
+    </button>
   );
 }

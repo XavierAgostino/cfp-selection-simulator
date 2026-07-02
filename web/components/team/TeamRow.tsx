@@ -1,6 +1,7 @@
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { SeedBadge } from "@/components/team/SeedBadge";
 import { BidBadge } from "@/components/team/BidBadge";
+import { ConferenceBadge, ConferenceCaption } from "@/components/team/ConferenceBadge";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -32,16 +33,25 @@ export function TeamRow({ team, onClick, className }: TeamRowProps) {
         abbreviation={team.abbreviation}
         primaryColor={team.primary_color}
       />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate text-sm font-medium text-foreground">
-          {team.team}
-        </span>
-        <span className="truncate text-xs text-muted-foreground">
-          {team.conference}
-        </span>
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="truncate text-sm font-medium text-foreground">
+            {team.team}
+          </span>
+          {team.bid_type === "auto" ? (
+            <ConferenceBadge
+              conference={team.conference}
+              isChampion
+              size="sm"
+            />
+          ) : null}
+        </div>
+        {team.bid_type !== "auto" ? (
+          <ConferenceCaption conference={team.conference} />
+        ) : null}
       </div>
       <BidBadge bidType={team.bid_type} />
-      <span className="w-16 shrink-0 text-right font-mono text-sm tabular-nums text-foreground">
+      <span className="w-16 shrink-0 text-right text-sm tabular-nums text-foreground">
         {formatScore(team.composite_score)}
       </span>
     </Comp>

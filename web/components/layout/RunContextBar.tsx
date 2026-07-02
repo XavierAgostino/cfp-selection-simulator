@@ -1,49 +1,104 @@
 import { Badge } from "@/components/ui/badge";
 import { RulesetBadge } from "@/components/team/RulesetBadge";
-import { getLatest, NotFoundError } from "@/lib/data";
+import { RunSwitcher } from "@/components/layout/RunSwitcher";
+import { getRuns, NotFoundError } from "@/lib/data";
 import { formatDateTime } from "@/lib/format";
-import type { LatestPayload } from "@/lib/types";
+import type { RunsPayload, RunSummary } from "@/lib/types";
 
-async function loadLatest(): Promise<LatestPayload | null> {
+async function loadRuns(): Promise<RunsPayload | null> {
   try {
-    return await getLatest();
+    return await getRuns();
   } catch (err) {
     if (err instanceof NotFoundError) return null;
     throw err;
   }
 }
 
-/** Season · week · ruleset · data-source · generated-at, read from latest.json. Degrades gracefully before the first run exists. */
-export async function RunContextBar() {
-  const latest = await loadLatest();
+interface RunContextBarProps {
+  /** Run stem from the page's ?run= param; null/undefined = latest run. */
+  stem?: string | null;
+}
 
-  if (!latest) {
+/** Season/week context header shared by every data page, with the run switcher. */
+export async function RunContextBar({ stem }: RunContextBarProps) {
+  const runs = await loadRuns();
+
+  if (!runs) {
+    // FirstRunGate normally catches this; belt-and-suspenders for direct hits.
     return (
-      <div className="mb-6 flex items-center gap-2 rounded-md border border-dashed border-border bg-card/40 px-4 py-2.5 text-xs text-muted-foreground">
-        No run data yet — seed fixtures or run the exporter to populate{" "}
-        <code className="rounded bg-secondary px-1 py-0.5 font-mono">
-          data/output/api/
-        </code>
-        .
+      <div className="mb-8 rounded-xl bg-card px-5 py-4 sm:px-6">
+        <p className="text-sm text-muted-foreground">
+          No run data yet. Run the pipeline to populate{" "}
+          <code className="rounded bg-secondary px-1.5 py-0.5 text-xs text-foreground">
+            data/output/api/
+          </code>
+          .
+        </p>
       </div>
     );
   }
 
+  const currentStem = stem ?? runs.latest.stem;
+  const run: RunSummary | undefined = runs.runs.find(
+    (r) => r.stem === currentStem,
+  );
+
+  if (!run) {
+    return (
+      <div className="mb-8 rounded-xl bg-card px-5 py-4 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">
+            Unknown run{" "}
+            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs text-foreground">
+              {currentStem}
+            </code>
+            {" — "}pick one that exists.
+          </p>
+          <RunSwitcher
+            runs={runs.runs}
+            currentStem={runs.latest.stem}
+            latestStem={runs.latest.stem}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const isLive = run.data_source === "cfbd";
+
   return (
-    <div className="mb-6 flex flex-wrap items-center gap-3 rounded-md border border-border bg-card/60 px-4 py-2.5">
-      <span className="font-mono text-sm font-medium tabular-nums text-foreground">
-        {latest.season} · Week {latest.week}
-      </span>
-      <div className="h-4 w-px bg-border" />
-      <RulesetBadge ruleset={latest.ruleset} />
-      <Badge
-        variant="outline"
-        className="cursor-default border-border bg-secondary text-muted-foreground"
-      >
-        {latest.data_source === "cfbd" ? "Live CFBD data" : "Sample data"}
-      </Badge>
-      <div className="ml-auto text-xs text-muted-foreground">
-        Generated {formatDateTime(latest.generated_at)}
+    <div className="mb-8 rounded-xl bg-card px-5 py-4 sm:px-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 space-y-1">
+          <p className="text-xs text-muted-foreground">{run.season} season</p>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <h2 className="text-3xl font-bold tabular-nums tracking-tight text-foreground">
+              Week {run.week}
+            </h2>
+            <RulesetBadge ruleset={run.ruleset} />
+          </div>
+        </div>
+
+        <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant={isLive ? "chip-red" : "chip-neutral"}>
+              {isLive ? "Live CFBD data" : "Sample data"}
+            </Badge>
+            {run.has_bracket ? (
+              <Badge variant="chip-neutral">Bracket ready</Badge>
+            ) : null}
+            {runs.runs.length > 1 ? (
+              <RunSwitcher
+                runs={runs.runs}
+                currentStem={currentStem}
+                latestStem={runs.latest.stem}
+              />
+            ) : null}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Updated {formatDateTime(run.generated_at)}
+          </p>
+        </div>
       </div>
     </div>
   );

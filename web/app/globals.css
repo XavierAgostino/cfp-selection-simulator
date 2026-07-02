@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -40,14 +40,39 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  /* Selection Room brand accents — used sparingly, mapped for utility classes
-     like bg-accent-red, text-accent-gold, border-surface-raised, etc. */
   --color-surface-raised: var(--surface-raised);
+  --color-logo-surface: var(--logo-surface);
   --color-accent-red: var(--accent-red);
   --color-accent-gold: var(--accent-gold);
   --color-accent-blue: var(--accent-blue);
   --color-accent-green: var(--accent-green);
   --color-accent-amber: var(--accent-amber);
+
+  --color-bar-track: var(--bar-track);
+  --color-bar-composite: var(--bar-composite);
+  --color-bar-resume: var(--bar-resume);
+  --color-bar-predictive: var(--bar-predictive);
+  --color-bar-sor: var(--bar-sor);
+  --color-bar-sos: var(--bar-sos);
+
+  --color-result-win: var(--result-win);
+  --color-result-loss: var(--result-loss);
+
+  --color-tag-neutral-bg: var(--tag-neutral-bg);
+  --color-tag-neutral-border: var(--tag-neutral-border);
+  --color-tag-neutral-text: var(--tag-neutral-text);
+  --color-tag-red-bg: var(--tag-red-bg);
+  --color-tag-red-border: var(--tag-red-border);
+  --color-tag-red-text: var(--tag-red-text);
+  --color-tag-red-dot: var(--tag-red-dot);
+  --color-tag-gold-bg: var(--tag-gold-bg);
+  --color-tag-gold-border: var(--tag-gold-border);
+  --color-tag-gold-text: var(--tag-gold-text);
+  --color-tag-gold-dot: var(--tag-gold-dot);
+  --color-tag-green-bg: var(--tag-green-bg);
+  --color-tag-green-border: var(--tag-green-border);
+  --color-tag-green-text: var(--tag-green-text);
+  --color-tag-green-dot: var(--tag-green-dot);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -58,53 +83,159 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Selection Room is dark-only: the palette lives in :root so there is no
-   flash-of-light-theme, and .dark carries the identical values so any
-   shadcn primitive that keys off the .dark class still resolves correctly. */
-:root,
+/*
+ * Selection Room — ESPN-inspired palettes.
+ * Light: soft gray broadcast desk (no pure-white glare). Dark: charcoal studio.
+ */
+:root {
+  color-scheme: light;
+  --background: #e4e4e4;
+  --foreground: #2a2a2a;
+  --card: #edeef0;
+  --card-foreground: #2a2a2a;
+  --popover: #edeef0;
+  --popover-foreground: #2a2a2a;
+  --primary: #cc0000;
+  --primary-foreground: #ffffff;
+  --secondary: #d8d8d8;
+  --secondary-foreground: #2a2a2a;
+  --muted: #d0d0d0;
+  --muted-foreground: #4a4a4a;
+  --accent: #d8d8d8;
+  --accent-foreground: #2a2a2a;
+  --destructive: #cc0000;
+  --border: #b8b8b8;
+  --input: #cccccc;
+  --ring: #cc0000;
+  --radius: 0.375rem;
+
+  --chart-1: #cc0000;
+  --chart-2: #a67c00;
+  --chart-3: #5c5c5c;
+  --chart-4: #7a7a7a;
+  --chart-5: #9a9a9a;
+
+  --sidebar: #dcdcdc;
+  --sidebar-foreground: #2a2a2a;
+  --sidebar-primary: #cc0000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #d0d0d0;
+  --sidebar-accent-foreground: #2a2a2a;
+  --sidebar-border: #b0b0b0;
+  --sidebar-ring: #cc0000;
+
+  --surface-raised: #edeef0;
+  --logo-surface: #f5f6f8;
+
+  --accent-red: #cc0000;
+  --accent-gold: #a67c00;
+  --accent-blue: #4a5568;
+  --accent-green: #2e8540;
+  --accent-amber: #a67c00;
+
+  --bar-track: #c4c4c4;
+  --bar-composite: #cc0000;
+  --bar-resume: #3d3d3d;
+  --bar-predictive: #5c5c5c;
+  --bar-sor: #787878;
+  --bar-sos: #a3a3a3;
+
+  --result-win: #2e8540;
+  --result-loss: #cc0000;
+
+  --tag-neutral-bg: #d8d8d8;
+  --tag-neutral-border: #ababab;
+  --tag-neutral-text: #333333;
+
+  --tag-red-bg: rgba(204, 0, 0, 0.1);
+  --tag-red-border: rgba(204, 0, 0, 0.28);
+  --tag-red-text: #9a0000;
+  --tag-red-dot: #cc0000;
+
+  --tag-gold-bg: rgba(166, 124, 0, 0.14);
+  --tag-gold-border: rgba(166, 124, 0, 0.32);
+  --tag-gold-text: #6b5100;
+  --tag-gold-dot: #a67c00;
+
+  --tag-green-bg: rgba(46, 133, 64, 0.12);
+  --tag-green-border: rgba(46, 133, 64, 0.28);
+  --tag-green-text: #1a5c2e;
+  --tag-green-dot: #2e8540;
+}
+
 .dark {
-  --background: #080b12;
-  --foreground: #f8fafc;
-  --card: #0f172a;
-  --card-foreground: #f8fafc;
-  --popover: #0f172a;
-  --popover-foreground: #f8fafc;
-  --primary: #d7263d;
-  --primary-foreground: #f8fafc;
-  --secondary: #111827;
-  --secondary-foreground: #f8fafc;
-  --muted: #111827;
-  --muted-foreground: #94a3b8;
-  --accent: #111827;
-  --accent-foreground: #f8fafc;
-  --destructive: #d7263d;
-  --border: rgba(148, 163, 184, 0.14);
-  --input: rgba(148, 163, 184, 0.14);
-  --ring: #d7263d;
-  --radius: 0.5rem;
+  color-scheme: dark;
+  --background: #101010;
+  --foreground: #ffffff;
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --popover: #1a1a1a;
+  --popover-foreground: #ffffff;
+  --primary: #cc0000;
+  --primary-foreground: #ffffff;
+  --secondary: #252525;
+  --secondary-foreground: #e8e8e8;
+  --muted: #2a2a2a;
+  --muted-foreground: #a3a3a3;
+  --accent: #252525;
+  --accent-foreground: #ffffff;
+  --destructive: #cc0000;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #cc0000;
 
-  --chart-1: #d4af37;
-  --chart-2: #3b82f6;
-  --chart-3: #22c55e;
-  --chart-4: #f59e0b;
-  --chart-5: #d7263d;
+  --chart-1: #cc0000;
+  --chart-2: #ffb81c;
+  --chart-3: #6b7280;
+  --chart-4: #9ca3af;
+  --chart-5: #d1d5db;
 
-  --sidebar: #0f172a;
-  --sidebar-foreground: #f8fafc;
-  --sidebar-primary: #d7263d;
-  --sidebar-primary-foreground: #f8fafc;
-  --sidebar-accent: #111827;
-  --sidebar-accent-foreground: #f8fafc;
-  --sidebar-border: rgba(148, 163, 184, 0.14);
-  --sidebar-ring: #d7263d;
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #cc0000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #252525;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.12);
+  --sidebar-ring: #cc0000;
 
-  /* Brand accents */
-  --surface-raised: #111827;
-  --accent-red: #d7263d;
-  --accent-gold: #d4af37;
-  --accent-blue: #3b82f6;
-  --accent-green: #22c55e;
-  --accent-amber: #f59e0b;
+  --surface-raised: #222222;
+  --logo-surface: #f5f5f5;
+
+  --accent-red: #cc0000;
+  --accent-gold: #ffb81c;
+  --accent-blue: #8b949e;
+  --accent-green: #6b7280;
+  --accent-amber: #c9a227;
+
+  --bar-track: #333333;
+  --bar-composite: #cc0000;
+  --bar-resume: #e5e5e5;
+  --bar-predictive: #b3b3b3;
+  --bar-sor: #8a8a8a;
+  --bar-sos: #666666;
+
+  --result-win: #2e8540;
+  --result-loss: #cc0000;
+
+  --tag-neutral-bg: #171717;
+  --tag-neutral-border: #2a2a2a;
+  --tag-neutral-text: #e5e5e5;
+
+  --tag-red-bg: rgba(255, 80, 80, 0.14);
+  --tag-red-border: rgba(255, 80, 80, 0.28);
+  --tag-red-text: #ff8a8a;
+  --tag-red-dot: #ff5c5c;
+
+  --tag-gold-bg: rgba(255, 184, 28, 0.12);
+  --tag-gold-border: rgba(255, 184, 28, 0.28);
+  --tag-gold-text: #ffd58a;
+  --tag-gold-dot: #ffb81c;
+
+  --tag-green-bg: rgba(46, 132, 64, 0.12);
+  --tag-green-border: rgba(46, 132, 64, 0.28);
+  --tag-green-text: #7ee2a8;
+  --tag-green-dot: #2e8540;
 }
 
 @layer base {
@@ -119,8 +250,19 @@
   }
 }
 
-/* Tabular figures for every stat — scores, records, seeds, dates. */
 .tabular-nums,
 .stat-figure {
   font-variant-numeric: tabular-nums;
+}
+
+.espn-global-header {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .espn-global-header .espn-nav-link span {
+    transition: none;
+  }
 }

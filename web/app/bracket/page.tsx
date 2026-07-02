@@ -1,22 +1,46 @@
-import { Network } from "lucide-react";
 import { RunContextBar } from "@/components/layout/RunContextBar";
+import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { EmptyState } from "@/components/common/EmptyState";
+import { BracketViewer } from "@/components/bracket/BracketViewer";
+import { getRunFile, NotFoundError } from "@/lib/data";
+import type { BracketPayload } from "@/lib/types";
 
-export default function BracketPage() {
+interface BracketPageProps {
+  searchParams: Promise<{ run?: string }>;
+}
+
+async function loadBracket(stem: string | null): Promise<BracketPayload | null> {
+  try {
+    return await getRunFile(stem, "bracket");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}
+
+export default async function BracketPage({ searchParams }: BracketPageProps) {
+  const { run } = await searchParams;
+  const stem = run ?? null;
+  const bracket = await loadBracket(stem);
+
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar />
+      <RunContextBar stem={stem} />
       <div>
         <h1 className="text-xl font-semibold text-foreground">Bracket</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           The full 12-team playoff bracket, pod by pod.
         </p>
       </div>
-      <EmptyState
-        icon={<Network className="h-5 w-5" />}
-        title="Bracket viewer under construction"
-        description="The flagship bracket reveal — pods, byes, and the path to the championship — is being built."
-      />
+      {bracket ? (
+        <BracketViewer bracket={bracket} />
+      ) : (
+        <EmptyState
+          icon={<PageNavIcon href="/bracket" />}
+          title="Bracket not available for this run"
+          description="This run was rankings-only, or the bracket export hasn't run yet. Re-run the pipeline with bracket generation enabled."
+        />
+      )}
     </div>
   );
 }
