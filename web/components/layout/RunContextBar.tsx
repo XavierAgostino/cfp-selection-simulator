@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { RulesetBadge } from "@/components/team/RulesetBadge";
+import { NewRunDialog } from "@/components/layout/NewRunDialog";
 import { RunSwitcher } from "@/components/layout/RunSwitcher";
 import { getRuns, NotFoundError } from "@/lib/data";
 import { formatDateTime } from "@/lib/format";
@@ -94,6 +95,7 @@ export async function RunContextBar({ stem }: RunContextBarProps) {
                 latestStem={runs.latest.stem}
               />
             ) : null}
+            <NewRunDialog defaultYear={run.season} defaultWeek={run.week} />
           </div>
           <p className="text-xs text-muted-foreground">
             Updated {formatDateTime(run.generated_at)}
