@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generated_at": "2025-12-07T18:15:00Z",
+  "latest": {
+    "season": 2025,
+    "week": 15,
+    "stem": "2025_week15"
+  },
+  "runs": [
+    {
+      "stem": "2025_week15",
+      "season": 2025,
+      "week": 15,
+      "ruleset": "2025_plus",
+      "data_source": "sample",
+      "champion_source": "cfbd",
+      "generated_at": "2025-12-07T18:15:00Z",
+      "has_bracket": true,
+      "simulator_version": "3.0.0"
+    },
+    {
+      "stem": "2025_week14",
+      "season": 2025,
+      "week": 14,
+      "ruleset": "2025_plus",
+      "data_source": "sample",
+      "champion_source": "cfbd",
+      "generated_at": "2025-11-30T18:00:00Z",
+      "has_bracket": false,
+      "simulator_version": "3.0.0"
+    }
+  ]
+}

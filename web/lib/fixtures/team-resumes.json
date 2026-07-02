@@ -1,0 +1,3780 @@
+{
+  "schema_version": 1,
+  "season": 2025,
+  "week": 15,
+  "teams": {
+    "Ohio State": {
+      "team": "Ohio State",
+      "abbreviation": "OSU",
+      "conference": "Big Ten",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+      "primary_color": "#BB0000",
+      "secondary_color": "#666666",
+      "rank": 1,
+      "seed": 1,
+      "bid_type": "auto",
+      "in_field": true,
+      "is_conference_champion": true,
+      "champion_of": "Big Ten",
+      "record": {
+        "wins": 12,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.932,
+        "resume": 0.951,
+        "predictive": 0.905,
+        "sor": 0.93,
+        "sos": 0.61
+      },
+      "component_ranks": {
+        "resume": 1,
+        "predictive": 4,
+        "sor": 5,
+        "sos": 29
+      },
+      "why_in": [
+        "Big Ten conference champion — automatic bid.",
+        "Composite score of 0.932 ranks 1th nationally."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Wisconsin",
+          "opponent_rank": 22,
+          "location": "home",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 16
+        },
+        {
+          "week": 2,
+          "opponent": "Michigan",
+          "opponent_rank": 35,
+          "location": "home",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 28
+        },
+        {
+          "week": 3,
+          "opponent": "Tennessee",
+          "opponent_rank": 39,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 4,
+          "opponent": "Texas A&M",
+          "opponent_rank": 36,
+          "location": "home",
+          "result": "L",
+          "points_for": 42,
+          "points_against": 52
+        },
+        {
+          "week": 5,
+          "opponent": "South Carolina",
+          "opponent_rank": 24,
+          "location": "home",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 14
+        },
+        {
+          "week": 6,
+          "opponent": "Army",
+          "opponent_rank": 1,
+          "location": "away",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 4
+        },
+        {
+          "week": 7,
+          "opponent": "Utah",
+          "opponent_rank": 25,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 15
+        },
+        {
+          "week": 8,
+          "opponent": "Kansas State",
+          "opponent_rank": 5,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 3
+        },
+        {
+          "week": 9,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 12
+        },
+        {
+          "week": 10,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 24
+        },
+        {
+          "week": 11,
+          "opponent": "Florida",
+          "opponent_rank": 30,
+          "location": "away",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 5
+        },
+        {
+          "week": 12,
+          "opponent": "South Carolina",
+          "opponent_rank": 6,
+          "location": "away",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 34
+        },
+        {
+          "week": 13,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 27
+        }
+      ]
+    },
+    "Georgia": {
+      "team": "Georgia",
+      "abbreviation": "UGA",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
+      "primary_color": "#BA0C2F",
+      "secondary_color": "#000000",
+      "rank": 2,
+      "seed": 2,
+      "bid_type": "auto",
+      "in_field": true,
+      "is_conference_champion": true,
+      "champion_of": "SEC",
+      "record": {
+        "wins": 12,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.918,
+        "resume": 0.937,
+        "predictive": 0.889,
+        "sor": 0.91,
+        "sos": 0.66
+      },
+      "component_ranks": {
+        "resume": 4,
+        "predictive": 1,
+        "sor": 6,
+        "sos": 30
+      },
+      "why_in": [
+        "SEC conference champion — automatic bid.",
+        "Composite score of 0.918 ranks 2th nationally."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "LSU",
+          "opponent_rank": 13,
+          "location": "home",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 29
+        },
+        {
+          "week": 2,
+          "opponent": "Boise State",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 9
+        },
+        {
+          "week": 3,
+          "opponent": "Memphis",
+          "opponent_rank": 22,
+          "location": "home",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 15
+        },
+        {
+          "week": 4,
+          "opponent": "Utah",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 5,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 8
+        },
+        {
+          "week": 6,
+          "opponent": "South Carolina",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 19
+        },
+        {
+          "week": 7,
+          "opponent": "Vanderbilt",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 3
+        },
+        {
+          "week": 8,
+          "opponent": "Missouri",
+          "opponent_rank": 40,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 13
+        },
+        {
+          "week": 9,
+          "opponent": "Navy",
+          "opponent_rank": 34,
+          "location": "away",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 17
+        },
+        {
+          "week": 10,
+          "opponent": "BYU",
+          "opponent_rank": 6,
+          "location": "away",
+          "result": "L",
+          "points_for": 21,
+          "points_against": 32
+        },
+        {
+          "week": 11,
+          "opponent": "Memphis",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 12
+        },
+        {
+          "week": 12,
+          "opponent": "BYU",
+          "opponent_rank": 29,
+          "location": "away",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 10
+        },
+        {
+          "week": 13,
+          "opponent": "Florida",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 22
+        }
+      ]
+    },
+    "Oregon": {
+      "team": "Oregon",
+      "abbreviation": "ORE",
+      "conference": "Big Ten",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
+      "primary_color": "#154733",
+      "secondary_color": "#FEE123",
+      "rank": 3,
+      "seed": 3,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 12,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.901,
+        "resume": 0.905,
+        "predictive": 0.897,
+        "sor": 0.89,
+        "sos": 0.58
+      },
+      "component_ranks": {
+        "resume": 5,
+        "predictive": 6,
+        "sor": 7,
+        "sos": 31
+      },
+      "why_in": [
+        "At-large selection on overall resume: 12-1 record with a 0.905 resume score.",
+        "Strength of record (SOR) of 0.89 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Indiana",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 2,
+          "opponent": "Illinois",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 14
+        },
+        {
+          "week": 3,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 17
+        },
+        {
+          "week": 4,
+          "opponent": "UCF",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 13
+        },
+        {
+          "week": 5,
+          "opponent": "Indiana",
+          "opponent_rank": 34,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 29
+        },
+        {
+          "week": 6,
+          "opponent": "LSU",
+          "opponent_rank": 15,
+          "location": "away",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 21
+        },
+        {
+          "week": 7,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 22
+        },
+        {
+          "week": 8,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 28
+        },
+        {
+          "week": 9,
+          "opponent": "Illinois",
+          "opponent_rank": 19,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 3
+        },
+        {
+          "week": 10,
+          "opponent": "Auburn",
+          "opponent_rank": 30,
+          "location": "away",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 30
+        },
+        {
+          "week": 11,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 33
+        },
+        {
+          "week": 12,
+          "opponent": "Oklahoma",
+          "opponent_rank": 22,
+          "location": "home",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 7
+        },
+        {
+          "week": 13,
+          "opponent": "Illinois",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 30,
+          "points_against": 45
+        }
+      ]
+    },
+    "Texas A&M": {
+      "team": "Texas A&M",
+      "abbreviation": "TAMU",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/245.png",
+      "primary_color": "#500000",
+      "secondary_color": "#FFFFFF",
+      "rank": 4,
+      "seed": 4,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 11,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.887,
+        "resume": 0.899,
+        "predictive": 0.872,
+        "sor": 0.87,
+        "sos": 0.64
+      },
+      "component_ranks": {
+        "resume": 3,
+        "predictive": 2,
+        "sor": 8,
+        "sos": 32
+      },
+      "why_in": [
+        "At-large selection on overall resume: 11-1 record with a 0.899 resume score.",
+        "Strength of record (SOR) of 0.87 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 12
+        },
+        {
+          "week": 2,
+          "opponent": "Boise State",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 23,
+          "points_against": 36
+        },
+        {
+          "week": 3,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 8
+        },
+        {
+          "week": 4,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 18
+        },
+        {
+          "week": 5,
+          "opponent": "Texas Tech",
+          "opponent_rank": 22,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 20
+        },
+        {
+          "week": 6,
+          "opponent": "Wisconsin",
+          "opponent_rank": 19,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 22
+        },
+        {
+          "week": 7,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 3
+        },
+        {
+          "week": 8,
+          "opponent": "Duke",
+          "opponent_rank": 37,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 9,
+          "opponent": "Georgia",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 16
+        },
+        {
+          "week": 10,
+          "opponent": "Kansas State",
+          "opponent_rank": 40,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 5
+        },
+        {
+          "week": 11,
+          "opponent": "Vanderbilt",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 12,
+          "opponent": "Florida",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 14
+        }
+      ]
+    },
+    "BYU": {
+      "team": "BYU",
+      "abbreviation": "BYU",
+      "conference": "Big 12",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png",
+      "primary_color": "#002E5D",
+      "secondary_color": "#FFFFFF",
+      "rank": 5,
+      "seed": 5,
+      "bid_type": "auto",
+      "in_field": true,
+      "is_conference_champion": true,
+      "champion_of": "Big 12",
+      "record": {
+        "wins": 12,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.86,
+        "resume": 0.882,
+        "predictive": 0.831,
+        "sor": 0.85,
+        "sos": 0.49
+      },
+      "component_ranks": {
+        "resume": 7,
+        "predictive": 8,
+        "sor": 9,
+        "sos": 33
+      },
+      "why_in": [
+        "Big 12 conference champion — automatic bid.",
+        "Composite score of 0.860 ranks 5th nationally."
+      ],
+      "concerns": [
+        "Strength of schedule (0.49) is on the light side relative to peer teams."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Army",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 20
+        },
+        {
+          "week": 2,
+          "opponent": "Ohio State",
+          "opponent_rank": 6,
+          "location": "away",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 24
+        },
+        {
+          "week": 3,
+          "opponent": "Miami",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 12
+        },
+        {
+          "week": 4,
+          "opponent": "Vanderbilt",
+          "opponent_rank": 20,
+          "location": "home",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 5,
+          "opponent": "Clemson",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 29
+        },
+        {
+          "week": 6,
+          "opponent": "Oregon",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 6
+        },
+        {
+          "week": 7,
+          "opponent": "Wisconsin",
+          "opponent_rank": 36,
+          "location": "away",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 13
+        },
+        {
+          "week": 8,
+          "opponent": "Louisville",
+          "opponent_rank": 18,
+          "location": "home",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 20
+        },
+        {
+          "week": 9,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 9
+        },
+        {
+          "week": 10,
+          "opponent": "Ole Miss",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 11,
+          "opponent": "Georgia",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 26,
+          "points_against": 40
+        },
+        {
+          "week": 12,
+          "opponent": "LSU",
+          "opponent_rank": 4,
+          "location": "home",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 11
+        },
+        {
+          "week": 13,
+          "opponent": "Oregon",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 20
+        }
+      ]
+    },
+    "Miami": {
+      "team": "Miami",
+      "abbreviation": "MIA",
+      "conference": "ACC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png",
+      "primary_color": "#005030",
+      "secondary_color": "#F47321",
+      "rank": 6,
+      "seed": 6,
+      "bid_type": "auto",
+      "in_field": true,
+      "is_conference_champion": true,
+      "champion_of": "ACC",
+      "record": {
+        "wins": 11,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.845,
+        "resume": 0.861,
+        "predictive": 0.826,
+        "sor": 0.83,
+        "sos": 0.55
+      },
+      "component_ranks": {
+        "resume": 8,
+        "predictive": 4,
+        "sor": 10,
+        "sos": 34
+      },
+      "why_in": [
+        "ACC conference champion — automatic bid.",
+        "Composite score of 0.845 ranks 6th nationally."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Utah",
+          "opponent_rank": 18,
+          "location": "away",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 4
+        },
+        {
+          "week": 2,
+          "opponent": "Army",
+          "opponent_rank": 9,
+          "location": "home",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 32
+        },
+        {
+          "week": 3,
+          "opponent": "UCF",
+          "opponent_rank": 11,
+          "location": "away",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 3
+        },
+        {
+          "week": 4,
+          "opponent": "Vanderbilt",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 24
+        },
+        {
+          "week": 5,
+          "opponent": "Wisconsin",
+          "opponent_rank": 25,
+          "location": "away",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 20
+        },
+        {
+          "week": 6,
+          "opponent": "Oregon",
+          "opponent_rank": 10,
+          "location": "home",
+          "result": "L",
+          "points_for": 34,
+          "points_against": 51
+        },
+        {
+          "week": 7,
+          "opponent": "Louisville",
+          "opponent_rank": 10,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 14
+        },
+        {
+          "week": 8,
+          "opponent": "Boise State",
+          "opponent_rank": 39,
+          "location": "away",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 3
+        },
+        {
+          "week": 9,
+          "opponent": "Clemson",
+          "opponent_rank": 1,
+          "location": "away",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 3
+        },
+        {
+          "week": 10,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 18
+        },
+        {
+          "week": 11,
+          "opponent": "Texas A&M",
+          "opponent_rank": 7,
+          "location": "home",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 17
+        },
+        {
+          "week": 12,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 10
+        }
+      ]
+    },
+    "Notre Dame": {
+      "team": "Notre Dame",
+      "abbreviation": "ND",
+      "conference": "FBS Independents",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
+      "primary_color": "#0C2340",
+      "secondary_color": "#C99700",
+      "rank": 7,
+      "seed": 7,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 11,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.833,
+        "resume": 0.868,
+        "predictive": 0.792,
+        "sor": 0.86,
+        "sos": 0.52
+      },
+      "component_ranks": {
+        "resume": 6,
+        "predictive": 10,
+        "sor": 11,
+        "sos": 35
+      },
+      "why_in": [
+        "At-large selection on overall resume: 11-1 record with a 0.868 resume score.",
+        "Strength of record (SOR) of 0.86 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Miami",
+          "opponent_rank": 10,
+          "location": "home",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 3
+        },
+        {
+          "week": 2,
+          "opponent": "Arizona State",
+          "opponent_rank": 13,
+          "location": "home",
+          "result": "L",
+          "points_for": 27,
+          "points_against": 39
+        },
+        {
+          "week": 3,
+          "opponent": "Texas Tech",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 29
+        },
+        {
+          "week": 4,
+          "opponent": "Illinois",
+          "opponent_rank": 18,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 16
+        },
+        {
+          "week": 5,
+          "opponent": "Texas A&M",
+          "opponent_rank": 2,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 16
+        },
+        {
+          "week": 6,
+          "opponent": "Indiana",
+          "opponent_rank": 28,
+          "location": "away",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 9
+        },
+        {
+          "week": 7,
+          "opponent": "Utah",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 19
+        },
+        {
+          "week": 8,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 8
+        },
+        {
+          "week": 9,
+          "opponent": "Texas A&M",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 12
+        },
+        {
+          "week": 10,
+          "opponent": "Ole Miss",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 27
+        },
+        {
+          "week": 11,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 26
+        },
+        {
+          "week": 12,
+          "opponent": "Virginia",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 14
+        }
+      ]
+    },
+    "Indiana": {
+      "team": "Indiana",
+      "abbreviation": "IND",
+      "conference": "Big Ten",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/84.png",
+      "primary_color": "#990000",
+      "secondary_color": "#EEEDEB",
+      "rank": 8,
+      "seed": 8,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 11,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.818,
+        "resume": 0.844,
+        "predictive": 0.786,
+        "sor": 0.82,
+        "sos": 0.5
+      },
+      "component_ranks": {
+        "resume": 10,
+        "predictive": 6,
+        "sor": 12,
+        "sos": 36
+      },
+      "why_in": [
+        "At-large selection on overall resume: 11-1 record with a 0.844 resume score.",
+        "Strength of record (SOR) of 0.82 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "No significant concerns — a clean profile at this point in the season."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Duke",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 21
+        },
+        {
+          "week": 2,
+          "opponent": "Iowa State",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 16
+        },
+        {
+          "week": 3,
+          "opponent": "LSU",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 12
+        },
+        {
+          "week": 4,
+          "opponent": "Miami",
+          "opponent_rank": 30,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 5,
+          "opponent": "Michigan",
+          "opponent_rank": 6,
+          "location": "home",
+          "result": "W",
+          "points_for": 27,
+          "points_against": 12
+        },
+        {
+          "week": 6,
+          "opponent": "Tennessee",
+          "opponent_rank": 11,
+          "location": "away",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 32
+        },
+        {
+          "week": 7,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 11
+        },
+        {
+          "week": 8,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 5
+        },
+        {
+          "week": 9,
+          "opponent": "Boise State",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 15
+        },
+        {
+          "week": 10,
+          "opponent": "Illinois",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 10
+        },
+        {
+          "week": 11,
+          "opponent": "South Carolina",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 22,
+          "points_against": 25
+        },
+        {
+          "week": 12,
+          "opponent": "Georgia",
+          "opponent_rank": 30,
+          "location": "home",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 12
+        }
+      ]
+    },
+    "Alabama": {
+      "team": "Alabama",
+      "abbreviation": "ALA",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+      "primary_color": "#9E1B32",
+      "secondary_color": "#828A8F",
+      "rank": 9,
+      "seed": 9,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.803,
+        "resume": 0.825,
+        "predictive": 0.777,
+        "sor": 0.8,
+        "sos": 0.63
+      },
+      "component_ranks": {
+        "resume": 11,
+        "predictive": 12,
+        "sor": 13,
+        "sos": 37
+      },
+      "why_in": [
+        "At-large selection on overall resume: 10-2 record with a 0.825 resume score.",
+        "Strength of record (SOR) of 0.80 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Vanderbilt",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 42,
+          "points_against": 54
+        },
+        {
+          "week": 2,
+          "opponent": "Texas Tech",
+          "opponent_rank": 40,
+          "location": "away",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 15
+        },
+        {
+          "week": 3,
+          "opponent": "Clemson",
+          "opponent_rank": 24,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 4
+        },
+        {
+          "week": 4,
+          "opponent": "Tennessee",
+          "opponent_rank": 36,
+          "location": "home",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 3
+        },
+        {
+          "week": 5,
+          "opponent": "Auburn",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 20
+        },
+        {
+          "week": 6,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 14
+        },
+        {
+          "week": 7,
+          "opponent": "Memphis",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 3
+        },
+        {
+          "week": 8,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 3
+        },
+        {
+          "week": 9,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 32,
+          "points_against": 49
+        },
+        {
+          "week": 10,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 14
+        },
+        {
+          "week": 11,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 10
+        },
+        {
+          "week": 12,
+          "opponent": "Navy",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 14
+        }
+      ]
+    },
+    "Ole Miss": {
+      "team": "Ole Miss",
+      "abbreviation": "MISS",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
+      "primary_color": "#14213D",
+      "secondary_color": "#CE1126",
+      "rank": 10,
+      "seed": 10,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.788,
+        "resume": 0.809,
+        "predictive": 0.762,
+        "sor": 0.78,
+        "sos": 0.57
+      },
+      "component_ranks": {
+        "resume": 9,
+        "predictive": 8,
+        "sor": 14,
+        "sos": 38
+      },
+      "why_in": [
+        "At-large selection on overall resume: 10-2 record with a 0.809 resume score.",
+        "Strength of record (SOR) of 0.78 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Tennessee",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 18
+        },
+        {
+          "week": 2,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 27
+        },
+        {
+          "week": 3,
+          "opponent": "Wisconsin",
+          "opponent_rank": 36,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 4,
+          "opponent": "Ohio State",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 7
+        },
+        {
+          "week": 5,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 6,
+          "opponent": "Louisville",
+          "opponent_rank": 12,
+          "location": "away",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 6
+        },
+        {
+          "week": 7,
+          "opponent": "South Carolina",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 18
+        },
+        {
+          "week": 8,
+          "opponent": "Alabama",
+          "opponent_rank": 39,
+          "location": "away",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 9,
+          "opponent": "Texas Tech",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 35,
+          "points_against": 40
+        },
+        {
+          "week": 10,
+          "opponent": "Florida",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 24,
+          "points_against": 36
+        },
+        {
+          "week": 11,
+          "opponent": "Auburn",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 9
+        },
+        {
+          "week": 12,
+          "opponent": "Texas Tech",
+          "opponent_rank": 21,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 5
+        }
+      ]
+    },
+    "Iowa State": {
+      "team": "Iowa State",
+      "abbreviation": "ISU",
+      "conference": "Big 12",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/66.png",
+      "primary_color": "#C8102E",
+      "secondary_color": "#F1BE48",
+      "rank": 11,
+      "seed": 11,
+      "bid_type": "at_large",
+      "in_field": true,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.771,
+        "resume": 0.799,
+        "predictive": 0.738,
+        "sor": 0.77,
+        "sos": 0.46
+      },
+      "component_ranks": {
+        "resume": 13,
+        "predictive": 14,
+        "sor": 15,
+        "sos": 39
+      },
+      "why_in": [
+        "At-large selection on overall resume: 10-2 record with a 0.799 resume score.",
+        "Strength of record (SOR) of 0.77 supports the case over teams just outside the field."
+      ],
+      "concerns": [
+        "Strength of schedule (0.46) is on the light side relative to peer teams.",
+        "Two losses on the season invite scrutiny from the committee."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Oregon",
+          "opponent_rank": 15,
+          "location": "home",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 9
+        },
+        {
+          "week": 2,
+          "opponent": "Utah",
+          "opponent_rank": 12,
+          "location": "away",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 3
+        },
+        {
+          "week": 3,
+          "opponent": "Duke",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 16
+        },
+        {
+          "week": 4,
+          "opponent": "Memphis",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 35,
+          "points_against": 46
+        },
+        {
+          "week": 5,
+          "opponent": "Miami",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 14
+        },
+        {
+          "week": 6,
+          "opponent": "Utah",
+          "opponent_rank": 1,
+          "location": "away",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 25
+        },
+        {
+          "week": 7,
+          "opponent": "Michigan",
+          "opponent_rank": 39,
+          "location": "home",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 22
+        },
+        {
+          "week": 8,
+          "opponent": "SMU",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 23
+        },
+        {
+          "week": 9,
+          "opponent": "Virginia",
+          "opponent_rank": 17,
+          "location": "away",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 29
+        },
+        {
+          "week": 10,
+          "opponent": "Duke",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 24,
+          "points_against": 35
+        },
+        {
+          "week": 11,
+          "opponent": "Texas A&M",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 15
+        },
+        {
+          "week": 12,
+          "opponent": "Miami",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 23
+        }
+      ]
+    },
+    "Boise State": {
+      "team": "Boise State",
+      "abbreviation": "BSU",
+      "conference": "Mountain West",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png",
+      "primary_color": "#0033A0",
+      "secondary_color": "#D64309",
+      "rank": 12,
+      "seed": 12,
+      "bid_type": "auto",
+      "in_field": true,
+      "is_conference_champion": true,
+      "champion_of": "Mountain West",
+      "record": {
+        "wins": 12,
+        "losses": 1
+      },
+      "scores": {
+        "composite": 0.754,
+        "resume": 0.812,
+        "predictive": 0.681,
+        "sor": 0.79,
+        "sos": 0.31
+      },
+      "component_ranks": {
+        "resume": 14,
+        "predictive": 10,
+        "sor": 16,
+        "sos": 40
+      },
+      "why_in": [
+        "Mountain West conference champion — automatic bid.",
+        "Composite score of 0.754 ranks 12th nationally."
+      ],
+      "concerns": [
+        "Strength of schedule (0.31) is on the light side relative to peer teams."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Florida",
+          "opponent_rank": 6,
+          "location": "away",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 14
+        },
+        {
+          "week": 2,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 11
+        },
+        {
+          "week": 3,
+          "opponent": "Syracuse",
+          "opponent_rank": 37,
+          "location": "away",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 11
+        },
+        {
+          "week": 4,
+          "opponent": "Texas Tech",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 11
+        },
+        {
+          "week": 5,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 27,
+          "points_against": 41
+        },
+        {
+          "week": 6,
+          "opponent": "Missouri",
+          "opponent_rank": 20,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 27,
+          "points_against": 5
+        },
+        {
+          "week": 7,
+          "opponent": "Notre Dame",
+          "opponent_rank": 28,
+          "location": "away",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 7
+        },
+        {
+          "week": 8,
+          "opponent": "Illinois",
+          "opponent_rank": 12,
+          "location": "home",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 16
+        },
+        {
+          "week": 9,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 22
+        },
+        {
+          "week": 10,
+          "opponent": "Wisconsin",
+          "opponent_rank": 32,
+          "location": "away",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 12
+        },
+        {
+          "week": 11,
+          "opponent": "Duke",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 15
+        },
+        {
+          "week": 12,
+          "opponent": "Louisville",
+          "opponent_rank": 10,
+          "location": "home",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 16
+        },
+        {
+          "week": 13,
+          "opponent": "Texas Tech",
+          "opponent_rank": 39,
+          "location": "away",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 17
+        }
+      ]
+    },
+    "Tennessee": {
+      "team": "Tennessee",
+      "abbreviation": "TENN",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png",
+      "primary_color": "#FF8200",
+      "secondary_color": "#58595B",
+      "rank": 13,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.742,
+        "resume": 0.756,
+        "predictive": 0.724,
+        "sor": 0.74,
+        "sos": 0.6
+      },
+      "component_ranks": {
+        "resume": 12,
+        "predictive": 16,
+        "sor": 17,
+        "sos": 41
+      },
+      "why_in": [
+        "Ranked 13th in the final composite — outside the 12-team field.",
+        "Resume score of 0.756 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "SMU",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 3
+        },
+        {
+          "week": 2,
+          "opponent": "Clemson",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 11
+        },
+        {
+          "week": 3,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 4
+        },
+        {
+          "week": 4,
+          "opponent": "Auburn",
+          "opponent_rank": 13,
+          "location": "home",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 29
+        },
+        {
+          "week": 5,
+          "opponent": "Arizona State",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 6
+        },
+        {
+          "week": 6,
+          "opponent": "South Carolina",
+          "opponent_rank": 9,
+          "location": "home",
+          "result": "W",
+          "points_for": 23,
+          "points_against": 7
+        },
+        {
+          "week": 7,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 15
+        },
+        {
+          "week": 8,
+          "opponent": "South Carolina",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 37,
+          "points_against": 43
+        },
+        {
+          "week": 9,
+          "opponent": "Texas A&M",
+          "opponent_rank": 27,
+          "location": "home",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 18
+        },
+        {
+          "week": 10,
+          "opponent": "Vanderbilt",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 26
+        },
+        {
+          "week": 11,
+          "opponent": "Memphis",
+          "opponent_rank": 5,
+          "location": "away",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 18
+        },
+        {
+          "week": 12,
+          "opponent": "Duke",
+          "opponent_rank": 40,
+          "location": "away",
+          "result": "L",
+          "points_for": 33,
+          "points_against": 39
+        }
+      ]
+    },
+    "Missouri": {
+      "team": "Missouri",
+      "abbreviation": "MIZ",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/142.png",
+      "primary_color": "#F1B82D",
+      "secondary_color": "#000000",
+      "rank": 14,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.731,
+        "resume": 0.748,
+        "predictive": 0.71,
+        "sor": 0.73,
+        "sos": 0.58
+      },
+      "component_ranks": {
+        "resume": 16,
+        "predictive": 12,
+        "sor": 18,
+        "sos": 42
+      },
+      "why_in": [
+        "Ranked 14th in the final composite — outside the 12-team field.",
+        "Resume score of 0.748 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Iowa State",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 8
+        },
+        {
+          "week": 2,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 5
+        },
+        {
+          "week": 3,
+          "opponent": "Texas Tech",
+          "opponent_rank": 25,
+          "location": "away",
+          "result": "L",
+          "points_for": 37,
+          "points_against": 40
+        },
+        {
+          "week": 4,
+          "opponent": "Texas Tech",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 23,
+          "points_against": 30
+        },
+        {
+          "week": 5,
+          "opponent": "UCF",
+          "opponent_rank": 32,
+          "location": "home",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 25
+        },
+        {
+          "week": 6,
+          "opponent": "Tennessee",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 10
+        },
+        {
+          "week": 7,
+          "opponent": "Texas A&M",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 6
+        },
+        {
+          "week": 8,
+          "opponent": "Clemson",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 13
+        },
+        {
+          "week": 9,
+          "opponent": "South Carolina",
+          "opponent_rank": 28,
+          "location": "home",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 17
+        },
+        {
+          "week": 10,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 22
+        },
+        {
+          "week": 11,
+          "opponent": "BYU",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 16
+        },
+        {
+          "week": 12,
+          "opponent": "Clemson",
+          "opponent_rank": 26,
+          "location": "home",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 23
+        }
+      ]
+    },
+    "Utah": {
+      "team": "Utah",
+      "abbreviation": "UTAH",
+      "conference": "Big 12",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/254.png",
+      "primary_color": "#CC0000",
+      "secondary_color": "#000000",
+      "rank": 15,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.719,
+        "resume": 0.733,
+        "predictive": 0.702,
+        "sor": 0.71,
+        "sos": 0.47
+      },
+      "component_ranks": {
+        "resume": 17,
+        "predictive": 18,
+        "sor": 19,
+        "sos": 43
+      },
+      "why_in": [
+        "Ranked 15th in the final composite — outside the 12-team field.",
+        "Resume score of 0.733 trails the last team in."
+      ],
+      "concerns": [
+        "Strength of schedule (0.47) is on the light side relative to peer teams.",
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Ohio State",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 2,
+          "opponent": "Clemson",
+          "opponent_rank": 25,
+          "location": "home",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 22
+        },
+        {
+          "week": 3,
+          "opponent": "Indiana",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 21,
+          "points_against": 27
+        },
+        {
+          "week": 4,
+          "opponent": "Indiana",
+          "opponent_rank": 9,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 5,
+          "opponent": "Miami",
+          "opponent_rank": 17,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 14
+        },
+        {
+          "week": 6,
+          "opponent": "Wisconsin",
+          "opponent_rank": 39,
+          "location": "away",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 16
+        },
+        {
+          "week": 7,
+          "opponent": "Ole Miss",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 14
+        },
+        {
+          "week": 8,
+          "opponent": "South Carolina",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 21,
+          "points_against": 30
+        },
+        {
+          "week": 9,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 7
+        },
+        {
+          "week": 10,
+          "opponent": "Vanderbilt",
+          "opponent_rank": 30,
+          "location": "away",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 11,
+          "opponent": "Navy",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 3
+        },
+        {
+          "week": 12,
+          "opponent": "Tennessee",
+          "opponent_rank": 25,
+          "location": "home",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 27
+        }
+      ]
+    },
+    "Michigan": {
+      "team": "Michigan",
+      "abbreviation": "MICH",
+      "conference": "Big Ten",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/130.png",
+      "primary_color": "#00274C",
+      "secondary_color": "#FFCB05",
+      "rank": 16,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.706,
+        "resume": 0.718,
+        "predictive": 0.691,
+        "sor": 0.7,
+        "sos": 0.55
+      },
+      "component_ranks": {
+        "resume": 15,
+        "predictive": 14,
+        "sor": 20,
+        "sos": 44
+      },
+      "why_in": [
+        "Ranked 16th in the final composite — outside the 12-team field.",
+        "Resume score of 0.718 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Kansas State",
+          "opponent_rank": 11,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 33,
+          "points_against": 50
+        },
+        {
+          "week": 2,
+          "opponent": "Duke",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 16
+        },
+        {
+          "week": 3,
+          "opponent": "Texas Tech",
+          "opponent_rank": 25,
+          "location": "home",
+          "result": "W",
+          "points_for": 27,
+          "points_against": 8
+        },
+        {
+          "week": 4,
+          "opponent": "Duke",
+          "opponent_rank": 2,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 20
+        },
+        {
+          "week": 5,
+          "opponent": "Navy",
+          "opponent_rank": 40,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 14
+        },
+        {
+          "week": 6,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 7
+        },
+        {
+          "week": 7,
+          "opponent": "Duke",
+          "opponent_rank": 16,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 10
+        },
+        {
+          "week": 8,
+          "opponent": "Texas A&M",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 3
+        },
+        {
+          "week": 9,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 34,
+          "points_against": 49
+        },
+        {
+          "week": 10,
+          "opponent": "Clemson",
+          "opponent_rank": 35,
+          "location": "away",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 20
+        },
+        {
+          "week": 11,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 18
+        },
+        {
+          "week": 12,
+          "opponent": "Texas Tech",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 14
+        }
+      ]
+    },
+    "Oklahoma": {
+      "team": "Oklahoma",
+      "abbreviation": "OU",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/201.png",
+      "primary_color": "#841617",
+      "secondary_color": "#FDF9D8",
+      "rank": 17,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.694,
+        "resume": 0.702,
+        "predictive": 0.683,
+        "sor": 0.69,
+        "sos": 0.59
+      },
+      "component_ranks": {
+        "resume": 19,
+        "predictive": 20,
+        "sor": 21,
+        "sos": 45
+      },
+      "why_in": [
+        "Ranked 17th in the final composite — outside the 12-team field.",
+        "Resume score of 0.702 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "South Carolina",
+          "opponent_rank": 2,
+          "location": "away",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 9
+        },
+        {
+          "week": 2,
+          "opponent": "Notre Dame",
+          "opponent_rank": 24,
+          "location": "away",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 19
+        },
+        {
+          "week": 3,
+          "opponent": "South Carolina",
+          "opponent_rank": 19,
+          "location": "home",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 4,
+          "opponent": "Wisconsin",
+          "opponent_rank": 38,
+          "location": "away",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 9
+        },
+        {
+          "week": 5,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 39,
+          "points_against": 47
+        },
+        {
+          "week": 6,
+          "opponent": "Clemson",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 35,
+          "points_against": 42
+        },
+        {
+          "week": 7,
+          "opponent": "Syracuse",
+          "opponent_rank": 5,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 17
+        },
+        {
+          "week": 8,
+          "opponent": "UCF",
+          "opponent_rank": 3,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 30
+        },
+        {
+          "week": 9,
+          "opponent": "SMU",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 22
+        },
+        {
+          "week": 10,
+          "opponent": "Texas A&M",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 9
+        },
+        {
+          "week": 11,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 31
+        },
+        {
+          "week": 12,
+          "opponent": "Arizona State",
+          "opponent_rank": 10,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 37,
+          "points_against": 54
+        }
+      ]
+    },
+    "LSU": {
+      "team": "LSU",
+      "abbreviation": "LSU",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
+      "primary_color": "#461D7C",
+      "secondary_color": "#FDD023",
+      "rank": 18,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.681,
+        "resume": 0.689,
+        "predictive": 0.67,
+        "sor": 0.68,
+        "sos": 0.61
+      },
+      "component_ranks": {
+        "resume": 20,
+        "predictive": 16,
+        "sor": 22,
+        "sos": 46
+      },
+      "why_in": [
+        "Ranked 18th in the final composite — outside the 12-team field.",
+        "Resume score of 0.689 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 5
+        },
+        {
+          "week": 2,
+          "opponent": "Navy",
+          "opponent_rank": 5,
+          "location": "home",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 24
+        },
+        {
+          "week": 3,
+          "opponent": "Vanderbilt",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 10
+        },
+        {
+          "week": 4,
+          "opponent": "Clemson",
+          "opponent_rank": 27,
+          "location": "away",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 3
+        },
+        {
+          "week": 5,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 36,
+          "points_against": 39
+        },
+        {
+          "week": 6,
+          "opponent": "Memphis",
+          "opponent_rank": 38,
+          "location": "home",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 5
+        },
+        {
+          "week": 7,
+          "opponent": "Illinois",
+          "opponent_rank": 39,
+          "location": "home",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 25
+        },
+        {
+          "week": 8,
+          "opponent": "Illinois",
+          "opponent_rank": 22,
+          "location": "away",
+          "result": "L",
+          "points_for": 21,
+          "points_against": 33
+        },
+        {
+          "week": 9,
+          "opponent": "Oregon",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 37,
+          "points_against": 44
+        },
+        {
+          "week": 10,
+          "opponent": "BYU",
+          "opponent_rank": 40,
+          "location": "away",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 26
+        },
+        {
+          "week": 11,
+          "opponent": "Indiana",
+          "opponent_rank": 31,
+          "location": "home",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 14
+        },
+        {
+          "week": 12,
+          "opponent": "Iowa State",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 17
+        }
+      ]
+    },
+    "South Carolina": {
+      "team": "South Carolina",
+      "abbreviation": "SC",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2579.png",
+      "primary_color": "#73000A",
+      "secondary_color": "#000000",
+      "rank": 19,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.668,
+        "resume": 0.677,
+        "predictive": 0.656,
+        "sor": 0.67,
+        "sos": 0.57
+      },
+      "component_ranks": {
+        "resume": 18,
+        "predictive": 22,
+        "sor": 23,
+        "sos": 47
+      },
+      "why_in": [
+        "Ranked 19th in the final composite — outside the 12-team field.",
+        "Resume score of 0.677 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "UCF",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 27,
+          "points_against": 6
+        },
+        {
+          "week": 2,
+          "opponent": "Florida",
+          "opponent_rank": 23,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 3,
+          "opponent": "Clemson",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 20
+        },
+        {
+          "week": 4,
+          "opponent": "Virginia",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 15
+        },
+        {
+          "week": 5,
+          "opponent": "Illinois",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 29,
+          "points_against": 36
+        },
+        {
+          "week": 6,
+          "opponent": "Arizona State",
+          "opponent_rank": 37,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 3
+        },
+        {
+          "week": 7,
+          "opponent": "Army",
+          "opponent_rank": 5,
+          "location": "home",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 6
+        },
+        {
+          "week": 8,
+          "opponent": "Indiana",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 43,
+          "points_against": 59
+        },
+        {
+          "week": 9,
+          "opponent": "Army",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 25
+        },
+        {
+          "week": 10,
+          "opponent": "Illinois",
+          "opponent_rank": 28,
+          "location": "away",
+          "result": "W",
+          "points_for": 34,
+          "points_against": 21
+        },
+        {
+          "week": 11,
+          "opponent": "Alabama",
+          "opponent_rank": 3,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 24
+        },
+        {
+          "week": 12,
+          "opponent": "Kansas State",
+          "opponent_rank": 27,
+          "location": "away",
+          "result": "L",
+          "points_for": 32,
+          "points_against": 48
+        }
+      ]
+    },
+    "Clemson": {
+      "team": "Clemson",
+      "abbreviation": "CLEM",
+      "conference": "ACC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/228.png",
+      "primary_color": "#F56600",
+      "secondary_color": "#522D80",
+      "rank": 20,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.655,
+        "resume": 0.663,
+        "predictive": 0.644,
+        "sor": 0.66,
+        "sos": 0.5
+      },
+      "component_ranks": {
+        "resume": 22,
+        "predictive": 18,
+        "sor": 24,
+        "sos": 48
+      },
+      "why_in": [
+        "Ranked 20th in the final composite — outside the 12-team field.",
+        "Resume score of 0.663 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Illinois",
+          "opponent_rank": 16,
+          "location": "away",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 15
+        },
+        {
+          "week": 2,
+          "opponent": "BYU",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 14
+        },
+        {
+          "week": 3,
+          "opponent": "Florida",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 43,
+          "points_against": 52
+        },
+        {
+          "week": 4,
+          "opponent": "UCF",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 31,
+          "points_against": 49
+        },
+        {
+          "week": 5,
+          "opponent": "Tennessee",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 24,
+          "points_against": 31
+        },
+        {
+          "week": 6,
+          "opponent": "Iowa State",
+          "opponent_rank": 18,
+          "location": "away",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 16
+        },
+        {
+          "week": 7,
+          "opponent": "Tennessee",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 19
+        },
+        {
+          "week": 8,
+          "opponent": "Memphis",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 7
+        },
+        {
+          "week": 9,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 3
+        },
+        {
+          "week": 10,
+          "opponent": "Utah",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 14
+        },
+        {
+          "week": 11,
+          "opponent": "Memphis",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 36,
+          "points_against": 22
+        },
+        {
+          "week": 12,
+          "opponent": "Clemson",
+          "opponent_rank": 33,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 4
+        }
+      ]
+    },
+    "SMU": {
+      "team": "SMU",
+      "abbreviation": "SMU",
+      "conference": "ACC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2567.png",
+      "primary_color": "#0033A0",
+      "secondary_color": "#C8102E",
+      "rank": 21,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.641,
+        "resume": 0.652,
+        "predictive": 0.627,
+        "sor": 0.65,
+        "sos": 0.48
+      },
+      "component_ranks": {
+        "resume": 23,
+        "predictive": 24,
+        "sor": 25,
+        "sos": 49
+      },
+      "why_in": [
+        "Ranked 21th in the final composite — outside the 12-team field.",
+        "Resume score of 0.652 trails the last team in."
+      ],
+      "concerns": [
+        "Strength of schedule (0.48) is on the light side relative to peer teams.",
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Michigan",
+          "opponent_rank": 7,
+          "location": "home",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 2,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 20
+        },
+        {
+          "week": 3,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 3
+        },
+        {
+          "week": 4,
+          "opponent": "Texas A&M",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 28,
+          "points_against": 31
+        },
+        {
+          "week": 5,
+          "opponent": "Virginia",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 32
+        },
+        {
+          "week": 6,
+          "opponent": "Ole Miss",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 43,
+          "points_against": 47
+        },
+        {
+          "week": 7,
+          "opponent": "Georgia",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 22,
+          "points_against": 12
+        },
+        {
+          "week": 8,
+          "opponent": "Texas A&M",
+          "opponent_rank": 1,
+          "location": "away",
+          "result": "W",
+          "points_for": 43,
+          "points_against": 21
+        },
+        {
+          "week": 9,
+          "opponent": "Notre Dame",
+          "opponent_rank": 40,
+          "location": "away",
+          "result": "W",
+          "points_for": 25,
+          "points_against": 6
+        },
+        {
+          "week": 10,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 11,
+          "opponent": "Wisconsin",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 19,
+          "points_against": 31
+        },
+        {
+          "week": 12,
+          "opponent": "Missouri",
+          "opponent_rank": 10,
+          "location": "home",
+          "result": "W",
+          "points_for": 17,
+          "points_against": 5
+        }
+      ]
+    },
+    "Louisville": {
+      "team": "Louisville",
+      "abbreviation": "LOU",
+      "conference": "ACC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/97.png",
+      "primary_color": "#AD0000",
+      "secondary_color": "#000000",
+      "rank": 22,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.628,
+        "resume": 0.639,
+        "predictive": 0.614,
+        "sor": 0.63,
+        "sos": 0.45
+      },
+      "component_ranks": {
+        "resume": 21,
+        "predictive": 20,
+        "sor": 26,
+        "sos": 50
+      },
+      "why_in": [
+        "Ranked 22th in the final composite — outside the 12-team field.",
+        "Resume score of 0.639 trails the last team in."
+      ],
+      "concerns": [
+        "Strength of schedule (0.45) is on the light side relative to peer teams.",
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Miami",
+          "opponent_rank": 39,
+          "location": "home",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 14
+        },
+        {
+          "week": 2,
+          "opponent": "Ole Miss",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 25
+        },
+        {
+          "week": 3,
+          "opponent": "Georgia",
+          "opponent_rank": 1,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 24,
+          "points_against": 31
+        },
+        {
+          "week": 4,
+          "opponent": "Alabama",
+          "opponent_rank": 7,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 30,
+          "points_against": 6
+        },
+        {
+          "week": 5,
+          "opponent": "Navy",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 24,
+          "points_against": 14
+        },
+        {
+          "week": 6,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 16
+        },
+        {
+          "week": 7,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 36,
+          "points_against": 54
+        },
+        {
+          "week": 8,
+          "opponent": "Clemson",
+          "opponent_rank": 39,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 15
+        },
+        {
+          "week": 9,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 3
+        },
+        {
+          "week": 10,
+          "opponent": "BYU",
+          "opponent_rank": 16,
+          "location": "away",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 12
+        },
+        {
+          "week": 11,
+          "opponent": "Oklahoma",
+          "opponent_rank": 37,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 32,
+          "points_against": 18
+        },
+        {
+          "week": 12,
+          "opponent": "Arizona State",
+          "opponent_rank": 21,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 30,
+          "points_against": 35
+        }
+      ]
+    },
+    "Vanderbilt": {
+      "team": "Vanderbilt",
+      "abbreviation": "VANDY",
+      "conference": "SEC",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/238.png",
+      "primary_color": "#000000",
+      "secondary_color": "#866D4B",
+      "rank": 23,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 9,
+        "losses": 3
+      },
+      "scores": {
+        "composite": 0.614,
+        "resume": 0.621,
+        "predictive": 0.605,
+        "sor": 0.61,
+        "sos": 0.52
+      },
+      "component_ranks": {
+        "resume": 25,
+        "predictive": 26,
+        "sor": 27,
+        "sos": 51
+      },
+      "why_in": [
+        "Ranked 23th in the final composite — outside the 12-team field.",
+        "Resume score of 0.621 trails the last team in."
+      ],
+      "concerns": [
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Virginia",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 38,
+          "points_against": 52
+        },
+        {
+          "week": 2,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "L",
+          "points_for": 21,
+          "points_against": 25
+        },
+        {
+          "week": 3,
+          "opponent": "Michigan",
+          "opponent_rank": 11,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 7
+        },
+        {
+          "week": 4,
+          "opponent": "Utah",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 18
+        },
+        {
+          "week": 5,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "L",
+          "points_for": 36,
+          "points_against": 52
+        },
+        {
+          "week": 6,
+          "opponent": "BYU",
+          "opponent_rank": 10,
+          "location": "home",
+          "result": "W",
+          "points_for": 44,
+          "points_against": 17
+        },
+        {
+          "week": 7,
+          "opponent": "Arizona State",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 18,
+          "points_against": 6
+        },
+        {
+          "week": 8,
+          "opponent": "South Carolina",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 28
+        },
+        {
+          "week": 9,
+          "opponent": "Boise State",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 4
+        },
+        {
+          "week": 10,
+          "opponent": "Notre Dame",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 41,
+          "points_against": 19
+        },
+        {
+          "week": 11,
+          "opponent": "Duke",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 5
+        },
+        {
+          "week": 12,
+          "opponent": "Ohio State",
+          "opponent_rank": 17,
+          "location": "home",
+          "result": "W",
+          "points_for": 28,
+          "points_against": 3
+        }
+      ]
+    },
+    "Memphis": {
+      "team": "Memphis",
+      "abbreviation": "MEM",
+      "conference": "American Athletic",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/235.png",
+      "primary_color": "#003087",
+      "secondary_color": "#898D8D",
+      "rank": 24,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": true,
+      "champion_of": "American Athletic",
+      "record": {
+        "wins": 11,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.598,
+        "resume": 0.64,
+        "predictive": 0.539,
+        "sor": 0.63,
+        "sos": 0.28
+      },
+      "component_ranks": {
+        "resume": 26,
+        "predictive": 22,
+        "sor": 28,
+        "sos": 52
+      },
+      "why_in": [
+        "Ranked 24th in the final composite — outside the 12-team field.",
+        "Resume score of 0.640 trails the last team in."
+      ],
+      "concerns": [
+        "Strength of schedule (0.28) is on the light side relative to peer teams.",
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Memphis",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 29
+        },
+        {
+          "week": 2,
+          "opponent": "Michigan",
+          "opponent_rank": 40,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 24,
+          "points_against": 31
+        },
+        {
+          "week": 3,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 21,
+          "points_against": 3
+        },
+        {
+          "week": 4,
+          "opponent": "Michigan",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "L",
+          "points_for": 31,
+          "points_against": 44
+        },
+        {
+          "week": 5,
+          "opponent": "Vanderbilt",
+          "opponent_rank": 33,
+          "location": "home",
+          "result": "W",
+          "points_for": 33,
+          "points_against": 22
+        },
+        {
+          "week": 6,
+          "opponent": "Oklahoma",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 35,
+          "points_against": 25
+        },
+        {
+          "week": 7,
+          "opponent": "Alabama",
+          "opponent_rank": 37,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 19
+        },
+        {
+          "week": 8,
+          "opponent": "Ole Miss",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 16
+        },
+        {
+          "week": 9,
+          "opponent": "Kansas State",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 26,
+          "points_against": 3
+        },
+        {
+          "week": 10,
+          "opponent": "Alabama",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 18
+        },
+        {
+          "week": 11,
+          "opponent": "Memphis",
+          "opponent_rank": 5,
+          "location": "home",
+          "result": "W",
+          "points_for": 19,
+          "points_against": 8
+        },
+        {
+          "week": 12,
+          "opponent": "Tennessee",
+          "opponent_rank": 34,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 31
+        },
+        {
+          "week": 13,
+          "opponent": "Navy",
+          "opponent_rank": 18,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 37,
+          "points_against": 18
+        }
+      ]
+    },
+    "Army": {
+      "team": "Army",
+      "abbreviation": "ARMY",
+      "conference": "American Athletic",
+      "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/349.png",
+      "primary_color": "#000000",
+      "secondary_color": "#D4BA84",
+      "rank": 25,
+      "seed": null,
+      "bid_type": null,
+      "in_field": false,
+      "is_conference_champion": false,
+      "champion_of": null,
+      "record": {
+        "wins": 10,
+        "losses": 2
+      },
+      "scores": {
+        "composite": 0.582,
+        "resume": 0.611,
+        "predictive": 0.541,
+        "sor": 0.6,
+        "sos": 0.24
+      },
+      "component_ranks": {
+        "resume": 24,
+        "predictive": 28,
+        "sor": 29,
+        "sos": 53
+      },
+      "why_in": [
+        "Ranked 25th in the final composite — outside the 12-team field.",
+        "Resume score of 0.611 trails the last team in."
+      ],
+      "concerns": [
+        "Strength of schedule (0.24) is on the light side relative to peer teams.",
+        "Two losses on the season invite scrutiny from the committee.",
+        "Needs results elsewhere to fall to jump back into the field."
+      ],
+      "schedule": [
+        {
+          "week": 1,
+          "opponent": "Missouri",
+          "opponent_rank": 12,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 17
+        },
+        {
+          "week": 2,
+          "opponent": "Syracuse",
+          "opponent_rank": null,
+          "location": "neutral",
+          "result": "W",
+          "points_for": 20,
+          "points_against": 5
+        },
+        {
+          "week": 3,
+          "opponent": "Ohio State",
+          "opponent_rank": 1,
+          "location": "away",
+          "result": "L",
+          "points_for": 33,
+          "points_against": 47
+        },
+        {
+          "week": 4,
+          "opponent": "Clemson",
+          "opponent_rank": null,
+          "location": "away",
+          "result": "W",
+          "points_for": 42,
+          "points_against": 21
+        },
+        {
+          "week": 5,
+          "opponent": "Indiana",
+          "opponent_rank": 37,
+          "location": "home",
+          "result": "L",
+          "points_for": 28,
+          "points_against": 34
+        },
+        {
+          "week": 6,
+          "opponent": "Louisville",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 31,
+          "points_against": 6
+        },
+        {
+          "week": 7,
+          "opponent": "Navy",
+          "opponent_rank": 31,
+          "location": "away",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 28
+        },
+        {
+          "week": 8,
+          "opponent": "Missouri",
+          "opponent_rank": 33,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 31
+        },
+        {
+          "week": 9,
+          "opponent": "South Carolina",
+          "opponent_rank": 9,
+          "location": "home",
+          "result": "W",
+          "points_for": 29,
+          "points_against": 3
+        },
+        {
+          "week": 10,
+          "opponent": "SMU",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 39,
+          "points_against": 28
+        },
+        {
+          "week": 11,
+          "opponent": "Virginia",
+          "opponent_rank": 36,
+          "location": "home",
+          "result": "W",
+          "points_for": 38,
+          "points_against": 31
+        },
+        {
+          "week": 12,
+          "opponent": "Missouri",
+          "opponent_rank": null,
+          "location": "home",
+          "result": "W",
+          "points_for": 40,
+          "points_against": 28
+        }
+      ]
+    }
+  }
+}

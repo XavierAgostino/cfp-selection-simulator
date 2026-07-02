@@ -1,0 +1,252 @@
+{
+  "Ohio State": {
+    "cfbd_id": null,
+    "espn_id": "194",
+    "abbreviation": "OSU",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+    "logo_source": "espn",
+    "primary_color": "#BB0000",
+    "secondary_color": "#666666"
+  },
+  "Georgia": {
+    "cfbd_id": null,
+    "espn_id": "61",
+    "abbreviation": "UGA",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
+    "logo_source": "espn",
+    "primary_color": "#BA0C2F",
+    "secondary_color": "#000000"
+  },
+  "Oregon": {
+    "cfbd_id": null,
+    "espn_id": "2483",
+    "abbreviation": "ORE",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
+    "logo_source": "espn",
+    "primary_color": "#154733",
+    "secondary_color": "#FEE123"
+  },
+  "Texas A&M": {
+    "cfbd_id": null,
+    "espn_id": "245",
+    "abbreviation": "TAMU",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/245.png",
+    "logo_source": "espn",
+    "primary_color": "#500000",
+    "secondary_color": "#FFFFFF"
+  },
+  "BYU": {
+    "cfbd_id": null,
+    "espn_id": "252",
+    "abbreviation": "BYU",
+    "conference": "Big 12",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png",
+    "logo_source": "espn",
+    "primary_color": "#002E5D",
+    "secondary_color": "#FFFFFF"
+  },
+  "Miami": {
+    "cfbd_id": null,
+    "espn_id": "2390",
+    "abbreviation": "MIA",
+    "conference": "ACC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png",
+    "logo_source": "espn",
+    "primary_color": "#005030",
+    "secondary_color": "#F47321"
+  },
+  "Notre Dame": {
+    "cfbd_id": null,
+    "espn_id": "87",
+    "abbreviation": "ND",
+    "conference": "FBS Independents",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
+    "logo_source": "espn",
+    "primary_color": "#0C2340",
+    "secondary_color": "#C99700"
+  },
+  "Indiana": {
+    "cfbd_id": null,
+    "espn_id": "84",
+    "abbreviation": "IND",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/84.png",
+    "logo_source": "espn",
+    "primary_color": "#990000",
+    "secondary_color": "#EEEDEB"
+  },
+  "Alabama": {
+    "cfbd_id": null,
+    "espn_id": "333",
+    "abbreviation": "ALA",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+    "logo_source": "espn",
+    "primary_color": "#9E1B32",
+    "secondary_color": "#828A8F"
+  },
+  "Ole Miss": {
+    "cfbd_id": null,
+    "espn_id": "145",
+    "abbreviation": "MISS",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
+    "logo_source": "espn",
+    "primary_color": "#14213D",
+    "secondary_color": "#CE1126"
+  },
+  "Iowa State": {
+    "cfbd_id": null,
+    "espn_id": "66",
+    "abbreviation": "ISU",
+    "conference": "Big 12",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/66.png",
+    "logo_source": "espn",
+    "primary_color": "#C8102E",
+    "secondary_color": "#F1BE48"
+  },
+  "Boise State": {
+    "cfbd_id": null,
+    "espn_id": "68",
+    "abbreviation": "BSU",
+    "conference": "Mountain West",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png",
+    "logo_source": "espn",
+    "primary_color": "#0033A0",
+    "secondary_color": "#D64309"
+  },
+  "Tennessee": {
+    "cfbd_id": null,
+    "espn_id": "2633",
+    "abbreviation": "TENN",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png",
+    "logo_source": "espn",
+    "primary_color": "#FF8200",
+    "secondary_color": "#58595B"
+  },
+  "Missouri": {
+    "cfbd_id": null,
+    "espn_id": "142",
+    "abbreviation": "MIZ",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/142.png",
+    "logo_source": "espn",
+    "primary_color": "#F1B82D",
+    "secondary_color": "#000000"
+  },
+  "Utah": {
+    "cfbd_id": null,
+    "espn_id": "254",
+    "abbreviation": "UTAH",
+    "conference": "Big 12",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/254.png",
+    "logo_source": "espn",
+    "primary_color": "#CC0000",
+    "secondary_color": "#000000"
+  },
+  "Michigan": {
+    "cfbd_id": null,
+    "espn_id": "130",
+    "abbreviation": "MICH",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/130.png",
+    "logo_source": "espn",
+    "primary_color": "#00274C",
+    "secondary_color": "#FFCB05"
+  },
+  "Oklahoma": {
+    "cfbd_id": null,
+    "espn_id": "201",
+    "abbreviation": "OU",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/201.png",
+    "logo_source": "espn",
+    "primary_color": "#841617",
+    "secondary_color": "#FDF9D8"
+  },
+  "LSU": {
+    "cfbd_id": null,
+    "espn_id": "99",
+    "abbreviation": "LSU",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
+    "logo_source": "espn",
+    "primary_color": "#461D7C",
+    "secondary_color": "#FDD023"
+  },
+  "South Carolina": {
+    "cfbd_id": null,
+    "espn_id": "2579",
+    "abbreviation": "SC",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2579.png",
+    "logo_source": "espn",
+    "primary_color": "#73000A",
+    "secondary_color": "#000000"
+  },
+  "Clemson": {
+    "cfbd_id": null,
+    "espn_id": "228",
+    "abbreviation": "CLEM",
+    "conference": "ACC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/228.png",
+    "logo_source": "espn",
+    "primary_color": "#F56600",
+    "secondary_color": "#522D80"
+  },
+  "SMU": {
+    "cfbd_id": null,
+    "espn_id": "2567",
+    "abbreviation": "SMU",
+    "conference": "ACC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2567.png",
+    "logo_source": "espn",
+    "primary_color": "#0033A0",
+    "secondary_color": "#C8102E"
+  },
+  "Louisville": {
+    "cfbd_id": null,
+    "espn_id": "97",
+    "abbreviation": "LOU",
+    "conference": "ACC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/97.png",
+    "logo_source": "espn",
+    "primary_color": "#AD0000",
+    "secondary_color": "#000000"
+  },
+  "Vanderbilt": {
+    "cfbd_id": null,
+    "espn_id": "238",
+    "abbreviation": "VANDY",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/238.png",
+    "logo_source": "espn",
+    "primary_color": "#000000",
+    "secondary_color": "#866D4B"
+  },
+  "Memphis": {
+    "cfbd_id": null,
+    "espn_id": "235",
+    "abbreviation": "MEM",
+    "conference": "American Athletic",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/235.png",
+    "logo_source": "espn",
+    "primary_color": "#003087",
+    "secondary_color": "#898D8D"
+  },
+  "Army": {
+    "cfbd_id": null,
+    "espn_id": "349",
+    "abbreviation": "ARMY",
+    "conference": "American Athletic",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/349.png",
+    "logo_source": "espn",
+    "primary_color": "#000000",
+    "secondary_color": "#D4BA84"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "season": 2025,
+  "week": 15,
+  "ruleset": "2025_plus",
+  "steps": [
+    {
+      "step": "conference_champions",
+      "message": "Identified 10 FBS conference champions from final regular-season and championship-game results."
+    },
+    {
+      "step": "conference_champions",
+      "message": "Highest-ranked champion per conference retained for auto-bid consideration: Ohio State (Big Ten), Georgia (SEC), BYU (Big 12), Miami (ACC), Boise State (Mountain West)."
+    },
+    {
+      "step": "auto_bids",
+      "message": "Awarded automatic bids to the five highest-ranked conference champions."
+    },
+    {
+      "step": "auto_bids",
+      "message": "Boise State (Mountain West, rank 12) claims the Group of Five automatic bid over Memphis (American Athletic, rank 24)."
+    },
+    {
+      "step": "at_large_selection",
+      "message": "Filled the remaining 7 at-large slots with the highest-ranked eligible teams: Oregon, Texas A&M, Notre Dame, Indiana, Alabama, Ole Miss, Iowa State."
+    },
+    {
+      "step": "at_large_selection",
+      "message": "Tennessee (rank 13) is the first team left out of the field."
+    },
+    {
+      "step": "seeding",
+      "message": "2025+ ruleset uses straight seeding: all 12 field teams are seeded 1-12 in composite rank order, regardless of auto vs. at-large status."
+    },
+    {
+      "step": "seeding",
+      "message": "Top four seeds (Ohio State, Georgia, Oregon, Texas A&M) receive first-round byes."
+    },
+    {
+      "step": "bracket_reveal",
+      "message": "Paired first-round matchups by seed: 8v9 feeds the 1-seed's pod, 7v10 feeds the 2-seed's pod, 6v11 feeds the 3-seed's pod, 5v12 feeds the 4-seed's pod."
+    }
+  ],
+  "phases": [
+    {
+      "step": "conference_champions",
+      "messages": [
+        "Identified 10 FBS conference champions from final regular-season and championship-game results.",
+        "Highest-ranked champion per conference retained for auto-bid consideration: Ohio State (Big Ten), Georgia (SEC), BYU (Big 12), Miami (ACC), Boise State (Mountain West)."
+      ]
+    },
+    {
+      "step": "auto_bids",
+      "messages": [
+        "Awarded automatic bids to the five highest-ranked conference champions.",
+        "Boise State (Mountain West, rank 12) claims the Group of Five automatic bid over Memphis (American Athletic, rank 24)."
+      ]
+    },
+    {
+      "step": "at_large_selection",
+      "messages": [
+        "Filled the remaining 7 at-large slots with the highest-ranked eligible teams: Oregon, Texas A&M, Notre Dame, Indiana, Alabama, Ole Miss, Iowa State.",
+        "Tennessee (rank 13) is the first team left out of the field."
+      ]
+    },
+    {
+      "step": "seeding",
+      "messages": [
+        "2025+ ruleset uses straight seeding: all 12 field teams are seeded 1-12 in composite rank order, regardless of auto vs. at-large status.",
+        "Top four seeds (Ohio State, Georgia, Oregon, Texas A&M) receive first-round byes."
+      ]
+    },
+    {
+      "step": "bracket_reveal",
+      "messages": [
+        "Paired first-round matchups by seed: 8v9 feeds the 1-seed's pod, 7v10 feeds the 2-seed's pod, 6v11 feeds the 3-seed's pod, 5v12 feeds the 4-seed's pod."
+      ]
+    }
+  ],
+  "log": [
+    "Identified 10 FBS conference champions from final regular-season and championship-game results.",
+    "Highest-ranked champion per conference retained for auto-bid consideration: Ohio State (Big Ten), Georgia (SEC), BYU (Big 12), Miami (ACC), Boise State (Mountain West).",
+    "Awarded automatic bids to the five highest-ranked conference champions.",
+    "Boise State (Mountain West, rank 12) claims the Group of Five automatic bid over Memphis (American Athletic, rank 24).",
+    "Filled the remaining 7 at-large slots with the highest-ranked eligible teams: Oregon, Texas A&M, Notre Dame, Indiana, Alabama, Ole Miss, Iowa State.",
+    "Tennessee (rank 13) is the first team left out of the field.",
+    "2025+ ruleset uses straight seeding: all 12 field teams are seeded 1-12 in composite rank order, regardless of auto vs. at-large status.",
+    "Top four seeds (Ohio State, Georgia, Oregon, Texas A&M) receive first-round byes.",
+    "Paired first-round matchups by seed: 8v9 feeds the 1-seed's pod, 7v10 feeds the 2-seed's pod, 6v11 feeds the 3-seed's pod, 5v12 feeds the 4-seed's pod."
+  ],
+  "displaced_team": null,
+  "first_four_out": [
+    "Tennessee",
+    "Missouri",
+    "Utah",
+    "Michigan"
+  ]
+}
