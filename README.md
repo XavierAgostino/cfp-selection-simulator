@@ -25,7 +25,7 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 
 ## What it does
 
-- Composite rankings (résumé, predictive, SOR, SOS)
+- Composite rankings (resume, predictive, SOR, SOS)
 - 12-team field selection under **2024** or **2025+** CFP rules
 - Format-aware seeding and bracket generation
 - Structured audit trail and reproducibility manifest
@@ -103,7 +103,7 @@ make dashboard
 # or: cfp-sim dashboard
 ```
 
-Tabs: Rankings, Playoff Field, Bracket, Team Résumés, Component Views, Selection Audit, Methodology.
+Tabs: Overview, Rankings, Playoff Field, Bracket, Bubble Watch, Team Resume, Components, Selection Audit, Methodology.
 
 Guide: [Dashboard Guide](docs/dashboard-guide.md)
 

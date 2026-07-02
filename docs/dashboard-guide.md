@@ -22,41 +22,63 @@ Opens `app/streamlit_app.py` at `http://localhost:8501` by default.
 |---------|-------------|
 | **Season** | 2024–2030 |
 | **Week** | Analysis week (5–15) |
-| **Use sample fixture data** | Offline demo without API key |
+| **Data source** | Sample fixture (offline demo) or Live CFBD data |
+| **Run simulator** | Refresh results after changing season/week/source |
+| **Export bracket HTML / CSV** | Write bracket viewer output to `data/output/` |
 
-When sample mode is enabled, games load from `data/processed/sample/sample_games.csv` with conference champion labels applied.
+When settings change without clicking **Run simulator**, the dashboard shows the previous run and a pending-state message.
+
+Sample mode displays a banner: demo results are illustrative, not official CFP projections.
 
 ---
 
 ## Tabs
 
+### Overview (default)
+
+Landing tab with metric cards (#1 team, auto/at-large counts, first team out), projected playoff field, and first-round matchups.
+
 ### Rankings
 
-Top 25 teams by composite score with team logos. Shows composite, résumé, and predictive scores per row.
+Structured table: Rank, Team, Conf, Composite, Resume, Predictive, SOR, SOS, Bid Status. Filters: All, Playoff Teams, Bubble, Conference Champions. Team logos use light neutral tiles for dark-mode contrast.
 
 ### Playoff Field
 
-Split view of **Automatic Bids** (conference champions) and **At-Large Bids**, plus **First Four Out** bubble teams.
+Three sections: **Automatic Bids**, **At-Large Bids**, **First Four Out**, with seed, conference, and bid badges.
 
 ### Bracket
 
-Interactive Plotly bracket with team logos on nodes. Requires season ≥ 2024.
+Custom HTML/CSS bracket viewer (dark mode) with view modes:
 
-### Team Résumés
+| Mode | Description |
+|------|-------------|
+| **Full Bracket** | Desktop grid layout (horizontal scroll on narrow screens) |
+| **Round View** | Vertical lists by round |
+| **Matchup Cards** | First-round pairs with quarterfinal destination |
 
-Select a team from the top 25 to view rank, composite, résumé, predictive, SOR, and SOS with logo.
+Export **HTML** (standalone file) or **CSV** (pod data) from the sidebar or Bracket tab. PNG export is not yet available.
 
-### Component Views
+**Advanced / Legacy chart** expander retains the Plotly bracket for fallback.
 
-Scatter plot: résumé vs predictive score (bubble size = SOS).
+### Bubble Watch
+
+Last Four In (#8–#11), First Four Out (#12–#15), Next Four Out (#16–#19).
+
+### Team Resume
+
+Team profile: logo tile, rank, bid badges, metric cards, and template-based selection case (why in / potential concerns).
+
+### Components
+
+Scatter plot: Resume Score vs Predictive Score (bubble size = SOS), colored by bid status, with quadrant labels.
 
 ### Selection Audit
 
-Human-readable audit log from field selection (same content as audit JSON `log` field).
+Step-by-step timeline with badges (not raw log text).
 
 ### Methodology
 
-Embeds key research docs: format history, model methodology, limitations.
+Short summary cards with links to full docs in `docs/research/` and `docs/METHODOLOGY.md`.
 
 ---
 
@@ -64,29 +86,26 @@ Embeds key research docs: format history, model methodology, limitations.
 
 | Mode | Setup |
 |------|-------|
-| Sample | Check "Use sample fixture data" — no API key |
-| Live | Uncheck sample; set `CFBD_API_KEY` in `.env` |
+| Sample | Select **Sample fixture** — no API key |
+| Live | Select **Live CFBD data**; set `CFBD_API_KEY` in `.env` |
 
-If live data fails, the dashboard shows an error with guidance to enable sample mode.
+If live data fails, the dashboard shows an error with guidance to use sample fixture data.
 
 ---
 
 ## Exporting reports
 
-The dashboard is read-only for exploration. To export files:
+From the dashboard sidebar or Bracket tab:
+
+- **Export bracket HTML** → `data/output/brackets/{year}_week{week}_bracket.html`
+- **Export bracket CSV** → `data/output/brackets/{year}_week{week}_bracket_pods.csv`
+
+Full pipeline exports via CLI:
 
 ```bash
 cfp-sim run --year 2025 --week 15 --sample
 cfp-sim open --latest
 ```
-
-HTML bracket and CSVs are written to `data/output/`.
-
----
-
-## Screenshots
-
-Add screenshots to `docs/assets/` and reference here after capturing from a local `make demo` + `make dashboard` run.
 
 ---
 
