@@ -1,0 +1,11 @@
+# Sample/demo run — no API key required
+year: 2025
+week: 15
+start_week: 5
+fbs_only: true
+mode: composite
+weights:
+  resume: 0.50
+  predictive: 0.30
+  sor: 0.10
+  sos: 0.10

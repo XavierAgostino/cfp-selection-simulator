@@ -5,6 +5,11 @@ All notable changes to the CFP Selection Simulator project.
 ## [2.0.0] - 2026-07-02
 
 ### Added
+- **CLI-first workflow**: `make setup`, `make demo`, `make verify`, `cfp-sim doctor`, `cfp-sim outputs`, `cfp-sim open`
+- **Predictable output contract** under `data/output/{rankings,fields,brackets,audits,runs}/`
+- **Config templates** in `configs/` (sample, 2024, 2025, validation)
+- **Rich sample demo data** with conference champions (`sample_champions.csv`, 110 games)
+- **CONTRIBUTING.md** and `./scripts/demo.sh`
 
 - **Format-aware CFP rules**: 2024 champion-bye seeding and 2025+ straight seeding (`src/config/formats.py`, `src/selection/seeding.py`)
 - **Field selection module**: 5+7 auto/at-large with displacement tracking and structured audit (`src/selection/field.py`, `src/selection/audit.py`)

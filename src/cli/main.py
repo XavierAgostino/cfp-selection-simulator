@@ -2,15 +2,26 @@
 
 from __future__ import annotations
 
+import json
+import shutil
 import subprocess
 import sys
+import webbrowser
 from pathlib import Path
 from typing import Optional
 
 import typer
 
+from src.cli.console import print_doctor_report, print_latest_outputs, print_run_summary
+from src.cli.doctor import run_doctor_checks
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
+from src.pipeline.paths import (
+    DATA_OUTPUT,
+    RunOutputPaths,
+    find_latest_manifest,
+    paths_from_manifest,
+)
 from src.pipeline.run import REPO_ROOT, run_pipeline
 from src.validation.backtest import run_multiple_seasons_backtest
 
@@ -21,8 +32,49 @@ app = typer.Typer(
 )
 
 
-def _config(year: int, week: int, start_week: int = 5) -> SimulatorConfig:
+def _resolve_config(
+    year: Optional[int],
+    week: Optional[int],
+    config_path: Optional[Path],
+    start_week: int = 5,
+) -> SimulatorConfig:
+    if config_path:
+        cfg = SimulatorConfig.from_yaml(config_path)
+        if year is not None:
+            cfg.year = year
+        if week is not None:
+            cfg.week = week
+        return cfg
+    if year is None or week is None:
+        raise typer.BadParameter("Provide --year and --week, or pass --config")
     return SimulatorConfig(year=year, week=week, start_week=start_week)
+
+
+def _run_and_report(
+    cfg: SimulatorConfig,
+    *,
+    sample: bool,
+    write_html: bool = True,
+) -> dict:
+    result = run_pipeline(cfg, use_sample=sample, write_html=write_html)
+    print_run_summary(
+        cfg,
+        data_source=result["data_source"],
+        steps=result["steps"],
+        paths=result["paths"],
+        sample=sample,
+    )
+    return result
+
+
+@app.command()
+def doctor() -> None:
+    """Check environment readiness for local runs."""
+    checks = run_doctor_checks()
+    print_doctor_report(checks)
+    typer.echo("Ready to run:")
+    typer.echo("  cfp-sim run --year 2025 --week 15 --sample")
+    typer.echo("  make demo")
 
 
 @app.command()
@@ -35,7 +87,7 @@ def fetch(
     api_key = get_api_key()
     games_df = fetch_season_games(year, start_week=start_week, api_key=api_key)
     games_df = games_df[games_df["week"] <= end_week]
-    cache_dir = REPO_ROOT / "data" / "cache" / str(year)
+    cache_dir = REPO_ROOT / "data" / "cache" / "cfbd" / str(year)
     cache_dir.mkdir(parents=True, exist_ok=True)
     out = cache_dir / f"games_week{end_week}.parquet"
     games_df.to_parquet(out, index=False)
@@ -44,54 +96,65 @@ def fetch(
 
 @app.command()
 def rank(
-    year: int = typer.Option(..., help="Season year"),
-    week: int = typer.Option(..., help="Analysis week"),
+    year: Optional[int] = typer.Option(None, help="Season year"),
+    week: Optional[int] = typer.Option(None, help="Analysis week"),
+    config: Optional[Path] = typer.Option(None, "--config", help="YAML config file"),
     sample: bool = typer.Option(False, help="Use bundled sample dataset"),
 ) -> None:
     """Compute composite rankings."""
-    result = run_pipeline(_config(year, week), use_sample=sample)
+    cfg = _resolve_config(year, week, config)
+    result = run_pipeline(cfg, use_sample=sample, write_html=False, select_field=False)
     typer.echo(f"Rankings written to {result['paths']['rankings']}")
 
 
 @app.command()
 def select(
-    year: int = typer.Option(..., help="Season year"),
-    week: int = typer.Option(..., help="Analysis week"),
+    year: Optional[int] = typer.Option(None, help="Season year"),
+    week: Optional[int] = typer.Option(None, help="Analysis week"),
+    config: Optional[Path] = typer.Option(None, "--config", help="YAML config file"),
     sample: bool = typer.Option(False, help="Use bundled sample dataset"),
 ) -> None:
     """Select playoff field and seed teams."""
-    result = run_pipeline(_config(year, week), use_sample=sample)
+    cfg = _resolve_config(year, week, config)
+    result = run_pipeline(cfg, use_sample=sample, write_html=False, select_field=True)
     sel = result["selection"]
-    typer.echo(f"Selected {len(sel.playoff_teams)} teams. Audit: {result['paths']['audit']}")
+    typer.echo(f"Selected {len(sel.playoff_teams)} teams.")
+    typer.echo(f"Field:  {result['paths']['field']}")
+    typer.echo(f"Audit:  {result['paths']['audit']}")
 
 
 @app.command()
 def bracket(
-    year: int = typer.Option(..., help="Season year"),
-    week: int = typer.Option(..., help="Analysis week"),
+    year: Optional[int] = typer.Option(None, help="Season year"),
+    week: Optional[int] = typer.Option(None, help="Analysis week"),
+    config: Optional[Path] = typer.Option(None, "--config", help="YAML config file"),
     sample: bool = typer.Option(False, help="Use bundled sample dataset"),
+    html: bool = typer.Option(False, "--html", help="Write HTML bracket visualization"),
 ) -> None:
-    """Generate HTML bracket visualization."""
-    result = run_pipeline(_config(year, week), use_sample=sample)
-    typer.echo(f"Bracket written to {result['paths']['bracket']}")
+    """Generate bracket outputs (CSV; optional HTML)."""
+    cfg = _resolve_config(year, week, config)
+    result = run_pipeline(cfg, use_sample=sample, write_html=html)
+    typer.echo(f"Bracket CSV:  {result['paths']['bracket']}")
+    if html and result["paths"].get("bracket_html"):
+        typer.echo(f"Bracket HTML: {result['paths']['bracket_html']}")
 
 
 @app.command(name="run")
 def run_cmd(
-    year: int = typer.Option(..., help="Season year"),
-    week: int = typer.Option(..., help="Analysis week"),
-    config: Optional[Path] = typer.Option(None, help="YAML config file"),
+    year: Optional[int] = typer.Option(None, help="Season year"),
+    week: Optional[int] = typer.Option(None, help="Analysis week"),
+    config: Optional[Path] = typer.Option(None, "--config", help="YAML config file"),
     sample: bool = typer.Option(False, help="Use bundled sample dataset"),
+    html: bool = typer.Option(True, "--html/--no-html", help="Write HTML bracket"),
 ) -> None:
     """Run full pipeline with manifest."""
-    cfg = SimulatorConfig.from_yaml(config) if config else _config(year, week)
-    result = run_pipeline(cfg, use_sample=sample)
-    typer.echo(f"Complete. Manifest: {result['paths']['manifest']}")
+    cfg = _resolve_config(year, week, config)
+    _run_and_report(cfg, sample=sample, write_html=html)
 
 
 @app.command()
 def validate(
-    years: str = typer.Option("2014:2023", help="Year range e.g. 2014:2023"),
+    years: str = typer.Option("2014:2024", help="Year range e.g. 2014:2024"),
 ) -> None:
     """Run historical validation backtest."""
     if ":" in years:
@@ -101,23 +164,112 @@ def validate(
         year_list = [int(y) for y in years.split(",")]
 
     df = run_multiple_seasons_backtest(year_list)
-    out_dir = REPO_ROOT / "data" / "output" / "validation"
+    out_dir = DATA_OUTPUT / "validation"
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "backtest_results.csv"
     df.to_csv(out_path, index=False)
     typer.echo(f"Validation results written to {out_path}")
-    typer.echo(df.to_string(index=False))
+    if len(df):
+        typer.echo(df.to_string(index=False))
 
 
 @app.command()
 def reproduce(
     season: int = typer.Option(..., help="Season to reproduce"),
     week: int = typer.Option(15, help="Final week"),
+    sample: bool = typer.Option(False, help="Use bundled sample dataset"),
 ) -> None:
     """Reproduce a season run with archived config snapshot."""
-    cfg = _config(season, week)
-    result = run_pipeline(cfg)
-    typer.echo(f"Reproduced {season} week {week}. Manifest: {result['paths']['manifest']}")
+    cfg = SimulatorConfig(year=season, week=week)
+    _run_and_report(cfg, sample=sample, write_html=True)
+
+
+@app.command()
+def outputs(
+    latest: bool = typer.Option(True, "--latest/--all", help="Show latest run outputs"),
+) -> None:
+    """List output files from recent runs."""
+    manifest_path = find_latest_manifest()
+    if manifest_path is None:
+        typer.echo("No runs found. Try: cfp-sim run --year 2025 --week 15 --sample")
+        raise typer.Exit(code=1)
+
+    data = json.loads(manifest_path.read_text())
+    paths = paths_from_manifest(manifest_path)
+    if paths is None:
+        typer.echo(f"Could not parse manifest: {manifest_path}")
+        raise typer.Exit(code=1)
+
+    print_latest_outputs(
+        season=int(data["season"]),
+        week=int(data["week"]),
+        ruleset=data.get("ruleset"),
+        generated_at=data.get("generated_at"),
+        paths=paths.as_dict(),
+    )
+
+    if not latest:
+        runs_dir = DATA_OUTPUT / "runs"
+        typer.echo("\nAll manifests:")
+        for path in sorted(runs_dir.glob("*_manifest.json"), reverse=True):
+            typer.echo(f"  {path.name}")
+
+
+@app.command(name="open")
+def open_cmd(
+    latest: bool = typer.Option(False, "--latest", help="Open latest bracket HTML"),
+    type: str = typer.Option("bracket", "--type", help="Output type: bracket, rankings, manifest"),
+    year: Optional[int] = typer.Option(None, help="Season year"),
+    week: Optional[int] = typer.Option(None, help="Analysis week"),
+) -> None:
+    """Open a run output in the default browser (or print its path)."""
+    if latest or (year is None and week is None):
+        manifest_path = find_latest_manifest()
+        if manifest_path is None:
+            typer.echo("No runs found.")
+            raise typer.Exit(code=1)
+        paths = paths_from_manifest(manifest_path)
+    else:
+        if year is None or week is None:
+            raise typer.BadParameter("Provide both --year and --week, or use --latest")
+        paths = RunOutputPaths(year=year, week=week)
+
+    assert paths is not None
+    key_map = {
+        "bracket": "bracket_html",
+        "rankings": "rankings",
+        "manifest": "manifest",
+        "field": "field",
+        "audit": "audit",
+    }
+    path_key = key_map.get(type, "bracket_html")
+    target = paths.as_dict().get(path_key)
+    if target is None or not target.exists():
+        typer.echo(f"File not found for type={type}: {target}")
+        raise typer.Exit(code=1)
+
+    typer.echo(str(target))
+    if target.suffix == ".html":
+        webbrowser.open(target.resolve().as_uri())
+
+
+@app.command()
+def clean(
+    outputs_only: bool = typer.Option(True, "--outputs/--all", help="Clean output artifacts only"),
+) -> None:
+    """Remove generated output artifacts."""
+    if outputs_only and DATA_OUTPUT.exists():
+        shutil.rmtree(DATA_OUTPUT)
+        typer.echo(f"Removed {DATA_OUTPUT}")
+    else:
+        for path in (DATA_OUTPUT, REPO_ROOT / "htmlcov", REPO_ROOT / ".pytest_cache"):
+            if path.exists():
+                shutil.rmtree(path)
+                typer.echo(f"Removed {path}")
+        coverage_file = REPO_ROOT / ".coverage"
+        if coverage_file.exists():
+            coverage_file.unlink()
+            typer.echo(f"Removed {coverage_file}")
 
 
 @app.command()

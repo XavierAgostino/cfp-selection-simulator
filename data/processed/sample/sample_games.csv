@@ -1,21 +1,111 @@
 game_id,week,home_team,away_team,home_score,away_score,home_conference,away_conference,neutral_site,date
-1,5,Ohio State,Michigan,31,24,Big Ten,Big Ten,False,2025-09-20
-2,5,Alabama,Georgia,27,21,SEC,SEC,False,2025-09-20
-3,5,Texas,Oklahoma,34,14,SEC,SEC,True,2025-10-05
-4,5,Oregon,USC,28,17,Big Ten,Big Ten,False,2025-09-27
-5,6,Ohio State,Penn State,24,10,Big Ten,Big Ten,False,2025-10-04
-6,6,Alabama,Tennessee,30,20,SEC,SEC,False,2025-10-11
-7,6,Georgia,Florida,38,14,SEC,SEC,False,2025-10-18
-8,6,Michigan,Michigan State,35,7,Big Ten,Big Ten,False,2025-10-25
-9,7,Texas,LSU,31,28,SEC,SEC,False,2025-11-01
-10,7,Oregon,Washington,21,17,Big Ten,Big Ten,False,2025-11-08
-11,7,Ohio State,Indiana,42,10,Big Ten,Big Ten,False,2025-11-15
-12,7,Alabama,Auburn,28,14,SEC,SEC,False,2025-11-22
-13,8,Georgia,Texas,24,21,SEC,SEC,False,2025-11-29
-14,8,Michigan,Ohio State,17,24,Big Ten,Big Ten,False,2025-11-29
-15,8,Oregon,Oregon State,45,3,Big Ten,Pac-12,False,2025-11-29
-16,8,Texas,Tennessee,27,24,SEC,SEC,False,2025-11-29
-17,9,Ohio State,Alabama,31,28,Big Ten,SEC,True,2025-12-07
-18,9,Georgia,Oregon,35,17,SEC,Big Ten,True,2025-12-14
-19,10,Texas,Ohio State,20,27,SEC,Big Ten,True,2025-12-21
-20,10,Alabama,Georgia,24,31,SEC,SEC,True,2025-12-28
+1,5,Oregon State,Michigan,14,44,Pac-12,Big Ten,False,2025-09-11
+2,5,Florida,Oregon,19,35,SEC,Big Ten,False,2025-09-11
+3,5,Tennessee,Washington,32,20,SEC,Big Ten,False,2025-09-11
+4,5,Auburn,Michigan State,31,21,SEC,Big Ten,False,2025-09-11
+5,5,Penn State,USC,37,18,Big Ten,Big Ten,False,2025-09-11
+6,5,Indiana,Boise State,38,17,Big Ten,Mountain West,True,2025-09-11
+7,5,Georgia,Arizona State,28,22,SEC,Big 12,False,2025-09-11
+8,5,Alabama,Oklahoma,14,44,SEC,SEC,False,2025-09-11
+9,5,Clemson,LSU,22,29,ACC,SEC,True,2025-09-11
+10,5,Ohio State,Texas,17,38,Big Ten,Big 12,False,2025-09-11
+11,6,Boise State,Oregon State,22,29,Mountain West,Pac-12,False,2025-09-13
+12,6,Penn State,USC,20,32,Big Ten,Big Ten,False,2025-09-13
+13,6,Indiana,LSU,41,16,Big Ten,SEC,False,2025-09-13
+14,6,Washington,Oklahoma,14,44,Big Ten,SEC,False,2025-09-13
+15,6,Arizona State,Texas,37,18,Big 12,Big 12,False,2025-09-13
+16,6,Alabama,Oregon,19,34,SEC,Big Ten,False,2025-09-13
+17,6,Clemson,Tennessee,17,39,ACC,SEC,False,2025-09-13
+18,6,Georgia,Michigan State,45,14,SEC,Big Ten,False,2025-09-13
+19,6,Michigan,Florida,42,15,Big Ten,SEC,False,2025-09-13
+20,6,Auburn,Ohio State,16,41,SEC,Big Ten,False,2025-09-13
+21,7,Oregon State,Michigan,16,40,Pac-12,Big Ten,False,2025-09-15
+22,7,Georgia,Alabama,17,39,SEC,SEC,False,2025-09-15
+23,7,Boise State,Michigan State,15,43,Mountain West,Big Ten,False,2025-09-15
+24,7,Florida,Penn State,23,27,SEC,Big Ten,False,2025-09-15
+25,7,USC,LSU,44,14,Big Ten,SEC,False,2025-09-15
+26,7,Clemson,Tennessee,18,37,ACC,SEC,False,2025-09-15
+27,7,Washington,Texas,16,41,Big Ten,Big 12,True,2025-09-15
+28,7,Oregon,Auburn,19,35,Big Ten,SEC,True,2025-09-15
+29,7,Oklahoma,Ohio State,15,43,SEC,Big Ten,False,2025-09-15
+30,7,Arizona State,Indiana,18,36,Big 12,Big Ten,False,2025-09-15
+31,8,Alabama,Ohio State,22,29,SEC,Big Ten,False,2025-09-17
+32,8,Arizona State,Michigan,14,44,Big 12,Big Ten,False,2025-09-17
+33,8,Clemson,Georgia,42,15,ACC,SEC,False,2025-09-17
+34,8,Texas,Indiana,43,15,Big 12,Big Ten,False,2025-09-17
+35,8,Penn State,Auburn,33,20,Big Ten,SEC,False,2025-09-17
+36,8,LSU,Oregon State,20,33,SEC,Pac-12,False,2025-09-17
+37,8,Oregon,Washington,17,39,Big Ten,Big Ten,False,2025-09-17
+38,8,USC,Michigan State,17,38,Big Ten,Big Ten,False,2025-09-17
+39,8,Tennessee,Boise State,21,30,SEC,Mountain West,False,2025-09-17
+40,8,Florida,Oklahoma,29,22,SEC,SEC,False,2025-09-17
+41,9,Clemson,Georgia,45,14,ACC,SEC,False,2025-10-19
+42,9,Auburn,Penn State,42,15,SEC,Big Ten,False,2025-10-19
+43,9,Michigan State,Arizona State,30,21,Big Ten,Big 12,False,2025-10-19
+44,9,Texas,Oregon,40,16,Big 12,Big Ten,False,2025-10-19
+45,9,Washington,Michigan,22,28,Big Ten,Big Ten,False,2025-10-19
+46,9,USC,Oklahoma,21,30,Big Ten,SEC,False,2025-10-19
+47,9,Oregon State,Ohio State,21,30,Pac-12,Big Ten,True,2025-10-19
+48,9,Florida,Tennessee,33,20,SEC,SEC,False,2025-10-19
+49,9,Indiana,Boise State,32,20,Big Ten,Mountain West,False,2025-10-19
+50,9,Alabama,LSU,34,19,SEC,SEC,False,2025-10-19
+51,10,Michigan,Arizona State,41,16,Big Ten,Big 12,True,2025-10-21
+52,10,Michigan State,Oregon State,14,44,Big Ten,Pac-12,False,2025-10-21
+53,10,Ohio State,Oklahoma,33,20,Big Ten,SEC,False,2025-10-21
+54,10,Alabama,Oregon,14,45,SEC,Big Ten,False,2025-10-21
+55,10,Texas,LSU,37,18,Big 12,SEC,False,2025-10-21
+56,10,Indiana,Tennessee,15,43,Big Ten,SEC,True,2025-10-21
+57,10,Clemson,Washington,28,22,ACC,Big Ten,False,2025-10-21
+58,10,USC,Georgia,32,20,Big Ten,SEC,False,2025-10-21
+59,10,Penn State,Boise State,34,19,Big Ten,Mountain West,True,2025-10-21
+60,10,Florida,Auburn,45,14,SEC,SEC,False,2025-10-21
+61,11,Michigan,Clemson,22,29,Big Ten,ACC,False,2025-10-23
+62,11,Auburn,Alabama,45,14,SEC,SEC,False,2025-10-23
+63,11,Tennessee,Penn State,33,20,SEC,Big Ten,False,2025-10-23
+64,11,Boise State,USC,38,17,Mountain West,Big Ten,False,2025-10-23
+65,11,Oregon State,Ohio State,17,38,Pac-12,Big Ten,False,2025-10-23
+66,11,Oklahoma,Texas,14,44,SEC,Big 12,False,2025-10-23
+67,11,Georgia,LSU,15,43,SEC,SEC,False,2025-10-23
+68,11,Indiana,Washington,44,14,Big Ten,Big Ten,False,2025-10-23
+69,11,Michigan State,Arizona State,21,31,Big Ten,Big 12,False,2025-10-23
+70,11,Florida,Oregon,14,44,SEC,Big Ten,False,2025-10-23
+71,12,Clemson,Georgia,35,19,ACC,SEC,False,2025-10-25
+72,12,Michigan State,Auburn,40,16,Big Ten,SEC,False,2025-10-25
+73,12,Indiana,Penn State,21,30,Big Ten,Big Ten,False,2025-10-25
+74,12,Arizona State,Michigan,21,31,Big 12,Big Ten,True,2025-10-25
+75,12,Texas,USC,14,45,Big 12,Big Ten,False,2025-10-25
+76,12,Florida,Oregon,22,28,SEC,Big Ten,False,2025-10-25
+77,12,LSU,Washington,22,28,SEC,Big Ten,False,2025-10-25
+78,12,Alabama,Oklahoma,20,33,SEC,SEC,False,2025-10-25
+79,12,Boise State,Ohio State,17,38,Mountain West,Big Ten,False,2025-10-25
+80,12,Oregon State,Tennessee,16,40,Pac-12,SEC,False,2025-10-25
+81,13,Oregon,USC,41,16,Big Ten,Big Ten,False,2025-11-27
+82,13,Ohio State,Texas,19,34,Big Ten,Big 12,False,2025-11-27
+83,13,LSU,Florida,33,20,SEC,SEC,False,2025-11-27
+84,13,Georgia,Oregon State,29,22,SEC,Pac-12,False,2025-11-27
+85,13,Auburn,Washington,43,15,SEC,Big Ten,False,2025-11-27
+86,13,Oklahoma,Michigan State,14,44,SEC,Big Ten,False,2025-11-27
+87,13,Clemson,Arizona State,35,19,ACC,Big 12,False,2025-11-27
+88,13,Alabama,Boise State,19,35,SEC,Mountain West,False,2025-11-27
+89,13,Penn State,Michigan,40,16,Big Ten,Big Ten,False,2025-11-27
+90,13,Indiana,Tennessee,16,40,Big Ten,SEC,False,2025-11-27
+91,14,Alabama,USC,36,18,SEC,Big Ten,False,2025-11-01
+92,14,Florida,Indiana,18,37,SEC,Big Ten,False,2025-11-01
+93,14,Oklahoma,Oregon State,31,21,SEC,Pac-12,False,2025-11-01
+94,14,Ohio State,Michigan,39,17,Big Ten,Big Ten,False,2025-11-01
+95,14,Washington,Auburn,14,45,Big Ten,SEC,False,2025-11-01
+96,14,Arizona State,Boise State,23,27,Big 12,Mountain West,False,2025-11-01
+97,14,Michigan State,Oregon,33,20,Big Ten,Big Ten,False,2025-11-01
+98,14,LSU,Georgia,14,45,SEC,SEC,False,2025-11-01
+99,14,Clemson,Texas,41,16,ACC,Big 12,False,2025-11-01
+100,14,Penn State,Tennessee,42,15,Big Ten,SEC,False,2025-11-01
+101,15,Penn State,Texas,14,45,Big Ten,Big 12,False,2025-11-03
+102,15,Michigan,Ohio State,39,17,Big Ten,Big Ten,False,2025-11-03
+103,15,Tennessee,Alabama,19,34,SEC,SEC,False,2025-11-03
+104,15,LSU,Washington,21,30,SEC,Big Ten,True,2025-11-03
+105,15,Boise State,Oklahoma,43,15,Mountain West,SEC,False,2025-11-03
+106,15,Georgia,Indiana,30,21,SEC,Big Ten,False,2025-11-03
+107,15,Michigan State,Oregon,16,41,Big Ten,Big Ten,False,2025-11-03
+108,15,USC,Arizona State,18,37,Big Ten,Big 12,False,2025-11-03
+109,15,Clemson,Auburn,15,43,ACC,SEC,False,2025-11-03
+110,15,Florida,Oregon State,16,41,SEC,Pac-12,False,2025-11-03

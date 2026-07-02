@@ -68,6 +68,7 @@ data/processed/*
 !data/processed/sample/
 data/processed/sample/*
 !data/processed/sample/sample_games.csv
+!data/processed/sample/sample_champions.csv
 *.pkl
 *.pickle
 *.h5
@@ -75,15 +76,18 @@ data/processed/sample/*
 *.parquet
 
 # Output Files (keep output directory structure but ignore contents)
+data/output/**/*
+!data/output/**/.gitkeep
+
+# Legacy output paths (pre-v2.0)
 data/output/rankings/*.csv
 data/output/rankings/*.json
-data/output/brackets/*.html
-data/output/brackets/*.json
-data/output/brackets/*.txt
-data/output/exports/*.csv
-data/output/exports/*.json
-data/output/validation/*.csv
-data/output/validation/*.json
+data/output/fields/*
+data/output/brackets/*
+data/output/audits/*
+data/output/runs/*
+data/output/exports/*
+data/output/validation/*
 data/output/visualizations/*.png
 data/output/visualizations/*.pdf
 

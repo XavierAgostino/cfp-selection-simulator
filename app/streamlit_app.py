@@ -16,7 +16,9 @@ from src.assets.logos import ensure_team_assets_loaded, get_team_logo
 from src.assets.teams import load_team_assets
 from src.config.simulator import SimulatorConfig
 from src.pipeline.composite import calculate_composite_rankings
+from src.pipeline.paths import RunOutputPaths
 from src.pipeline.run import SAMPLE_GAMES, load_games, run_select
+from src.pipeline.sample import enrich_sample_rankings
 from src.playoff.bracket_plotly import create_interactive_bracket
 
 st.set_page_config(page_title="CFP Selection Simulator", layout="wide")
@@ -35,18 +37,16 @@ with st.sidebar:
 
 config = SimulatorConfig(year=int(year), week=int(week))
 
-tab_rankings, tab_field, tab_bracket, tab_resume, tab_components, tab_audit, tab_method = (
-    st.tabs(
-        [
-            "Rankings",
-            "Playoff Field",
-            "Bracket",
-            "Team Résumés",
-            "Component Views",
-            "Selection Audit",
-            "Methodology",
-        ]
-    )
+tab_rankings, tab_field, tab_bracket, tab_resume, tab_components, tab_audit, tab_method = st.tabs(
+    [
+        "Rankings",
+        "Playoff Field",
+        "Bracket",
+        "Team Résumés",
+        "Component Views",
+        "Selection Audit",
+        "Methodology",
+    ]
 )
 
 try:
@@ -55,6 +55,8 @@ try:
     else:
         games = load_games(config, use_sample=use_sample)
     rankings = calculate_composite_rankings(games)
+    if use_sample:
+        rankings = enrich_sample_rankings(rankings)
 except Exception as exc:
     st.error(f"Could not load data: {exc}")
     st.info("Enable 'Use sample fixture data' or set CFBD_API_KEY in .env")
@@ -69,6 +71,8 @@ if not use_sample:
 
 if "conf_champ" not in rankings.columns:
     rankings["conf_champ"] = "No"
+
+output_paths = RunOutputPaths(year=int(year), week=int(week))
 
 
 def render_team_row(team_name: str, label: str, logo_size: int = 32) -> None:
@@ -97,7 +101,7 @@ selection_result = None
 seeded = None
 if year >= 2024:
     try:
-        selection_result = run_select(config, rankings)
+        selection_result = run_select(config, rankings, output_paths)
         seeded = selection_result["seeded"]
     except Exception as exc:
         st.warning(f"Selection unavailable: {exc}")

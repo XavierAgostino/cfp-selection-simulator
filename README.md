@@ -8,22 +8,79 @@
 
 ---
 
-## Run in 60 Seconds
+## Quickstart
 
 ```bash
 git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
 cd cfp-selection-simulator
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[app,dev]"
-
-# Run with bundled sample data (no API key required)
-cfp-sim run --year 2025 --week 15 --sample
-
-# Launch dashboard
-cfp-sim dashboard
+make setup
+make demo
+make dashboard
 ```
 
-With live data, copy `.env.example` to `.env` and set `CFBD_API_KEY`.
+No API key is required for demo mode.
+
+Or run the one-shot demo script:
+
+```bash
+./scripts/demo.sh
+```
+
+---
+
+## Run with live data
+
+```bash
+export CFBD_API_KEY="your_key_here"
+make run YEAR=2025 WEEK=15
+# or
+cfp-sim run --year 2025 --week 15
+```
+
+Copy `.env.example` to `.env` to persist your API key locally.
+
+---
+
+## Common commands
+
+| Goal | Command |
+|------|---------|
+| Environment check | `cfp-sim doctor` |
+| Run sample demo | `make demo` |
+| Run full simulator | `make run YEAR=2025 WEEK=15` |
+| Launch dashboard | `make dashboard` |
+| Generate bracket HTML | `make bracket YEAR=2025 WEEK=15` |
+| List latest outputs | `cfp-sim outputs --latest` |
+| Open latest bracket | `cfp-sim open --latest` |
+| Run validation | `make validate` |
+| Tests + lint + smoke | `make verify` |
+
+Power-user CLI:
+
+```bash
+cfp-sim run --year 2025 --week 15 --sample
+cfp-sim run --config configs/2025.yaml --sample
+cfp-sim select --year 2025 --week 15 --sample
+cfp-sim bracket --year 2025 --week 15 --sample --html
+cfp-sim reproduce --season 2024
+cfp-sim validate --years 2014:2024
+```
+
+---
+
+## Output layout
+
+Every run writes to predictable paths:
+
+```
+data/output/
+├── rankings/   {year}_week{week}_rankings.csv
+├── fields/     {year}_week{week}_field.csv
+├── brackets/   {year}_week{week}_bracket.csv
+│               {year}_week{week}_bracket.html
+├── audits/     {year}_week{week}_audit.json
+└── runs/       {year}_week{week}_manifest.json
+```
 
 ---
 
@@ -42,15 +99,18 @@ With live data, copy `.env.example` to `.env` and set `CFBD_API_KEY`.
 
 | Command | Description |
 |---------|-------------|
+| `cfp-sim doctor` | Environment readiness check |
 | `cfp-sim fetch --year 2025` | Fetch games to cache |
 | `cfp-sim rank --year 2025 --week 15` | Composite rankings |
 | `cfp-sim select --year 2025 --week 15` | Field selection + seeding |
-| `cfp-sim bracket --year 2025 --week 15` | HTML bracket export |
+| `cfp-sim bracket --year 2025 --week 15 --html` | Bracket CSV + HTML |
 | `cfp-sim run --year 2025 --week 15` | Full pipeline + manifest |
-| `cfp-sim validate --years 2014:2023` | Historical backtest |
+| `cfp-sim outputs --latest` | List files from latest run |
+| `cfp-sim open --latest` | Open latest bracket HTML |
+| `cfp-sim validate --years 2014:2024` | Historical backtest |
 | `cfp-sim dashboard` | Streamlit UI |
 
-Makefile shortcuts: `make run YEAR=2025 WEEK=15`, `make dashboard`, `make validate`
+Config-driven runs: `cfp-sim run --config configs/sample.yaml --sample`
 
 ---
 
@@ -72,6 +132,8 @@ See [docs/research/cfp-format-history.md](docs/research/cfp-format-history.md).
 - [Historical validation](docs/research/historical-validation.md)
 - [Limitations and ethics](docs/research/limitations-and-ethics.md)
 - [Data sources](docs/research/data-sources.md)
+
+Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
