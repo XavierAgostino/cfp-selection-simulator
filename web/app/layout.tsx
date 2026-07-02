@@ -4,6 +4,7 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { AppShell } from "@/components/layout/AppShell";
+import { TeamDrawerProvider } from "@/components/team/TeamDrawerProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <TooltipProvider delay={150}>
-          <AppShell>{children}</AppShell>
+          <TeamDrawerProvider>
+            <AppShell>{children}</AppShell>
+          </TeamDrawerProvider>
           <Toaster theme="dark" position="bottom-right" />
         </TooltipProvider>
       </body>
