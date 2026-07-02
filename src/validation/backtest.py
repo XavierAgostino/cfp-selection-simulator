@@ -10,9 +10,6 @@ from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.composite import calculate_composite_rankings
 from src.validation.committee_validation import validate_committee_replication
 from src.validation.era import ValidationTarget, get_era_spec, has_historical_rankings
-from src.validation.predictive_validation import evaluate_predictive_baselines
-from src.validation.reports import print_validation_summary, write_validation_outputs
-from src.validation.selection_validation import validate_selection
 
 # Re-export historical fixtures for backward compatibility
 from src.validation.historical import HISTORICAL_CFP_RANKINGS  # noqa: F401
@@ -22,6 +19,9 @@ from src.validation.metrics import (  # noqa: F401
     calculate_spearman_correlation,
 )
 from src.validation.predictive_validation import calculate_prediction_metrics  # noqa: F401
+from src.validation.predictive_validation import evaluate_predictive_baselines
+from src.validation.reports import print_validation_summary, write_validation_outputs
+from src.validation.selection_validation import validate_selection
 
 
 def run_season_validation(
@@ -160,61 +160,3 @@ def run_era_validation(
 
         return pd.DataFrame([committee_result_to_row(r) for r in committee_results])
     return pd.DataFrame()
-
-
-# Legacy entry points ---------------------------------------------------------
-
-def run_season_backtest(
-    year: int,
-    max_week: Optional[int] = None,
-    start_week: int = 5,
-    api_key: Optional[str] = None,
-    include_baselines: bool = True,
-) -> dict:
-    """Legacy wrapper; prefer ``run_season_validation``."""
-    season = run_season_validation(
-        year,
-        target="all",
-        start_week=start_week,
-        max_week=max_week,
-        api_key=api_key,
-    )
-    if "error" in season:
-        return season
-
-    committee = season.get("committee")
-    selection = season.get("selection")
-    predictive = season.get("predictive", [])
-    composite_pred = next((p for p in predictive if p.model == "composite"), None)
-
-    legacy = {
-        "year": year,
-        "n_games": season["n_games"],
-        "n_teams": season["n_teams"],
-        "composite": {
-            "spearman_correlation": committee.spearman_top12 if committee else None,
-            "selection_accuracy": selection.field_overlap_ratio if selection else None,
-            "correct_selections": int(selection.field_overlap_label.split("/")[0])
-            if selection
-            else None,
-            "seeding_within_one": selection.seeding_within_one if selection else None,
-            "brier_score": composite_pred.brier_score if composite_pred else None,
-            "prediction_mae": composite_pred.margin_mae if composite_pred else None,
-        },
-    }
-    return legacy
-
-
-def run_multiple_seasons_backtest(
-    years: List[int],
-    start_week: int = 5,
-    api_key: Optional[str] = None,
-    include_baselines: bool = True,
-) -> pd.DataFrame:
-    """Legacy wrapper; delegates to ``run_era_validation``."""
-    return run_era_validation(
-        years,
-        target="all",
-        start_week=start_week,
-        api_key=api_key,
-    )

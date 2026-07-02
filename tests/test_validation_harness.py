@@ -5,7 +5,12 @@ from __future__ import annotations
 import pandas as pd
 
 from src.validation.era import get_era_spec, has_historical_field
-from src.validation.metrics import average_rank_error, field_overlap, spearman_on_list, subset_overlap
+from src.validation.metrics import (
+    average_rank_error,
+    field_overlap,
+    spearman_on_list,
+    subset_overlap,
+)
 
 
 def test_era_spec_four_team():

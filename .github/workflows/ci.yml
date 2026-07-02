@@ -1,5 +1,5 @@
 # =============================================================================
-# CFP Selection Simulator - Continuous Integration
+# Selection Room - Continuous Integration
 # =============================================================================
 
 name: CI
@@ -29,14 +29,13 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
         restore-keys: |
           ${{ runner.os }}-pip-
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
         pip install -e ".[app,dev]"
 
     - name: Lint with flake8
@@ -70,36 +69,3 @@ jobs:
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
-
-  notebooks:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install nbconvert nbformat
-
-    - name: Validate notebooks
-      run: |
-        # Check that all notebooks are valid JSON
-        for notebook in notebooks/*.ipynb; do
-          echo "Validating $notebook"
-          python -c "import json; json.load(open('$notebook'))"
-        done
-
-    - name: Check for notebook outputs
-      run: |
-        # Ensure notebooks don't have outputs committed (best practice)
-        for notebook in notebooks/*.ipynb; do
-          if grep -q '"outputs": \[' "$notebook"; then
-            echo "Warning: $notebook contains outputs"
-          fi
-        done

@@ -9,13 +9,13 @@
 This is the primary validation target for `PlayoffFormat` `2024` rules:
 
 ```bash
-cfp-sim run --config configs/2024.yaml --sample
+sroom run --config configs/2024.yaml --sample
 ```
 
 Compare against 2025 rules:
 
 ```bash
-cfp-sim run --config configs/2025.yaml --sample
+sroom run --config configs/2025.yaml --sample
 ```
 
 Inspect bye assignments in `data/output/brackets/*_bracket.csv`.

@@ -211,7 +211,10 @@ def resolve_rank_ties(
     while idx < len(rows):
         group = [rows[idx]]
         j = idx + 1
-        while j < len(rows) and abs(rows[idx]["composite_score"] - rows[j]["composite_score"]) < tolerance:
+        while (
+            j < len(rows)
+            and abs(rows[idx]["composite_score"] - rows[j]["composite_score"]) < tolerance
+        ):
             group.append(rows[j])
             j += 1
 

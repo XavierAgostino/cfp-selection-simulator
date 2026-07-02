@@ -12,7 +12,7 @@ cd cfp-selection-simulator
 make setup
 ```
 
-Installs `pip install -e ".[app,dev]"` including `cfp-sim`, pytest, black, isort, flake8.
+Installs `pip install -e ".[app,dev]"` including `sroom`, pytest, black, isort, flake8.
 
 ---
 
@@ -57,8 +57,8 @@ Runs tests, lint, and a sample-mode smoke run.
 
 ```bash
 make demo
-cfp-sim doctor
-cfp-sim outputs --latest
+sroom doctor
+sroom outputs --latest
 ```
 
 No API key required.

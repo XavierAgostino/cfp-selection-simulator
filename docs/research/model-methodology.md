@@ -2,7 +2,7 @@
 
 ## Overview
 
-The CFP Selection Simulator uses a **single composite pipeline** with exposed component views (résumé, predictive, schedule). It does not claim to replicate committee deliberations exactly.
+The Selection Room uses a **single composite pipeline** with exposed component views (résumé, predictive, schedule). It does not claim to replicate committee deliberations exactly.
 
 ## Composite Formula
 

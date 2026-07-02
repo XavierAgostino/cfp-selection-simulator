@@ -1,6 +1,15 @@
 # Changelog
 
-All notable changes to the CFP Selection Simulator project.
+All notable changes to the Selection Room project.
+
+## 3.0.0
+
+### Changed
+- **Renamed to Selection Room**: new `sroom` CLI (the `cfp-sim` alias is kept for compatibility)
+- **Removed Docker/Jupyter setup path**: local development now goes through `make setup` (`.venv` + pip install), no container required
+
+### Added
+- **JSON API contract layer** (`docs/api-contracts.md`) and a Next.js web app under `web/` (in progress)
 
 ## [2.0.0] - 2026-07-02
 
@@ -8,7 +17,7 @@ All notable changes to the CFP Selection Simulator project.
 - **Documentation funnel**: `docs/index.md`, quickstart, user guide, CLI reference, dashboard guide, output files, configuration, development
 - **Research index** and case studies under `docs/research/case-studies/`
 - **Sensitivity analysis** doc; root `CHANGELOG.md`
-- **CLI-first workflow**: `make setup`, `make demo`, `make verify`, `cfp-sim doctor`, `cfp-sim outputs`, `cfp-sim open`
+- **CLI-first workflow**: `make setup`, `make demo`, `make verify`, `sroom doctor`, `sroom outputs`, `sroom open`
 - **Predictable output contract** under `data/output/{rankings,fields,brackets,audits,runs}/`
 - **Config templates** in `configs/` (sample, 2024, 2025, validation)
 - **Rich sample demo data** with conference champions (`sample_champions.csv`, 110 games)
@@ -17,7 +26,7 @@ All notable changes to the CFP Selection Simulator project.
 - **Format-aware CFP rules**: 2024 champion-bye seeding and 2025+ straight seeding (`src/config/formats.py`, `src/selection/seeding.py`)
 - **Field selection module**: 5+7 auto/at-large with displacement tracking and structured audit (`src/selection/field.py`, `src/selection/audit.py`)
 - **Composite pipeline**: Extracted ranking algorithms and composite scoring (`src/rankings/algorithms.py`, `src/pipeline/composite.py`)
-- **CLI**: `cfp-sim` Typer commands for fetch, rank, select, bracket, run, validate, dashboard
+- **CLI**: `sroom` Typer commands for fetch, rank, select, bracket, run, validate, dashboard
 - **Pipeline runner**: Full orchestration with reproducibility manifest (`src/pipeline/run.py`)
 - **Streamlit dashboard**: Field, bracket, résumé, audit, and component views (`app/streamlit_app.py`)
 - **Team asset registry**: Logo/color lookup with CFBD → ESPN → placeholder fallbacks (`src/assets/`)

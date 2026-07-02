@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This report synthesizes findings from the CFP Selection Simulator, a data-driven ranking system designed to provide an objective, transparent alternative to the College Football Playoff committee's subjective selection process. Analysis spans composite rankings, playoff selection, historical validation, and resume-vs-predictive evaluation for the 2025 season through Week 15.
+This report synthesizes findings from the Selection Room, a data-driven ranking system designed to provide an objective, transparent alternative to the College Football Playoff committee's subjective selection process. Analysis spans composite rankings, playoff selection, historical validation, and resume-vs-predictive evaluation for the 2025 season through Week 15.
 
 ### Key Findings
 
@@ -718,7 +718,7 @@ All analysis is fully reproducible:
 
 ---
 
-**Report Author**: CFP Selection Simulator v1.0  
+**Report Author**: Selection Room v1.0  
 **Analysis Period**: 2025 Season, Week 15  
 **Last Updated**: December 5, 2025  
 **License**: MIT (Open Source)

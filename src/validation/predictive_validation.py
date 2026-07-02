@@ -8,7 +8,12 @@ from typing import Dict, Literal
 import numpy as np
 import pandas as pd
 
-from src.rankings.baseline import HomeFieldBaseline, SimpleElo, SimpleSRS, calculate_baseline_rankings
+from src.rankings.baseline import (
+    HomeFieldBaseline,
+    SimpleElo,
+    SimpleSRS,
+    calculate_baseline_rankings,
+)
 
 PredictiveMethod = Literal["composite", "elo", "srs", "home_field"]
 
@@ -146,7 +151,5 @@ def evaluate_predictive_baselines(
     ]
     for method in ("elo", "srs", "home_field"):
         baseline_rankings = calculate_baseline_rankings(games_df, method)
-        results.append(
-            evaluate_predictive(games_df, baseline_rankings, method=method, year=year)
-        )
+        results.append(evaluate_predictive(games_df, baseline_rankings, method=method, year=year))
     return results

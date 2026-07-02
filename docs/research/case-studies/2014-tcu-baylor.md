@@ -6,7 +6,7 @@ In the final 4-team CFP poll (2014), both TCU and Baylor finished ranked but onl
 
 ## Simulator relevance
 
-The v2.0 simulator focuses on the **12-team era (2024+)**. For 2014, use `cfp-sim validate --years 2014:2014` to compare composite rankings against historical CFP top-25 data, not 12-team bracket selection.
+The v2.0 simulator focuses on the **12-team era (2024+)**. For 2014, use `sroom validate --years 2014:2014` to compare composite rankings against historical CFP top-25 data, not 12-team bracket selection.
 
 ## Questions to explore
 

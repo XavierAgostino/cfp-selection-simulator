@@ -8,7 +8,11 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 import pandas as pd
 
 from src.config.conferences import CFP_CONFERENCES, team_conference_map
-from src.data.fetcher import fetch_conference_championship_games, fetch_team_records, get_fbs_teams_list
+from src.data.fetcher import (
+    fetch_conference_championship_games,
+    fetch_team_records,
+    get_fbs_teams_list,
+)
 from src.selection.conference_champions import (
     apply_champion_labels,
     champions_from_ccg_games,

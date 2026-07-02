@@ -19,7 +19,7 @@ cfp-selection-simulator/
 │   ├── pipeline/             # Composite, run orchestration, paths
 │   ├── rankings/             # Colley, Massey, Elo algorithms
 │   ├── playoff/              # Bracket viz (HTML, Plotly)
-│   ├── cli/                  # cfp-sim Typer commands
+│   ├── cli/                  # sroom Typer commands
 │   ├── assets/               # Team logos/colors registry
 │   ├── data/                 # CFBD fetcher
 │   ├── validation/           # Backtest, sensitivity

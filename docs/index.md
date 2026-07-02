@@ -1,4 +1,4 @@
-# CFP Selection Simulator Docs
+# Selection Room Docs
 
 Documentation funnel: **Quickstart → User Guide → Methodology → Research → Development**
 
@@ -48,5 +48,3 @@ Documentation funnel: **Quickstart → User Guide → Methodology → Research �
 Older standalone files are kept for reference but may be superseded:
 
 - [METHODOLOGY.md](METHODOLOGY.md) → see [research/model-methodology.md](research/model-methodology.md)
-- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) → see [project-structure.md](project-structure.md)
-- [DOCKER.md](DOCKER.md) → optional Docker workflow

@@ -1,4 +1,4 @@
-"""Typer CLI for CFP Selection Simulator."""
+"""Typer CLI for Selection Room."""
 
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ from typing import Optional
 
 import typer
 
+from src.assets.logos import refresh_team_assets_cache
 from src.cli.console import print_doctor_report, print_latest_outputs, print_run_summary
 from src.cli.doctor import run_doctor_checks
-from src.assets.logos import refresh_team_assets_cache
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.cache_paths import games_cache_write_path
@@ -28,8 +28,11 @@ from src.pipeline.run import REPO_ROOT, run_pipeline
 from src.validation.backtest import run_era_validation
 
 app = typer.Typer(
-    name="cfp-sim",
-    help="Transparent decision-support simulator for College Football Playoff selection.",
+    name="sroom",
+    help=(
+        "Selection Room — transparent decision-support simulator for College Football "
+        "Playoff selection."
+    ),
     no_args_is_help=True,
 )
 
@@ -75,7 +78,7 @@ def doctor() -> None:
     checks = run_doctor_checks()
     print_doctor_report(checks)
     typer.echo("Ready to run:")
-    typer.echo("  cfp-sim run --year 2025 --week 15 --sample")
+    typer.echo("  sroom run --year 2025 --week 15 --sample")
     typer.echo("  make demo")
 
 
@@ -212,7 +215,7 @@ def outputs(
     """List output files from recent runs."""
     manifest_path = find_latest_manifest()
     if manifest_path is None:
-        typer.echo("No runs found. Try: cfp-sim run --year 2025 --week 15 --sample")
+        typer.echo("No runs found. Try: sroom run --year 2025 --week 15 --sample")
         raise typer.Exit(code=1)
 
     data = json.loads(manifest_path.read_text())

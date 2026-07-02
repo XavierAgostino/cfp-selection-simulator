@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for contributing to the CFP Selection Simulator.
+Thanks for contributing to the Selection Room.
 
 Author: **Xavier Agostino**
 

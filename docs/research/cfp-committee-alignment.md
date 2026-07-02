@@ -60,7 +60,7 @@ Independents (including Notre Dame) never receive conference-champion auto-bid l
 Run backtests against historical CFP top-12 proxies:
 
 ```bash
-cfp-sim validate --years 2014:2023
+sroom validate --years 2014:2023
 ```
 
 Report Spearman correlation and selection overlap from `data/output/validation/backtest_results.csv`. Treat aggregate accuracy as indicative, not proof of committee replication.

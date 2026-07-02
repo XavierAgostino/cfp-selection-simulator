@@ -46,7 +46,12 @@ def test_common_opponents_comparison():
 def test_apply_tiebreaker_uses_h2h_before_sos():
     games = _games(
         [
-            {"home_team": "Ohio State", "away_team": "Michigan", "home_score": 24, "away_score": 17},
+            {
+                "home_team": "Ohio State",
+                "away_team": "Michigan",
+                "home_score": 24,
+                "away_score": 17,
+            },
         ]
     )
     team_a = {"team": "Michigan", "composite_score": 0.91}

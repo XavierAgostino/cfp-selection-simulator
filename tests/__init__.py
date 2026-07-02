@@ -1,1 +1,1 @@
-"""Test suite for CFP Selection Simulator."""
+"""Test suite for Selection Room."""

@@ -1,5 +1,5 @@
 """
-CFP Selection Simulator — Streamlit dashboard.
+Selection Room — Analyst Console (Streamlit dashboard).
 
 A transparent decision-support simulator for College Football Playoff selection.
 """
@@ -51,17 +51,16 @@ from src.assets.teams import load_team_assets
 from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
 from src.pipeline.composite import calculate_composite_rankings
-from src.pipeline.paths import DATA_OUTPUT, RunOutputPaths
 from src.pipeline.live import enrich_live_rankings
+from src.pipeline.paths import DATA_OUTPUT, RunOutputPaths
 from src.pipeline.run import SAMPLE_GAMES, load_games, run_select
 from src.pipeline.sample import enrich_sample_rankings
 from src.playoff.bracket import BracketMatchup
-from src.playoff.bracket_plotly import create_interactive_bracket
 
-st.set_page_config(page_title="CFP Selection Simulator", layout="wide")
+st.set_page_config(page_title="Selection Room — Analyst Console", layout="wide")
 inject_global_css()
 
-st.title("CFP Selection Simulator")
+st.title("Selection Room — Analyst Console")
 st.markdown(
     '<p class="app-subtitle">Transparent CFP ranking, selection, and bracket analysis.</p>',
     unsafe_allow_html=True,
@@ -274,7 +273,7 @@ if use_sample:
 elif payload.get("n_teams", 0) > 200:
     st.warning(
         "Live data returned an unusually large team count. "
-        "Clear cache with `cfp-sim clean --cache`, then re-run the simulator."
+        "Clear cache with `sroom clean --cache`, then re-run the simulator."
     )
 elif payload.get("champion_source") == "cfbd_records":
     render_info_callout(
@@ -457,15 +456,6 @@ with tab_bracket:
             view_mode=view_mode,
             height=780 if view_mode == "full" else 480,
         )
-
-        with st.expander("Advanced / Legacy chart"):
-            fig = create_interactive_bracket(
-                seeded,
-                first_round,
-                title=f"CFP Bracket {season} (Week {week})",
-                use_sample=use_sample,
-            )
-            st.plotly_chart(fig, width="stretch")
     else:
         st.info("Bracket available when playoff field is computed.")
 

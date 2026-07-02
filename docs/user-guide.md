@@ -64,7 +64,7 @@ See [Output Files](output-files.md) for full column definitions.
 
 ```bash
 export CFBD_API_KEY="..."
-cfp-sim run --year 2025 --week 15
+sroom run --year 2025 --week 15
 ```
 
 ### Run sample demo (offline)
@@ -76,9 +76,9 @@ make demo
 ### Compare 2024 vs 2025 seeding rules
 
 ```bash
-cfp-sim run --config configs/2024.yaml --sample
-cfp-sim run --config configs/2025.yaml --sample
-cfp-sim outputs --latest
+sroom run --config configs/2024.yaml --sample
+sroom run --config configs/2025.yaml --sample
+sroom outputs --latest
 ```
 
 Compare `bracket.csv` bye assignments between runs.
@@ -86,7 +86,7 @@ Compare `bracket.csv` bye assignments between runs.
 ### Reproduce a historical season
 
 ```bash
-cfp-sim reproduce --season 2024
+sroom reproduce --season 2024
 ```
 
 Requires CFBD API key and cached or fetched game data.
@@ -94,7 +94,7 @@ Requires CFBD API key and cached or fetched game data.
 ### Historical validation
 
 ```bash
-cfp-sim validate --years 2014:2023
+sroom validate --years 2014:2023
 ```
 
 Results: `data/output/validation/backtest_results.csv`. See [Historical Validation](research/historical-validation.md).
@@ -102,8 +102,8 @@ Results: `data/output/validation/backtest_results.csv`. See [Historical Validati
 ### Export bracket report
 
 ```bash
-cfp-sim bracket --year 2025 --week 15 --sample --html
-cfp-sim open --type bracket --year 2025 --week 15
+sroom bracket --year 2025 --week 15 --sample --html
+sroom open --type bracket --year 2025 --week 15
 ```
 
 ---

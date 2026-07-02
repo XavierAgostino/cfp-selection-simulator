@@ -1,4 +1,4 @@
-"""Environment diagnostics for cfp-sim doctor."""
+"""Environment diagnostics for sroom doctor."""
 
 from __future__ import annotations
 
@@ -74,12 +74,12 @@ def run_doctor_checks() -> List[CheckResult]:
     else:
         checks.append(("Streamlit", False, 'not installed (pip install -e ".[app]")', False))
 
-    if shutil.which("cfp-sim"):
-        checks.append(("cfp-sim CLI", True, "on PATH", False))
+    if shutil.which("sroom"):
+        checks.append(("sroom CLI", True, "on PATH", False))
     else:
         checks.append(
             (
-                "cfp-sim CLI",
+                "sroom CLI",
                 True,
                 'available via python -m (install with pip install -e ".[app]")',
                 True,

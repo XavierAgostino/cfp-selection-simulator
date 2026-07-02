@@ -1,6 +1,6 @@
 # Scripts
 
-Utility scripts for the CFP Selection Simulator.
+Utility scripts for the Selection Room.
 
 ---
 
@@ -12,7 +12,7 @@ One-shot demo for new users:
 ./scripts/demo.sh
 ```
 
-Installs the package, runs `cfp-sim doctor`, executes sample pipeline, generates bracket HTML, and lists outputs.
+Installs the package, runs `sroom doctor`, executes sample pipeline, generates bracket HTML, and lists outputs.
 
 ---
 

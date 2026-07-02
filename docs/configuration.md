@@ -37,14 +37,14 @@ weights:
 ## Usage
 
 ```bash
-cfp-sim run --config configs/2025.yaml --sample
-cfp-sim run --config configs/2024.yaml --sample
+sroom run --config configs/2025.yaml --sample
+sroom run --config configs/2024.yaml --sample
 ```
 
 Override year/week from CLI if needed:
 
 ```bash
-cfp-sim run --config configs/2025.yaml --year 2025 --week 14 --sample
+sroom run --config configs/2025.yaml --year 2025 --week 14 --sample
 ```
 
 ---
@@ -91,7 +91,7 @@ Implementation: `src/config/formats.py`
 Sample mode is a **CLI flag**, not a YAML field:
 
 ```bash
-cfp-sim run --config configs/sample.yaml --sample
+sroom run --config configs/sample.yaml --sample
 ```
 
 Loads games from `data/processed/sample/sample_games.csv` and applies `sample_champions.csv`.

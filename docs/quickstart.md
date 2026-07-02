@@ -12,12 +12,12 @@ cd cfp-selection-simulator
 make setup
 ```
 
-This runs `pip install -e ".[app,dev]"` and installs the `cfp-sim` CLI.
+This runs `pip install -e ".[app,dev]"` and installs the `sroom` CLI.
 
 Verify your environment:
 
 ```bash
-cfp-sim doctor
+sroom doctor
 ```
 
 ---
@@ -31,7 +31,7 @@ make demo
 Equivalent:
 
 ```bash
-cfp-sim run --year 2025 --week 15 --sample
+sroom run --year 2025 --week 15 --sample
 ```
 
 Expected terminal output includes steps for loading games, rankings, field selection, seeding, bracket HTML, and manifest.
@@ -41,7 +41,7 @@ Expected terminal output includes steps for loading games, rankings, field selec
 ## 3. Inspect outputs
 
 ```bash
-cfp-sim outputs --latest
+sroom outputs --latest
 ```
 
 Files land under:
@@ -59,7 +59,7 @@ data/output/
 Open the HTML bracket:
 
 ```bash
-cfp-sim open --latest
+sroom open --latest
 ```
 
 Column reference: [Output Files](output-files.md)
@@ -83,13 +83,13 @@ cp .env.example .env
 # Edit .env and set CFBD_API_KEY
 
 export CFBD_API_KEY="your_key_here"
-cfp-sim run --year 2025 --week 15
+sroom run --year 2025 --week 15
 ```
 
 Or use a config file:
 
 ```bash
-cfp-sim run --config configs/2025.yaml
+sroom run --config configs/2025.yaml
 ```
 
 ---

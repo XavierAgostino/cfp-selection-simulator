@@ -1,5 +1,5 @@
 # =============================================================================
-# CFP Selection Simulator - Makefile
+# Selection Room - Makefile
 # =============================================================================
 
 PYTHON ?= python3
@@ -11,14 +11,14 @@ VENV_BIN := $(VENV_DIR)/bin
 ifeq ($(wildcard $(VENV_PY)),)
 PY := $(PYTHON)
 BIN := $(shell $(PYTHON) -c "import sysconfig; print(sysconfig.get_path('scripts'))" 2>/dev/null)
-CFP_SIM := cfp-sim
+SROOM := sroom
 else
 PY := $(VENV_PY)
 BIN := $(VENV_BIN)
-CFP_SIM := $(VENV_BIN)/cfp-sim
+SROOM := $(VENV_BIN)/sroom
 endif
 
-.PHONY: help setup demo run rank select bracket dashboard validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean start stop status
+.PHONY: help setup demo run rank select bracket dashboard validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean
 
 YEAR ?= 2025
 WEEK ?= 15
@@ -28,7 +28,7 @@ TARGET ?= all
 
 help:
 	@echo ""
-	@echo "CFP Selection Simulator"
+	@echo "Selection Room"
 	@echo "============================================================"
 	@echo ""
 	@echo "Getting started"
@@ -55,9 +55,6 @@ help:
 	@echo "  make verify             Tests + lint + sample smoke run"
 	@echo "  make clean              Remove output artifacts and caches"
 	@echo ""
-	@echo "Docker (optional)"
-	@echo "  make start / stop / status"
-	@echo ""
 
 setup:
 	@test -d $(VENV_DIR) || $(PYTHON) -m venv $(VENV_DIR)
@@ -67,37 +64,37 @@ setup:
 	@echo "Setup complete. Commands use $(VENV_DIR)/ automatically."
 
 demo:
-	$(CFP_SIM) run --year $(YEAR) --week $(WEEK) --sample
+	$(SROOM) run --year $(YEAR) --week $(WEEK) --sample
 
 run:
-	$(CFP_SIM) run --year $(YEAR) --week $(WEEK)
+	$(SROOM) run --year $(YEAR) --week $(WEEK)
 
 rank:
-	$(CFP_SIM) rank --year $(YEAR) --week $(WEEK) --sample
+	$(SROOM) rank --year $(YEAR) --week $(WEEK) --sample
 
 select:
-	$(CFP_SIM) select --year $(YEAR) --week $(WEEK) --sample
+	$(SROOM) select --year $(YEAR) --week $(WEEK) --sample
 
 bracket:
-	$(CFP_SIM) bracket --year $(YEAR) --week $(WEEK) --sample --html
+	$(SROOM) bracket --year $(YEAR) --week $(WEEK) --sample --html
 
 dashboard:
-	$(CFP_SIM) dashboard
+	$(SROOM) dashboard
 
 validate:
-	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target $(or $(TARGET),all)
+	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target $(or $(TARGET),all)
 
 validate-committee:
-	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target committee
+	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target committee
 
 validate-selection:
-	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target selection
+	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target selection
 
 validate-predictive:
-	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target predictive
+	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target predictive
 
 reproduce:
-	$(CFP_SIM) reproduce --season $(SEASON) --week $(WEEK)
+	$(SROOM) reproduce --season $(SEASON) --week $(WEEK)
 
 test:
 	$(PY) -m pytest tests/ -v
@@ -112,17 +109,8 @@ format:
 	$(PY) -m isort src/ tests/ app/
 
 verify: test lint
-	$(CFP_SIM) run --year $(YEAR) --week $(WEEK) --sample
+	$(SROOM) run --year $(YEAR) --week $(WEEK) --sample
 
 clean:
 	rm -rf htmlcov .pytest_cache .coverage
-	$(CFP_SIM) clean --outputs
-
-start:
-	@./bin/start.sh
-
-stop:
-	@./bin/stop.sh
-
-status:
-	@./bin/status.sh
+	$(SROOM) clean --outputs

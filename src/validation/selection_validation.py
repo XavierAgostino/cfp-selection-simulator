@@ -126,7 +126,9 @@ def validate_selection(
             result.first_team_out_match = result.first_team_out_sim == ref_first_out
 
         ref_seeds = {team: i + 1 for i, team in enumerate(ref_field)}
-        seeded = seed_playoff_teams(selection.playoff_teams, selection.auto_bids, get_format_for_year(year))
+        seeded = seed_playoff_teams(
+            selection.playoff_teams, selection.auto_bids, get_format_for_year(year)
+        )
         sim_seeds = dict(zip(seeded["team"], seeded["seed"]))
         from src.validation.metrics import calculate_seeding_accuracy
 

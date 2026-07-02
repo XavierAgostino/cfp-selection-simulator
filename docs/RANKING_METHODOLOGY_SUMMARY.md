@@ -1,4 +1,4 @@
-# CFP Selection Simulator - Ranking Methodology Summary
+# Selection Room - Ranking Methodology Summary
 
 ## How Teams Are Ranked
 

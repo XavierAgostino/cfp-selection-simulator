@@ -81,7 +81,7 @@ Path: `data/output/brackets/{year}_week{week}_bracket.csv`
 
 Path: `data/output/brackets/{year}_week{week}_bracket.html`
 
-Standalone HTML bracket visualization. Open with `cfp-sim open --latest`.
+Standalone HTML bracket visualization. Open with `sroom open --latest`.
 
 ---
 
@@ -119,7 +119,7 @@ Path: `data/output/runs/{year}_week{week}_manifest.json`
 | `outputs` | Map of artifact keys to paths |
 | `n_games` / `n_teams` | Dataset stats |
 
-Use manifests with `cfp-sim reproduce` to re-run seasons.
+Use manifests with `sroom reproduce` to re-run seasons.
 
 ---
 
@@ -127,14 +127,14 @@ Use manifests with `cfp-sim reproduce` to re-run seasons.
 
 Path: `data/output/validation/backtest_results.csv`
 
-Produced by `cfp-sim validate`. Columns vary by backtest version; see [Historical Validation](research/historical-validation.md).
+Produced by `sroom validate`. Columns vary by backtest version; see [Historical Validation](research/historical-validation.md).
 
 ---
 
 ## Inspecting latest outputs
 
 ```bash
-cfp-sim outputs --latest
+sroom outputs --latest
 ```
 
 ---

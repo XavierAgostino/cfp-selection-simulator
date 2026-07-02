@@ -1,11 +1,11 @@
 """Dashboard UI components."""
 
 from app.components.ui import (
+    bid_status_label,
+    bubble_section_teams,
     build_components_scatter,
     build_rankings_display_df,
     build_selection_case,
-    bubble_section_teams,
-    bid_status_label,
     derive_bid_status,
     field_team_meta,
     filter_rankings_df,

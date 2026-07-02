@@ -9,7 +9,7 @@ The Streamlit dashboard provides an interactive view of rankings, field selectio
 ```bash
 make dashboard
 # or
-cfp-sim dashboard
+sroom dashboard
 ```
 
 Opens `app/streamlit_app.py` at `http://localhost:8501` by default.
@@ -103,8 +103,8 @@ From the dashboard sidebar or Bracket tab:
 Full pipeline exports via CLI:
 
 ```bash
-cfp-sim run --year 2025 --week 15 --sample
-cfp-sim open --latest
+sroom run --year 2025 --week 15 --sample
+sroom open --latest
 ```
 
 ---

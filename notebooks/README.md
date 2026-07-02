@@ -1,6 +1,6 @@
 # Notebooks
 
-Research and exploratory notebooks for the CFP Selection Simulator.
+Research and exploratory notebooks for the Selection Room.
 
 **Primary user path:** CLI + dashboard, not notebooks.
 

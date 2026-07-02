@@ -16,12 +16,12 @@ Pre-2024 **field validation uses the actual 4-team CFP bracket**, not top-12 ran
 
 ```bash
 # All three tracks (default)
-cfp-sim validate --years 2014:2024
+sroom validate --years 2014:2024
 
 # Single track
-cfp-sim validate --years 2021:2023 --target committee
-cfp-sim validate --years 2014:2024 --target selection
-cfp-sim validate --years 2021:2023 --target predictive
+sroom validate --years 2021:2023 --target committee
+sroom validate --years 2014:2024 --target selection
+sroom validate --years 2021:2023 --target predictive
 ```
 
 ## Outputs
@@ -105,7 +105,7 @@ Predictive performance protects against overfitting to committee votes.
 
 ```bash
 # Planned — do not mix with validation
-cfp-sim calibrate --train-years 2014:2021 --holdout-years 2022,2024
+sroom calibrate --train-years 2014:2021 --holdout-years 2022,2024
 ```
 
 ## Module layout

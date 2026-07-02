@@ -2,7 +2,7 @@
 
 > **Note:** For v2.0, prefer [research/model-methodology.md](research/model-methodology.md) and [research/metric-definitions.md](research/metric-definitions.md). This file is a detailed legacy reference.
 
-This document provides comprehensive technical documentation for the ranking algorithms used in the CFP Selection Simulator.
+This document provides comprehensive technical documentation for the ranking algorithms used in the Selection Room.
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ This document provides comprehensive technical documentation for the ranking alg
 
 ## Overview
 
-The CFP Selection Simulator implements an ensemble ranking methodology that combines five distinct algorithms. Each algorithm evaluates teams from a different analytical perspective, creating a comprehensive and balanced evaluation framework.
+The Selection Room implements an ensemble ranking methodology that combines five distinct algorithms. Each algorithm evaluates teams from a different analytical perspective, creating a comprehensive and balanced evaluation framework.
 
 ### Design Philosophy
 

@@ -38,9 +38,7 @@ def conference_record(
     losses = 0
     opponents: List[str] = []
 
-    team_games = games_df[
-        (games_df["home_team"] == team) | (games_df["away_team"] == team)
-    ]
+    team_games = games_df[(games_df["home_team"] == team) | (games_df["away_team"] == team)]
     for _, game in team_games.iterrows():
         opp = game["away_team"] if game["home_team"] == team else game["home_team"]
         if conf_map.get(opp) != conference:
@@ -153,9 +151,7 @@ def resolve_conference_seeds(
                 break
 
         if sweeper:
-            sorted_group = sorted(
-                group_teams, key=lambda x: (x["team"] != sweeper, -x["conf_sos"])
-            )
+            sorted_group = sorted(group_teams, key=lambda x: (x["team"] != sweeper, -x["conf_sos"]))
         elif is_balanced:
             sorted_group = sorted(
                 group_teams,
@@ -240,9 +236,7 @@ def champions_from_games(
         if not conf_data:
             continue
 
-        top_two = resolve_conference_seeds(
-            conf_data, games_df, team_opponents, team_records
-        )
+        top_two = resolve_conference_seeds(conf_data, games_df, team_opponents, team_records)
         if not top_two:
             continue
 

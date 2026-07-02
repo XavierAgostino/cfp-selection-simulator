@@ -212,9 +212,7 @@ def fetch_conference_championship_games(
                     "away_score": int(away_score),
                     "home_conference": _game_field(game, "home_conference", "homeConference"),
                     "away_conference": _game_field(game, "away_conference", "awayConference"),
-                    "neutral_site": bool(
-                        _game_field(game, "neutral_site", "neutralSite") or False
-                    ),
+                    "neutral_site": bool(_game_field(game, "neutral_site", "neutralSite") or False),
                     "notes": _game_field(game, "notes"),
                     "season_type": "regular",
                     "is_conference_championship": True,

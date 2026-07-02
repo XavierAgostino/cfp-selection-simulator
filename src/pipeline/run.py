@@ -13,8 +13,8 @@ from src import __version__
 from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
-from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.cache_paths import games_cache_candidates, games_cache_write_path
+from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.live import enrich_live_rankings, filter_games_to_fbs
 from src.pipeline.paths import RunOutputPaths, ensure_output_dirs
 from src.pipeline.sample import SAMPLE_GAMES, enrich_sample_rankings

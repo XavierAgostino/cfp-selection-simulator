@@ -1,4 +1,6 @@
-# CFP Selection Simulator
+# Selection Room
+
+_a CFP selection simulator_
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -48,6 +50,12 @@ No API key is required for demo mode.
 
 One-shot script: `./scripts/demo.sh`
 
+A Next.js web app also lives at [`web/`](web/):
+
+```bash
+cd web && pnpm install && pnpm dev
+```
+
 ---
 
 ## Run with live data
@@ -56,7 +64,7 @@ One-shot script: `./scripts/demo.sh`
 cp .env.example .env   # add CFBD_API_KEY
 export CFBD_API_KEY="your_key_here"
 make run YEAR=2025 WEEK=15
-# or: ./bin/cfp-sim run --year 2025 --week 15
+# or: ./bin/sroom run --year 2025 --week 15
 ```
 
 Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key).
@@ -65,16 +73,16 @@ Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key)
 
 ## Common commands
 
-Use `make` or `./bin/cfp-sim` from the repo root. Bare `cfp-sim` requires `source .venv/bin/activate`.
+Use `make` or `./bin/sroom` from the repo root. Bare `sroom` requires `source .venv/bin/activate`.
 
 | Goal | Command |
 |------|---------|
-| Environment check | `./bin/cfp-sim doctor` |
+| Environment check | `./bin/sroom doctor` |
 | Sample demo | `make demo` |
 | Full pipeline | `make run YEAR=2025 WEEK=15` |
 | Dashboard | `make dashboard` |
 | Bracket HTML | `make bracket YEAR=2025 WEEK=15` |
-| Latest outputs | `./bin/cfp-sim outputs --latest` |
+| Latest outputs | `./bin/sroom outputs --latest` |
 | Validation (all tracks) | `make validate` |
 | Field validation only | `make validate-selection` |
 | Predictive metrics only | `make validate-predictive` |
@@ -105,7 +113,7 @@ Details: [Output Files](docs/output-files.md)
 
 ```bash
 make dashboard
-# or: cfp-sim dashboard
+# or: sroom dashboard
 ```
 
 Tabs: Overview, Rankings, Playoff Field, Bracket, Bubble Watch, Team Resume, Components, Selection Audit, Methodology.

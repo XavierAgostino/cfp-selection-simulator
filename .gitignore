@@ -1,5 +1,5 @@
 # =============================================================================
-# CFP Selection Simulator - .gitignore
+# Selection Room - .gitignore
 # =============================================================================
 
 # Environment Variables
@@ -51,10 +51,6 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
-# Docker
-.docker/
-*.dockerignore
-
 # Logs
 *.log
 logs/
@@ -94,13 +90,16 @@ data/output/visualizations/*.pdf
 # Root-level output files (from notebooks)
 /*.csv
 /*.json
-!docker/requirements.txt
 !pyproject.toml
 !package.json
 !data/config.json
 
+# API cache output
+data/output/api/
+
 # Testing
 .coverage
+coverage.xml
 .pytest_cache/
 .tox/
 htmlcov/
