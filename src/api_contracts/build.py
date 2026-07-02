@@ -1,0 +1,542 @@
+"""Builders: engine objects (DataFrames, PlayoffSelection, bracket pods) -> API
+contract pydantic models (src.api_contracts.models).
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Mapping, Optional, Union
+
+import pandas as pd
+
+from src.api_contracts.models import (
+    AuditPayload,
+    AuditPhase,
+    AuditStepEntry,
+    BracketPayload,
+    BracketPod,
+    BracketRounds,
+    Championship,
+    ComponentRanks,
+    FieldPayload,
+    FirstRoundGame,
+    QuarterfinalGame,
+    RankingsPayload,
+    RankingsTeam,
+    Record,
+    RunsIndexEntry,
+    ScheduleGame,
+    SemifinalGroup,
+    TeamResume,
+    TeamResumeScores,
+    TeamResumesPayload,
+    TeamSlot,
+)
+from src.api_contracts.selection_case import build_selection_case
+from src.assets.teams import TeamAsset, get_team_asset
+from src.config.simulator import SimulatorConfig
+from src.playoff.bracket_view import build_bracket_pods, build_bracket_rounds
+from src.selection.audit import AuditStep
+from src.selection.field import PlayoffSelection
+
+TEAM_RESUME_TOP_N = 40
+
+RowLike = Union[Mapping[str, Any], "pd.Series[Any]"]
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def team_records_from_games(games_df: Optional[pd.DataFrame]) -> Dict[str, Dict[str, int]]:
+    """Compute {team: {wins, losses}} from raw game results.
+
+    The rankings DataFrame carries no win/loss columns (and the seeded CSV
+    defaults wins/losses to 0), so records must always be derived from games.
+    """
+    if games_df is None or games_df.empty:
+        return {}
+    teams = sorted(set(games_df["home_team"].unique()) | set(games_df["away_team"].unique()))
+    records: Dict[str, Dict[str, int]] = {}
+    for team in teams:
+        tg = games_df[(games_df["home_team"] == team) | (games_df["away_team"] == team)]
+        wins = int(
+            ((tg["home_team"] == team) & (tg["home_score"] > tg["away_score"])).sum()
+            + ((tg["away_team"] == team) & (tg["away_score"] > tg["home_score"])).sum()
+        )
+        records[team] = {"wins": wins, "losses": int(len(tg) - wins)}
+    return records
+
+
+def component_ranks_by_team(rankings_df: pd.DataFrame) -> Dict[str, Dict[str, int]]:
+    """Rank each team 1..N (best=1) within each score component, across all teams."""
+    result: Dict[str, Dict[str, int]] = {team: {} for team in rankings_df["team"]}
+    for col, key in (
+        ("resume_score", "resume"),
+        ("predictive_score", "predictive"),
+        ("sor", "sor"),
+        ("sos", "sos"),
+    ):
+        ordered = rankings_df.sort_values(col, ascending=False).reset_index(drop=True)
+        for idx, row in ordered.iterrows():
+            result[row["team"]][key] = idx + 1
+    return result
+
+
+def _seed_lookup(seeded_df: Optional[pd.DataFrame]) -> Dict[str, Dict[str, Any]]:
+    if seeded_df is None or seeded_df.empty:
+        return {}
+    return {row["team"]: row.to_dict() for _, row in seeded_df.iterrows()}
+
+
+def _bid_type_lookup(selection: Optional[PlayoffSelection]) -> Dict[str, str]:
+    if selection is None:
+        return {}
+    lookup = {t["team"]: "auto" for t in selection.auto_bids}
+    lookup.update({t["team"]: "at_large" for t in selection.at_large_bids})
+    return lookup
+
+
+def _is_champion(conf_champ: Any) -> bool:
+    return "Yes" in str(conf_champ or "")
+
+
+def _champion_of(conf_champ: Any, conference: Optional[str]) -> Optional[str]:
+    label = str(conf_champ or "")
+    if "Yes" not in label:
+        return None
+    if "(" in label:
+        return label.split("(", 1)[1].rstrip(")")
+    return conference
+
+
+def _team_asset(team_name: str, use_sample: bool) -> Optional[TeamAsset]:
+    return get_team_asset(team_name, use_sample=use_sample)
+
+
+def _abbreviation(asset: Optional[TeamAsset]) -> Optional[str]:
+    return asset.abbreviation if asset and asset.abbreviation else None
+
+
+def build_team_slot(
+    row: RowLike,
+    *,
+    records: Dict[str, Dict[str, int]],
+    use_sample: bool,
+    bid_type_lookup: Optional[Dict[str, str]] = None,
+    seed: Optional[int] = None,
+    is_bye: Optional[bool] = None,
+) -> TeamSlot:
+    """Build a TeamSlot from any row-like mapping with rank/team/score columns.
+
+    ``seed``/``is_bye`` override whatever is in ``row`` (used when the row
+    comes from a rankings/selection dict that has no seed of its own); when
+    omitted, they fall back to ``row["seed"]``/``row["is_bye"]`` for rows that
+    already carry seeding info (e.g. bracket pod rows).
+    """
+    team_name = row["team"]
+    asset = _team_asset(team_name, use_sample)
+
+    resolved_seed = seed if seed is not None else row.get("seed")
+    if resolved_seed is not None and not (
+        isinstance(resolved_seed, float) and pd.isna(resolved_seed)
+    ):
+        resolved_seed = int(resolved_seed)
+    else:
+        resolved_seed = None
+
+    resolved_is_bye = is_bye if is_bye is not None else bool(row.get("is_bye", False))
+    record = records.get(team_name, {"wins": 0, "losses": 0})
+
+    return TeamSlot(
+        seed=resolved_seed,
+        rank=int(row["rank"]),
+        team=team_name,
+        abbreviation=_abbreviation(asset),
+        conference=row.get("conference"),
+        logo_url=asset.logo if asset else None,
+        primary_color=asset.primary_color if asset else None,
+        secondary_color=asset.secondary_color if asset else None,
+        bid_type=(bid_type_lookup or {}).get(team_name),
+        is_bye=resolved_is_bye,
+        composite_score=float(row.get("composite_score", 0.0) or 0.0),
+        resume_score=float(row.get("resume_score", 0.0) or 0.0),
+        predictive_score=float(row.get("predictive_score", 0.0) or 0.0),
+        sor=float(row.get("sor", 0.0) or 0.0),
+        sos=float(row.get("sos", 0.0) or 0.0),
+        record=Record(**record),
+    )
+
+
+def _team_slot_from_selection_dict(
+    team_dict: Dict[str, Any],
+    *,
+    seed_rows: Dict[str, Dict[str, Any]],
+    records: Dict[str, Dict[str, int]],
+    bid_type_lookup: Dict[str, str],
+    use_sample: bool,
+) -> TeamSlot:
+    seed_row = seed_rows.get(team_dict["team"])
+    seed = int(seed_row["seed"]) if seed_row is not None else None
+    is_bye = bool(seed_row.get("is_bye")) if seed_row is not None else False
+    return build_team_slot(
+        team_dict,
+        records=records,
+        use_sample=use_sample,
+        bid_type_lookup=bid_type_lookup,
+        seed=seed,
+        is_bye=is_bye,
+    )
+
+
+def _next_four_out(
+    rankings_df: pd.DataFrame, selection: Optional[PlayoffSelection]
+) -> List[Dict[str, Any]]:
+    """Next 4 teams by rank after first_four_out, excluding the field."""
+    if selection is None:
+        return []
+    excluded = {t["team"] for t in selection.playoff_teams} | {
+        t["team"] for t in selection.first_four_out
+    }
+    pool = rankings_df[~rankings_df["team"].isin(excluded)].sort_values("rank")
+    return pool.head(4).to_dict("records")
+
+
+def _last_four_in(selection: Optional[PlayoffSelection]) -> List[Dict[str, Any]]:
+    """4 lowest-ranked (worst) at-large bids."""
+    if selection is None or not selection.at_large_bids:
+        return []
+    return sorted(selection.at_large_bids, key=lambda t: t["rank"], reverse=True)[:4]
+
+
+def _ruleset_name(config: SimulatorConfig) -> Optional[str]:
+    return config.playoff_format.name if config.playoff_format else None
+
+
+def _seeding_mode(config: SimulatorConfig) -> Optional[str]:
+    return config.playoff_format.seeding if config.playoff_format else None
+
+
+def build_rankings_payload(
+    config: SimulatorConfig,
+    rankings_df: pd.DataFrame,
+    selection: Optional[PlayoffSelection],
+    seeded_df: Optional[pd.DataFrame],
+    records: Dict[str, Dict[str, int]],
+    use_sample: bool,
+) -> RankingsPayload:
+    seed_rows = _seed_lookup(seeded_df)
+    bid_lookup = _bid_type_lookup(selection)
+    in_field_names = (
+        {t["team"] for t in selection.playoff_teams} if selection is not None else set()
+    )
+
+    teams: List[RankingsTeam] = []
+    for _, row in rankings_df.sort_values("rank").iterrows():
+        team_name = row["team"]
+        asset = _team_asset(team_name, use_sample)
+        seed_row = seed_rows.get(team_name)
+        teams.append(
+            RankingsTeam(
+                rank=int(row["rank"]),
+                team=team_name,
+                abbreviation=_abbreviation(asset),
+                conference=row.get("conference"),
+                composite_score=float(row.get("composite_score", 0.0)),
+                resume_score=float(row.get("resume_score", 0.0)),
+                predictive_score=float(row.get("predictive_score", 0.0)),
+                sor=float(row.get("sor", 0.0)),
+                sos=float(row.get("sos", 0.0)),
+                is_conference_champion=_is_champion(row.get("conf_champ")),
+                champion_of=_champion_of(row.get("conf_champ"), row.get("conference")),
+                record=Record(**records.get(team_name, {"wins": 0, "losses": 0})),
+                in_field=team_name in in_field_names,
+                bid_type=bid_lookup.get(team_name),
+                seed=int(seed_row["seed"]) if seed_row is not None else None,
+                logo_url=asset.logo if asset else None,
+                primary_color=asset.primary_color if asset else None,
+                secondary_color=asset.secondary_color if asset else None,
+            )
+        )
+    return RankingsPayload(
+        season=config.year, week=config.week, generated_at=_now_iso(), teams=teams
+    )
+
+
+def build_field_payload(
+    config: SimulatorConfig,
+    rankings_df: pd.DataFrame,
+    selection: Optional[PlayoffSelection],
+    seeded_df: Optional[pd.DataFrame],
+    records: Dict[str, Dict[str, int]],
+    use_sample: bool,
+) -> Optional[FieldPayload]:
+    if selection is None:
+        return None
+
+    seed_rows = _seed_lookup(seeded_df)
+    bid_lookup = _bid_type_lookup(selection)
+
+    def slot(team_dict: Dict[str, Any]) -> TeamSlot:
+        return _team_slot_from_selection_dict(
+            team_dict,
+            seed_rows=seed_rows,
+            records=records,
+            bid_type_lookup=bid_lookup,
+            use_sample=use_sample,
+        )
+
+    field_slots = sorted(
+        (slot(t) for t in selection.playoff_teams),
+        key=lambda s: s.seed if s.seed is not None else s.rank,
+    )
+    displaced = slot(selection.displaced_team) if selection.displaced_team else None
+
+    return FieldPayload(
+        season=config.year,
+        week=config.week,
+        ruleset=_ruleset_name(config),
+        seeding_mode=_seeding_mode(config),
+        field=field_slots,
+        auto_bids=[slot(t) for t in selection.auto_bids],
+        at_large_bids=[slot(t) for t in selection.at_large_bids],
+        last_four_in=[slot(t) for t in _last_four_in(selection)],
+        first_four_out=[slot(t) for t in selection.first_four_out],
+        next_four_out=[slot(t) for t in _next_four_out(rankings_df, selection)],
+        displaced_team=displaced,
+        champ_pulled_in=selection.champ_pulled_in,
+    )
+
+
+def _merge_seeded_with_rankings(seeded_df: pd.DataFrame, rankings_df: pd.DataFrame) -> pd.DataFrame:
+    extra_cols = ["team", "resume_score", "predictive_score", "sor", "sos"]
+    extra_cols = [c for c in extra_cols if c in rankings_df.columns]
+    merged = seeded_df.merge(rankings_df[extra_cols], on="team", how="left")
+    for col in ("resume_score", "predictive_score", "sor", "sos"):
+        if col not in merged.columns:
+            merged[col] = 0.0
+    return merged
+
+
+def build_bracket_payload(
+    config: SimulatorConfig,
+    rankings_df: pd.DataFrame,
+    selection: Optional[PlayoffSelection],
+    seeded_df: Optional[pd.DataFrame],
+    records: Dict[str, Dict[str, int]],
+    use_sample: bool,
+) -> Optional[BracketPayload]:
+    if seeded_df is None or seeded_df.empty:
+        return None
+
+    merged = _merge_seeded_with_rankings(seeded_df, rankings_df)
+    merged["wins"] = merged["team"].map(lambda t: records.get(t, {}).get("wins", 0))
+    merged["losses"] = merged["team"].map(lambda t: records.get(t, {}).get("losses", 0))
+
+    bid_lookup = _bid_type_lookup(selection)
+
+    def to_slot(row_dict: Dict[str, Any]) -> TeamSlot:
+        return build_team_slot(
+            row_dict, records=records, use_sample=use_sample, bid_type_lookup=bid_lookup
+        )
+
+    raw_pods = build_bracket_pods(merged)
+    pods = [
+        BracketPod(
+            pod_id=pod["pod_id"],
+            first_round=[to_slot(t) for t in pod["first_round"]],
+            bye=to_slot(pod["bye"]),
+            quarterfinal_id=pod["quarterfinal_id"],
+            semifinal_side=pod["semifinal_side"],
+        )
+        for pod in raw_pods
+    ]
+
+    raw_rounds = build_bracket_rounds(raw_pods)
+    rounds = BracketRounds(
+        first_round=[
+            FirstRoundGame(
+                game_id=g["game_id"],
+                team_a=to_slot(g["team_a"]),
+                team_b=to_slot(g["team_b"]),
+                winner_to_seed=g["winner_to_seed"],
+            )
+            for g in raw_rounds["first_round"]
+        ],
+        quarterfinals=[
+            QuarterfinalGame(
+                game_id=q["game_id"],
+                bye_team=to_slot(q["bye_team"]),
+                feeds_from=q["feeds_from"],
+            )
+            for q in raw_rounds["quarterfinals"]
+        ],
+        semifinals=[
+            SemifinalGroup(side=s["side"], pods=s["pods"]) for s in raw_rounds["semifinals"]
+        ],
+        championship=Championship(label="CFP National Championship"),
+    )
+
+    return BracketPayload(
+        season=config.year,
+        week=config.week,
+        ruleset=_ruleset_name(config),
+        seeding_mode=_seeding_mode(config),
+        pods=pods,
+        rounds=rounds,
+    )
+
+
+def build_audit_payload(
+    config: SimulatorConfig, selection: Optional[PlayoffSelection]
+) -> Optional[AuditPayload]:
+    if selection is None:
+        return None
+
+    steps = [
+        AuditStepEntry(step=entry.step.value, message=entry.message)
+        for entry in selection.audit.entries
+    ]
+
+    phase_order = [
+        AuditStep.FOUND_CHAMPIONS,
+        AuditStep.AUTO_BIDS,
+        AuditStep.AT_LARGE,
+        AuditStep.DISPLACEMENT,
+        AuditStep.FINAL_FIELD,
+        AuditStep.FIRST_FOUR_OUT,
+    ]
+    grouped: Dict[AuditStep, List[str]] = {}
+    for entry in selection.audit.entries:
+        grouped.setdefault(entry.step, []).append(entry.message)
+    phases = [
+        AuditPhase(step=step.value, messages=grouped[step])
+        for step in phase_order
+        if step in grouped
+    ]
+
+    return AuditPayload(
+        season=config.year,
+        week=config.week,
+        ruleset=_ruleset_name(config),
+        steps=steps,
+        phases=phases,
+        log=selection.audit_log,
+        displaced_team=selection.displaced_team["team"] if selection.displaced_team else None,
+        first_four_out=[t["team"] for t in selection.first_four_out],
+    )
+
+
+def build_schedule(
+    team_name: str, games_df: Optional[pd.DataFrame], rank_lookup: Dict[str, int]
+) -> List[ScheduleGame]:
+    if games_df is None or games_df.empty:
+        return []
+    tg = games_df[
+        (games_df["home_team"] == team_name) | (games_df["away_team"] == team_name)
+    ].sort_values("week")
+
+    games: List[ScheduleGame] = []
+    for _, g in tg.iterrows():
+        is_home = g["home_team"] == team_name
+        opponent = g["away_team"] if is_home else g["home_team"]
+        neutral = bool(g.get("neutral_site", False))
+        location = "neutral" if neutral else ("home" if is_home else "away")
+        team_score = int(g["home_score"] if is_home else g["away_score"])
+        opp_score = int(g["away_score"] if is_home else g["home_score"])
+        games.append(
+            ScheduleGame(
+                week=int(g["week"]),
+                opponent=opponent,
+                opponent_rank=rank_lookup.get(opponent),
+                location=location,  # type: ignore[arg-type]
+                result="W" if team_score > opp_score else "L",
+                points_for=team_score,
+                points_against=opp_score,
+            )
+        )
+    return games
+
+
+def build_team_resumes_payload(
+    config: SimulatorConfig,
+    rankings_df: pd.DataFrame,
+    selection: Optional[PlayoffSelection],
+    seeded_df: Optional[pd.DataFrame],
+    games_df: Optional[pd.DataFrame],
+    records: Dict[str, Dict[str, int]],
+    use_sample: bool,
+) -> TeamResumesPayload:
+    comp_ranks = component_ranks_by_team(rankings_df)
+    rank_lookup = {row["team"]: int(row["rank"]) for _, row in rankings_df.iterrows()}
+    seed_rows = _seed_lookup(seeded_df)
+    bid_lookup = _bid_type_lookup(selection)
+
+    scope_names = set(rankings_df.sort_values("rank").head(TEAM_RESUME_TOP_N)["team"])
+    in_field_names: set = set()
+    if selection is not None:
+        in_field_names = {t["team"] for t in selection.playoff_teams}
+        scope_names |= in_field_names
+        scope_names |= {t["team"] for t in selection.first_four_out}
+        scope_names |= {t["team"] for t in _next_four_out(rankings_df, selection)}
+
+    teams: Dict[str, TeamResume] = {}
+    for _, row in rankings_df.iterrows():
+        team_name = row["team"]
+        if team_name not in scope_names:
+            continue
+        asset = _team_asset(team_name, use_sample)
+        seed_row = seed_rows.get(team_name)
+        why, concerns = build_selection_case(team_name, row, selection, seeded_df)
+        default_ranks = {"resume": 0, "predictive": 0, "sor": 0, "sos": 0}
+        teams[team_name] = TeamResume(
+            team=team_name,
+            abbreviation=_abbreviation(asset),
+            conference=row.get("conference"),
+            logo_url=asset.logo if asset else None,
+            primary_color=asset.primary_color if asset else None,
+            secondary_color=asset.secondary_color if asset else None,
+            rank=int(row["rank"]),
+            seed=int(seed_row["seed"]) if seed_row is not None else None,
+            bid_type=bid_lookup.get(team_name),
+            in_field=team_name in in_field_names,
+            is_conference_champion=_is_champion(row.get("conf_champ")),
+            champion_of=_champion_of(row.get("conf_champ"), row.get("conference")),
+            record=Record(**records.get(team_name, {"wins": 0, "losses": 0})),
+            scores=TeamResumeScores(
+                composite=float(row.get("composite_score", 0.0)),
+                resume=float(row.get("resume_score", 0.0)),
+                predictive=float(row.get("predictive_score", 0.0)),
+                sor=float(row.get("sor", 0.0)),
+                sos=float(row.get("sos", 0.0)),
+            ),
+            component_ranks=ComponentRanks(**comp_ranks.get(team_name, default_ranks)),
+            why_in=why,
+            concerns=concerns,
+            schedule=build_schedule(team_name, games_df, rank_lookup),
+        )
+
+    return TeamResumesPayload(season=config.year, week=config.week, teams=teams)
+
+
+def build_runs_index_entry(
+    config: SimulatorConfig,
+    *,
+    stem: str,
+    data_source: str,
+    champion_source: str,
+    generated_at: str,
+    has_bracket: bool,
+    simulator_version: str,
+) -> RunsIndexEntry:
+    return RunsIndexEntry(
+        stem=stem,
+        season=config.year,
+        week=config.week,
+        ruleset=_ruleset_name(config),  # type: ignore[arg-type]
+        data_source=data_source,  # type: ignore[arg-type]
+        champion_source=champion_source,
+        generated_at=generated_at,
+        has_bracket=has_bracket,
+        simulator_version=simulator_version,
+    )

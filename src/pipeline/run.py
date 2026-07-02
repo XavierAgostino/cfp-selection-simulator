@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 from src import __version__
+from src.api_contracts.export import export_run_api
 from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
@@ -90,7 +91,7 @@ def run_rank(
     paths: RunOutputPaths,
     use_sample: bool = False,
     api_key: Optional[str] = None,
-) -> tuple[pd.DataFrame, Path]:
+) -> tuple[pd.DataFrame, Path, str]:
     rankings = calculate_composite_rankings(games_df, weights=config.weights)
     champion_source = "sample_fixture"
     if use_sample:
@@ -197,6 +198,7 @@ def run_pipeline(
     use_sample: bool = False,
     write_html: bool = True,
     select_field: bool = True,
+    export_api: bool = True,
 ) -> Dict[str, Any]:
     """Run full fetch → rank → select → bracket pipeline."""
     ensure_output_dirs()
@@ -251,5 +253,11 @@ def run_pipeline(
     )
     steps.append("Wrote manifest")
     result["manifest"] = paths.manifest
+
+    if export_api:
+        api_paths = export_run_api(config, result, paths)
+        steps.append("Exported JSON API")
+        result["api_paths"] = api_paths
+
     result["steps"] = steps
     return result

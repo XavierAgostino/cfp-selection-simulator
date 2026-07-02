@@ -8,6 +8,7 @@ from typing import Optional
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_OUTPUT = REPO_ROOT / "data" / "output"
+API_ROOT = DATA_OUTPUT / "api"
 
 
 def run_stem(year: int, week: int) -> str:
@@ -23,8 +24,10 @@ def ensure_output_dirs() -> None:
         "validation",
         "reports",
         "runs",
+        "api",
     ):
         (DATA_OUTPUT / subdir).mkdir(parents=True, exist_ok=True)
+    (API_ROOT / "runs").mkdir(parents=True, exist_ok=True)
 
 
 @dataclass(frozen=True)
@@ -60,6 +63,30 @@ class RunOutputPaths:
     def manifest(self) -> Path:
         return DATA_OUTPUT / "runs" / f"{self.stem}_manifest.json"
 
+    @property
+    def api_dir(self) -> Path:
+        return API_ROOT / "runs" / self.stem
+
+    @property
+    def api_rankings(self) -> Path:
+        return self.api_dir / "rankings.json"
+
+    @property
+    def api_field(self) -> Path:
+        return self.api_dir / "field.json"
+
+    @property
+    def api_bracket(self) -> Path:
+        return self.api_dir / "bracket.json"
+
+    @property
+    def api_audit(self) -> Path:
+        return self.api_dir / "audit.json"
+
+    @property
+    def api_team_resumes(self) -> Path:
+        return self.api_dir / "team-resumes.json"
+
     def as_dict(self) -> dict[str, Path]:
         return {
             "rankings": self.rankings,
@@ -68,6 +95,15 @@ class RunOutputPaths:
             "bracket_html": self.bracket_html,
             "audit": self.audit,
             "manifest": self.manifest,
+        }
+
+    def api_as_dict(self) -> dict[str, Path]:
+        return {
+            "rankings": self.api_rankings,
+            "field": self.api_field,
+            "bracket": self.api_bracket,
+            "audit": self.api_audit,
+            "team_resumes": self.api_team_resumes,
         }
 
 

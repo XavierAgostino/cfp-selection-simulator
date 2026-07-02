@@ -1,0 +1,301 @@
+"""Pydantic v2 models for the Selection Room JSON API contract.
+
+Source of truth for docs/api-contracts.md — keep that doc in sync with this
+module. Field names are snake_case on the wire; the Next.js app consumes them
+verbatim (no camelCase mapping layer).
+"""
+
+from __future__ import annotations
+
+from typing import Dict, List, Literal, Optional
+
+from pydantic import BaseModel, Field, RootModel
+
+from src.api_contracts import SCHEMA_VERSION
+
+BidType = Literal["auto", "at_large"]
+Ruleset = Literal["2024", "2025_plus"]
+SeedingMode = Literal["champion_byes", "straight"]
+DataSource = Literal["cfbd", "sample"]
+AssetsSource = Literal["cache", "sample"]
+Location = Literal["home", "away", "neutral"]
+Result = Literal["W", "L"]
+SemifinalSide = Literal["top", "bottom"]
+
+
+class Record(BaseModel):
+    wins: int
+    losses: int
+
+
+class TeamSlot(BaseModel):
+    """Shared team representation used across field/bracket/rankings payloads."""
+
+    seed: Optional[int] = None
+    rank: int
+    team: str
+    abbreviation: Optional[str] = None
+    conference: Optional[str] = None
+    logo_url: Optional[str] = None
+    primary_color: Optional[str] = None
+    secondary_color: Optional[str] = None
+    bid_type: Optional[BidType] = None
+    is_bye: bool = False
+    composite_score: float
+    resume_score: float
+    predictive_score: float
+    sor: float
+    sos: float
+    record: Record
+
+
+# --- runs.json ---------------------------------------------------------------
+
+
+class RunsIndexEntry(BaseModel):
+    stem: str
+    season: int
+    week: int
+    ruleset: Optional[Ruleset] = None
+    data_source: DataSource
+    champion_source: str
+    generated_at: str
+    has_bracket: bool
+    simulator_version: str
+
+
+class LatestRef(BaseModel):
+    season: int
+    week: int
+    stem: str
+
+
+class RunsIndex(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    generated_at: str
+    latest: Optional[LatestRef] = None
+    runs: List[RunsIndexEntry] = Field(default_factory=list)
+
+
+# --- latest.json ---------------------------------------------------------------
+
+
+class LatestMeta(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    product: str = "Selection Room"
+    simulator_version: str
+    season: int
+    week: int
+    stem: str
+    ruleset: Optional[Ruleset] = None
+    seeding_mode: Optional[SeedingMode] = None
+    bye_rule: Optional[str] = None
+    data_source: DataSource
+    champion_source: str
+    config_hash: str
+    generated_at: str
+    assets_source: AssetsSource
+    weights: Dict[str, float]
+    counts: Dict[str, int]
+    has_bracket: bool
+
+
+# --- rankings.json ---------------------------------------------------------------
+
+
+class RankingsTeam(BaseModel):
+    rank: int
+    team: str
+    abbreviation: Optional[str] = None
+    conference: Optional[str] = None
+    composite_score: float
+    resume_score: float
+    predictive_score: float
+    sor: float
+    sos: float
+    is_conference_champion: bool
+    champion_of: Optional[str] = None
+    record: Record
+    in_field: bool
+    bid_type: Optional[BidType] = None
+    seed: Optional[int] = None
+    logo_url: Optional[str] = None
+    primary_color: Optional[str] = None
+    secondary_color: Optional[str] = None
+
+
+class RankingsPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    generated_at: str
+    teams: List[RankingsTeam]
+
+
+# --- field.json ---------------------------------------------------------------
+
+
+class FieldPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    ruleset: Optional[Ruleset] = None
+    seeding_mode: Optional[SeedingMode] = None
+    field: List[TeamSlot] = Field(default_factory=list)
+    auto_bids: List[TeamSlot] = Field(default_factory=list)
+    at_large_bids: List[TeamSlot] = Field(default_factory=list)
+    last_four_in: List[TeamSlot] = Field(default_factory=list)
+    first_four_out: List[TeamSlot] = Field(default_factory=list)
+    next_four_out: List[TeamSlot] = Field(default_factory=list)
+    displaced_team: Optional[TeamSlot] = None
+    champ_pulled_in: bool = False
+
+
+# --- bracket.json ---------------------------------------------------------------
+
+
+class BracketPod(BaseModel):
+    pod_id: str
+    first_round: List[TeamSlot]
+    bye: TeamSlot
+    quarterfinal_id: str
+    semifinal_side: SemifinalSide
+
+
+class FirstRoundGame(BaseModel):
+    game_id: str
+    team_a: TeamSlot
+    team_b: TeamSlot
+    winner_to_seed: int
+
+
+class QuarterfinalGame(BaseModel):
+    game_id: str
+    bye_team: TeamSlot
+    feeds_from: str
+
+
+class SemifinalGroup(BaseModel):
+    side: SemifinalSide
+    pods: List[str]
+
+
+class Championship(BaseModel):
+    label: str = "CFP National Championship"
+
+
+class BracketRounds(BaseModel):
+    first_round: List[FirstRoundGame]
+    quarterfinals: List[QuarterfinalGame]
+    semifinals: List[SemifinalGroup]
+    championship: Championship = Field(default_factory=Championship)
+
+
+class BracketPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    ruleset: Optional[Ruleset] = None
+    seeding_mode: Optional[SeedingMode] = None
+    pods: List[BracketPod]
+    rounds: BracketRounds
+
+
+# --- audit.json ---------------------------------------------------------------
+
+
+class AuditStepEntry(BaseModel):
+    step: str
+    message: str
+
+
+class AuditPhase(BaseModel):
+    step: str
+    messages: List[str]
+
+
+class AuditPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    ruleset: Optional[Ruleset] = None
+    steps: List[AuditStepEntry] = Field(default_factory=list)
+    phases: List[AuditPhase] = Field(default_factory=list)
+    log: List[str] = Field(default_factory=list)
+    displaced_team: Optional[str] = None
+    first_four_out: List[str] = Field(default_factory=list)
+
+
+# --- team-resumes.json ---------------------------------------------------------------
+
+
+class ScheduleGame(BaseModel):
+    week: int
+    opponent: str
+    opponent_rank: Optional[int] = None
+    location: Location
+    result: Result
+    points_for: int
+    points_against: int
+
+
+class TeamResumeScores(BaseModel):
+    composite: float
+    resume: float
+    predictive: float
+    sor: float
+    sos: float
+
+
+class ComponentRanks(BaseModel):
+    resume: int
+    predictive: int
+    sor: int
+    sos: int
+
+
+class TeamResume(BaseModel):
+    team: str
+    abbreviation: Optional[str] = None
+    conference: Optional[str] = None
+    logo_url: Optional[str] = None
+    primary_color: Optional[str] = None
+    secondary_color: Optional[str] = None
+    rank: int
+    seed: Optional[int] = None
+    bid_type: Optional[BidType] = None
+    in_field: bool
+    is_conference_champion: bool
+    champion_of: Optional[str] = None
+    record: Record
+    scores: TeamResumeScores
+    component_ranks: ComponentRanks
+    why_in: List[str] = Field(default_factory=list)
+    concerns: List[str] = Field(default_factory=list)
+    schedule: List[ScheduleGame] = Field(default_factory=list)
+
+
+class TeamResumesPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    teams: Dict[str, TeamResume] = Field(default_factory=dict)
+
+
+# --- team-assets.json ---------------------------------------------------------------
+
+
+class TeamAssetEntry(BaseModel):
+    cfbd_id: Optional[int] = None
+    espn_id: Optional[int] = None
+    abbreviation: str = ""
+    conference: str = ""
+    logo: Optional[str] = None
+    logo_source: str = "placeholder"
+    primary_color: str = "#667eea"
+    secondary_color: str = "#333333"
+
+
+class TeamAssetsPayload(RootModel[Dict[str, TeamAssetEntry]]):
+    """Flat passthrough of ``load_team_assets()`` — no schema_version wrapper,
+    keyed by team name, per docs/api-contracts.md."""

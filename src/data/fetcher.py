@@ -5,11 +5,12 @@ Data fetching utilities for CollegeFootballData.com API.
 import os
 from typing import Any, Dict, List, Optional, Set
 
-import cfbd
 import pandas as pd
 import requests
-from cfbd.rest import ApiException
 from dotenv import load_dotenv
+
+# cfbd must come via the compat shim (pydantic v1/v2 bridge) — never directly.
+from src.data._cfbd_compat import ApiException, cfbd
 
 
 def get_api_key() -> str:

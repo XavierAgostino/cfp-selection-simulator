@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from app.styles import BADGE_STYLES, COLORS
+from src.api_contracts.selection_case import build_selection_case
 from src.assets.logos import get_team_logo
 from src.assets.teams import get_team_asset
 from src.config.formats import PlayoffFormat, get_format_for_year
@@ -444,51 +445,6 @@ def bubble_section_teams(
     return rankings[(rankings["rank"] >= start_rank) & (rankings["rank"] <= end_rank)].to_dict(
         "records"
     )
-
-
-def build_selection_case(
-    team_name: str,
-    row: pd.Series,
-    selection: Optional[PlayoffSelection],
-    seeded: Optional[pd.DataFrame],
-) -> Tuple[List[str], List[str]]:
-    """Template-based selection case bullets from existing data."""
-    why: List[str] = []
-    concerns: List[str] = []
-
-    if selection is None:
-        return why, concerns
-
-    if any(t["team"] == team_name for t in selection.auto_bids):
-        why.append("Conference champion with an automatic bid")
-    if any(t["team"] == team_name for t in selection.at_large_bids):
-        why.append("Selected as an at-large bid based on composite ranking")
-
-    if int(row["rank"]) == 1:
-        why.append("Highest composite score in the field")
-
-    if seeded is not None:
-        seed_rows = seeded[seeded["team"] == team_name]
-        if not seed_rows.empty:
-            seed_val = int(seed_rows.iloc[0]["seed"])
-            why.append(f"Playoff seed #{seed_val}")
-            if bool(seed_rows.iloc[0].get("is_bye")):
-                why.append("Top-four overall seed, receives first-round bye")
-
-    if selection.displaced_team and selection.displaced_team.get("team") == team_name:
-        concerns.append("Displaced from the field by a guaranteed conference champion")
-
-    resume = float(row.get("resume_score", 0))
-    predictive = float(row.get("predictive_score", 0))
-    if predictive + 0.08 < resume:
-        concerns.append("Predictive score trails resume score")
-    elif resume + 0.08 < predictive:
-        concerns.append("Resume score trails predictive strength")
-
-    if not why and int(row["rank"]) <= 25:
-        why.append("Ranked in the composite top 25")
-
-    return why, concerns
 
 
 AUDIT_STEP_TITLES: Dict[AuditStep, str] = {

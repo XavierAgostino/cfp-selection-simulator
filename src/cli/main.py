@@ -12,6 +12,7 @@ from typing import Optional
 
 import typer
 
+from src.api_contracts.export import export_run_api, regenerate_runs_index
 from src.assets.logos import refresh_team_assets_cache
 from src.cli.console import print_doctor_report, print_latest_outputs, print_run_summary
 from src.cli.doctor import run_doctor_checks
@@ -237,6 +238,42 @@ def outputs(
         typer.echo("\nAll manifests:")
         for path in sorted(runs_dir.glob("*_manifest.json"), reverse=True):
             typer.echo(f"  {path.name}")
+
+
+@app.command(name="export")
+def export_cmd(
+    year: Optional[int] = typer.Option(None, help="Season year (default: latest run)"),
+    week: Optional[int] = typer.Option(None, help="Analysis week (default: latest run)"),
+    sample: bool = typer.Option(False, help="Use bundled sample dataset"),
+    index_only: bool = typer.Option(
+        False, "--index-only", help="Only regenerate runs.json from existing manifests"
+    ),
+) -> None:
+    """(Re-)export the JSON API for a run, or just refresh runs.json."""
+    if index_only:
+        path = regenerate_runs_index()
+        typer.echo(f"Regenerated {path}")
+        return
+
+    if year is None or week is None:
+        manifest_path = find_latest_manifest()
+        if manifest_path is None:
+            typer.echo("No runs found. Try: sroom run --year 2025 --week 15 --sample")
+            raise typer.Exit(code=1)
+        data = json.loads(manifest_path.read_text())
+        if year is None:
+            year = int(data["season"])
+        if week is None:
+            week = int(data["week"])
+        if not sample:
+            sample = data.get("data_source") == "sample"
+
+    cfg = SimulatorConfig(year=year, week=week)
+    result = run_pipeline(cfg, use_sample=sample, write_html=False)
+    api_paths = result.get("api_paths", {})
+    typer.echo(f"Exported JSON API for {cfg.year} week {cfg.week}:")
+    for key, path in api_paths.items():
+        typer.echo(f"  {key}: {path}")
 
 
 @app.command(name="open")
