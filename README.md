@@ -41,30 +41,26 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 ```bash
 git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
 cd cfp-selection-simulator
-make setup
-make demo
-make dashboard
+make setup     # Python engine (.venv)
+make demo      # first sample run (no API key needed)
+make web       # Selection Room site at http://localhost:3000
 ```
 
-No API key is required for demo mode.
+The site walks you through setup if you open it first, and new analyses can
+be launched straight from the run bar (**New run**) — season, week, sample or
+live CFBD data. `make dashboard` still opens the legacy Streamlit console.
 
-One-shot script: `./scripts/demo.sh`
-
-A Next.js web app also lives at [`web/`](web/):
-
-```bash
-cd web && pnpm install && pnpm dev
-```
+One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web-app.md)
 
 ---
 
 ## Run with live data
 
 ```bash
-cp .env.example .env   # add CFBD_API_KEY
-export CFBD_API_KEY="your_key_here"
+cp .env.example .env   # put your CFBD_API_KEY in .env
 make run YEAR=2025 WEEK=15
 # or: ./bin/sroom run --year 2025 --week 15
+# or: the New run button on the site
 ```
 
 Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key).

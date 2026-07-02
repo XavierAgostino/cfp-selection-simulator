@@ -65,8 +65,7 @@ def seed_playoff_teams(
     """
     Seed 12-team playoff field using format-specific rules.
 
-    When format_rules is omitted, defaults to 2024 champion-bye seeding for
-    backward compatibility with existing notebooks.
+    When format_rules is omitted, defaults to 2024 champion-bye seeding.
 
     Parameters
     ----------
@@ -665,5 +664,5 @@ def visualize_bracket_html(seeded_df: pd.DataFrame, first_round: List[BracketMat
     return "\n".join(html)
 
 
-# Re-export for notebooks and legacy imports
+# Re-export so src.playoff exposes the full selection surface.
 from src.selection.tiebreakers import apply_tiebreaker  # noqa: E402,F401

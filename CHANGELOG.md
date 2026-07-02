@@ -5,7 +5,7 @@ All notable changes to the Selection Room project.
 ## 3.0.0
 
 ### Changed
-- **Renamed to Selection Room**: new `sroom` CLI (the `cfp-sim` alias is kept for compatibility)
+- **Renamed to Selection Room**: new `sroom` CLI (the legacy `cfp-sim` alias has been removed)
 - **Removed Docker/Jupyter setup path**: local development now goes through `make setup` (`.venv` + pip install), no container required
 
 ### Added

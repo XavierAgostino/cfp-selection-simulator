@@ -8,6 +8,7 @@ Every run writes reproducible artifacts under `data/output/`. Generated files ar
 
 ```
 data/output/
+├── api/          JSON API consumed by the web app (see below)
 ├── rankings/     Composite ranking tables
 ├── fields/       Selected 12-team playoff fields
 ├── brackets/     Seeded bracket CSV + HTML
@@ -144,3 +145,26 @@ sroom outputs --latest
 - [User Guide](user-guide.md)
 - [Configuration](configuration.md)
 - [CLI Reference](cli-reference.md)
+
+---
+
+## JSON API (`data/output/api/`)
+
+Written automatically at the end of every `sroom run` (re-exportable with
+`sroom export`). This is what the web app serves via `/api/data/`.
+
+```
+data/output/api/
+├── runs.json           Index of all exported runs + which one is latest
+├── latest.json         Metadata for the latest run (weights, counts, ruleset)
+├── field.json          Latest 12-team field, bids, bubble, audit trail
+├── bracket.json        Latest seeded bracket (pods + rounds)
+├── rankings.json       Latest full composite table
+├── team-resumes.json   Latest per-team schedules and score breakdowns
+├── team-assets.json    Logos and colors keyed by team name
+└── runs/{stem}/        The same five payloads per run, e.g. runs/2025_week15/
+```
+
+Schema: [api-contracts.md](api-contracts.md) (`schema_version: 1`), validated
+by the pydantic models in `src/api_contracts/models.py` and round-trip tested
+in `tests/test_api_contracts.py`.

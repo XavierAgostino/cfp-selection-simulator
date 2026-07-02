@@ -1,7 +1,7 @@
 """
 Conference champion determination with waterfall tiebreakers and CCG simulation.
 
-Ports the notebook waterfall protocol into production code. When CFBD conference
+When CFBD conference
 records identify a single leader, that team is labeled. When multiple teams tie
 at the top of conference standings, we apply pool H2H / conference SOS logic and
 optionally simulate a championship game between the top two seeds.

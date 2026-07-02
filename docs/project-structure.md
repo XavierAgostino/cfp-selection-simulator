@@ -25,7 +25,6 @@ cfp-selection-simulator/
 │   ├── validation/           # Backtest, sensitivity
 │   └── utils/                # Metrics, conference helpers
 ├── tests/                    # pytest suite
-├── notebooks/                # Research notebooks (legacy path)
 ├── docs/                     # Documentation funnel
 └── data/
     ├── cache/                # CFBD + team asset cache
@@ -54,7 +53,7 @@ cfp-selection-simulator/
 
 ## What belongs where
 
-- **Selection logic** → `src/selection/` (not notebooks)
+- **Selection logic** → `src/selection/`
 - **Ranking math** → `src/rankings/` + `src/pipeline/composite.py`
 - **User-facing commands** → `src/cli/` + `Makefile`
 - **Research prose** → `docs/research/`
@@ -62,11 +61,6 @@ cfp-selection-simulator/
 
 ---
 
-## Notebooks
-
-`notebooks/` remain for exploratory analysis. The primary user path is CLI + dashboard, not notebook order.
-
----
 
 ## Related
 

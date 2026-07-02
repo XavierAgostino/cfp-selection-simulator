@@ -18,7 +18,7 @@ BIN := $(VENV_BIN)
 SROOM := $(VENV_BIN)/sroom
 endif
 
-.PHONY: help setup demo run rank select bracket dashboard validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean
+.PHONY: help setup demo run rank select bracket dashboard web validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean
 
 YEAR ?= 2025
 WEEK ?= 15
@@ -35,6 +35,7 @@ help:
 	@echo "  make setup              Create .venv and install package"
 	@echo "  make demo               Run sample demo (no API key)"
 	@echo "  make dashboard          Launch Streamlit dashboard"
+	@echo "  make web                Launch the Selection Room web app"
 	@echo ""
 	@echo "Simulator"
 	@echo "  make run YEAR=2025 WEEK=15     Full pipeline (live data)"
@@ -80,6 +81,9 @@ bracket:
 
 dashboard:
 	$(SROOM) dashboard
+
+web:
+	cd web && pnpm install --silent && pnpm dev
 
 validate:
 	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target $(or $(TARGET),all)

@@ -6,32 +6,25 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, selection-room ]
   pull_request:
     branches: [ main, develop ]
 
 jobs:
-  test:
+  engine:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.11', '3.12', '3.13']
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: Cache pip packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+        cache: pip
 
     - name: Install dependencies
       run: |
@@ -40,32 +33,49 @@ jobs:
 
     - name: Lint with flake8
       run: |
-        # Stop the build if there are Python syntax errors or undefined names
         flake8 src/ app/ --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings
-        flake8 src/ app/ --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
 
     - name: Check code formatting with Black
-      run: |
-        black --check src/ tests/ app/
+      run: black --check src/ tests/ app/
 
     - name: Check import sorting with isort
-      run: |
-        isort --check-only src/ tests/ app/
-
-    - name: Type check with mypy
-      run: |
-        mypy src/ --ignore-missing-imports
-      continue-on-error: true  # Don't fail build on type errors initially
+      run: isort --check-only src/ tests/ app/
 
     - name: Run tests with pytest
-      run: |
-        pytest tests/ -v --cov=src --cov-report=xml --cov-report=term-missing
+      run: pytest tests/ -v --cov=src --cov-report=term-missing
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+    - name: Sample pipeline smoke run (incl. JSON export)
+      run: |
+        python -m src.cli.main run --year 2025 --week 15 --sample
+        test -f data/output/api/runs.json
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
       with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
+        version: 11
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24
+        cache: pnpm
+        cache-dependency-path: web/pnpm-lock.yaml
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Lint
+      run: pnpm lint
+
+    - name: Type check
+      run: pnpm exec tsc --noEmit
+
+    - name: Build
+      run: pnpm build

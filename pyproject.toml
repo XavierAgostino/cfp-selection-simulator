@@ -62,7 +62,6 @@ app = [
 
 [project.scripts]
 sroom = "src.cli.main:app"
-cfp-sim = "src.cli.main:app"
 
 [project.urls]
 Homepage = "https://github.com/xavieragostino/cfp-selection-simulator"

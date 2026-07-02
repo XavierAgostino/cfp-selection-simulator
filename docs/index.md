@@ -9,6 +9,7 @@ Documentation funnel: **Quickstart → User Guide → Methodology → Research �
 | Doc | Audience | Purpose |
 |-----|----------|---------|
 | [Quickstart](quickstart.md) | Everyone | Install and run in 5 minutes |
+| [Web App](web-app.md) | Everyone | The Selection Room site: pages, setup flow, in-app runs |
 | [User Guide](user-guide.md) | Analysts, fans | Understand outputs and workflows |
 | [CLI Reference](cli-reference.md) | Power users | Complete command reference |
 | [Dashboard Guide](dashboard-guide.md) | Dashboard users | Streamlit UI walkthrough |
@@ -43,8 +44,3 @@ Documentation funnel: **Quickstart → User Guide → Methodology → Research �
 
 ---
 
-## Legacy docs
-
-Older standalone files are kept for reference but may be superseded:
-
-- [METHODOLOGY.md](METHODOLOGY.md) → see [research/model-methodology.md](research/model-methodology.md)
