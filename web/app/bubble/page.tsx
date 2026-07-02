@@ -3,7 +3,13 @@ import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { EmptyState } from "@/components/common/EmptyState";
 import { BubbleBoard } from "@/components/bubble/BubbleBoard";
 import { SelectionAuditTimeline } from "@/components/audit/SelectionAuditTimeline";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import type { AuditPayload, FieldPayload } from "@/lib/types";
 
@@ -47,13 +53,30 @@ export default async function BubblePage({ searchParams }: BubblePageProps) {
         <>
           <BubbleBoard field={field} />
           {audit ? (
-            <Card className="border-border bg-card">
-              <CardHeader className="px-4">
-                <CardTitle>How this field was selected</CardTitle>
-              </CardHeader>
-              <CardContent className="px-4">
-                <SelectionAuditTimeline phases={audit.phases} variant="full" />
-              </CardContent>
+            <Card className="gap-0 border-border bg-card py-0">
+              <Collapsible>
+                <CollapsibleTrigger className="group flex w-full items-center justify-between gap-3 rounded-xl px-4 py-4 text-left transition-colors hover:bg-secondary/40">
+                  <div className="flex flex-col gap-1">
+                    <CardTitle>How this field was selected</CardTitle>
+                    <span className="text-xs text-muted-foreground">
+                      The full rule-by-rule audit trail for this projected
+                      field. Expand to walk each selection phase.
+                    </span>
+                  </div>
+                  <ChevronDown
+                    aria-hidden
+                    className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[panel-open]:rotate-180"
+                  />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="px-4 pb-5">
+                    <SelectionAuditTimeline
+                      phases={audit.phases}
+                      variant="full"
+                    />
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
             </Card>
           ) : null}
         </>

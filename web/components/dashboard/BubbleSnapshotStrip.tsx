@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BubbleCutlineChart } from "@/components/charts/BubbleCutlineChart";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
 import { InfoTooltip } from "@/components/explain/InfoTooltip";
@@ -70,6 +71,13 @@ export function BubbleSnapshotStrip({
         </Link>
       </CardHeader>
       <CardContent className="px-4">
+        <div className="mb-3 border-b border-border pb-2">
+          <BubbleCutlineChart
+            lastFourIn={lastFourIn}
+            firstFourOut={firstFourOut}
+            variant="mini"
+          />
+        </div>
         <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
           <div className="flex flex-col gap-0.5">
             <span className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

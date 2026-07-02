@@ -2,6 +2,7 @@ import { RunContextBar } from "@/components/layout/RunContextBar";
 import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { EmptyState } from "@/components/common/EmptyState";
 import { RankingTable } from "@/components/rankings/RankingTable";
+import { ResumePredictiveScatter } from "@/components/charts/ResumePredictiveScatter";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import type { RankingsPayload } from "@/lib/types";
 
@@ -39,7 +40,10 @@ export default async function RankingsPage({
 
       {rankings ? (
         rankings.teams.length > 0 ? (
-          <RankingTable teams={rankings.teams} />
+          <>
+            <ResumePredictiveScatter teams={rankings.teams} />
+            <RankingTable teams={rankings.teams} />
+          </>
         ) : (
           <EmptyState
             icon={<PageNavIcon href="/rankings" />}

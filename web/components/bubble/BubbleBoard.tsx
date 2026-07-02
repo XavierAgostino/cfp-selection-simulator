@@ -1,6 +1,7 @@
 import { UserX } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BubbleColumn } from "@/components/bubble/BubbleColumn";
+import { BubbleCutlineChart } from "@/components/charts/BubbleCutlineChart";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import type { FieldPayload } from "@/lib/types";
 
@@ -24,6 +25,27 @@ export function BubbleBoard({ field }: BubbleBoardProps) {
         slots. Everything below is measured against the composite-score gap
         to that final at-large cutoff — the cut line.
       </div>
+
+      {last_four_in.length > 0 ? (
+        <Card className="gap-3 border-border bg-card shadow-none">
+          <CardHeader className="px-4">
+            <CardTitle>The Cut Line</CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Who is closest to the selection cut line, and why? Every bubble
+              team placed by composite score — in-field teams above the spine,
+              teams out of the field below it, the cut gap shaded. Hover a logo
+              for the exact margin; click to open the team resume.
+            </p>
+          </CardHeader>
+          <CardContent className="px-4">
+            <BubbleCutlineChart
+              lastFourIn={last_four_in}
+              firstFourOut={first_four_out}
+              nextFourOut={next_four_out}
+            />
+          </CardContent>
+        </Card>
+      ) : null}
 
       {displaced_team ? (
         <Card className="border-border bg-secondary/40">
