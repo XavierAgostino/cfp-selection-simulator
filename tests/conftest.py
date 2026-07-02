@@ -9,6 +9,13 @@ import pytest
 
 
 @pytest.fixture
+def sample_games_path() -> str:
+    from pathlib import Path
+
+    return str(Path(__file__).resolve().parents[1] / "data/processed/sample/sample_games.csv")
+
+
+@pytest.fixture
 def sample_games_data() -> pd.DataFrame:
     """Sample FBS game data for testing."""
     return pd.DataFrame(

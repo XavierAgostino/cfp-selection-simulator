@@ -1,0 +1,122 @@
+{
+  "Georgia": {
+    "cfbd_id": 61,
+    "espn_id": 61,
+    "abbreviation": "UGA",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
+    "logo_source": "espn",
+    "primary_color": "#BA0C2F",
+    "secondary_color": "#000000"
+  },
+  "Ohio State": {
+    "cfbd_id": 194,
+    "espn_id": 194,
+    "abbreviation": "OSU",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+    "logo_source": "espn",
+    "primary_color": "#BB0000",
+    "secondary_color": "#666666"
+  },
+  "Notre Dame": {
+    "cfbd_id": 87,
+    "espn_id": 87,
+    "abbreviation": "ND",
+    "conference": "FBS Independents",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
+    "logo_source": "espn",
+    "primary_color": "#0C2340",
+    "secondary_color": "#C99700"
+  },
+  "Alabama": {
+    "cfbd_id": 333,
+    "espn_id": 333,
+    "abbreviation": "ALA",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+    "logo_source": "espn",
+    "primary_color": "#9E1B32",
+    "secondary_color": "#FFFFFF"
+  },
+  "Michigan": {
+    "cfbd_id": 130,
+    "espn_id": 130,
+    "abbreviation": "MICH",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/130.png",
+    "logo_source": "espn",
+    "primary_color": "#00274C",
+    "secondary_color": "#FFCB05"
+  },
+  "Texas": {
+    "cfbd_id": 251,
+    "espn_id": 251,
+    "abbreviation": "TEX",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
+    "logo_source": "espn",
+    "primary_color": "#BF5700",
+    "secondary_color": "#FFFFFF"
+  },
+  "Oregon": {
+    "cfbd_id": 2483,
+    "espn_id": 2483,
+    "abbreviation": "ORE",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
+    "logo_source": "espn",
+    "primary_color": "#154733",
+    "secondary_color": "#FEE123"
+  },
+  "Penn State": {
+    "cfbd_id": 213,
+    "espn_id": 213,
+    "abbreviation": "PSU",
+    "conference": "Big Ten",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/213.png",
+    "logo_source": "espn",
+    "primary_color": "#041E42",
+    "secondary_color": "#FFFFFF"
+  },
+  "Clemson": {
+    "cfbd_id": 228,
+    "espn_id": 228,
+    "abbreviation": "CLEM",
+    "conference": "ACC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/228.png",
+    "logo_source": "espn",
+    "primary_color": "#F56600",
+    "secondary_color": "#522D80"
+  },
+  "LSU": {
+    "cfbd_id": 99,
+    "espn_id": 99,
+    "abbreviation": "LSU",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
+    "logo_source": "espn",
+    "primary_color": "#461D7C",
+    "secondary_color": "#FDD023"
+  },
+  "Oklahoma": {
+    "cfbd_id": 201,
+    "espn_id": 201,
+    "abbreviation": "OU",
+    "conference": "SEC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/201.png",
+    "logo_source": "espn",
+    "primary_color": "#841617",
+    "secondary_color": "#FDF9D8"
+  },
+  "Florida State": {
+    "cfbd_id": 52,
+    "espn_id": 52,
+    "abbreviation": "FSU",
+    "conference": "ACC",
+    "logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/52.png",
+    "logo_source": "espn",
+    "primary_color": "#782F40",
+    "secondary_color": "#CEB888"
+  }
+}

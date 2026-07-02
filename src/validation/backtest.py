@@ -5,29 +5,23 @@ This module provides functions to validate the ranking and selection model
 against historical CFP committee decisions.
 """
 
-# Import existing modules
-import sys
-from pathlib import Path
-from pathlib import Path as PathLib
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-from scipy import linalg
 from scipy.stats import spearmanr
-from sklearn.preprocessing import MinMaxScaler
 
-sys.path.insert(0, str(PathLib(__file__).parent.parent.parent))
-
+from src.config.formats import get_format_for_year
 from src.data.fetcher import fetch_season_games, get_api_key
-from src.playoff.bracket import select_playoff_field
+from src.pipeline.composite import calculate_composite_rankings
 from src.rankings.baseline import (
     HomeFieldBaseline,
     SimpleElo,
     SimpleSRS,
     calculate_baseline_rankings,
 )
-from src.utils.metrics import calculate_sor, calculate_sos
+from src.selection.field import select_playoff_field
+from src.selection.seeding import seed_playoff_teams
 
 # Historical CFP final rankings (top 12 teams)
 HISTORICAL_CFP_RANKINGS = {
@@ -172,375 +166,6 @@ HISTORICAL_CFP_RANKINGS = {
         "Kansas State",
     ],
 }
-
-
-class ColleyMatrix:
-    """Colley Matrix ranking implementation."""
-
-    def __init__(self, games_df: pd.DataFrame):
-        self.games = games_df.copy()
-        self.teams = sorted(
-            set(games_df["home_team"].unique()) | set(games_df["away_team"].unique())
-        )
-        self.n_teams = len(self.teams)
-        self.team_idx = {team: i for i, team in enumerate(self.teams)}
-        self.ratings = {}
-
-    def build_system(self):
-        """Build Colley matrix C and vector b."""
-        C = np.zeros((self.n_teams, self.n_teams))
-        b = np.ones(self.n_teams)
-
-        wins = {team: 0 for team in self.teams}
-        losses = {team: 0 for team in self.teams}
-
-        for _, game in self.games.iterrows():
-            home_idx = self.team_idx[game["home_team"]]
-            away_idx = self.team_idx[game["away_team"]]
-
-            C[home_idx, home_idx] += 1
-            C[away_idx, away_idx] += 1
-            C[home_idx, away_idx] -= 1
-            C[away_idx, home_idx] -= 1
-
-            if game["home_score"] > game["away_score"]:
-                wins[game["home_team"]] += 1
-                losses[game["away_team"]] += 1
-            else:
-                wins[game["away_team"]] += 1
-                losses[game["home_team"]] += 1
-
-        np.fill_diagonal(C, C.diagonal() + 2)
-
-        for i, team in enumerate(self.teams):
-            b[i] = 1 + 0.5 * (wins[team] - losses[team])
-
-        return C, b
-
-    def solve(self):
-        """Solve Cr = b for ratings."""
-        C, b = self.build_system()
-        try:
-            ratings = linalg.solve(C, b)
-            self.ratings = {self.teams[i]: ratings[i] for i in range(self.n_teams)}
-            return self.ratings
-        except Exception as e:
-            print(f"Error solving Colley system: {e}")
-            return {}
-
-
-class MasseyRatings:
-    """Massey Ratings implementation (Colleyized version)."""
-
-    def __init__(self, games_df: pd.DataFrame, mov_cap: int = 28, hfa: float = 3.75):
-        self.games = games_df.copy()
-        self.mov_cap = mov_cap
-        self.hfa = hfa
-        self.teams = sorted(
-            set(games_df["home_team"].unique()) | set(games_df["away_team"].unique())
-        )
-        self.n_teams = len(self.teams)
-        self.team_idx = {team: i for i, team in enumerate(self.teams)}
-        self.ratings = {}
-
-    def apply_adjustments(self):
-        """Apply HFA and MOV cap."""
-        adjusted_margins = []
-        for _, game in self.games.iterrows():
-            margin = game["home_score"] - game["away_score"]
-            if not game.get("neutral_site", False):
-                margin -= self.hfa
-            capped_margin = np.clip(margin, -self.mov_cap, self.mov_cap)
-            adjusted_margins.append(capped_margin)
-        self.games["adj_margin"] = adjusted_margins
-
-    def build_system(self):
-        """Build Colleyized Massey system: Cr = p."""
-        self.apply_adjustments()
-        C = np.zeros((self.n_teams, self.n_teams))
-        p = np.zeros(self.n_teams)
-
-        for _, game in self.games.iterrows():
-            home_idx = self.team_idx[game["home_team"]]
-            away_idx = self.team_idx[game["away_team"]]
-            margin = game["adj_margin"]
-
-            C[home_idx, home_idx] += 1
-            C[away_idx, away_idx] += 1
-            C[home_idx, away_idx] -= 1
-            C[away_idx, home_idx] -= 1
-
-            p[home_idx] += margin
-            p[away_idx] -= margin
-
-        np.fill_diagonal(C, C.diagonal() + 2)
-        return C, p
-
-    def solve(self):
-        """Solve Cr = p for ratings."""
-        C, p = self.build_system()
-        try:
-            ratings = linalg.solve(C, p)
-            self.ratings = {self.teams[i]: ratings[i] for i in range(self.n_teams)}
-            return self.ratings
-        except Exception as e:
-            print(f"Error solving Massey system: {e}")
-            return {}
-
-
-class EloRatings:
-    """Elo rating system implementation."""
-
-    def __init__(
-        self, k_factor: int = 85, hfa_points: float = 3.75, mov_scale: int = 17, mov_cap: int = 28
-    ):
-        self.k = k_factor
-        self.hfa_points = hfa_points
-        self.mov_scale = mov_scale
-        self.mov_cap = mov_cap
-        self.ratings = {}
-
-    def initialize_ratings(self, teams: List[str], base_rating: float = 1505.0):
-        """Initialize all teams to base rating."""
-        self.ratings = {team: base_rating for team in teams}
-
-    def expected_score(self, rating_a: float, rating_b: float) -> float:
-        """Calculate expected score for team A."""
-        return 1 / (1 + 10 ** ((rating_b - rating_a) / 400))
-
-    def mov_multiplier(self, score_diff: float, is_neutral: bool) -> float:
-        """Calculate MOV-adjusted score."""
-        hfa_adjusted_diff = score_diff - (0 if is_neutral else self.hfa_points)
-        hfa_adjusted_diff = np.clip(hfa_adjusted_diff, -self.mov_cap, self.mov_cap)
-        s_adj = 1 / (1 + 10 ** (-hfa_adjusted_diff / self.mov_scale))
-        return s_adj
-
-    def update_game(
-        self, home_team: str, away_team: str, home_score: int, away_score: int, is_neutral: bool
-    ):
-        """Update ratings based on game result."""
-        hfa_bonus = 0 if is_neutral else 55
-        home_rating = self.ratings[home_team] + hfa_bonus
-        away_rating = self.ratings[away_team]
-
-        home_expected = self.expected_score(home_rating, away_rating)
-        score_diff = home_score - away_score
-
-        s_adj = self.mov_multiplier(score_diff, is_neutral)
-
-        if score_diff > 0:
-            home_actual = s_adj
-            away_actual = 1 - s_adj
-        else:
-            home_actual = 1 - s_adj
-            away_actual = s_adj
-
-        self.ratings[home_team] += self.k * (home_actual - home_expected)
-        self.ratings[away_team] += self.k * (away_actual - (1 - home_expected))
-
-    def process_season(self, games_df: pd.DataFrame):
-        """Process all games in chronological order."""
-        games_sorted = games_df.sort_values(["week", "date"]).copy()
-        teams = sorted(
-            set(games_sorted["home_team"].unique()) | set(games_sorted["away_team"].unique())
-        )
-        self.initialize_ratings(teams)
-
-        for _, game in games_sorted.iterrows():
-            is_neutral = game.get("neutral_site", False)
-            self.update_game(
-                game["home_team"],
-                game["away_team"],
-                game["home_score"],
-                game["away_score"],
-                is_neutral,
-            )
-
-        return self.ratings
-
-
-def calculate_composite_rankings(games_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Calculate composite rankings from games data.
-
-    This is a simplified version that runs the full ranking pipeline.
-    """
-    # Calculate component rankings
-    colley = ColleyMatrix(games_df)
-    colley_ratings = colley.solve()
-
-    massey = MasseyRatings(games_df)
-    massey_ratings = massey.solve()
-
-    elo = EloRatings()
-    elo_ratings = elo.process_season(games_df)
-
-    # Calculate win percentages
-    teams = sorted(set(games_df["home_team"].unique()) | set(games_df["away_team"].unique()))
-    win_pcts = {}
-    for team in teams:
-        team_games = games_df[(games_df["home_team"] == team) | (games_df["away_team"] == team)]
-        wins = 0
-        total = 0
-        for _, game in team_games.iterrows():
-            if game["home_team"] == team:
-                wins += 1 if game["home_score"] > game["away_score"] else 0
-            else:
-                wins += 1 if game["away_score"] > game["home_score"] else 0
-            total += 1
-        win_pcts[team] = wins / total if total > 0 else 0.0
-
-    # Normalize all components
-    scaler = MinMaxScaler()
-
-    colley_values = np.array([[colley_ratings.get(t, 0)] for t in teams])
-    massey_values = np.array([[massey_ratings.get(t, 0)] for t in teams])
-    elo_values = np.array([[elo_ratings.get(t, 0)] for t in teams])
-    win_pct_values = np.array([[win_pcts.get(t, 0)] for t in teams])
-
-    colley_norm = scaler.fit_transform(colley_values).flatten()
-    massey_norm = scaler.fit_transform(massey_values).flatten()
-    elo_norm = scaler.fit_transform(elo_values).flatten()
-    win_pct_norm = win_pct_values.flatten()  # Already 0-1, ensure 1-D
-
-    # Calculate resume and predictive scores
-    resume_scores = {
-        teams[i]: float(0.6 * colley_norm[i] + 0.4 * win_pct_norm[i]) for i in range(len(teams))
-    }
-    predictive_scores = {
-        teams[i]: float(0.5 * massey_norm[i] + 0.5 * elo_norm[i]) for i in range(len(teams))
-    }
-
-    # ---- Full SOR/SOS implementation ----
-    # First, build a provisional composite (resume + predictive only) to rate opponents on 0-1 scale
-    # Updated weights: 50% resume, 30% predictive (matches CFP emphasis on wins/losses)
-    provisional_scores = {}
-    for team in teams:
-        provisional_scores[team] = float(
-            0.50 * resume_scores[team] + 0.30 * predictive_scores[team]
-        )
-
-    # Normalize provisional scores to 0-1 for opponent ratings
-    scaler_provisional = MinMaxScaler()
-    prov_vals = np.array([[provisional_scores[t]] for t in teams])
-    prov_norm = scaler_provisional.fit_transform(prov_vals).flatten()
-    opponent_rating_lookup = {teams[i]: prov_norm[i] for i in range(len(teams))}
-
-    # Helper to compute team record
-    def get_team_record(team: str) -> Dict[str, int]:
-        tg = games_df[(games_df["home_team"] == team) | (games_df["away_team"] == team)]
-        wins = ((tg["home_team"] == team) & (tg["home_score"] > tg["away_score"])).sum() + (
-            (tg["away_team"] == team) & (tg["away_score"] > tg["home_score"])
-        ).sum()
-        losses = len(tg) - wins
-        return {"wins": int(wins), "losses": int(losses)}
-
-    # Build opponent records (excluding head-to-head to avoid circular dependency)
-    def get_opponent_records(team: str):
-        opponents = []
-        opponents_records = []
-        opponents_opp_records = []
-
-        team_games = games_df[(games_df["home_team"] == team) | (games_df["away_team"] == team)]
-        for _, game in team_games.iterrows():
-            opp = game["away_team"] if game["home_team"] == team else game["home_team"]
-            opponents.append(opp)
-
-            # Opponent record excluding the game vs this team
-            opp_games = games_df[(games_df["home_team"] == opp) | (games_df["away_team"] == opp)]
-            opp_w = 0
-            opp_l = 0
-            for _, g in opp_games.iterrows():
-                if (g["home_team"] == team and g["away_team"] == opp) or (
-                    g["home_team"] == opp and g["away_team"] == team
-                ):
-                    continue  # exclude head-to-head
-                if g["home_team"] == opp:
-                    opp_w += 1 if g["home_score"] > g["away_score"] else 0
-                else:
-                    opp_w += 1 if g["away_score"] > g["home_score"] else 0
-            opp_l = len(opp_games) - opp_w
-            opponents_records.append((opp_w, opp_l))
-
-            # Opponent's opponents records (exclude this team when opp is playing)
-            opp_opp_records = []
-            for _, gg in opp_games.iterrows():
-                opp_opp = gg["away_team"] if gg["home_team"] == opp else gg["home_team"]
-                if opp_opp == team:
-                    continue
-                if gg["home_team"] == opp:
-                    w = 1 if gg["home_score"] > gg["away_score"] else 0
-                    l = 1 - w
-                else:
-                    w = 1 if gg["away_score"] > gg["home_score"] else 0
-                    l = 1 - w
-                opp_opp_records.append((w, l))
-            opponents_opp_records.append(opp_opp_records)
-
-        return opponents, opponents_records, opponents_opp_records
-
-    # Calculate SOR and SOS
-    sor_scores = {}
-    sos_scores = {}
-    for team in teams:
-        opponents, opp_records, opp_opp_records = get_opponent_records(team)
-
-        # Opponent ratings for SOR
-        opp_ratings = [opponent_rating_lookup.get(o, 0.5) for o in opponents]
-        sor_scores[team] = calculate_sor(get_team_record(team), opp_ratings)
-
-        # SOS using opponent and opponent's opponent records
-        sos_scores[team] = calculate_sos(
-            opp_records, opp_opp_records, include_oor=True, oor_weight=0.33
-        )
-
-    # Normalize all components
-    scaler = MinMaxScaler()
-    resume_arr = np.array([[resume_scores[t]] for t in teams])
-    predictive_arr = np.array([[predictive_scores[t]] for t in teams])
-    sor_arr = np.array([[sor_scores[t]] for t in teams])
-    sos_arr = np.array([[sos_scores[t]] for t in teams])
-
-    resume_norm = scaler.fit_transform(resume_arr).flatten()
-    predictive_norm = scaler.fit_transform(predictive_arr).flatten()
-    sor_norm = scaler.fit_transform(sor_arr).flatten()  # higher sor_score = better
-    sos_norm = scaler.fit_transform(sos_arr).flatten()  # higher sos_score = tougher
-
-    # Calculate composite score with updated weights
-    # Updated: 50% resume, 30% predictive, 10% SOR, 10% SOS
-    # This better reflects CFP committee's emphasis on wins/losses over predictive power
-    composite_scores = {}
-    for i, team in enumerate(teams):
-        composite_scores[team] = (
-            0.50 * resume_norm[i]
-            + 0.30 * predictive_norm[i]
-            + 0.10 * sor_norm[i]
-            + 0.10 * sos_norm[i]
-        )
-
-    # Create DataFrame
-    results = []
-    for i, team in enumerate(teams):
-        results.append(
-            {
-                "team": team,
-                "composite_score": composite_scores[team],
-                "resume_score": resume_scores[team],
-                "predictive_score": predictive_scores[team],
-                "sor": sor_scores[team],
-                "sos": sos_scores[team],
-                "colley_rating": colley_ratings.get(team, 0),
-                "massey_rating": massey_ratings.get(team, 0),
-                "elo_rating": elo_ratings.get(team, 0),
-                "win_pct": win_pcts[team],
-            }
-        )
-
-    df = pd.DataFrame(results)
-    df = df.sort_values("composite_score", ascending=False).reset_index(drop=True)
-    df["rank"] = range(1, len(df) + 1)
-
-    return df
 
 
 def calculate_spearman_correlation(
@@ -781,13 +406,29 @@ def run_season_backtest(
     composite_rankings = calculate_composite_rankings(games_df)
     print(f"✅ Calculated composite rankings for {len(composite_rankings)} teams")
 
-    # Calculate metrics for composite model
     spearman_corr, spearman_p = calculate_spearman_correlation(composite_rankings, cfp_rankings)
     composite_top12 = composite_rankings.head(12)["team"].tolist()
-    selection_metrics = calculate_selection_accuracy(composite_top12, cfp_playoff_teams)
-    composite_seeds = {team: i + 1 for i, team in enumerate(composite_top12)}
     cfp_seeds = {team: i + 1 for i, team in enumerate(cfp_playoff_teams)}
-    seeding_metrics = calculate_seeding_accuracy(composite_seeds, cfp_seeds)
+
+    # Format-aware field selection and seeding (2024+)
+    if year >= 2024:
+        rankings_for_sel = composite_rankings.copy()
+        if "conf_champ" not in rankings_for_sel.columns:
+            rankings_for_sel["conf_champ"] = "No"
+        if "conference" not in rankings_for_sel.columns:
+            rankings_for_sel["conference"] = "Unknown"
+
+        fmt = get_format_for_year(year)
+        selection = select_playoff_field(rankings_for_sel, format_rules=fmt)
+        seeded = seed_playoff_teams(selection.playoff_teams, selection.auto_bids, fmt)
+        sim_playoff = [t["team"] for t in selection.playoff_teams]
+        sim_seeds = dict(zip(seeded["team"], seeded["seed"]))
+    else:
+        sim_playoff = composite_top12
+        sim_seeds = {team: i + 1 for i, team in enumerate(composite_top12)}
+
+    selection_metrics = calculate_selection_accuracy(sim_playoff, cfp_playoff_teams)
+    seeding_metrics = calculate_seeding_accuracy(sim_seeds, cfp_seeds)
     prediction_metrics = calculate_prediction_metrics(games_df, composite_rankings, "composite")
 
     # Compile composite results
@@ -807,7 +448,8 @@ def run_season_backtest(
             "prediction_mae": prediction_metrics["mae"],
             "prediction_rmse": prediction_metrics["rmse"],
             "brier_score": prediction_metrics["brier_score"],
-            "top_12": composite_top12,
+            "top_12": sim_playoff,
+            "ruleset": get_format_for_year(year).name if year >= 2024 else "4_team_era",
         },
     }
 

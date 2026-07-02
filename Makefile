@@ -2,7 +2,7 @@
 # CFP Selection Simulator - Makefile
 # =============================================================================
 
-.PHONY: help setup start stop status clean
+.PHONY: help setup start stop status clean run dashboard validate
 
 help:
 	@echo ""
@@ -17,6 +17,11 @@ help:
 	@echo "Development"
 	@echo "  make start          Start development environment"
 	@echo "  make stop           Stop all containers"
+	@echo ""
+	@echo "Simulator (requires: pip install -e \".[app]\")"
+	@echo "  make run YEAR=2025 WEEK=15   Run full pipeline"
+	@echo "  make dashboard               Launch Streamlit dashboard"
+	@echo "  make validate                Run historical validation"
 	@echo ""
 
 setup:
@@ -34,3 +39,14 @@ status:
 clean:
 	@./bin/cleanup.sh
 
+YEAR ?= 2025
+WEEK ?= 15
+
+validate:
+	@cfp-sim validate --years 2014:2023
+
+run:
+	@cfp-sim run --year $(YEAR) --week $(WEEK) --sample
+
+dashboard:
+	@cfp-sim dashboard

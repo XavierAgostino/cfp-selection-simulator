@@ -1,0 +1,21 @@
+game_id,week,home_team,away_team,home_score,away_score,home_conference,away_conference,neutral_site,date
+1,5,Ohio State,Michigan,31,24,Big Ten,Big Ten,False,2025-09-20
+2,5,Alabama,Georgia,27,21,SEC,SEC,False,2025-09-20
+3,5,Texas,Oklahoma,34,14,SEC,SEC,True,2025-10-05
+4,5,Oregon,USC,28,17,Big Ten,Big Ten,False,2025-09-27
+5,6,Ohio State,Penn State,24,10,Big Ten,Big Ten,False,2025-10-04
+6,6,Alabama,Tennessee,30,20,SEC,SEC,False,2025-10-11
+7,6,Georgia,Florida,38,14,SEC,SEC,False,2025-10-18
+8,6,Michigan,Michigan State,35,7,Big Ten,Big Ten,False,2025-10-25
+9,7,Texas,LSU,31,28,SEC,SEC,False,2025-11-01
+10,7,Oregon,Washington,21,17,Big Ten,Big Ten,False,2025-11-08
+11,7,Ohio State,Indiana,42,10,Big Ten,Big Ten,False,2025-11-15
+12,7,Alabama,Auburn,28,14,SEC,SEC,False,2025-11-22
+13,8,Georgia,Texas,24,21,SEC,SEC,False,2025-11-29
+14,8,Michigan,Ohio State,17,24,Big Ten,Big Ten,False,2025-11-29
+15,8,Oregon,Oregon State,45,3,Big Ten,Pac-12,False,2025-11-29
+16,8,Texas,Tennessee,27,24,SEC,SEC,False,2025-11-29
+17,9,Ohio State,Alabama,31,28,Big Ten,SEC,True,2025-12-07
+18,9,Georgia,Oregon,35,17,SEC,Big Ten,True,2025-12-14
+19,10,Texas,Ohio State,20,27,SEC,Big Ten,True,2025-12-21
+20,10,Alabama,Georgia,24,31,SEC,SEC,True,2025-12-28

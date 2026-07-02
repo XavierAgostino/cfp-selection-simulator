@@ -18,18 +18,6 @@ import pandas as pd
 
 
 @dataclass
-class PlayoffSelection:
-    """Results of 12-team playoff selection."""
-
-    playoff_teams: List[Dict]
-    auto_bids: List[Dict]
-    at_large_bids: List[Dict]
-    displaced_team: Optional[Dict]
-    champ_pulled_in: bool
-    audit_log: List[str]
-
-
-@dataclass
 class BracketMatchup:
     """Single playoff matchup."""
 
@@ -50,117 +38,35 @@ def select_playoff_field(
     conf_champ_col: str = "conf_champ",
     n_auto_bids: int = 5,
     n_at_large: int = 7,
-) -> PlayoffSelection:
-    """
-    Select 12-team playoff field using 5+7 protocol.
+    format_rules=None,
+):
+    """Select 12-team playoff field. Delegates to src.selection.field."""
+    from src.selection.field import select_playoff_field as _select
 
-    Protocol:
-    1. Select 5 highest-ranked conference champions (automatic bids)
-    2. Fill 7 at-large spots with next highest-ranked teams
-    3. If a conference champion outside top 12 must be included,
-       displace the lowest-ranked at-large team
-
-    Parameters
-    ----------
-    rankings_df : DataFrame
-        Must contain: 'rank', 'team', 'composite_score', conference_col, conf_champ_col
-    conference_col : str
-        Column name for conference
-    conf_champ_col : str
-        Column name for conference champion status
-    n_auto_bids : int
-        Number of automatic bids (default 5)
-    n_at_large : int
-        Number of at-large bids (default 7)
-
-    Returns
-    -------
-    PlayoffSelection
-        Complete selection results with audit trail
-    """
-    audit_log = []
-    total_teams = n_auto_bids + n_at_large
-
-    # Ensure dataframe is sorted by rank
-    rankings_df = rankings_df.sort_values("rank").reset_index(drop=True)
-
-    # Step 1: Identify all conference champions
-    champs_df = rankings_df[rankings_df[conf_champ_col].str.contains("Yes", na=False)].copy()
-    audit_log.append(f"Found {len(champs_df)} conference champions")
-
-    if len(champs_df) < n_auto_bids:
-        audit_log.append(f"WARNING: Only {len(champs_df)} champions found, need {n_auto_bids}")
-        n_auto_bids = len(champs_df)
-        n_at_large = total_teams - n_auto_bids
-
-    # Step 2: Select top N conference champions for automatic bids
-    auto_bid_teams = champs_df.head(n_auto_bids).to_dict("records")
-    auto_bid_names = {team["team"] for team in auto_bid_teams}
-
-    audit_log.append(f"\nAutomatic bids (top {n_auto_bids} conference champions):")
-    for i, team in enumerate(auto_bid_teams, 1):
-        audit_log.append(f"  {i}. #{team['rank']} {team['team']} ({team[conf_champ_col]})")
-
-    # Step 3: Select at-large teams (highest-ranked non-auto-bid teams)
-    eligible_at_large = rankings_df[~rankings_df["team"].isin(auto_bid_names)].copy()
-    at_large_teams = eligible_at_large.head(n_at_large).to_dict("records")
-
-    audit_log.append(f"\nAt-large bids ({n_at_large} spots):")
-    for i, team in enumerate(at_large_teams, 1):
-        audit_log.append(f"  {i}. #{team['rank']} {team['team']}")
-
-    # Step 4: Check if any auto-bid team is outside top 12
-    all_selected = auto_bid_teams + at_large_teams
-    all_selected_sorted = sorted(all_selected, key=lambda x: x["rank"])
-
-    champ_pulled_in = False
-    displaced_team = None
-
-    # Find if any champion is ranked below the 12th spot
-    for team in auto_bid_teams:
-        if team["rank"] > total_teams:
-            champ_pulled_in = True
-            # Find who got displaced (would have been last at-large)
-            if len(at_large_teams) > 0:
-                # The team that would have made it
-                would_be_12th = (
-                    eligible_at_large.iloc[n_at_large - 1]
-                    if len(eligible_at_large) > n_at_large
-                    else None
-                )
-                if would_be_12th is not None:
-                    displaced_team = would_be_12th.to_dict()
-                    audit_log.append(f"\nCHAMPION PULLED IN: #{team['rank']} {team['team']}")
-                    audit_log.append(
-                        f"DISPLACED: #{displaced_team['rank']} {displaced_team['team']}"
-                    )
-            break
-
-    # Step 5: Final playoff field
-    playoff_teams = all_selected_sorted[:total_teams]
-
-    audit_log.append(f"\nFinal 12-team playoff field:")
-    for i, team in enumerate(playoff_teams, 1):
-        status = "AUTO" if team["team"] in auto_bid_names else "AT-LARGE"
-        audit_log.append(f"  {i}. #{team['rank']} {team['team']} ({status})")
-
-    return PlayoffSelection(
-        playoff_teams=playoff_teams,
-        auto_bids=auto_bid_teams,
-        at_large_bids=at_large_teams,
-        displaced_team=displaced_team,
-        champ_pulled_in=champ_pulled_in,
-        audit_log=audit_log,
+    return _select(
+        rankings_df,
+        conference_col=conference_col,
+        conf_champ_col=conf_champ_col,
+        n_auto_bids=n_auto_bids,
+        n_at_large=n_at_large,
+        format_rules=format_rules,
     )
 
 
-def seed_playoff_teams(playoff_teams: List[Dict], auto_bid_teams: List[Dict]) -> pd.DataFrame:
-    """
-    Seed 12-team playoff with top 4 conference champions receiving byes.
+# Re-export for backward compatibility
+from src.selection.field import PlayoffSelection  # noqa: E402
 
-    Seeding rules:
-    - Top 4 seeds: 4 highest-ranked conference champions (get byes)
-    - Seeds 5-12: Remaining teams by composite rank
+
+def seed_playoff_teams(
+    playoff_teams: List[Dict],
+    auto_bid_teams: List[Dict],
+    format_rules=None,
+) -> pd.DataFrame:
+    """
+    Seed 12-team playoff field using format-specific rules.
+
+    When format_rules is omitted, defaults to 2024 champion-bye seeding for
+    backward compatibility with existing notebooks.
 
     Parameters
     ----------
@@ -168,63 +74,17 @@ def seed_playoff_teams(playoff_teams: List[Dict], auto_bid_teams: List[Dict]) ->
         12 playoff teams with rank and team info
     auto_bid_teams : list of dict
         Conference champion teams
+    format_rules : PlayoffFormat, optional
+        CFP format rules. Use get_format_for_year(year) for season-specific rules.
 
     Returns
     -------
     DataFrame
         Seeded bracket with columns: seed, team, rank, conf_champ, is_bye
     """
-    auto_bid_names = {team["team"] for team in auto_bid_teams}
+    from src.selection.seeding import seed_playoff_teams as _seed_playoff_teams
 
-    # Sort playoff teams by rank
-    sorted_teams = sorted(playoff_teams, key=lambda x: x["rank"])
-
-    # Identify top 4 conference champions for byes
-    champs_in_playoff = [t for t in sorted_teams if t["team"] in auto_bid_names]
-    top_4_champs = champs_in_playoff[:4]
-    top_4_names = {t["team"] for t in top_4_champs}
-
-    # Assign seeds 1-4 to top 4 champions
-    seeded_teams = []
-    seed = 1
-
-    for team in top_4_champs:
-        seeded_teams.append(
-            {
-                "seed": seed,
-                "team": team["team"],
-                "rank": team["rank"],
-                "wins": team.get("wins", 0),
-                "losses": team.get("losses", 0),
-                "conference": team.get("conference", ""),
-                "conf_champ": team.get("conf_champ", ""),
-                "is_bye": True,
-                "composite_score": team.get("composite_score", 0.0),
-            }
-        )
-        seed += 1
-
-    # Assign seeds 5-12 to remaining teams by rank
-    remaining_teams = [t for t in sorted_teams if t["team"] not in top_4_names]
-
-    for team in remaining_teams:
-        is_champ = team["team"] in auto_bid_names
-        seeded_teams.append(
-            {
-                "seed": seed,
-                "team": team["team"],
-                "rank": team["rank"],
-                "wins": team.get("wins", 0),
-                "losses": team.get("losses", 0),
-                "conference": team.get("conference", ""),
-                "conf_champ": team.get("conf_champ", "") if is_champ else "No",
-                "is_bye": False,
-                "composite_score": team.get("composite_score", 0.0),
-            }
-        )
-        seed += 1
-
-    return pd.DataFrame(seeded_teams)
+    return _seed_playoff_teams(playoff_teams, auto_bid_teams, format_rules)
 
 
 def create_bracket_matchups(
@@ -389,8 +249,7 @@ def visualize_bracket_html(seeded_df: pd.DataFrame, first_round: List[BracketMat
     str
         HTML bracket visualization
     """
-    html = [
-        """
+    html = ["""
     <style>
         * { box-sizing: border-box; }
 
@@ -629,8 +488,7 @@ def visualize_bracket_html(seeded_df: pd.DataFrame, first_round: List[BracketMat
             }
         }
     </style>
-    """
-    ]
+    """]
 
     html.append('<div class="bracket-container">')
 

@@ -3,90 +3,18 @@ from typing import Dict, List, Optional
 import pandas as pd
 import plotly.graph_objects as go
 
-# --- 1. Enhanced Color Handling ---
-TEAM_COLORS = {
-    # SEC
-    "Georgia": "#BA0C2F",
-    "Alabama": "#9E1B32",
-    "Texas": "#BF5700",
-    "Tennessee": "#FF8200",
-    "Ole Miss": "#CE1126",
-    "LSU": "#461D7C",
-    "Missouri": "#F1B82D",
-    "Oklahoma": "#841617",
-    "Texas A&M": "#500000",
-    "South Carolina": "#73000A",
-    "Kentucky": "#0033A0",
-    "Florida": "#FA4616",
-    "Auburn": "#0C2340",
-    "Vanderbilt": "#866D4B",
-    "Arkansas": "#9D2235",
-    # Big Ten
-    "Ohio State": "#BB0000",
-    "Oregon": "#154733",
-    "Penn State": "#041E42",
-    "Indiana": "#990000",
-    "Michigan State": "#18453B",
-    "Michigan": "#00274C",
-    "USC": "#990000",
-    "Wisconsin": "#C5050C",
-    "Iowa State": "#C8102E",
-    "Iowa": "#FFCD00",
-    "Nebraska": "#E41C38",
-    "Illinois": "#E84A27",
-    "Minnesota": "#7A0019",
-    "Washington": "#4B2E83",
-    "UCLA": "#2D68C4",
-    # ACC
-    "Miami": "#005030",
-    "Clemson": "#F56600",
-    "SMU": "#0033A0",
-    "Florida State": "#782F40",
-    "Louisville": "#C9001F",
-    "North Carolina": "#7BAFD4",
-    "Virginia Tech": "#630031",
-    "Pitt": "#FFB81C",
-    # Big 12
-    "BYU": "#002E5D",
-    "Kansas State": "#512888",
-    "Colorado": "#CFB87C",
-    "Arizona State": "#8C1D40",
-    "Utah": "#CC0000",
-    "Oklahoma State": "#FF7300",
-    "TCU": "#4D1979",
-    "Texas Tech": "#CC0000",
-    "Baylor": "#154734",
-    "West Virginia": "#002855",
-    "UCF": "#BA9B37",
-    # G5 / Independent / Pac-12
-    "Notre Dame": "#0C2340",
-    "Boise State": "#0033A0",
-    "Army": "#D4BF80",
-    "Navy": "#00205B",
-    "Tulane": "#006747",
-    "UNLV": "#CF0A2C",
-    "Memphis": "#003087",
-    "Liberty": "#002D62",
-    "Louisiana": "#CE181E",
-    "Washington State": "#981E32",
-    "Oregon State": "#DC4405",
-}
+from src.assets.colors import get_primary_color
+from src.assets.logos import get_team_logo
+
+# Legacy fallback retained for bracket_plotly backward compatibility
+TEAM_COLORS: Dict[str, str] = {}
 
 
 def get_team_color(team_name: str) -> str:
-    """Robust color lookup that prevents 'Iowa' matching 'Iowa State'."""
-    if not team_name:
-        return "#667eea"
-
+    """Team primary color via asset registry with legacy fallback."""
     if team_name in TEAM_COLORS:
         return TEAM_COLORS[team_name]
-
-    sorted_keys = sorted(TEAM_COLORS.keys(), key=len, reverse=True)
-    for key in sorted_keys:
-        if key in team_name:
-            return TEAM_COLORS[key]
-
-    return "#667eea"
+    return get_primary_color(team_name, use_sample=True)
 
 
 def create_interactive_bracket(
@@ -138,6 +66,7 @@ def create_interactive_bracket(
 
         # 1. Main Team Box
         color = get_team_color(name)
+        logo_url = get_team_logo(name, use_sample=True)
         fig.add_shape(
             type="rect",
             x0=x - 0.4,
@@ -181,6 +110,22 @@ def create_interactive_bracket(
             showarrow=False,
             font=dict(size=11, color="black", family="Arial Black"),
         )
+
+        if logo_url and logo_url.startswith("http"):
+            fig.add_layout_image(
+                dict(
+                    source=logo_url,
+                    xref="x",
+                    yref="y",
+                    x=x - 0.55,
+                    y=y,
+                    sizex=0.18,
+                    sizey=0.45,
+                    xanchor="right",
+                    yanchor="middle",
+                    layer="above",
+                )
+            )
 
     # --- Draw Connectors ---
     path_map = {8: "Q1", 9: "Q1", 5: "Q2", 12: "Q2", 6: "Q3", 11: "Q3", 7: "Q4", 10: "Q4"}

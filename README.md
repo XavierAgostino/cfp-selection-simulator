@@ -1,11 +1,77 @@
-# College Football Playoff Selection Simulator
+# CFP Selection Simulator
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-> A data-driven ranking system providing transparent, reproducible analysis of college football team performance for playoff selection. This project implements an ensemble modeling approach combining multiple mathematical ranking methodologies to create an objective alternative to subjective committee decisions.
+> A transparent decision-support simulator for College Football Playoff ranking, field selection, seeding, and bracket analysis.
+
+---
+
+## Run in 60 Seconds
+
+```bash
+git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
+cd cfp-selection-simulator
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[app,dev]"
+
+# Run with bundled sample data (no API key required)
+cfp-sim run --year 2025 --week 15 --sample
+
+# Launch dashboard
+cfp-sim dashboard
+```
+
+With live data, copy `.env.example` to `.env` and set `CFBD_API_KEY`.
+
+---
+
+## What It Does
+
+- Fetches FBS game data (CFBD API)
+- Computes résumé, predictive, SOR, and SOS metrics
+- Selects the CFP field under **2024 or 2025+ rules** (format-aware seeding)
+- Generates a 12-team bracket with audit trail
+- Compares model output to historical CFP rankings
+- Writes a reproducibility manifest on every run
+
+---
+
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `cfp-sim fetch --year 2025` | Fetch games to cache |
+| `cfp-sim rank --year 2025 --week 15` | Composite rankings |
+| `cfp-sim select --year 2025 --week 15` | Field selection + seeding |
+| `cfp-sim bracket --year 2025 --week 15` | HTML bracket export |
+| `cfp-sim run --year 2025 --week 15` | Full pipeline + manifest |
+| `cfp-sim validate --years 2014:2023` | Historical backtest |
+| `cfp-sim dashboard` | Streamlit UI |
+
+Makefile shortcuts: `make run YEAR=2025 WEEK=15`, `make dashboard`, `make validate`
+
+---
+
+## CFP Format Support
+
+| Era | Seeding | Byes |
+|-----|---------|------|
+| 2024 | Top 4 conference champions | Champion byes |
+| 2025+ | Straight by final ranking | Top 4 overall |
+
+See [docs/research/cfp-format-history.md](docs/research/cfp-format-history.md).
+
+---
+
+## Research Documentation
+
+- [Model methodology](docs/research/model-methodology.md)
+- [Metric definitions](docs/research/metric-definitions.md)
+- [Historical validation](docs/research/historical-validation.md)
+- [Limitations and ethics](docs/research/limitations-and-ethics.md)
+- [Data sources](docs/research/data-sources.md)
 
 ---
 
@@ -78,8 +144,8 @@ jupyter lab
 - **12-Team Playoff Protocol**: Official 5+7 selection with visual bracket display
 - **Conference Championship Simulation**: Accurate multi-team tiebreaker resolution
 - **Team Resume Sheets**: CFP committee-style detailed team analysis
-- **Historical Validation**: Backtesting against 2014-2023 CFP selections
-- **Tie-Breaker Logic**: Committee-style stepwise decision traces
+- **Historical Validation**: Backtesting against 2014-2023 CFP rankings (see year-by-year tables in docs)
+- **Selection Audit Trail**: Structured step-by-step field selection log
 - **Data Caching**: Reproducible analysis with persistent data storage
 - **Docker Support**: Consistent environment across all platforms
 
@@ -350,18 +416,9 @@ games_df = fetch_season_games(
 print(f"Loaded {len(games_df)} FBS games")
 ```
 
-### Command Line (Future Feature)
+### Command Line
 
-```bash
-# Run complete simulation
-cfp-simulator run --year 2025 --week 15
-
-# Generate rankings only
-cfp-simulator rank --year 2025 --week 15
-
-# Validate against historical data
-cfp-simulator validate --year 2023
-```
+See the [Quick Start](#quick-start) section above for `cfp-sim` commands. Install with `pip install -e ".[app]"`.
 
 ---
 

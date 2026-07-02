@@ -30,6 +30,8 @@ env/
 # IDE & Editors
 .vscode/
 .idea/
+.ipython/
+.local/
 *.swp
 *.swo
 *~
@@ -59,9 +61,13 @@ logs/
 *.log.*
 
 # Data & Cache
-data/cache/
+data/cache/*
+!data/cache/team_assets.sample.json
 data/raw/
-data/processed/
+data/processed/*
+!data/processed/sample/
+data/processed/sample/*
+!data/processed/sample/sample_games.csv
 *.pkl
 *.pickle
 *.h5
@@ -76,6 +82,8 @@ data/output/brackets/*.json
 data/output/brackets/*.txt
 data/output/exports/*.csv
 data/output/exports/*.json
+data/output/validation/*.csv
+data/output/validation/*.json
 data/output/visualizations/*.png
 data/output/visualizations/*.pdf
 

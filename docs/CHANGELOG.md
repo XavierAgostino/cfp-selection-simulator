@@ -2,6 +2,34 @@
 
 All notable changes to the CFP Selection Simulator project.
 
+## [2.0.0] - 2026-07-02
+
+### Added
+
+- **Format-aware CFP rules**: 2024 champion-bye seeding and 2025+ straight seeding (`src/config/formats.py`, `src/selection/seeding.py`)
+- **Field selection module**: 5+7 auto/at-large with displacement tracking and structured audit (`src/selection/field.py`, `src/selection/audit.py`)
+- **Composite pipeline**: Extracted ranking algorithms and composite scoring (`src/rankings/algorithms.py`, `src/pipeline/composite.py`)
+- **CLI**: `cfp-sim` Typer commands for fetch, rank, select, bracket, run, validate, dashboard
+- **Pipeline runner**: Full orchestration with reproducibility manifest (`src/pipeline/run.py`)
+- **Streamlit dashboard**: Field, bracket, résumé, audit, and component views (`app/streamlit_app.py`)
+- **Team asset registry**: Logo/color lookup with CFBD → ESPN → placeholder fallbacks (`src/assets/`)
+- **Sample team assets**: Offline logo cache at `data/cache/team_assets.sample.json`
+- **Research docs**: Methodology, metrics, validation, limitations, data sources under `docs/research/`
+- **Sensitivity stub**: Selection stability placeholder (`src/validation/sensitivity.py`)
+- **Tests**: Seeding (2024/2025), field selection, composite pipeline
+
+### Changed
+
+- **Version**: 1.0.0 → 2.0.0
+- **Backtest**: Imports shared composite pipeline; format-aware seeding for 2024+
+- **README**: North-star quickstart focused on CLI and decision-support positioning
+- **Makefile**: Added `run`, `dashboard`, `validate` targets
+
+### Fixed
+
+- Stale 2025+ seeding logic (was using 2024 champion-bye rules for all years)
+- Displacement audit-only bug (now tracks displaced team correctly)
+
 ## [1.0.0] - 2024-12-04
 
 ### Added
