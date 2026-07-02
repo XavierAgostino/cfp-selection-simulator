@@ -1,32 +1,49 @@
-/* CFP bracket viewer — dark mode */
+/* CFP bracket viewer — scoped inside components.html iframe */
 
+.cfp-bracket,
 .cfp-bracket-wrap {
-  background: #0b0f17;
-  border: 1px solid #263244;
-  border-radius: 18px;
-  padding: 24px;
-  overflow-x: auto;
+  box-sizing: border-box;
   color: #f9fafb;
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
+.cfp-bracket *,
+.cfp-bracket-wrap * {
+  box-sizing: border-box;
+}
+
+.cfp-bracket img,
+.cfp-bracket-wrap img {
+  max-width: 100%;
+}
+
+.cfp-bracket-wrap {
+  background: rgba(17, 24, 39, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.10);
+  border-radius: 14px;
+  padding: 20px;
+  overflow-x: auto;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.20);
+}
+
 .cfp-rules-banner {
   background: #111827;
-  border: 1px solid #2d3748;
-  border-radius: 12px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
 }
 
 .cfp-rules-banner strong {
   color: #d4af37;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  font-size: 0.82rem;
 }
 
 .cfp-rules-banner span {
   color: #9ca3af;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
 
 .cfp-round-headers {
@@ -38,7 +55,7 @@
 
 .cfp-round-header {
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   color: #9ca3af;
@@ -78,7 +95,7 @@
   right: -32px;
   top: 50%;
   width: 32px;
-  border-top: 1px solid #64748b;
+  border-top: 1px solid rgba(100, 116, 139, 0.5);
 }
 
 .cfp-round-col:last-child .cfp-game::after {
@@ -87,26 +104,26 @@
 
 .cfp-team-card {
   width: 230px;
-  min-height: 56px;
+  min-height: 52px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #111827;
-  border: 1px solid #2d3748;
-  border-left: 5px solid var(--team-color, #64748b);
-  border-radius: 12px;
-  padding: 8px 10px;
-  margin-bottom: 6px;
+  border: none;
+  border-left: 3px solid var(--team-color, #64748b);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
 }
 
 .cfp-team-card.bye-slot {
-  opacity: 0.95;
-  border-style: dashed;
+  opacity: 0.92;
+  border-left-style: dashed;
 }
 
 .cfp-seed {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   background: #e5e7eb;
   color: #111827;
@@ -114,14 +131,17 @@
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   flex-shrink: 0;
 }
 
-.cfp-logo-tile {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
+.cfp-logo-tile,
+.bracket-logo-tile {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  border-radius: 8px;
   background: #f8fafc;
   display: flex;
   align-items: center;
@@ -130,14 +150,18 @@
   overflow: hidden;
 }
 
-.cfp-logo-tile img {
-  max-width: 22px;
-  max-height: 22px;
+.cfp-logo-tile img,
+.bracket-logo-tile img {
+  max-width: 24px !important;
+  max-height: 24px !important;
+  width: auto !important;
+  height: auto !important;
   object-fit: contain;
+  display: block;
 }
 
 .cfp-logo-fallback {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 800;
   color: #334155;
 }
@@ -148,8 +172,8 @@
 }
 
 .cfp-team-name {
-  font-weight: 700;
-  font-size: 0.88rem;
+  font-weight: 600;
+  font-size: 0.84rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -161,103 +185,102 @@
   gap: 4px;
   align-items: center;
   margin-top: 2px;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: #9ca3af;
 }
 
 .cfp-badge {
   display: inline-block;
-  padding: 0.1rem 0.35rem;
+  padding: 1px 6px;
   border-radius: 999px;
-  font-size: 0.62rem;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
 .cfp-badge.auto {
   background: rgba(212, 175, 55, 0.16);
   color: #d4af37;
-  border: 1px solid rgba(212, 175, 55, 0.35);
 }
 
 .cfp-badge.atlarge {
   background: rgba(96, 165, 250, 0.14);
   color: #93c5fd;
-  border: 1px solid rgba(96, 165, 250, 0.35);
 }
 
 .cfp-badge.bye {
   background: rgba(22, 163, 74, 0.14);
   color: #86efac;
-  border: 1px solid rgba(22, 163, 74, 0.35);
 }
 
 .cfp-await {
   color: #64748b;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-style: italic;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .cfp-title-game {
   width: 230px;
-  min-height: 72px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #111827;
-  border: 2px solid #d4af37;
-  border-radius: 14px;
-  font-weight: 800;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 12px;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 
 /* Round view */
 .cfp-round-view section {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .cfp-round-view h3 {
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: #9ca3af;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.10);
 }
 
 .cfp-matchup-line {
-  padding: 8px 0;
-  border-bottom: 1px solid #1f2937;
-  font-size: 0.9rem;
+  padding: 6px 0;
+  font-size: 0.88rem;
+  color: #f9fafb;
 }
 
 /* Matchup cards */
 .cfp-matchup-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 
 .cfp-matchup-card {
   background: #111827;
-  border: 1px solid #2d3748;
-  border-radius: 14px;
-  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
 }
 
 .cfp-matchup-card .cfp-vs {
   text-align: center;
   color: #64748b;
-  font-size: 0.78rem;
-  margin: 6px 0;
+  font-size: 0.76rem;
+  margin: 4px 0;
 }
 
 .cfp-matchup-footer {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #1f2937;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.10);
   color: #9ca3af;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }

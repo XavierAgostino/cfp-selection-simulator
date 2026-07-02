@@ -84,7 +84,72 @@ ESPN_TEAM_IDS: Dict[str, int] = {
     "Arizona": 12,
     "Kansas": 2305,
     "Houston": 248,
+    "James Madison": 256,
+    "UConn": 41,
+    "Connecticut": 41,
+    "South Florida": 58,
+    "Toledo": 2649,
+    "Northern Illinois": 2459,
+    "North Texas": 249,
+    "San Diego State": 21,
+    "Fresno State": 278,
+    "App State": 2026,
+    "Appalachian State": 2026,
+    "Coastal Carolina": 324,
+    "Marshall": 276,
+    "Louisiana": 309,
+    "Troy": 2653,
+    "Western Kentucky": 98,
+    "East Carolina": 151,
+    "South Alabama": 2654,
+    "Georgia Southern": 290,
+    "Old Dominion": 295,
+    "Buffalo": 2084,
+    "Bowling Green": 189,
+    "Ohio": 195,
+    "Miami (OH)": 193,
+    "Ball State": 2050,
+    "Akron": 2006,
+    "Central Michigan": 2117,
+    "Eastern Michigan": 2199,
+    "Western Michigan": 2711,
+    "Air Force": 2005,
+    "Colorado State": 36,
+    "Wyoming": 2751,
+    "Hawaii": 62,
+    "Nevada": 2440,
+    "San Jose State": 23,
+    "New Mexico": 167,
+    "Utah State": 328,
+    "Florida Atlantic": 2226,
+    "FIU": 2229,
+    "Florida International": 2229,
+    "Charlotte": 2429,
+    "UTSA": 2636,
+    "Rice": 242,
+    "North Carolina State": 152,
+    "NC State": 152,
+    "Virginia": 258,
+    "Boston College": 103,
+    "Syracuse": 183,
+    "Wake Forest": 154,
+    "Mississippi State": 344,
+    "Missouri State": 2623,
+    "Kennesaw State": 338,
 }
+
+# Alternate CFBD / display names → canonical ESPN_TEAM_IDS key
+TEAM_NAME_ALIASES: Dict[str, str] = {
+    "UConn": "Connecticut",
+    "Connecticut Huskies": "Connecticut",
+    "James Madison Dukes": "James Madison",
+    "App State": "Appalachian State",
+    "FIU": "Florida International",
+    "NC State": "North Carolina State",
+    "Miami (FL)": "Miami",
+}
+
+MIN_FBS_ASSET_COUNT = 100
 
 
 def espn_logo_url(espn_id: int) -> str:
@@ -126,21 +191,34 @@ def _parse_cache(raw: dict) -> Dict[str, TeamAsset]:
     return {name: TeamAsset.from_dict(data) for name, data in raw.items()}
 
 
+def resolve_team_name_for_espn(team_name: str) -> str:
+    """Map display/CFBD names to ESPN_TEAM_IDS keys."""
+    if team_name in ESPN_TEAM_IDS:
+        return team_name
+    if team_name in TEAM_NAME_ALIASES:
+        return TEAM_NAME_ALIASES[team_name]
+    for key in ESPN_TEAM_IDS:
+        if key.lower() == team_name.lower():
+            return key
+    return team_name
+
+
 def load_team_assets(use_sample: bool = False) -> Dict[str, TeamAsset]:
     """Load team assets from cache file (live cache or sample)."""
     global _assets_cache
     if _assets_cache is not None and not use_sample:
         return _assets_cache
 
-    path = SAMPLE_CACHE_PATH if use_sample else CACHE_PATH
-    if not path.exists() and not use_sample and SAMPLE_CACHE_PATH.exists():
-        path = SAMPLE_CACHE_PATH
+    if use_sample:
+        if SAMPLE_CACHE_PATH.exists():
+            with open(SAMPLE_CACHE_PATH) as f:
+                return _parse_cache(json.load(f))
+        return {}
 
-    if path.exists():
-        with open(path) as f:
+    if CACHE_PATH.exists():
+        with open(CACHE_PATH) as f:
             parsed = _parse_cache(json.load(f))
-        if not use_sample:
-            _assets_cache = parsed
+        _assets_cache = parsed
         return parsed
 
     return {}

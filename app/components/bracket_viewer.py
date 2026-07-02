@@ -8,7 +8,7 @@ from io import StringIO
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
-import streamlit.components.v1 as components
+import streamlit as st
 
 from src.assets.colors import get_primary_color
 from src.assets.logos import get_team_logo
@@ -107,7 +107,7 @@ def render_team_card_html(team: Dict[str, Any], *, bye_slot: bool = False) -> st
     return (
         f'<div class="cfp-team-card{bye_class}" style="--team-color:{color}" title="{tooltip}">'
         f'<div class="cfp-seed">{seed}</div>'
-        f'<div class="cfp-logo-tile">{logo_html}</div>'
+        f'<div class="cfp-logo-tile bracket-logo-tile">{logo_html}</div>'
         f'<div class="cfp-team-info">'
         f'<div class="cfp-team-name">{name}</div>'
         f'<div class="cfp-team-meta">{"".join(badges)}'
@@ -165,12 +165,11 @@ def _render_round_view(pods: List[PodDict]) -> str:
         )
     parts.append("</section>")
 
-    parts.append("<section><h3>Quarterfinals</h3>")
+    parts.append("<section><h3>Quarterfinal Byes</h3>")
     for qf in rounds["quarterfinals"]:
         bye = qf["bye_team"]
         parts.append(
-            f'<div class="cfp-matchup-line">#{int(bye["seed"])} {html.escape(bye["team"])} '
-            f'vs {html.escape(qf["feeds_from"])}</div>'
+            f'<div class="cfp-matchup-line">#{int(bye["seed"])} {html.escape(bye["team"])}</div>'
         )
     parts.append("</section>")
 
@@ -228,8 +227,8 @@ def render_bracket_html(
         body = _render_full_bracket(pods)
 
     inner = (
-        f'<div class="cfp-bracket-wrap">'
-        f"<h2 style='margin:0 0 8px 0;font-size:1.1rem'>"
+        f'<div class="cfp-bracket cfp-bracket-wrap">'
+        f"<h2 style='margin:0 0 8px 0;font-size:1rem;font-weight:700'>"
         f"Projected CFP Bracket — {season} · Week {week}</h2>"
         f"{banner}{body}</div>"
     )
@@ -249,12 +248,14 @@ def render_bracket_html(
 def render_bracket_component(
     pods: List[PodDict],
     metadata: Dict[str, Any],
-    view_mode: ViewMode = "full",
+    view_mode: ViewMode = "round",
     height: int = 720,
 ) -> None:
-    """Render bracket in Streamlit via components.html."""
-    html_content = render_bracket_html(pods, metadata, view_mode=view_mode, standalone=False)
-    components.html(html_content, height=height, scrolling=True)
+    """Render bracket in Streamlit via st.iframe."""
+    css = _load_css()
+    body = render_bracket_html(pods, metadata, view_mode=view_mode, standalone=False)
+    html_content = f"<style>{css}</style>{body}"
+    st.iframe(html_content, height=height, width="stretch")
 
 
 def export_bracket_html(

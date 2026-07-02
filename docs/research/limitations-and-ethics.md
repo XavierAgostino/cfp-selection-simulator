@@ -13,10 +13,10 @@ A transparent **decision-support** tool for exploring CFP selection under publis
 ## Known Limitations
 
 1. **Committee subjectivity**: Real selection involves qualitative factors not fully captured in data
-2. **Conference champion data**: Auto-bid logic requires accurate `conf_champ` labels; backtests may lack this
+5. **Conference champion data**: Live mode prefers CFBD week 14–16 CCG results; falls back to conference-record tiebreaks.
 3. **Weight sensitivity**: Composite weights are configurable defaults, not committee-calibrated
 4. **Selection Stability Index**: Stub in v2.0; full Monte Carlo sensitivity ships in v2.1
-5. **4-team era (2014–2023)**: Validation uses top-12 ranking proxy, not historical 4-team bracket rules
+5. **4-team era (2014–2023)**: Field validation uses actual 4-team participants; committee top-12 overlap is a separate metric (see [historical-validation.md](historical-validation.md))
 
 ## Responsible Use
 

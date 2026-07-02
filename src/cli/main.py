@@ -14,8 +14,10 @@ import typer
 
 from src.cli.console import print_doctor_report, print_latest_outputs, print_run_summary
 from src.cli.doctor import run_doctor_checks
+from src.assets.logos import refresh_team_assets_cache
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
+from src.pipeline.cache_paths import games_cache_write_path
 from src.pipeline.paths import (
     DATA_OUTPUT,
     RunOutputPaths,
@@ -23,7 +25,7 @@ from src.pipeline.paths import (
     paths_from_manifest,
 )
 from src.pipeline.run import REPO_ROOT, run_pipeline
-from src.validation.backtest import run_multiple_seasons_backtest
+from src.validation.backtest import run_era_validation
 
 app = typer.Typer(
     name="cfp-sim",
@@ -89,9 +91,18 @@ def fetch(
     games_df = games_df[games_df["week"] <= end_week]
     cache_dir = REPO_ROOT / "data" / "cache" / "cfbd" / str(year)
     cache_dir.mkdir(parents=True, exist_ok=True)
-    out = cache_dir / f"games_week{end_week}.parquet"
+    out = games_cache_write_path(year, end_week)
     games_df.to_parquet(out, index=False)
     typer.echo(f"Saved {len(games_df)} games to {out}")
+
+
+@app.command("fetch-assets")
+def fetch_assets(
+    year: int = typer.Option(2025, help="Season year for FBS team metadata"),
+) -> None:
+    """Fetch FBS team logos/colors from CFBD into data/cache/team_assets.json."""
+    assets = refresh_team_assets_cache(year)
+    typer.echo(f"Cached {len(assets)} FBS team assets.")
 
 
 @app.command()
@@ -155,21 +166,31 @@ def run_cmd(
 @app.command()
 def validate(
     years: str = typer.Option("2014:2024", help="Year range e.g. 2014:2024"),
+    target: str = typer.Option(
+        "all",
+        help="Validation track: all, committee, selection, or predictive",
+    ),
 ) -> None:
-    """Run historical validation backtest."""
+    """Run era-aware historical validation (committee, selection, predictive)."""
     if ":" in years:
         start, end = years.split(":")
         year_list = list(range(int(start), int(end) + 1))
     else:
         year_list = [int(y) for y in years.split(",")]
 
-    df = run_multiple_seasons_backtest(year_list)
+    allowed = {"all", "committee", "selection", "predictive"}
+    if target not in allowed:
+        typer.echo(f"Invalid target '{target}'. Choose from: {', '.join(sorted(allowed))}")
+        raise typer.Exit(code=1)
+
     out_dir = DATA_OUTPUT / "validation"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "backtest_results.csv"
-    df.to_csv(out_path, index=False)
-    typer.echo(f"Validation results written to {out_path}")
+    df = run_era_validation(
+        year_list,
+        target=target,  # type: ignore[arg-type]
+        output_dir=str(out_dir),
+    )
     if len(df):
+        typer.echo("\nPrimary selection validation table:")
         typer.echo(df.to_string(index=False))
 
 
@@ -256,12 +277,15 @@ def open_cmd(
 @app.command()
 def clean(
     outputs_only: bool = typer.Option(True, "--outputs/--all", help="Clean output artifacts only"),
+    cache: bool = typer.Option(
+        False, "--cache", help="Also remove CFBD game cache (refetch on next run)"
+    ),
 ) -> None:
     """Remove generated output artifacts."""
-    if outputs_only and DATA_OUTPUT.exists():
+    if outputs_only and not cache and DATA_OUTPUT.exists():
         shutil.rmtree(DATA_OUTPUT)
         typer.echo(f"Removed {DATA_OUTPUT}")
-    else:
+    elif cache or not outputs_only:
         for path in (DATA_OUTPUT, REPO_ROOT / "htmlcov", REPO_ROOT / ".pytest_cache"):
             if path.exists():
                 shutil.rmtree(path)
@@ -270,6 +294,13 @@ def clean(
         if coverage_file.exists():
             coverage_file.unlink()
             typer.echo(f"Removed {coverage_file}")
+    if cache:
+        cache_root = REPO_ROOT / "data" / "cache"
+        for sub in ("cfbd", "2024", "2025", "2026"):
+            target = cache_root / sub if sub != "cfbd" else cache_root / "cfbd"
+            if target.exists():
+                shutil.rmtree(target)
+                typer.echo(f"Removed {target}")
 
 
 @app.command()

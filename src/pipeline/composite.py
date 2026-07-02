@@ -10,6 +10,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 from src.rankings.algorithms import ColleyMatrix, EloRatings, MasseyRatings
+from src.selection.tiebreakers import resolve_rank_ties
 from src.utils.metrics import calculate_sor, calculate_sos
 
 
@@ -95,6 +96,9 @@ def _get_opponent_records(games_df: pd.DataFrame, team: str):
 def calculate_composite_rankings(
     games_df: pd.DataFrame,
     weights: Optional[RankingWeights] = None,
+    *,
+    apply_tiebreakers: bool = True,
+    tie_tolerance: float = 0.01,
 ) -> pd.DataFrame:
     """
     Calculate composite rankings from game data.
@@ -177,5 +181,8 @@ def calculate_composite_rankings(
 
     df = pd.DataFrame(results)
     df = df.sort_values("composite_score", ascending=False).reset_index(drop=True)
-    df["rank"] = range(1, len(df) + 1)
+    if apply_tiebreakers:
+        df = resolve_rank_ties(df, games_df, tolerance=tie_tolerance)
+    else:
+        df["rank"] = range(1, len(df) + 1)
     return df

@@ -27,4 +27,4 @@ The config API reserves `mode` for future Committee Emulation, Merit, and Best-T
 
 ## References
 
-See [metric-definitions.md](metric-definitions.md) and [cfp-format-history.md](cfp-format-history.md).
+See [metric-definitions.md](metric-definitions.md), [cfp-format-history.md](cfp-format-history.md), and [cfp-committee-alignment.md](cfp-committee-alignment.md).

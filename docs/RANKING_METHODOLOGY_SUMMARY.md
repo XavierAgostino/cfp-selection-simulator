@@ -7,14 +7,14 @@ Your ranking system uses a **composite approach** that balances multiple perspec
 ### Final Composite Score Formula
 
 ```
-Composite Score = 30% Resume + 40% Predictive + 15% SOR + 15% SOS
+Composite Score = 50% Resume + 30% Predictive + 10% SOR + 10% SOS
 ```
 
 ---
 
 ## Component Breakdown
 
-### 1. Resume Rankings (30% of final score)
+### 1. Resume Rankings (50% of final score)
 
 **What it measures:** What teams have accomplished (win/loss record only)
 
@@ -31,7 +31,7 @@ Composite Score = 30% Resume + 40% Predictive + 15% SOR + 15% SOS
 
 ---
 
-### 2. Predictive Rankings (40% of final score)
+### 2. Predictive Rankings (30% of final score)
 
 **What it measures:** How good teams are (using scoring margins)
 
@@ -50,7 +50,7 @@ Composite Score = 30% Resume + 40% Predictive + 15% SOR + 15% SOS
 
 ---
 
-### 3. Strength of Record - SOR (15% of final score)
+### 3. Strength of Record - SOR (10% of final score)
 
 **What it measures:** How impressive the record is given the schedule
 
@@ -60,7 +60,7 @@ Composite Score = 30% Resume + 40% Predictive + 15% SOR + 15% SOS
 
 ---
 
-### 4. Strength of Schedule - SOS (15% of final score)
+### 4. Strength of Schedule - SOS (10% of final score)
 
 **What it measures:** Difficulty of opponents faced
 

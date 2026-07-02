@@ -10,15 +10,18 @@ from src.assets.logos import get_team_logo
 TEAM_COLORS: Dict[str, str] = {}
 
 
-def get_team_color(team_name: str) -> str:
+def get_team_color(team_name: str, use_sample: bool = False) -> str:
     """Team primary color via asset registry with legacy fallback."""
     if team_name in TEAM_COLORS:
         return TEAM_COLORS[team_name]
-    return get_primary_color(team_name, use_sample=True)
+    return get_primary_color(team_name, use_sample=use_sample)
 
 
 def create_interactive_bracket(
-    seeded_df: pd.DataFrame, first_round: List, title: str = "College Football Playoff"
+    seeded_df: pd.DataFrame,
+    first_round: List,
+    title: str = "College Football Playoff",
+    use_sample: bool = False,
 ):
     """Create interactive bracket with fixed badge positioning."""
     fig = go.Figure()
@@ -65,8 +68,8 @@ def create_interactive_bracket(
         )
 
         # 1. Main Team Box
-        color = get_team_color(name)
-        logo_url = get_team_logo(name, use_sample=True)
+        color = get_team_color(name, use_sample=use_sample)
+        logo_url = get_team_logo(name, use_sample=use_sample)
         fig.add_shape(
             type="rect",
             x0=x - 0.4,

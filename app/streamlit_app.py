@@ -6,8 +6,7 @@ A transparent decision-support simulator for College Football Playoff selection.
 
 from __future__ import annotations
 
-import subprocess
-import sys
+import html
 from io import StringIO
 from typing import Any, Dict, Optional, Tuple
 
@@ -26,12 +25,16 @@ from app.components import (
     format_rules_short,
     render_audit_timeline,
     render_badges_html,
+    render_bubble_section,
+    render_case_panel,
+    render_info_callout,
     render_logo_html,
     render_methodology_summary,
     render_metric_card,
+    render_overview_field_table,
     render_pending_banner,
+    render_rankings_table_html,
     render_run_context,
-    render_sample_data_banner,
     render_team_row,
     run_timestamp,
 )
@@ -49,6 +52,7 @@ from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
 from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.paths import DATA_OUTPUT, RunOutputPaths
+from src.pipeline.live import enrich_live_rankings
 from src.pipeline.run import SAMPLE_GAMES, load_games, run_select
 from src.pipeline.sample import enrich_sample_rankings
 from src.playoff.bracket import BracketMatchup
@@ -58,9 +62,9 @@ st.set_page_config(page_title="CFP Selection Simulator", layout="wide")
 inject_global_css()
 
 st.title("CFP Selection Simulator")
-st.caption(
-    "A transparent decision-support simulator for College Football Playoff selection, "
-    "designed to reproduce, audit, explain, and stress-test committee-style rankings."
+st.markdown(
+    '<p class="app-subtitle">Transparent CFP ranking, selection, and bracket analysis.</p>',
+    unsafe_allow_html=True,
 )
 
 
@@ -80,19 +84,15 @@ def run_simulation_cached(season: int, week: int, use_sample: bool) -> Dict[str,
         games = load_games(config, use_sample=use_sample)
 
     rankings = calculate_composite_rankings(games)
+    champion_source = "sample_fixture"
     if use_sample:
         rankings = enrich_sample_rankings(rankings)
-
-    if "conf_champ" not in rankings.columns:
-        rankings = rankings.copy()
-        rankings["conf_champ"] = "No"
+    else:
+        rankings, champion_source = enrich_live_rankings(rankings, games, year=season, api_key=None)
 
     load_team_assets(use_sample=use_sample)
     if not use_sample:
-        try:
-            ensure_team_assets_loaded(use_sample=False, year=season)
-        except Exception:
-            load_team_assets(use_sample=True)
+        ensure_team_assets_loaded(use_sample=False, year=season)
 
     selection_payload: Optional[Dict[str, Any]] = None
     if season >= 2024:
@@ -130,6 +130,9 @@ def run_simulation_cached(season: int, week: int, use_sample: bool) -> Dict[str,
         "week": week,
         "use_sample": use_sample,
         "format_name": fmt.name if fmt else "",
+        "n_games": len(games),
+        "n_teams": len(rankings),
+        "champion_source": champion_source,
         "selection": selection_payload,
         "generated_at": run_timestamp(),
     }
@@ -187,7 +190,6 @@ with st.sidebar:
     pending_season = int(st.number_input("Season", min_value=2024, max_value=2030, value=2025))
     pending_week = int(st.slider("Week", min_value=5, max_value=15, value=15))
 
-    st.subheader("Data source")
     sample_available = SAMPLE_GAMES.exists()
     data_options = ["Sample fixture", "Live CFBD data"]
     default_idx = 0 if sample_available else 1
@@ -199,21 +201,7 @@ with st.sidebar:
     )
     pending_sample = data_choice == "Sample fixture"
 
-    fmt = get_format_for_year(pending_season) if pending_season >= 2024 else None
-    st.subheader("Ruleset")
-    st.caption(format_rules_label(pending_season) if fmt else "N/A")
-    if fmt:
-        st.caption(format_rules_short(pending_season))
-
-    st.subheader("Actions")
-    run_clicked = st.button("Run simulator", type="primary", use_container_width=True)
-
-    if st.button("Open output folder", use_container_width=True):
-        DATA_OUTPUT.mkdir(parents=True, exist_ok=True)
-        if sys.platform == "darwin":
-            subprocess.run(["open", str(DATA_OUTPUT)], check=False)
-        else:
-            st.info(f"Output folder: {DATA_OUTPUT}")
+    run_clicked = st.button("Run simulator", type="primary", width="stretch")
 
     pending = _params_key(pending_season, pending_week, pending_sample)
     if "last_run_params" not in st.session_state:
@@ -234,16 +222,21 @@ with st.sidebar:
                 st.info("Live CFBD data unavailable. Try Sample fixture data.")
             st.stop()
 
-    st.subheader("Run info")
+    st.header("Current Run")
     if st.session_state.run_payload:
         payload = st.session_state.run_payload
+        st.markdown(
+            f'<div class="sidebar-run-summary">{payload["season"]} · Week {payload["week"]}</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f'<div class="sidebar-run-meta">{format_rules_label(payload["season"])}</div>',
+            unsafe_allow_html=True,
+        )
         source_badge = render_badges_html(
-            [("SAMPLE DATA", "sample") if payload["use_sample"] else ("LIVE DATA", "live")]
+            [("Sample Data", "sample") if payload["use_sample"] else ("Live Data", "live")]
         )
         st.markdown(source_badge, unsafe_allow_html=True)
-        st.caption(f"Ruleset: {format_rules_label(payload['season'])}")
-        st.caption("Mode: Composite")
-        st.caption(f"Generated: {payload.get('generated_at', '—')}")
 
 # --- Active run data ---
 params_dirty = pending != st.session_state.last_run_params
@@ -263,9 +256,36 @@ selection, seeded, first_round_raw = _rehydrate_selection(payload.get("selection
 first_round = _first_round_objects(first_round_raw) if first_round_raw else []
 playoff_format = get_format_for_year(season) if season >= 2024 else None
 
-render_run_context(season, week, playoff_format, use_sample) if playoff_format else None
+if playoff_format:
+    render_run_context(
+        season,
+        week,
+        playoff_format,
+        use_sample,
+        n_teams=payload.get("n_teams"),
+        n_games=payload.get("n_games"),
+    )
+
 if use_sample:
-    render_sample_data_banner()
+    render_info_callout(
+        "Sample fixture: 20 curated teams with hand-labeled conference champions. "
+        "Rankings are relative to this small pool, not full FBS."
+    )
+elif payload.get("n_teams", 0) > 200:
+    st.warning(
+        "Live data returned an unusually large team count. "
+        "Clear cache with `cfp-sim clean --cache`, then re-run the simulator."
+    )
+elif payload.get("champion_source") == "cfbd_records":
+    render_info_callout(
+        "Composite rankings over full FBS (~130 teams). Auto bids use CFBD conference-record "
+        "leaders (not official CCG results). Scores are model outputs, not AP/CFP poll replicas."
+    )
+elif not use_sample:
+    render_info_callout(
+        "Composite rankings over full FBS (~130 teams). Auto bids inferred from composite rank "
+        "per conference (CFBD records unavailable). Not AP/CFP poll replicas."
+    )
 
 output_paths = RunOutputPaths(year=season, week=week)
 bracket_metadata = {
@@ -280,9 +300,9 @@ if seeded is not None and selection is not None:
     bracket_pods = enrich_pods(build_bracket_pods(seeded), use_sample, auto_bid_names)
 
 with st.sidebar:
-    st.subheader("Export")
-    export_html = st.button("Export bracket HTML", use_container_width=True)
-    export_csv = st.button("Export bracket CSV", use_container_width=True)
+    st.header("Exports")
+    export_html = st.button("Bracket HTML", width="stretch")
+    export_csv = st.button("Bracket CSV", width="stretch")
     if export_html or export_csv:
         if bracket_pods:
             if export_html:
@@ -312,19 +332,18 @@ with st.sidebar:
     [
         "Overview",
         "Rankings",
-        "Playoff Field",
+        "Field",
         "Bracket",
-        "Bubble Watch",
-        "Team Resume",
+        "Bubble",
+        "Resume",
         "Components",
-        "Selection Audit",
+        "Audit",
         "Methodology",
     ]
 )
 
 # --- Overview ---
 with tab_overview:
-    st.subheader("Overview")
     if selection and seeded is not None:
         top_team = rankings.iloc[0]
         first_out = selection.first_four_out[0]["team"] if selection.first_four_out else "—"
@@ -340,10 +359,65 @@ with tab_overview:
 
         col_left, col_right = st.columns(2)
         with col_left:
-            st.markdown(
-                '<div class="panel-card"><h4>Projected Playoff Field</h4>', unsafe_allow_html=True
+            table_html = render_overview_field_table(
+                selection.playoff_teams, selection, seeded, use_sample
             )
-            for team in selection.playoff_teams:
+            st.markdown(
+                f'<div class="app-card"><h4>Projected Playoff Field</h4>{table_html}</div>',
+                unsafe_allow_html=True,
+            )
+
+        with col_right:
+            matchup_lines = []
+            if first_round:
+                for m in first_round:
+                    matchup_lines.append(
+                        f'<div class="cfp-matchup-line">#{m.seed_high} {html.escape(m.team_high)} '
+                        f"vs #{m.seed_low} {html.escape(m.team_low)}</div>"
+                    )
+            else:
+                matchup_lines.append(
+                    '<div class="cfp-matchup-line" style="color:#9CA3AF">'
+                    "First-round matchups available when field is computed.</div>"
+                )
+            st.markdown(
+                f'<div class="app-card"><h4>First-Round Matchups</h4>{"".join(matchup_lines)}</div>',
+                unsafe_allow_html=True,
+            )
+    else:
+        st.info("Overview requires season 2024+ with a computed playoff field.")
+
+# --- Rankings ---
+with tab_rankings:
+    display_df = build_rankings_display_df(rankings, selection, seeded)
+    ctrl1, ctrl2 = st.columns([1, 1])
+    with ctrl1:
+        filter_choice = st.selectbox(
+            "Filter",
+            ["All", "Playoff Teams", "Bubble", "Conference Champions"],
+        )
+    with ctrl2:
+        search = st.text_input("Search team", placeholder="Search team…")
+    filtered = filter_rankings_df(display_df, rankings, selection, filter_choice)
+    if search.strip():
+        filtered = filtered[filtered["Team"].str.contains(search.strip(), case=False, na=False)]
+    bid_badges = {
+        str(team): derive_bid_status(str(team), selection, seeded) for team in filtered["Team"]
+    }
+    table = render_rankings_table_html(filtered, bid_badges, use_sample)
+    st.markdown(f'<div class="app-card">{table}</div>', unsafe_allow_html=True)
+
+# --- Playoff Field ---
+with tab_field:
+    if selection and seeded is not None:
+        sections = [
+            ("Automatic Bids", selection.auto_bids),
+            ("At-Large Bids", selection.at_large_bids),
+            ("First Four Out", selection.first_four_out),
+        ]
+        for title, teams in sections:
+            st.markdown(f'<div class="section-heading">{title}</div>', unsafe_allow_html=True)
+            for team in teams:
                 badges = derive_bid_status(team["team"], selection, seeded)
                 render_team_row(
                     team["team"],
@@ -352,229 +426,131 @@ with tab_overview:
                     badges=badges,
                     use_sample=use_sample,
                 )
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        with col_right:
-            st.markdown(
-                '<div class="panel-card"><h4>First-Round Matchups</h4>', unsafe_allow_html=True
-            )
-            if first_round:
-                for m in first_round:
-                    st.markdown(
-                        f"**#{m.seed_high} {m.team_high}** vs **#{m.seed_low} {m.team_low}**  \n"
-                        f"<span style='color:#9CA3AF;font-size:0.85rem'>{m.location}</span>",
-                        unsafe_allow_html=True,
-                    )
-            else:
-                st.caption("First-round matchups available when field is computed.")
-            st.markdown("</div>", unsafe_allow_html=True)
-    else:
-        st.info("Overview requires season 2024+ with a computed playoff field.")
-
-# --- Rankings ---
-with tab_rankings:
-    st.subheader("Composite Rankings")
-    display_df = build_rankings_display_df(rankings, selection, seeded)
-    filter_choice = st.selectbox(
-        "Show",
-        ["All", "Playoff Teams", "Bubble", "Conference Champions"],
-        label_visibility="collapsed",
-    )
-    filtered = filter_rankings_df(display_df, rankings, selection, filter_choice)
-
-    table_html = [
-        '<div class="panel-card"><table style="width:100%;border-collapse:collapse;font-size:0.88rem;">'
-    ]
-    table_html.append(
-        "<thead><tr style='color:#9CA3AF;text-align:left;border-bottom:1px solid #2D3748'>"
-        "<th style='padding:0.4rem'>Rank</th><th>Team</th><th>Conf</th>"
-        "<th>Composite</th><th>Resume</th><th>Predictive</th>"
-        "<th>SOR</th><th>SOS</th><th>Bid Status</th></tr></thead><tbody>"
-    )
-    for _, row in filtered.iterrows():
-        team = row["Team"]
-        logo = render_logo_html(team, use_sample=use_sample)
-        table_html.append(
-            f"<tr style='border-bottom:1px solid rgba(45,55,72,0.5)'>"
-            f"<td style='padding:0.45rem 0.4rem'>#{int(row['Rank'])}</td>"
-            f"<td><div style='display:flex;align-items:center;gap:0.5rem'>{logo}{team}</div></td>"
-            f"<td>{row['Conf']}</td><td>{row['Composite']}</td><td>{row['Resume']}</td>"
-            f"<td>{row['Predictive']}</td><td>{row['SOR']}</td><td>{row['SOS']}</td>"
-            f"<td>{row['Bid Status']}</td></tr>"
-        )
-    table_html.append("</tbody></table></div>")
-    st.markdown("".join(table_html), unsafe_allow_html=True)
-
-# --- Playoff Field ---
-with tab_field:
-    st.subheader("Playoff Field")
-    if selection and seeded is not None:
-        sections = [
-            ("Automatic Bids", selection.auto_bids),
-            ("At-Large Bids", selection.at_large_bids),
-            ("First Four Out", selection.first_four_out),
-        ]
-        for title, teams in sections:
-            st.markdown(f'<div class="panel-card"><h4>{title}</h4>', unsafe_allow_html=True)
-            for team in teams:
-                badges = derive_bid_status(team["team"], selection, seeded)
-                meta = field_team_meta(team, selection, seeded)
-                render_team_row(
-                    team["team"],
-                    f"#{int(team['rank'])} {team['team']}",
-                    meta=meta,
-                    badges=badges,
-                    use_sample=use_sample,
-                )
-            st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.info("12-team selection requires season 2024+.")
 
 # --- Bracket ---
 with tab_bracket:
-    st.subheader("Projected CFP Bracket")
     if bracket_pods and first_round:
         view_mode_label = st.radio(
             "View",
-            ["Full Bracket", "Round View", "Matchup Cards"],
+            ["Round View", "Full Bracket", "Matchup Cards"],
             horizontal=True,
             label_visibility="collapsed",
         )
         view_mode_map = {
-            "Full Bracket": "full",
             "Round View": "round",
+            "Full Bracket": "full",
             "Matchup Cards": "matchups",
         }
         view_mode = view_mode_map[view_mode_label]
 
-        exp_col1, exp_col2, exp_col3 = st.columns(3)
-        with exp_col1:
-            if st.button("Download PNG", disabled=True, help="Coming in a future release"):
-                pass
-        with exp_col2:
-            if st.button("Export HTML", key="bracket_tab_export_html"):
-                path = export_bracket_html(
-                    bracket_pods, bracket_metadata, output_paths.bracket_html
-                )
-                st.success(f"Exported to {path}")
-        with exp_col3:
-            if st.button("Copy share summary", disabled=True):
-                pass
+        if st.button("Export HTML", key="bracket_tab_export_html"):
+            path = export_bracket_html(
+                bracket_pods, bracket_metadata, output_paths.bracket_html, view_mode=view_mode
+            )
+            st.success(f"Exported to {path}")
 
         render_bracket_component(
             bracket_pods,
             bracket_metadata,
             view_mode=view_mode,
-            height=780 if view_mode == "full" else 520,
+            height=780 if view_mode == "full" else 480,
         )
-
-        st.markdown("**First-round campus games**")
-        for m in first_round:
-            st.markdown(f"- #{m.seed_high} {m.team_high} hosts #{m.seed_low} {m.team_low}")
-        st.markdown("**Quarterfinal byes**")
-        bye_teams = seeded[seeded["is_bye"] == True].sort_values("seed")  # noqa: E712
-        for _, t in bye_teams.iterrows():
-            st.markdown(f"- #{int(t['seed'])} {t['team']}")
 
         with st.expander("Advanced / Legacy chart"):
             fig = create_interactive_bracket(
                 seeded,
                 first_round,
                 title=f"CFP Bracket {season} (Week {week})",
+                use_sample=use_sample,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
     else:
         st.info("Bracket available when playoff field is computed.")
 
 # --- Bubble Watch ---
 with tab_bubble:
-    st.subheader("Bubble Watch")
     if selection and seeded is not None:
-        sections = [
+        st.markdown('<div class="app-card-flat">', unsafe_allow_html=True)
+        for title, lo, hi in [
             ("Last Four In", 8, 11),
             ("First Four Out", 12, 15),
             ("Next Four Out", 16, 19),
-        ]
-        for title, lo, hi in sections:
+        ]:
             teams = bubble_section_teams(seeded, rankings, lo, hi)
-            st.markdown(f'<div class="panel-card"><h4>{title}</h4>', unsafe_allow_html=True)
-            for team in teams:
-                badges = derive_bid_status(team["team"], selection, seeded)
-                note = ""
-                if (
-                    selection.displaced_team
-                    and selection.displaced_team.get("team") == team["team"]
-                ):
-                    note = "Displaced by guaranteed conference champion"
-                render_team_row(
-                    team["team"],
-                    f"#{int(team['rank'])} {team['team']}",
-                    meta=note,
-                    badges=badges,
-                    use_sample=use_sample,
-                )
-            st.markdown("</div>", unsafe_allow_html=True)
+            render_bubble_section(title, teams, selection, seeded, use_sample)
+        st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.info("Bubble watch requires a computed playoff field.")
 
 # --- Team Resume ---
 with tab_resume:
-    st.subheader("Team Resume")
-    team = st.selectbox("Select team", rankings["team"].head(25), label_visibility="collapsed")
+    ctrl_col, _ = st.columns([1, 2])
+    with ctrl_col:
+        team = st.selectbox("Select team", rankings["team"].head(25))
     row = rankings[rankings["team"] == team].iloc[0]
     badges = derive_bid_status(team, selection, seeded)
 
-    st.markdown(render_logo_html(team, size="lg", use_sample=use_sample), unsafe_allow_html=True)
-    st.markdown(f'<div class="profile-headline">{team}</div>', unsafe_allow_html=True)
-
-    badge_parts = [f"#{int(row['rank'])} Composite Rank"]
-    if "conference" in row and pd.notna(row["conference"]):
-        badge_parts.append(str(row["conference"]))
-    st.markdown(
-        f'<div class="profile-sub">{" · ".join(badge_parts)} {render_badges_html(badges)}</div>',
-        unsafe_allow_html=True,
-    )
+    head_col1, head_col2 = st.columns([1, 4])
+    with head_col1:
+        st.markdown(
+            render_logo_html(team, size="lg", use_sample=use_sample), unsafe_allow_html=True
+        )
+    with head_col2:
+        st.markdown(
+            f'<div class="profile-headline">{html.escape(team)}</div>', unsafe_allow_html=True
+        )
+        badge_parts = [f"#{int(row['rank'])} Composite Rank"]
+        if "conference" in row and pd.notna(row["conference"]):
+            badge_parts.append(str(row["conference"]))
+        st.markdown(
+            f'<div class="profile-sub">{" · ".join(badge_parts)} {render_badges_html(badges)}</div>',
+            unsafe_allow_html=True,
+        )
 
     m1, m2, m3, m4, m5 = st.columns(5)
     with m1:
-        render_metric_card("Composite", f"{row['composite_score']:.3f}")
+        render_metric_card("Composite", f"{row['composite_score']:.3f}", small=True)
     with m2:
-        render_metric_card("Resume", f"{row['resume_score']:.3f}")
+        render_metric_card("Resume", f"{row['resume_score']:.3f}", small=True)
     with m3:
-        render_metric_card("Predictive", f"{row['predictive_score']:.3f}")
+        render_metric_card("Predictive", f"{row['predictive_score']:.3f}", small=True)
     with m4:
-        render_metric_card("SOR", f"{row['sor']:.3f}")
+        render_metric_card("SOR", f"{row['sor']:.3f}", small=True)
     with m5:
-        render_metric_card("SOS", f"{row['sos']:.3f}")
+        render_metric_card("SOS", f"{row['sos']:.3f}", small=True)
 
     why, concerns = build_selection_case(team, row, selection, seeded)
     col_why, col_con = st.columns(2)
     with col_why:
-        st.markdown('<div class="panel-card"><h4>Why they are in</h4>', unsafe_allow_html=True)
         if why:
-            for item in why:
-                st.markdown(f"- {item}")
+            render_case_panel("Why they are in", why, variant="positive")
         else:
-            st.caption("Not in the projected playoff field.")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown(
+                '<div class="case-panel"><h4>Why they are in</h4>'
+                '<p style="color:#9CA3AF;margin:0;font-size:0.86rem">'
+                "Not in the projected playoff field.</p></div>",
+                unsafe_allow_html=True,
+            )
     with col_con:
-        st.markdown('<div class="panel-card"><h4>Potential concerns</h4>', unsafe_allow_html=True)
         if concerns:
-            for item in concerns:
-                st.markdown(f"- {item}")
+            render_case_panel("Potential concerns", concerns, variant="warning")
         else:
-            st.caption("No notable concerns from component scores.")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown(
+                '<div class="case-panel"><h4>Potential concerns</h4>'
+                '<p style="color:#9CA3AF;margin:0;font-size:0.86rem">'
+                "No notable concerns from component scores.</p></div>",
+                unsafe_allow_html=True,
+            )
 
 # --- Components ---
 with tab_components:
-    st.subheader("Resume vs Predictive")
     fig = build_components_scatter(rankings, selection, seeded)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 # --- Audit ---
 with tab_audit:
-    st.subheader("Selection Audit")
     if selection:
         render_audit_timeline(selection.audit)
     else:
@@ -582,5 +558,4 @@ with tab_audit:
 
 # --- Methodology ---
 with tab_method:
-    st.subheader("Methodology")
     render_methodology_summary()

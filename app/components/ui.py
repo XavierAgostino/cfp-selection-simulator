@@ -47,7 +47,7 @@ def render_badge(label: str, kind: BadgeKind = "default") -> str:
     safe = html.escape(label)
     return (
         f'<span class="badge" style="background:{style["bg"]};color:{style["color"]};'
-        f'border:1px solid {style["border"]};">{safe}</span>'
+        f'border:none;">{safe}</span>'
     )
 
 
@@ -88,11 +88,14 @@ def render_logo(team_name: str, size: str = "sm", use_sample: bool = False) -> N
     )
 
 
-def render_metric_card(label: str, value: str, help_text: Optional[str] = None) -> None:
+def render_metric_card(
+    label: str, value: str, help_text: Optional[str] = None, *, small: bool = False
+) -> None:
     """Render a styled metric card."""
     help_attr = f' title="{html.escape(help_text)}"' if help_text else ""
+    cls = "metric-card-sm" if small else "metric-card"
     st.markdown(
-        f'<div class="metric-card"{help_attr}>'
+        f'<div class="{cls}"{help_attr}>'
         f'<div class="label">{html.escape(label)}</div>'
         f'<div class="value">{html.escape(value)}</div></div>',
         unsafe_allow_html=True,
@@ -105,13 +108,30 @@ def render_run_context(
     fmt: PlayoffFormat,
     sample: bool,
     mode: str = "Composite",
+    n_teams: Optional[int] = None,
+    n_games: Optional[int] = None,
 ) -> None:
-    """Render run context bar under the title."""
+    """Render compact context badges under the header."""
     rules = format_rules_label(season)
-    source = "Sample Fixture Data" if sample else "Live CFBD Data"
+    source_label = "Sample Data" if sample else "Live Data"
+    source_kind: BadgeKind = "sample" if sample else "live"
+    badges: List[Tuple[str, BadgeKind]] = [
+        (f"{season} Season", "context"),
+        (f"Week {week}", "context"),
+        (rules, "rules"),
+        (source_label, source_kind),
+    ]
+    if n_teams is not None and n_games is not None:
+        badges.append((f"{n_teams} teams · {n_games} games", "context"))
     st.markdown(
-        f'<div class="run-context">{season} Season · Week {week} · {mode} Mode · '
-        f"{rules} · {source}</div>",
+        f'<div class="context-bar">{render_badges_html(badges)}</div>',
+        unsafe_allow_html=True,
+    )
+
+
+def render_info_callout(message: str) -> None:
+    st.markdown(
+        f'<div class="info-callout">{html.escape(message)}</div>',
         unsafe_allow_html=True,
     )
 
@@ -173,7 +193,7 @@ def derive_bid_status(
 
 def bid_status_label(badges: Sequence[Tuple[str, BadgeKind]]) -> str:
     if not badges:
-        return "—"
+        return "Unselected"
     return " · ".join(label for label, _ in badges)
 
 
@@ -194,18 +214,16 @@ def render_team_row_html(
     badges: Optional[Sequence[Tuple[str, BadgeKind]]] = None,
     use_sample: bool = False,
 ) -> str:
-    badge_html = render_badges_html(badges or [])
-    meta_line = (
-        f'<div class="team-row-meta">{html.escape(meta)} {badge_html}</div>'
-        if meta or badges
+    badge_html = render_badges_html(badges or []) if badges else ""
+    meta_html = (
+        f'<span class="team-row-meta">{badge_html or html.escape(meta)}</span>'
+        if (badge_html or meta)
         else ""
     )
-    if badges and not meta:
-        meta_line = f'<div class="team-row-meta">{badge_html}</div>'
     return (
         f'<div class="team-row">{render_logo_html(team_name, use_sample=use_sample)}'
         f'<div class="team-row-main"><div class="team-row-title">{html.escape(title)}</div>'
-        f"{meta_line}</div></div>"
+        f"{meta_html}</div></div>"
     )
 
 
@@ -283,6 +301,114 @@ def filter_rankings_df(
     return df
 
 
+def render_overview_field_table(
+    teams: List[Dict[str, Any]],
+    selection: PlayoffSelection,
+    seeded: Optional[pd.DataFrame],
+    use_sample: bool,
+) -> str:
+    """Compact scan-friendly overview table for the playoff field."""
+    rows = ['<table class="field-table"><thead><tr>']
+    rows.append(
+        "<th class='num'>Seed</th><th>Team</th><th>Bid</th><th>Status</th></tr></thead><tbody>"
+    )
+    for team in teams:
+        badges = derive_bid_status(team["team"], selection, seeded)
+        seed_val = int(team.get("seed", team.get("rank", 0)))
+        if seeded is not None:
+            seed_rows = seeded[seeded["team"] == team["team"]]
+            if not seed_rows.empty:
+                seed_val = int(seed_rows.iloc[0]["seed"])
+        bid_labels = [b for b, _ in badges if b in ("AUTO", "AT-LARGE")]
+        status_labels = [b for b, _ in badges if b in ("BYE", "DISPLACED", "FIRST OUT")]
+        bid_html = (
+            render_badges_html([(bid_labels[0], "auto" if bid_labels[0] == "AUTO" else "atlarge")])
+            if bid_labels
+            else "—"
+        )
+        status_html = (
+            render_badges_html(
+                [(status_labels[0], "bye" if status_labels[0] == "BYE" else "default")]
+            )
+            if status_labels
+            else "—"
+        )
+        logo = render_logo_html(team["team"], use_sample=use_sample)
+        rows.append(
+            f"<tr><td class='num'>{seed_val}</td>"
+            f"<td><div class='team-cell'>{logo}{html.escape(team['team'])}</div></td>"
+            f"<td>{bid_html}</td><td>{status_html}</td></tr>"
+        )
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+def render_rankings_table_html(
+    df: pd.DataFrame,
+    bid_badges: Dict[str, List[Tuple[str, BadgeKind]]],
+    use_sample: bool,
+) -> str:
+    """Rankings table with light styling and badge column."""
+    parts = [
+        '<table class="rankings-table"><thead><tr>',
+        "<th class='num'>Rank</th><th>Team</th><th>Conf</th>",
+        "<th class='num'>Composite</th><th class='num'>Resume</th><th class='num'>Predictive</th>",
+        "<th class='num'>SOR</th><th class='num'>SOS</th><th>Bid</th>",
+        "</tr></thead><tbody>",
+    ]
+    for _, row in df.iterrows():
+        team = str(row["Team"])
+        logo = render_logo_html(team, use_sample=use_sample)
+        badges = bid_badges.get(team, [])
+        bid_html = render_badges_html(badges) if badges else render_badge("Unselected", "default")
+        parts.append(
+            f"<tr>"
+            f"<td class='num'>{int(row['Rank'])}</td>"
+            f"<td><div class='team-cell'>{logo}{html.escape(team)}</div></td>"
+            f"<td>{html.escape(str(row['Conf']))}</td>"
+            f"<td class='num'>{row['Composite']}</td>"
+            f"<td class='num'>{row['Resume']}</td>"
+            f"<td class='num'>{row['Predictive']}</td>"
+            f"<td class='num'>{row['SOR']}</td>"
+            f"<td class='num'>{row['SOS']}</td>"
+            f"<td>{bid_html}</td></tr>"
+        )
+    parts.append("</tbody></table>")
+    return "".join(parts)
+
+
+def render_bubble_section(
+    title: str,
+    teams: List[Dict[str, Any]],
+    selection: Optional[PlayoffSelection],
+    seeded: Optional[pd.DataFrame],
+    use_sample: bool,
+) -> None:
+    """Compact bubble section with heading divider and team rows."""
+    st.markdown(f'<div class="section-heading">{html.escape(title)}</div>', unsafe_allow_html=True)
+    for team in teams:
+        badges = derive_bid_status(team["team"], selection, seeded)
+        render_team_row(
+            team["team"],
+            f"#{int(team['rank'])} {team['team']}",
+            badges=badges,
+            use_sample=use_sample,
+        )
+
+
+def render_case_panel(title: str, items: List[str], *, variant: str = "positive") -> None:
+    """Resume case bullets inside a single panel."""
+    if not items:
+        return
+    li_class = "positive" if variant == "positive" else "warning"
+    lis = "".join(f'<li class="{li_class}">{html.escape(item)}</li>' for item in items)
+    st.markdown(
+        f'<div class="case-panel"><h4>{html.escape(title)}</h4>'
+        f'<ul class="case-list">{lis}</ul></div>',
+        unsafe_allow_html=True,
+    )
+
+
 def field_team_meta(
     team: Dict[str, Any], selection: PlayoffSelection, seeded: Optional[pd.DataFrame]
 ) -> str:
@@ -301,10 +427,6 @@ def field_team_meta(
             parts.append("Bye")
     if selection.displaced_team and selection.displaced_team.get("team") == team["team"]:
         return "Displaced by guaranteed conference champion"
-    if any(t["team"] == team["team"] for t in selection.at_large_bids):
-        parts.append("At-large")
-    elif any(t["team"] == team["team"] for t in selection.auto_bids):
-        parts.append("Automatic bid")
     return " · ".join(parts) if parts else conf
 
 
@@ -423,14 +545,15 @@ def render_methodology_summary() -> None:
             "Sample fixture data for offline demo, or live CFBD API when configured.",
         ),
         (
-            "Limitations",
-            "Decision-support simulator only. Not an official CFP ranking or projection.",
+            "Committee alignment",
+            "Transparent composite model, not committee vote replication. "
+            "See docs/research/cfp-committee-alignment.md.",
         ),
     ]
     for title, body in cards:
         st.markdown(
-            f'<div class="panel-card"><h4>{html.escape(title)}</h4>'
-            f'<p style="color:{COLORS["muted"]};margin:0;font-size:0.9rem;">{html.escape(body)}</p></div>',
+            f'<div class="app-card-flat"><h4>{html.escape(title)}</h4>'
+            f'<p style="color:{COLORS["muted"]};margin:0;font-size:0.88rem;">{html.escape(body)}</p></div>',
             unsafe_allow_html=True,
         )
     st.markdown(
@@ -466,14 +589,14 @@ def build_components_scatter(
             "resume_score": False,
             "predictive_score": False,
             "sos": False,
-            "bid_group": True,
+            "bid_group": False,
         },
         labels={
             "resume_score": "Resume Score",
             "predictive_score": "Predictive Score",
             "bid_group": "Bid Status",
         },
-        title="Resume vs Predictive (bubble size = SOS)",
+        title="Resume vs Predictive",
     )
 
     x_mid = df["resume_score"].median()
@@ -490,18 +613,32 @@ def build_components_scatter(
             y=y,
             text=label,
             showarrow=False,
-            font=dict(size=10, color="#64748B"),
-            opacity=0.7,
+            font=dict(size=11, color="#94A3B8"),
+            opacity=0.85,
         )
 
     fig.update_layout(
         plot_bgcolor=COLORS["panel"],
         paper_bgcolor=COLORS["bg"],
         font_color=COLORS["text"],
-        legend=dict(bgcolor=COLORS["panel_2"], bordercolor=COLORS["border"]),
+        legend=dict(bgcolor="rgba(17,24,39,0.85)", bordercolor=COLORS["border_soft"]),
+        margin=dict(t=80),
     )
-    fig.update_xaxes(gridcolor=COLORS["border"])
-    fig.update_yaxes(gridcolor=COLORS["border"])
+    fig.add_annotation(
+        text=(
+            "Teams above the diagonal have stronger predictive profiles than resumes; "
+            "teams to the right have stronger resumes. Bubble size = SOS."
+        ),
+        xref="paper",
+        yref="paper",
+        x=0,
+        y=1.08,
+        showarrow=False,
+        font=dict(size=11, color=COLORS["muted"]),
+        align="left",
+    )
+    fig.update_xaxes(gridcolor=COLORS["border_soft"])
+    fig.update_yaxes(gridcolor=COLORS["border_soft"])
     return fig
 
 

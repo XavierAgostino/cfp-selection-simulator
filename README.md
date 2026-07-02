@@ -55,7 +55,8 @@ One-shot script: `./scripts/demo.sh`
 ```bash
 cp .env.example .env   # add CFBD_API_KEY
 export CFBD_API_KEY="your_key_here"
-cfp-sim run --year 2025 --week 15
+make run YEAR=2025 WEEK=15
+# or: ./bin/cfp-sim run --year 2025 --week 15
 ```
 
 Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key).
@@ -64,15 +65,19 @@ Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key)
 
 ## Common commands
 
+Use `make` or `./bin/cfp-sim` from the repo root. Bare `cfp-sim` requires `source .venv/bin/activate`.
+
 | Goal | Command |
 |------|---------|
-| Environment check | `cfp-sim doctor` |
+| Environment check | `./bin/cfp-sim doctor` |
 | Sample demo | `make demo` |
 | Full pipeline | `make run YEAR=2025 WEEK=15` |
 | Dashboard | `make dashboard` |
 | Bracket HTML | `make bracket YEAR=2025 WEEK=15` |
-| Latest outputs | `cfp-sim outputs --latest` |
-| Validation | `make validate` |
+| Latest outputs | `./bin/cfp-sim outputs --latest` |
+| Validation (all tracks) | `make validate` |
+| Field validation only | `make validate-selection` |
+| Predictive metrics only | `make validate-predictive` |
 | Dev verification | `make verify` |
 
 See [CLI Reference](docs/cli-reference.md) for all options.

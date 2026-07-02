@@ -10,7 +10,7 @@ Primary data source for FBS teams, games, scores, and conferences.
 
 ## Caching
 
-- Game data cached as Parquet: `data/cache/{year}/games_week{N}.parquet`
+- Game data cached as Parquet: `data/cache/cfbd/{year}/games_w{week}.parquet` (legacy `games_week{N}` also read)
 - Sample dataset for offline demos: `data/processed/sample/sample_games.csv`
 
 ## Environment

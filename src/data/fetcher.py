@@ -3,7 +3,7 @@ Data fetching utilities for CollegeFootballData.com API.
 """
 
 import os
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set
 
 import cfbd
 import pandas as pd
@@ -125,3 +125,113 @@ def fetch_season_games(
             )
 
     return pd.DataFrame(games_data)
+
+
+def _game_field(game: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        if key in game and game[key] is not None:
+            return game[key]
+    return None
+
+
+def is_fbs_conference_championship(game: dict[str, Any]) -> bool:
+    """True for FBS league title games (week 15), excluding FCS/DII/DIII/SWAC."""
+    notes = str(_game_field(game, "notes") or "")
+    if "Championship" not in notes:
+        return False
+    excluded = (
+        "FCS",
+        "Division II",
+        "Division III",
+        "NAIA",
+        "SWAC Championship",
+        "Celebration Bowl",
+    )
+    return not any(token in notes for token in excluded)
+
+
+def fetch_conference_championship_games(
+    year: int,
+    *,
+    fbs_teams: Optional[Set[str]] = None,
+    api_key: Optional[str] = None,
+    weeks: tuple[int, ...] = (14, 15, 16),
+) -> pd.DataFrame:
+    """
+    Fetch completed FBS conference championship games from CFBD.
+
+    CFBD lists these under regular season weeks 14-16 (varies by year) with
+    ``notes`` containing ``Championship`` (e.g. ``SEC Championship``).
+    """
+    key = api_key or get_api_key()
+    teams = fbs_teams or get_fbs_teams_list(year, key)
+
+    url = "https://api.collegefootballdata.com/games"
+    headers = {"Authorization": f"Bearer {key}", "accept": "application/json"}
+
+    games_data: list[dict[str, Any]] = []
+    seen_ids: set[Any] = set()
+
+    for week in weeks:
+        params = {"year": year, "week": week, "seasonType": "regular", "division": "fbs"}
+        response = requests.get(url, headers=headers, params=params, timeout=30)
+        response.raise_for_status()
+        payload = response.json()
+        if not isinstance(payload, list):
+            raise ValueError("Unexpected CFBD /games response for conference championships")
+
+        for game in payload:
+            if not is_fbs_conference_championship(game):
+                continue
+
+            game_id = _game_field(game, "id", "gameId")
+            if game_id in seen_ids:
+                continue
+
+            home_team = _game_field(game, "home_team", "homeTeam")
+            away_team = _game_field(game, "away_team", "awayTeam")
+            home_score = _game_field(game, "home_points", "homePoints")
+            away_score = _game_field(game, "away_points", "awayPoints")
+
+            if (
+                home_team not in teams
+                or away_team not in teams
+                or home_score is None
+                or away_score is None
+            ):
+                continue
+
+            seen_ids.add(game_id)
+            games_data.append(
+                {
+                    "game_id": game_id,
+                    "week": _game_field(game, "week"),
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "home_score": int(home_score),
+                    "away_score": int(away_score),
+                    "home_conference": _game_field(game, "home_conference", "homeConference"),
+                    "away_conference": _game_field(game, "away_conference", "awayConference"),
+                    "neutral_site": bool(
+                        _game_field(game, "neutral_site", "neutralSite") or False
+                    ),
+                    "notes": _game_field(game, "notes"),
+                    "season_type": "regular",
+                    "is_conference_championship": True,
+                }
+            )
+
+    return pd.DataFrame(games_data)
+
+
+def fetch_team_records(year: int, api_key: Optional[str] = None) -> list[dict[str, Any]]:
+    """Fetch team records (including conference games) from CFBD /records."""
+    key = api_key or get_api_key()
+    url = "https://api.collegefootballdata.com/records"
+    headers = {"Authorization": f"Bearer {key}", "accept": "application/json"}
+    response = requests.get(url, headers=headers, params={"year": year}, timeout=30)
+    response.raise_for_status()
+    payload = response.json()
+    if not isinstance(payload, list):
+        raise ValueError("Unexpected CFBD /records response")
+    return payload

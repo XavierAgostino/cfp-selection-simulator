@@ -4,7 +4,15 @@ Mechanical reference for the `cfp-sim` command. For tutorials, see [Quickstart](
 
 Install: `make setup` or `pip install -e ".[app,dev]"`
 
----
+**Run without activating the venv** (pick one):
+
+```bash
+make validate                    # preferred
+./bin/cfp-sim validate ...       # project wrapper
+.venv/bin/cfp-sim validate ...   # direct venv path
+```
+
+Bare `cfp-sim` only works after `source .venv/bin/activate` or a global install.
 
 ## Global
 
@@ -89,17 +97,22 @@ cfp-sim bracket --year 2025 --week 15 [--sample] [--html] [--config PATH]
 
 ## `cfp-sim validate`
 
-Historical backtest against published CFP rankings.
+Era-aware historical validation: committee replication, field selection, and predictive metrics.
 
 ```bash
-cfp-sim validate [--years 2014:2024]
+./bin/cfp-sim validate [--years 2014:2024] [--target all|committee|selection|predictive]
 ```
 
 Year range format: `2014:2023` or comma-separated `2014,2015,2016`.
 
-Output: `data/output/validation/backtest_results.csv`
+Outputs in `data/output/validation/`:
 
----
+- `committee_replication.csv`
+- `era_selection_validation.csv`
+- `predictive_validation.csv`
+- `validation_summary.md`
+- `validation_manifest.json`
+- `backtest_results.csv` (legacy)
 
 ## `cfp-sim reproduce`
 
@@ -167,7 +180,11 @@ cfp-sim dashboard
 | `make demo` | `cfp-sim run --year 2025 --week 15 --sample` |
 | `make run` | `cfp-sim run --year $(YEAR) --week $(WEEK)` |
 | `make bracket` | `cfp-sim bracket ... --sample --html` |
-| `make validate` | `cfp-sim validate --years 2014:2024` |
+| `make validate` | `./bin/cfp-sim validate --years 2014:2024 --target all` |
+| `make validate-selection` | `./bin/cfp-sim validate --target selection` |
+| `make validate-committee` | `./bin/cfp-sim validate --target committee` |
+| `make validate-predictive` | `./bin/cfp-sim validate --target predictive` |
+| `make validate YEARS=2021:2023 TARGET=selection` | Custom year range and track |
 | `make verify` | tests + lint + sample smoke run |
 
 ---

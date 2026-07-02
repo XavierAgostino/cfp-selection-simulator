@@ -9,6 +9,7 @@ import requests
 from src.assets.colors import asset_from_espn_fallback
 from src.assets.teams import (
     CACHE_PATH,
+    MIN_FBS_ASSET_COUNT,
     TeamAsset,
     clear_assets_cache,
     espn_logo_url,
@@ -117,16 +118,16 @@ def refresh_team_assets_cache(year: int, api_key: Optional[str] = None) -> Dict[
 
 def ensure_team_assets_loaded(use_sample: bool = False, year: int = 2025) -> Dict[str, TeamAsset]:
     """
-    Load cached assets; if empty and not using sample, try CFBD fetch when API key present.
+    Load cached assets; if live cache is missing or incomplete, fetch from CFBD.
     """
     assets = load_team_assets(use_sample=use_sample)
-    if assets:
+    if use_sample:
         return assets
 
-    if use_sample:
-        return {}
+    if len(assets) >= MIN_FBS_ASSET_COUNT:
+        return assets
 
     try:
         return refresh_team_assets_cache(year)
     except Exception:
-        return load_team_assets(use_sample=True)
+        return assets

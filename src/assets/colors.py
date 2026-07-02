@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Tuple
 
-from src.assets.teams import ESPN_TEAM_IDS, TeamAsset, get_team_asset
+from src.assets.teams import ESPN_TEAM_IDS, TeamAsset, get_team_asset, resolve_team_name_for_espn
 
 # Legacy fallback when no asset cache entry exists
 _LEGACY_COLORS: dict[str, str] = {
@@ -44,9 +44,10 @@ def get_team_colors(team_name: str, use_sample: bool = False) -> Tuple[str, str]
 
 def asset_from_espn_fallback(team_name: str) -> TeamAsset:
     """Build minimal TeamAsset from ESPN directory when CFBD data unavailable."""
-    espn_id = ESPN_TEAM_IDS.get(team_name)
+    canonical = resolve_team_name_for_espn(team_name)
+    espn_id = ESPN_TEAM_IDS.get(canonical)
     logo = f"https://a.espncdn.com/i/teamlogos/ncaa/500/{espn_id}.png" if espn_id else None
-    primary = _LEGACY_COLORS.get(team_name, "#667eea")
+    primary = _LEGACY_COLORS.get(canonical, _LEGACY_COLORS.get(team_name, "#667eea"))
     return TeamAsset(
         espn_id=espn_id,
         logo=logo,

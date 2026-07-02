@@ -14,6 +14,8 @@ from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.composite import calculate_composite_rankings
+from src.pipeline.cache_paths import games_cache_candidates, games_cache_write_path
+from src.pipeline.live import enrich_live_rankings, filter_games_to_fbs
 from src.pipeline.paths import RunOutputPaths, ensure_output_dirs
 from src.pipeline.sample import SAMPLE_GAMES, enrich_sample_rankings
 from src.playoff.bracket import create_bracket_matchups, visualize_bracket_html
@@ -34,17 +36,24 @@ def load_games(
         games = pd.read_csv(SAMPLE_GAMES)
         return games[games["week"] <= config.week]
 
-    cache_path = DATA_CACHE / "cfbd" / str(config.year) / f"games_w{config.week}.parquet"
-    if not cache_path.exists():
-        cache_path = DATA_CACHE / str(config.year) / f"games_w{config.week}.parquet"
-    if cache_path.exists():
-        return pd.read_parquet(cache_path)
+    cache_path = None
+    for candidate in games_cache_candidates(config.year, config.week):
+        if candidate.exists():
+            cache_path = candidate
+            break
+    if cache_path is not None:
+        games = pd.read_parquet(cache_path)
+    else:
+        key = api_key or get_api_key()
+        games = fetch_season_games(config.year, start_week=config.start_week, api_key=key)
+        games = games[games["week"] <= config.week]
+        cache_path = games_cache_write_path(config.year, config.week)
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        games.to_parquet(cache_path, index=False)
 
-    key = api_key or get_api_key()
-    games = fetch_season_games(config.year, start_week=config.start_week, api_key=key)
-    games = games[games["week"] <= config.week]
-    cache_path = DATA_CACHE / "cfbd" / str(config.year) / f"games_w{config.week}.parquet"
-    games.to_parquet(cache_path, index=False)
+    if config.fbs_only:
+        key = api_key or get_api_key()
+        games = filter_games_to_fbs(games, config.year, api_key=key)
     return games
 
 
@@ -80,13 +89,22 @@ def run_rank(
     games_df: pd.DataFrame,
     paths: RunOutputPaths,
     use_sample: bool = False,
+    api_key: Optional[str] = None,
 ) -> tuple[pd.DataFrame, Path]:
     rankings = calculate_composite_rankings(games_df, weights=config.weights)
+    champion_source = "sample_fixture"
     if use_sample:
         rankings = enrich_sample_rankings(rankings)
+    else:
+        rankings, champion_source = enrich_live_rankings(
+            rankings,
+            games_df,
+            year=config.year,
+            api_key=api_key,
+        )
     paths.rankings.parent.mkdir(parents=True, exist_ok=True)
     rankings.to_csv(paths.rankings, index=False)
-    return rankings, paths.rankings
+    return rankings, paths.rankings, champion_source
 
 
 def _field_rows(selection) -> pd.DataFrame:
@@ -189,8 +207,12 @@ def run_pipeline(
     games = load_games(config, api_key=api_key, use_sample=use_sample)
     steps.append(f"Loaded {len(games)} games")
 
-    rankings, _ = run_rank(config, games, paths, use_sample=use_sample)
+    rankings, _, champion_source = run_rank(
+        config, games, paths, use_sample=use_sample, api_key=api_key
+    )
     steps.append(f"Generated rankings for {len(rankings)} teams")
+    if not use_sample:
+        steps.append(f"Conference auto-bid labels: {champion_source}")
 
     result: Dict[str, Any] = {
         "config": config,
@@ -198,6 +220,7 @@ def run_pipeline(
         "rankings": rankings,
         "paths": paths.as_dict(),
         "data_source": data_source,
+        "champion_source": champion_source,
         "steps": steps,
     }
 
@@ -219,7 +242,11 @@ def run_pipeline(
     write_manifest(
         config,
         paths,
-        extra={"n_games": len(games), "n_teams": len(rankings)},
+        extra={
+            "n_games": len(games),
+            "n_teams": len(rankings),
+            "champion_source": champion_source if not use_sample else "sample_fixture",
+        },
         data_source=data_source,
     )
     steps.append("Wrote manifest")

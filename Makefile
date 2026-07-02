@@ -18,11 +18,13 @@ BIN := $(VENV_BIN)
 CFP_SIM := $(VENV_BIN)/cfp-sim
 endif
 
-.PHONY: help setup demo run rank select bracket dashboard validate reproduce test lint format verify clean start stop status
+.PHONY: help setup demo run rank select bracket dashboard validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean start stop status
 
 YEAR ?= 2025
 WEEK ?= 15
 SEASON ?= 2024
+YEARS ?= 2014:2024
+TARGET ?= all
 
 help:
 	@echo ""
@@ -39,7 +41,11 @@ help:
 	@echo "  make rank                      Composite rankings"
 	@echo "  make select                    Field selection + seeding"
 	@echo "  make bracket                   Bracket HTML export"
-	@echo "  make validate                  Historical backtest"
+	@echo "  make validate                  Era-aware validation (all tracks)"
+	@echo "  make validate-selection        Field validation only"
+	@echo "  make validate-committee        Committee replication only"
+	@echo "  make validate-predictive         Game prediction metrics only"
+	@echo "  make validate YEARS=2021:2023 TARGET=selection"
 	@echo "  make reproduce SEASON=2024     Reproduce a season run"
 	@echo ""
 	@echo "Development"
@@ -79,7 +85,16 @@ dashboard:
 	$(CFP_SIM) dashboard
 
 validate:
-	$(CFP_SIM) validate --years 2014:2024
+	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target $(or $(TARGET),all)
+
+validate-committee:
+	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target committee
+
+validate-selection:
+	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target selection
+
+validate-predictive:
+	$(CFP_SIM) validate --years $(or $(YEARS),2014:2024) --target predictive
 
 reproduce:
 	$(CFP_SIM) reproduce --season $(SEASON) --week $(WEEK)

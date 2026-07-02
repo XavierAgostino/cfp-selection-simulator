@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Run cfp-sim from the project venv without manual activation.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VENV_BIN="$ROOT/.venv/bin/cfp-sim"
+
+if [[ -x "$VENV_BIN" ]]; then
+  exec "$VENV_BIN" "$@"
+fi
+
+if command -v cfp-sim >/dev/null 2>&1; then
+  exec cfp-sim "$@"
+fi
+
+echo "cfp-sim not found." >&2
+echo "Run: make setup" >&2
+echo "Or:  $ROOT/.venv/bin/cfp-sim <command>" >&2
+exit 127

@@ -20,6 +20,7 @@ This simulator is designed as a **transparent decision-support tool**, not a rep
 | Document | Focus |
 |----------|-------|
 | [CFP Format History](cfp-format-history.md) | Rule changes by era |
+| [CFP Committee Alignment](cfp-committee-alignment.md) | Simulator vs official committee practice |
 | [Model Methodology](model-methodology.md) | Composite pipeline |
 | [Metric Definitions](metric-definitions.md) | SOR, SOS, résumé, predictive |
 | [Historical Validation](historical-validation.md) | Backtest design and results |

@@ -72,6 +72,31 @@ def test_sample_cache_file_exists_and_loads():
     assert assets["Georgia"].logo_source == "espn"
 
 
+def test_get_team_logo_james_madison_espn_fallback():
+    clear_assets_cache()
+    logo = get_team_logo("James Madison", use_sample=False)
+    assert logo is not None
+    assert "256" in logo
+
+
+def test_get_team_logo_uconn_espn_fallback():
+    clear_assets_cache()
+    logo = get_team_logo("UConn", use_sample=False)
+    assert logo is not None
+    assert "41" in logo
+
+
+def test_live_load_does_not_use_sample_cache(tmp_path: Path, monkeypatch):
+    """Live mode must not silently load the 12-team sample asset file."""
+    from src.assets import teams as teams_mod
+
+    monkeypatch.setattr(teams_mod, "CACHE_PATH", tmp_path / "missing_live.json")
+    clear_assets_cache()
+    assets = load_team_assets(use_sample=False)
+    assert assets == {}
+    assert "James Madison" not in assets
+
+
 def test_get_team_asset_case_insensitive():
     assert get_team_asset("georgia", use_sample=True) is not None
     assert get_team_asset("Georgia", use_sample=True) is not None
