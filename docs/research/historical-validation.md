@@ -89,6 +89,29 @@ Predictive performance protects against overfitting to committee votes.
 
 **2022** is flagged as an outlier in aggregate summaries. Committee decisions that year diverged sharply from formula rankings (TCU, Kansas State). Exclude from headline averages when reporting replication quality.
 
+## Current results (defaults: 40/30/20/10, start_week 1)
+
+Snapshot from `make validate` on the 2014-2024 backtest, which selected the
+current default weights and full-season data window:
+
+| Year | Field overlap | Misses |
+|------|---------------|--------|
+| 2014 | 4/4 | — |
+| 2015 | 3/4 | Stanford in, Oklahoma out |
+| 2016 | 3/4 | Michigan in, Clemson out |
+| 2017 | 2/4 | Auburn/UCF in, Alabama/Oklahoma out |
+| 2018 | 3/4 | Georgia in, Oklahoma out |
+| 2019 | 3/4 | Penn State in, Oklahoma out |
+| 2020 | 1/4 | COVID year: conference-only P5 schedules starve the graph |
+| 2021 | 4/4 | — |
+| 2022 | 4/4 | — |
+| 2023 | 4/4 | — |
+| 2024 | 11/12 | Alabama in, Tennessee out (auto bids 5/5) |
+
+Mean field overlap ~79%; the only structural failure is 2020, where G5
+unbeatens (BYU, Cincinnati, Coastal Carolina) can't be separated from P5
+contenders without cross-conference games.
+
 ## Interpretation guidelines
 
 | Metric | Good (rough guide) | Notes |
@@ -101,7 +124,10 @@ Predictive performance protects against overfitting to committee votes.
 
 ## Weight calibration
 
-**Not included in validation.** Calibration is a separate future command:
+The current defaults came from a weight sweep evaluated with this harness
+(field overlap + committee Spearman across 2014-2024). The SOR-heavy
+40/30/20/10 mix matched or beat 50/30/10/10 in every season. A built-in
+calibration command remains future work:
 
 ```bash
 # Planned — do not mix with validation
