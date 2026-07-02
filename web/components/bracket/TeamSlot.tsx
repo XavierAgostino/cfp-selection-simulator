@@ -2,6 +2,7 @@
 
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { SeedBadge } from "@/components/team/SeedBadge";
+import { BidBadge } from "@/components/team/BidBadge";
 import { ConferenceBadge, ConferenceCaption } from "@/components/team/ConferenceBadge";
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
@@ -11,19 +12,30 @@ import { cn } from "@/lib/utils";
 
 interface TeamSlotProps {
   team: TeamSlotData;
-  /** "row" is the standard bracket-card row; "compact" trims padding for dense matchup lists. */
-  variant?: "row" | "compact";
+  /**
+   * "lg" is the flagship bracket row (bigger logo, bid badge);
+   * "row" is the standard size; "compact" trims padding for dense lists.
+   */
+  variant?: "lg" | "row" | "compact";
+  /** Show the AUTO / AT-LARGE chip after the record. */
+  showBid?: boolean;
   className?: string;
 }
 
 /**
  * A single team's line inside a bracket game: seed, logo, name, conference,
- * and a bid-type accent. Hovering surfaces the shared TeamHoverCard preview;
+ * record, and bid status. Hovering surfaces the shared TeamHoverCard preview;
  * clicking (or tapping) opens the team resume drawer.
  */
-export function TeamSlot({ team, variant = "row", className }: TeamSlotProps) {
+export function TeamSlot({
+  team,
+  variant = "row",
+  showBid = false,
+  className,
+}: TeamSlotProps) {
   const { openTeam } = useTeamDrawer();
   const compact = variant === "compact";
+  const lg = variant === "lg";
 
   return (
     <TeamHoverCard team={team}>
@@ -32,8 +44,8 @@ export function TeamSlot({ team, variant = "row", className }: TeamSlotProps) {
         onClick={() => openTeam(team.team)}
         aria-label={`Open resume for ${team.team}`}
         className={cn(
-          "group/slot flex w-full items-center gap-2.5 rounded-md border-l-2 px-2 text-left transition-colors duration-150",
-          compact ? "py-1.5" : "py-2",
+          "group/slot flex w-full items-center rounded-md border-l-2 text-left transition-colors duration-150",
+          compact ? "gap-2.5 px-2 py-1.5" : lg ? "gap-3 px-3 py-2.5" : "gap-2.5 px-2 py-2",
           team.is_bye
             ? "border-l-accent-gold bg-accent-gold/[0.06]"
             : team.bid_type === "auto"
@@ -49,14 +61,14 @@ export function TeamSlot({ team, variant = "row", className }: TeamSlotProps) {
           logoUrl={team.logo_url}
           abbreviation={team.abbreviation}
           primaryColor={team.primary_color}
-          size={compact ? 20 : 26}
+          size={compact ? 20 : lg ? 30 : 26}
         />
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <div className="flex min-w-0 items-center gap-1.5">
             <span
               className={cn(
                 "truncate font-medium text-foreground",
-                compact ? "text-xs" : "text-sm",
+                compact ? "text-xs" : lg ? "text-sm font-semibold" : "text-sm",
               )}
             >
               {team.team}
@@ -76,9 +88,17 @@ export function TeamSlot({ team, variant = "row", className }: TeamSlotProps) {
             />
           ) : null}
         </div>
-        <span className="shrink-0 text-[0.7rem] tabular-nums text-muted-foreground">
+        <span
+          className={cn(
+            "shrink-0 tabular-nums text-muted-foreground",
+            lg ? "text-xs" : "text-[0.7rem]",
+          )}
+        >
           {formatRecord(team.record)}
         </span>
+        {showBid ? (
+          <BidBadge bidType={team.bid_type} className="shrink-0 px-1.5 text-[0.6rem]" />
+        ) : null}
       </button>
     </TeamHoverCard>
   );

@@ -5,6 +5,7 @@ import { SeedBadge } from "@/components/team/SeedBadge";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
 import { MetricTooltip } from "@/components/explain/InfoTooltip";
+import { firstRoundHost } from "@/components/bracket/types";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import type { ScoreMetricKey } from "@/lib/scoreBars";
 import { formatRecord, formatScore } from "@/lib/format";
@@ -51,8 +52,14 @@ export function MatchupCards({ bracket }: MatchupCardsProps) {
               colorB={game.team_b.primary_color}
             />
           </div>
-          <div className="border-t border-border px-4 pt-3 text-xs text-muted-foreground">
-            Winner advances to face No. {game.winner_to_seed} seed
+          <div className="flex flex-wrap items-center justify-between gap-1 border-t border-border px-4 pt-3 text-xs text-muted-foreground">
+            <span>
+              Campus site — at{" "}
+              <span className="font-medium text-foreground/80">
+                {firstRoundHost(game.team_a, game.team_b).team}
+              </span>
+            </span>
+            <span>Winner faces No. {game.winner_to_seed} seed</span>
           </div>
         </Card>
       ))}

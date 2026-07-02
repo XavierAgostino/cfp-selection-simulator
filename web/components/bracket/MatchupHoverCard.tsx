@@ -2,14 +2,27 @@
 
 import * as React from "react";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
+import { ConferenceCaption } from "@/components/team/ConferenceBadge";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import { formatRecord, formatScore } from "@/lib/format";
+import type { ScoreMetricKey } from "@/lib/scoreBars";
 import type { TeamHoverData } from "@/components/team/TeamHoverCard";
 import { cn } from "@/lib/utils";
+
+const COMPARE_METRICS: ScoreMetricKey[] = [
+  "composite",
+  "resume",
+  "predictive",
+  "sor",
+  "sos",
+];
+
+const FALLBACK_BAR_COLOR = "#64748B";
 
 interface MatchupHoverCardProps {
   teamA: TeamHoverData;
@@ -19,10 +32,25 @@ interface MatchupHoverCardProps {
   children: React.ReactElement<Record<string, unknown>>;
 }
 
+function metricValue(team: TeamHoverData, metric: ScoreMetricKey): number {
+  switch (metric) {
+    case "composite":
+      return team.composite_score;
+    case "resume":
+      return team.resume_score;
+    case "predictive":
+      return team.predictive_score;
+    case "sor":
+      return team.sor;
+    case "sos":
+      return team.sos;
+  }
+}
+
 /**
- * Quick matchup preview: both teams head-to-head across the three headline
- * metrics, with the stronger side of each row emphasized. Basic version —
- * the bracket flagship pass (Phase 1B) extends it.
+ * Full matchup preview: both teams head-to-head across all five metrics,
+ * with team-colored diverging bars and the stronger side of each row
+ * emphasized. The bracket's answer to "what does this matchup mean?".
  */
 export function MatchupHoverCard({ teamA, teamB, note, children }: MatchupHoverCardProps) {
   return (
@@ -37,9 +65,16 @@ export function MatchupHoverCard({ teamA, teamB, note, children }: MatchupHoverC
           <MatchupTeam team={teamB} align="right" />
         </div>
         <div className="mt-3 flex flex-col gap-1.5 border-t border-border pt-2.5">
-          <CompareRow label="Composite" a={teamA.composite_score} b={teamB.composite_score} />
-          <CompareRow label="Resume" a={teamA.resume_score} b={teamB.resume_score} />
-          <CompareRow label="Predictive" a={teamA.predictive_score} b={teamB.predictive_score} />
+          {COMPARE_METRICS.map((metric) => (
+            <CompareRow
+              key={metric}
+              label={METRIC_EXPLANATIONS[metric].label}
+              a={metricValue(teamA, metric)}
+              b={metricValue(teamB, metric)}
+              colorA={teamA.primary_color}
+              colorB={teamB.primary_color}
+            />
+          ))}
         </div>
         {note ? (
           <p className="mt-2.5 border-t border-border pt-2 text-[0.65rem] text-muted-foreground">
@@ -82,12 +117,28 @@ function MatchupTeam({
         <div className="truncate text-[0.65rem] tabular-nums text-muted-foreground">
           {formatRecord(team.record)}
         </div>
+        <ConferenceCaption conference={team.conference} className="block text-[0.6rem]" />
       </div>
     </div>
   );
 }
 
-function CompareRow({ label, a, b }: { label: string; a: number; b: number }) {
+function CompareRow({
+  label,
+  a,
+  b,
+  colorA,
+  colorB,
+}: {
+  label: string;
+  a: number;
+  b: number;
+  colorA: string | null;
+  colorB: string | null;
+}) {
+  const aPct = Math.max(0, Math.min(100, a * 100));
+  const bPct = Math.max(0, Math.min(100, b * 100));
+
   return (
     <div className="flex items-center gap-2 text-[0.7rem]">
       <span
@@ -98,9 +149,21 @@ function CompareRow({ label, a, b }: { label: string; a: number; b: number }) {
       >
         {formatScore(a)}
       </span>
-      <span className="flex-1 text-center text-[0.6rem] uppercase tracking-wide text-muted-foreground">
+      <div className="flex h-1 flex-1 justify-end overflow-hidden rounded-full bg-secondary">
+        <div
+          className="h-full rounded-l-full"
+          style={{ width: `${aPct}%`, backgroundColor: colorA ?? FALLBACK_BAR_COLOR }}
+        />
+      </div>
+      <span className="w-14 shrink-0 text-center text-[0.6rem] uppercase tracking-wide text-muted-foreground">
         {label}
       </span>
+      <div className="flex h-1 flex-1 justify-start overflow-hidden rounded-full bg-secondary">
+        <div
+          className="h-full rounded-r-full"
+          style={{ width: `${bPct}%`, backgroundColor: colorB ?? FALLBACK_BAR_COLOR }}
+        />
+      </div>
       <span
         className={cn(
           "w-10 shrink-0 text-right tabular-nums",
