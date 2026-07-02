@@ -49,9 +49,9 @@ def enrich_team(
     return {
         **team,
         "logo": get_team_logo(name, use_sample=use_sample),
-        "abbreviation": asset.abbreviation
-        if asset and asset.abbreviation
-        else _abbreviation(name, use_sample),
+        "abbreviation": (
+            asset.abbreviation if asset and asset.abbreviation else _abbreviation(name, use_sample)
+        ),
         "primary_color": get_primary_color(name, use_sample=use_sample),
         "bid_type": bid_type,
         "conference": team.get("conference") or (asset.conference if asset else ""),
