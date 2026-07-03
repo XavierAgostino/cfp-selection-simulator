@@ -40,6 +40,19 @@ def get_team_logo(team_name: str, use_sample: bool = False) -> Optional[str]:
     2. ESPN fallback mapping
     3. Placeholder data URI
     """
+    url = get_team_logo_url(team_name, use_sample=use_sample)
+    if url is not None:
+        return url
+    return placeholder_logo_url()
+
+
+def get_team_logo_url(team_name: str, use_sample: bool = False) -> Optional[str]:
+    """
+    Return a real logo URL for API exports (CFBD cache or ESPN CDN).
+
+    Returns None when no URL is known so clients render initials instead of
+    embedding placeholder data URIs in JSON payloads.
+    """
     asset = get_team_asset(team_name, use_sample=use_sample)
     if asset and asset.logo:
         return asset.logo
@@ -48,7 +61,7 @@ def get_team_logo(team_name: str, use_sample: bool = False) -> Optional[str]:
     if fallback.logo:
         return fallback.logo
 
-    return placeholder_logo_url()
+    return None
 
 
 def _normalize_cfbd_team(raw: dict) -> Optional[TeamAsset]:

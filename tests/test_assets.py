@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from src.assets.logos import get_team_logo, placeholder_logo_url
+from src.assets.logos import get_team_logo, get_team_logo_url, placeholder_logo_url
 from src.assets.teams import (
     SAMPLE_CACHE_PATH,
     TeamAsset,
@@ -33,6 +33,19 @@ def test_get_team_logo_returns_url_from_sample_cache():
 def test_get_team_logo_fallback_to_placeholder_for_unknown_team():
     logo = get_team_logo("Totally Fake University", use_sample=True)
     assert logo == placeholder_logo_url()
+
+
+def test_get_team_logo_url_returns_none_for_unknown_team():
+    url = get_team_logo_url("Totally Fake University", use_sample=True)
+    assert url is None
+
+
+def test_get_team_logo_url_espn_fallback_without_cache_entry():
+    clear_assets_cache()
+    url = get_team_logo_url("Ohio State", use_sample=False)
+    assert url is not None
+    assert "194" in url
+    assert not url.startswith("data:")
 
 
 def test_get_team_logo_espn_fallback_without_cache_entry():
