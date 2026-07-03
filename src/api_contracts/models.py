@@ -21,6 +21,10 @@ AssetsSource = Literal["cache", "sample"]
 Location = Literal["home", "away", "neutral"]
 Result = Literal["W", "L"]
 SemifinalSide = Literal["top", "bottom"]
+StabilityStatus = Literal["lock", "likely_in", "bubble", "likely_out", "out"]
+StabilityBaseStatus = Literal["in_field", "first_out", "next_out", "out"]
+StabilityOutcome = Literal["in_field", "first_out", "out"]
+StabilityRisk = Literal["none", "weight_sensitivity", "auto_bid_displacement", "composite_gap"]
 
 
 class Record(BaseModel):
@@ -61,6 +65,7 @@ class RunsIndexEntry(BaseModel):
     champion_source: str
     generated_at: str
     has_bracket: bool
+    has_sensitivity: bool = False
     simulator_version: str
 
 
@@ -280,6 +285,56 @@ class TeamResumesPayload(BaseModel):
     season: int
     week: int
     teams: Dict[str, TeamResume] = Field(default_factory=dict)
+
+
+# --- sensitivity.json ---------------------------------------------------------------
+
+
+class PerturbationSpec(BaseModel):
+    method: str = "uniform_relative_weight_perturbation"
+    relative_range: float
+    base_weights: Dict[str, float]
+
+
+class BaseFieldCutoff(BaseModel):
+    """Links Selection Stability to the deterministic cut line so the UI can
+    cross-reference without recomputing."""
+
+    final_at_large_team: Optional[str] = None
+    final_at_large_score: Optional[float] = None
+    first_team_out: Optional[str] = None
+    first_team_out_score: Optional[float] = None
+
+
+class SelectionStabilityTeam(BaseModel):
+    team: str
+    abbreviation: Optional[str] = None
+    logo_url: Optional[str] = None
+    primary_color: Optional[str] = None
+    selection_frequency: float
+    in_field_count: int
+    n_scenarios: int
+    base_rank: int
+    base_seed: Optional[int] = None
+    base_selected: bool
+    base_status: StabilityBaseStatus
+    status: StabilityStatus
+    median_rank: int
+    most_common_outcome: StabilityOutcome
+    primary_risk: StabilityRisk
+
+
+class SensitivityPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    ruleset: Optional[Ruleset] = None
+    generated_at: str
+    n_scenarios: int
+    random_seed: int
+    perturbation_spec: PerturbationSpec
+    base_field_cutoff: BaseFieldCutoff
+    teams: List[SelectionStabilityTeam] = Field(default_factory=list)
 
 
 # --- team-assets.json ---------------------------------------------------------------

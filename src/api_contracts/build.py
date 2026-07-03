@@ -13,6 +13,7 @@ from src.api_contracts.models import (
     AuditPayload,
     AuditPhase,
     AuditStepEntry,
+    BaseFieldCutoff,
     BracketPayload,
     BracketPod,
     BracketRounds,
@@ -20,19 +21,23 @@ from src.api_contracts.models import (
     ComponentRanks,
     FieldPayload,
     FirstRoundGame,
+    PerturbationSpec,
     QuarterfinalGame,
     RankingsPayload,
     RankingsTeam,
     Record,
     RunsIndexEntry,
     ScheduleGame,
+    SelectionStabilityTeam,
     SemifinalGroup,
+    SensitivityPayload,
     TeamResume,
     TeamResumeScores,
     TeamResumesPayload,
     TeamSlot,
 )
 from src.api_contracts.selection_case import build_selection_case
+from src.assets.logos import get_team_logo_url
 from src.assets.teams import TeamAsset, get_team_asset
 from src.config.simulator import SimulatorConfig
 from src.playoff.bracket_view import build_bracket_pods, build_bracket_rounds
@@ -118,6 +123,10 @@ def _abbreviation(asset: Optional[TeamAsset]) -> Optional[str]:
     return asset.abbreviation if asset and asset.abbreviation else None
 
 
+def _logo_url(team_name: str, use_sample: bool) -> Optional[str]:
+    return get_team_logo_url(team_name, use_sample=use_sample)
+
+
 def build_team_slot(
     row: RowLike,
     *,
@@ -154,7 +163,7 @@ def build_team_slot(
         team=team_name,
         abbreviation=_abbreviation(asset),
         conference=row.get("conference"),
-        logo_url=asset.logo if asset else None,
+        logo_url=_logo_url(team_name, use_sample),
         primary_color=asset.primary_color if asset else None,
         secondary_color=asset.secondary_color if asset else None,
         bid_type=(bid_type_lookup or {}).get(team_name),
@@ -253,7 +262,7 @@ def build_rankings_payload(
                 in_field=team_name in in_field_names,
                 bid_type=bid_lookup.get(team_name),
                 seed=int(seed_row["seed"]) if seed_row is not None else None,
-                logo_url=asset.logo if asset else None,
+                logo_url=_logo_url(team_name, use_sample),
                 primary_color=asset.primary_color if asset else None,
                 secondary_color=asset.secondary_color if asset else None,
             )
@@ -493,7 +502,7 @@ def build_team_resumes_payload(
             team=team_name,
             abbreviation=_abbreviation(asset),
             conference=row.get("conference"),
-            logo_url=asset.logo if asset else None,
+            logo_url=_logo_url(team_name, use_sample),
             primary_color=asset.primary_color if asset else None,
             secondary_color=asset.secondary_color if asset else None,
             rank=int(row["rank"]),
@@ -517,6 +526,55 @@ def build_team_resumes_payload(
         )
 
     return TeamResumesPayload(season=config.year, week=config.week, teams=teams)
+
+
+def build_sensitivity_payload(
+    config: SimulatorConfig,
+    sensitivity_result,
+    seeded_df: Optional[pd.DataFrame],
+    use_sample: bool,
+) -> SensitivityPayload:
+    """Map a SensitivityResult (src.validation.sensitivity) to the JSON contract."""
+    seed_rows = _seed_lookup(seeded_df)
+
+    teams: List[SelectionStabilityTeam] = []
+    for entry in sensitivity_result.teams:
+        asset = _team_asset(entry.team, use_sample)
+        seed_row = seed_rows.get(entry.team)
+        teams.append(
+            SelectionStabilityTeam(
+                team=entry.team,
+                abbreviation=_abbreviation(asset),
+                logo_url=_logo_url(entry.team, use_sample),
+                primary_color=asset.primary_color if asset else None,
+                selection_frequency=entry.selection_frequency,
+                in_field_count=entry.in_field_count,
+                n_scenarios=entry.n_scenarios,
+                base_rank=entry.base_rank,
+                base_seed=int(seed_row["seed"]) if seed_row is not None else None,
+                base_selected=entry.base_selected,
+                base_status=entry.base_status,
+                status=entry.status,
+                median_rank=entry.median_rank,
+                most_common_outcome=entry.most_common_outcome,
+                primary_risk=entry.primary_risk,
+            )
+        )
+
+    return SensitivityPayload(
+        season=config.year,
+        week=config.week,
+        ruleset=_ruleset_name(config),
+        generated_at=_now_iso(),
+        n_scenarios=sensitivity_result.n_scenarios,
+        random_seed=sensitivity_result.random_seed,
+        perturbation_spec=PerturbationSpec(
+            relative_range=sensitivity_result.relative_range,
+            base_weights=sensitivity_result.base_weights,
+        ),
+        base_field_cutoff=BaseFieldCutoff(**sensitivity_result.base_field_cutoff),
+        teams=teams,
+    )
 
 
 def build_runs_index_entry(

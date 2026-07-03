@@ -23,6 +23,7 @@ from src.api_contracts.build import (
     build_bracket_payload,
     build_field_payload,
     build_rankings_payload,
+    build_sensitivity_payload,
     build_team_resumes_payload,
     team_records_from_games,
 )
@@ -36,6 +37,7 @@ from src.api_contracts.models import (
 from src.assets.teams import load_team_assets
 from src.config.simulator import SimulatorConfig
 from src.pipeline.paths import API_ROOT, DATA_OUTPUT, RunOutputPaths, run_stem
+from src.validation.sensitivity import run_weight_perturbation
 
 FLAT_FILE_NAMES = {
     "rankings": "rankings.json",
@@ -43,6 +45,7 @@ FLAT_FILE_NAMES = {
     "bracket": "bracket.json",
     "audit": "audit.json",
     "team_resumes": "team-resumes.json",
+    "sensitivity": "sensitivity.json",
 }
 
 
@@ -84,6 +87,7 @@ def regenerate_runs_index() -> Path:
             champion_source=data.get("champion_source", "unknown"),
             generated_at=data.get("generated_at", ""),
             has_bracket=(run_api_dir / "bracket.json").exists(),
+            has_sensitivity=(run_api_dir / "sensitivity.json").exists(),
             simulator_version=data.get("simulator_version", ""),
         )
         scored.append((manifest_path.stat().st_mtime, entry))
@@ -143,6 +147,20 @@ def export_run_api(
         config, rankings_df, selection, seeded_df, games_df, records, use_sample
     )
 
+    sensitivity_payload = None
+    if selection is not None:
+        # Monte Carlo Selection Stability: reuses the precomputed component
+        # scores in rankings_df; only the weighted composite is recomputed
+        # per scenario (see src/validation/sensitivity.py).
+        sensitivity_result = run_weight_perturbation(
+            rankings_df,
+            base_weights=config.weights,
+            format_rules=config.playoff_format,
+        )
+        sensitivity_payload = build_sensitivity_payload(
+            config, sensitivity_result, seeded_df, use_sample
+        )
+
     run_dir = API_ROOT / "runs" / paths.stem
     written: Dict[str, Path] = {}
 
@@ -159,6 +177,7 @@ def export_run_api(
     write_payload("bracket", bracket_payload)
     write_payload("audit", audit_payload)
     write_payload("team_resumes", team_resumes_payload)
+    write_payload("sensitivity", sensitivity_payload)
 
     is_latest = _is_latest_run(paths)
     if is_latest:
@@ -168,6 +187,7 @@ def export_run_api(
             ("bracket", bracket_payload),
             ("audit", audit_payload),
             ("team_resumes", team_resumes_payload),
+            ("sensitivity", sensitivity_payload),
         ):
             if payload is None:
                 continue

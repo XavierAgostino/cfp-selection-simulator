@@ -11,10 +11,10 @@ truth; this doc mirrors them.
 data/output/api/
   runs.json                      # index across all runs (drives season/week switcher)
   latest.json                    # meta for most recent run
-  rankings.json  field.json  bracket.json  audit.json  team-resumes.json   # latest run (flat copies)
+  rankings.json  field.json  bracket.json  audit.json  team-resumes.json  sensitivity.json   # latest run (flat copies)
   team-assets.json               # passthrough of data/cache/team_assets.json (or sample)
-  runs/{year}_week{week}/        # per-run dirs, same 5 files
-    rankings.json field.json bracket.json audit.json team-resumes.json
+  runs/{year}_week{week}/        # per-run dirs, same 6 files
+    rankings.json field.json bracket.json audit.json team-resumes.json sensitivity.json
 ```
 
 All top-level payloads carry `schema_version: 1`.
@@ -59,6 +59,7 @@ All top-level payloads carry `schema_version: 1`.
       "champion_source": "cfbd",        // how champs were determined
       "generated_at": "...",
       "has_bracket": true,              // false if rank-only run
+      "has_sensitivity": true,          // false if run predates Selection Stability
       "simulator_version": "3.0.0"
     }
   ]
@@ -198,6 +199,53 @@ Step values come from `src/selection/audit.py` `AuditStep` enum.
 ```
 
 Scope: top 40 teams by rank plus everyone in field/first-four-out/next-four-out.
+
+## sensitivity.json
+
+Selection Stability: Monte Carlo weight-perturbation results
+(`src/validation/sensitivity.py`). It varies **model weights only** — never
+future game outcomes; conference-champion labels are fixed per run. Frequencies
+are 0–1 on the wire (the UI renders percentages).
+
+```jsonc
+{
+  "schema_version": 1, "season": 2025, "week": 15,
+  "ruleset": "2025_plus",
+  "generated_at": "...",
+  "n_scenarios": 1000,
+  "random_seed": 42,
+  "perturbation_spec": {
+    "method": "uniform_relative_weight_perturbation",
+    "relative_range": 0.10,             // each weight × U(0.90, 1.10), clamp ≥0, renormalize to 1.0
+    "base_weights": { "resume": 0.40, "predictive": 0.30, "sor": 0.20, "sos": 0.10 }  // the run's actual weights
+  },
+  "base_field_cutoff": {                // cross-links to the deterministic field
+    "final_at_large_team": "Oregon",  "final_at_large_score": 0.4122,
+    "first_team_out": "Oregon State", "first_team_out_score": 0.2780
+  },
+  "teams": [                            // bubble scope: base field + first/next four out + displaced (~20)
+    {
+      "team": "Oregon", "abbreviation": "ORE",
+      "logo_url": "https://...", "primary_color": "#154733",
+      "selection_frequency": 0.394,     // share of scenarios in the projected field
+      "in_field_count": 394,
+      "n_scenarios": 1000,
+      "base_rank": 10,
+      "base_seed": 10,                  // int | null (null when out of base field)
+      "base_selected": true,
+      "base_status": "in_field",        // "in_field" | "first_out" | "next_out" | "out"
+      "status": "bubble",               // "lock" ≥0.99 | "likely_in" ≥0.75 | "bubble" ≥0.25 | "likely_out" >0.01 | "out"
+      "median_rank": 10,                // median composite rank across scenarios
+      "most_common_outcome": "in_field",// "in_field" | "first_out" | "out"
+      "primary_risk": "weight_sensitivity" // "none" | "weight_sensitivity" | "auto_bid_displacement" | "composite_gap"
+    }
+  ]
+}
+```
+
+`n_scenarios` + `random_seed` + `perturbation_spec` fully reproduce a run.
+Missing file ⇒ the web UI omits Selection Stability surfaces entirely (no proxy).
+See `docs/research/sensitivity-analysis.md` for methodology.
 
 ## team-assets.json
 
