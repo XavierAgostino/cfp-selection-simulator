@@ -22,6 +22,16 @@ interface TeamSlotProps {
   className?: string;
 }
 
+function slotCardClass(team: TeamSlotData): string {
+  if (team.is_bye) {
+    return cn(
+      "border border-accent-gold/65 bg-gradient-to-b from-accent-gold/[0.10] to-transparent",
+      "shadow-[0_0_0_1px_rgba(166,124,0,0.08)]",
+    );
+  }
+  return "border border-border bg-transparent";
+}
+
 /**
  * A single team's line inside a bracket game: seed, logo, name, conference,
  * record, and bid status. Hovering surfaces the shared TeamHoverCard preview;
@@ -44,13 +54,9 @@ export function TeamSlot({
         onClick={() => openTeam(team.team)}
         aria-label={`Open resume for ${team.team}`}
         className={cn(
-          "group/slot flex w-full items-center rounded-md border-l-2 text-left transition-colors duration-150",
+          "group/slot flex w-full items-center rounded-md text-left transition-colors duration-150",
+          slotCardClass(team),
           compact ? "gap-2.5 px-2 py-1.5" : lg ? "gap-3 px-3 py-2.5" : "gap-2.5 px-2 py-2",
-          team.is_bye
-            ? "border-l-accent-gold bg-accent-gold/[0.06]"
-            : team.bid_type === "auto"
-              ? "border-l-primary/60"
-              : "border-l-border",
           "hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
           className,
         )}

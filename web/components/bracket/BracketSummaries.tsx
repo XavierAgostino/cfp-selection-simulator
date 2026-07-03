@@ -54,7 +54,7 @@ export function BracketSummaries({ bracket }: BracketSummariesProps) {
         </CardHeader>
         <CardContent className="flex flex-col gap-1 px-4">
           {byes.map((team) => (
-            <TeamSlot key={team.team} team={team} showBid />
+            <TeamSlot key={team.team} team={team} variant="lg" showBid />
           ))}
         </CardContent>
       </Card>

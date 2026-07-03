@@ -5,9 +5,8 @@ interface ConnectorLinesProps {
 }
 
 /**
- * Decorative elbow connector between two stacked games and the single game
- * they feed into (pod pair -> semifinal, semifinal pair -> championship).
- * Purely visual: stretches to fill its flex/grid cell via preserveAspectRatio="none".
+ * Optional decorative bracket connector. Full Bracket omits connectors — pod
+ * labels carry the path — but this remains available for round/other views.
  */
 export function ConnectorLines({ flip = false, className }: ConnectorLinesProps) {
   return (
@@ -21,15 +20,35 @@ export function ConnectorLines({ flip = false, className }: ConnectorLinesProps)
       <path
         d="M0,25 H20 V50 H40"
         fill="none"
-        stroke="rgba(148,163,184,0.28)"
-        strokeWidth={1.5}
+        stroke="rgba(148,163,184,0.18)"
+        strokeWidth={1}
         vectorEffect="non-scaling-stroke"
       />
       <path
         d="M0,75 H20 V50 H40"
         fill="none"
-        stroke="rgba(148,163,184,0.28)"
-        strokeWidth={1.5}
+        stroke="rgba(148,163,184,0.18)"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+/** Thin horizontal elbow between adjacent bracket columns. */
+export function BracketElbow({ flip = false, className }: ConnectorLinesProps) {
+  return (
+    <svg
+      viewBox="0 0 32 24"
+      className={className}
+      style={{ transform: flip ? "scaleX(-1)" : undefined }}
+      aria-hidden
+    >
+      <path
+        d="M0,12 H16 V12 H32"
+        fill="none"
+        stroke="rgba(148,163,184,0.18)"
+        strokeWidth={1}
         vectorEffect="non-scaling-stroke"
       />
     </svg>

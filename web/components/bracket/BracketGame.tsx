@@ -66,9 +66,11 @@ export function BracketGame({ pod, className }: BracketGameProps) {
           aria-label={`Preview first-round matchup: ${teamA.team} vs ${teamB.team}, hosted by ${host.team}`}
           className="cursor-help border-t border-border bg-secondary/25 px-3 py-1.5 text-[0.65rem] text-muted-foreground outline-none transition-colors hover:bg-secondary/50 focus-visible:ring-2 focus-visible:ring-ring/50"
         >
-          <span className="font-medium text-foreground/80">at {host.team}</span>
+          <span className="font-medium text-foreground/80">
+            Winner meets No. {pod.bye.seed} {pod.bye.team}
+          </span>
           <span className="mx-1.5 text-border">·</span>
-          Campus site — winner meets No. {pod.bye.seed}
+          at {host.team}
         </div>
       </MatchupHoverCard>
     </Card>
