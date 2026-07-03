@@ -59,19 +59,19 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               label="Automatic bids"
               value={field.auto_bids.length}
               sub="Conference champions"
-              tooltip="Teams that earned their spot by winning their conference championship."
+              explainBadge="auto"
             />
             <MetricCard
               label="At-large bids"
               value={field.at_large_bids.length}
               sub="Selected on overall resume"
-              tooltip="Teams selected on overall resume strength, not conference championship status."
+              explainBadge="at_large"
             />
             <MetricCard
               label="Last team in"
               value={field.last_four_in.at(-1)?.team ?? "—"}
               sub={`Composite ${formatScore(field.last_four_in.at(-1)?.composite_score)}`}
-              tooltip="The lowest-ranked at-large team still inside the field."
+              explainMetric="cut_line"
             />
           </div>
 

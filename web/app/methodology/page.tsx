@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MethodologyWeightBreakdown } from "@/components/methodology/MethodologyWeightBreakdown";
 import { getLatest, NotFoundError } from "@/lib/data";
 import type { LatestPayload } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 async function loadLatest(): Promise<LatestPayload | null> {
   try {
@@ -14,42 +14,6 @@ async function loadLatest(): Promise<LatestPayload | null> {
 }
 
 const DEFAULT_WEIGHTS = { resume: 0.4, predictive: 0.3, sor: 0.2, sos: 0.1 };
-
-const WEIGHT_META: {
-  key: keyof typeof DEFAULT_WEIGHTS;
-  label: string;
-  barClass: string;
-  blurb: string;
-}[] = [
-  {
-    key: "resume",
-    label: "Resume",
-    barClass: "bg-bar-resume",
-    blurb:
-      "What a team has actually done — a Colley-matrix rating blended with winning percentage. Beating good teams counts; losing to bad ones costs you.",
-  },
-  {
-    key: "predictive",
-    label: "Predictive",
-    barClass: "bg-bar-predictive",
-    blurb:
-      "How good a team looks going forward — Massey ratings blended with Elo. This is the 'would they win on a neutral field' signal.",
-  },
-  {
-    key: "sor",
-    label: "Strength of Record",
-    barClass: "bg-bar-sor",
-    blurb:
-      "How impressive the record is given the schedule: the chance an average top-tier team would match this record against this slate.",
-  },
-  {
-    key: "sos",
-    label: "Strength of Schedule",
-    barClass: "bg-bar-sos",
-    blurb:
-      "How hard the schedule was on its own, independent of results. A small tiebreaker-scale nudge, not a driver.",
-  },
-];
 
 export default async function MethodologyPage() {
   const latest = await loadLatest();
@@ -75,32 +39,7 @@ export default async function MethodologyPage() {
             results only: no polls, no preseason priors, no brand names. The
             weights below are the exact values used for the current run.
           </p>
-          <div className="flex flex-col gap-4">
-            {WEIGHT_META.map((w) => {
-              const value = weights[w.key];
-              return (
-                <div key={w.key} className="flex flex-col gap-1.5">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-sm font-medium text-foreground">
-                      {w.label}
-                    </span>
-                    <span className="text-sm font-semibold tabular-nums text-foreground">
-                      {Math.round(value * 100)}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-bar-track">
-                    <div
-                      className={cn("h-full rounded-full", w.barClass)}
-                      style={{ width: `${value * 100}%` }}
-                    />
-                  </div>
-                  <p className="text-xs leading-relaxed text-muted-foreground">
-                    {w.blurb}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+          <MethodologyWeightBreakdown weights={weights} />
         </CardContent>
       </Card>
 

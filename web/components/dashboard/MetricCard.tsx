@@ -5,10 +5,10 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  BadgeTooltip,
+  MetricTooltip,
+} from "@/components/explain/InfoTooltip";
+import type { ExplainBadgeKey, ExplainMetricKey } from "@/lib/explain";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +16,10 @@ interface MetricCardProps {
   label: string;
   value: ReactNode;
   sub?: ReactNode;
-  tooltip?: string;
+  /** Centralized metric definition from explain.ts. */
+  explainMetric?: ExplainMetricKey;
+  /** Centralized badge definition from explain.ts. */
+  explainBadge?: ExplainBadgeKey;
   className?: string;
   /** Makes the whole card an interactive button (e.g. jump to a team's resume drawer). */
   onClick?: () => void;
@@ -27,10 +30,20 @@ export function MetricCard({
   label,
   value,
   sub,
-  tooltip,
+  explainMetric,
+  explainBadge,
   className,
   onClick,
 }: MetricCardProps) {
+  const infoTrigger = (
+    <button
+      type="button"
+      className="inline-flex rounded-sm text-muted-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      aria-label={`About ${label}`}
+    >
+      <Info className="h-3.5 w-3.5" />
+    </button>
+  );
   const card = (
     <Card
       className={cn(
@@ -44,23 +57,10 @@ export function MetricCard({
         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
         </span>
-        {tooltip ? (
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <button
-                  type="button"
-                  className="inline-flex rounded-sm text-muted-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-                  aria-label={`About ${label}`}
-                >
-                  <Info className="h-3.5 w-3.5" />
-                </button>
-              }
-            />
-            <TooltipContent side="top" className="max-w-[220px]">
-              {tooltip}
-            </TooltipContent>
-          </Tooltip>
+        {explainMetric ? (
+          <MetricTooltip metric={explainMetric}>{infoTrigger}</MetricTooltip>
+        ) : explainBadge ? (
+          <BadgeTooltip badge={explainBadge}>{infoTrigger}</BadgeTooltip>
         ) : null}
       </CardHeader>
       <CardContent className="px-4">
