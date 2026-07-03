@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTeamAssetsContext } from "@/components/team/TeamAssetsProvider";
 import { teamInitials } from "@/lib/format";
 import { resolveTeamVisual } from "@/lib/teamAssets";
+import { logoSurfaceFrameClass } from "@/lib/logoSurface";
 import { cn } from "@/lib/utils";
 
 interface TeamLogoTileProps {
@@ -43,7 +44,7 @@ export function TeamLogoTile({
     return (
       <div
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-full border border-border bg-logo-surface text-[0.65rem] font-semibold text-foreground",
+          logoSurfaceFrameClass("text-[0.65rem] font-semibold text-foreground"),
           className,
         )}
         style={{
@@ -62,10 +63,7 @@ export function TeamLogoTile({
 
   return (
     <div
-      className={cn(
-        "flex shrink-0 items-center justify-center rounded-full border border-border bg-logo-surface p-1",
-        className,
-      )}
+      className={logoSurfaceFrameClass(className)}
       style={{ width: frameSize, height: frameSize }}
       aria-label={team}
       title={team}

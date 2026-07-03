@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { useTeamAssetsContext } from "@/components/team/TeamAssetsProvider";
 import { teamInitials } from "@/lib/format";
+import { resolveTeamVisual, type ResolvedTeamVisual } from "@/lib/teamAssets";
 
 export interface ChartTeamIdentity {
   team: string;
@@ -24,9 +26,8 @@ interface ChartLogoDotProps {
 }
 
 /**
- * A team logo rendered as an SVG chart point: circular tile, status ring,
- * initials fallback when the team has no logo. Shared by the scatter and
- * cutline charts so points look identical everywhere.
+ * Team logo as an SVG chart point: light circular surface (matches TeamLogoTile),
+ * status ring, unified resolveTeamVisual fallbacks, initials on missing/failed load.
  */
 export function ChartLogoDot({
   cx,
@@ -37,8 +38,16 @@ export function ChartLogoDot({
   dimmed = false,
   onClick,
 }: ChartLogoDotProps) {
-  const clipId = React.useId();
-  const r = size / 2;
+  const { assets } = useTeamAssetsContext();
+  const resolved = resolveTeamVisual(
+    team.team,
+    {
+      logoUrl: team.logo_url,
+      abbreviation: team.abbreviation,
+      primaryColor: team.primary_color,
+    },
+    assets,
+  );
 
   return (
     <g
@@ -48,14 +57,66 @@ export function ChartLogoDot({
       style={onClick ? { cursor: "pointer" } : undefined}
     >
       <title>{team.team}</title>
-      <circle r={r + 2.5} fill="var(--card)" stroke={ringColor} strokeWidth={1.5} />
-      {team.logo_url ? (
+      <ChartLogoDotBody
+        key={resolved.logoUrl ?? `${team.team}-initials`}
+        team={team}
+        resolved={resolved}
+        size={size}
+        ringColor={ringColor}
+      />
+    </g>
+  );
+}
+
+function ChartLogoDotBody({
+  team,
+  resolved,
+  size,
+  ringColor,
+}: {
+  team: ChartTeamIdentity;
+  resolved: ResolvedTeamVisual;
+  size: number;
+  ringColor: string;
+}) {
+  const clipId = React.useId();
+  const r = size / 2;
+  const ringR = r + 2.5;
+  const [imageReady, setImageReady] = React.useState(false);
+  const [imageFailed, setImageFailed] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!resolved.logoUrl) return;
+
+    const img = new window.Image();
+    img.onload = () => setImageReady(true);
+    img.onerror = () => setImageFailed(true);
+    img.src = resolved.logoUrl;
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [resolved.logoUrl]);
+
+  const showLogo = Boolean(resolved.logoUrl) && imageReady && !imageFailed;
+  const initials = teamInitials(team.team, resolved.abbreviation ?? team.abbreviation);
+
+  return (
+    <>
+      <circle
+        r={ringR}
+        fill="var(--logo-surface)"
+        stroke={ringColor}
+        strokeWidth={1.5}
+      />
+      {showLogo ? (
         <>
           <clipPath id={clipId}>
             <circle r={r} />
           </clipPath>
           <image
-            href={team.logo_url}
+            href={resolved.logoUrl!}
             x={-r}
             y={-r}
             width={size}
@@ -70,11 +131,11 @@ export function ChartLogoDot({
           dominantBaseline="central"
           fontSize={size * 0.42}
           fontWeight={700}
-          fill={team.primary_color ?? "var(--muted-foreground)"}
+          fill={resolved.primaryColor ?? team.primary_color ?? "var(--muted-foreground)"}
         >
-          {teamInitials(team.team, team.abbreviation)}
+          {initials}
         </text>
       )}
-    </g>
+    </>
   );
 }

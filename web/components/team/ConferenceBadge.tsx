@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getConferenceMeta } from "@/lib/conferences";
+import { championLogoRingClass, logoSurfaceFrameClass } from "@/lib/logoSurface";
 import { cn } from "@/lib/utils";
 
 interface ConferenceBadgeProps {
@@ -24,9 +25,15 @@ interface ConferenceBadgeProps {
 }
 
 const MARK_SIZES = {
-  sm: { tile: 30, logo: 24 },
-  md: { tile: 34, logo: 28 },
-  lg: { tile: 40, logo: 32 },
+  sm: { frame: 28, logo: 22 },
+  md: { frame: 32, logo: 26 },
+  lg: { frame: 38, logo: 30 },
+} as const;
+
+const CHIP_LOGO_SIZES = {
+  sm: { frame: 16, logo: 12 },
+  md: { frame: 18, logo: 14 },
+  lg: { frame: 20, logo: 16 },
 } as const;
 
 /**
@@ -104,6 +111,28 @@ export function ConferenceCaption({
   );
 }
 
+function ConferenceLogoImage({
+  src,
+  logoSize,
+  onError,
+}: {
+  src: string;
+  logoSize: number;
+  onError: () => void;
+}) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={logoSize}
+      height={logoSize}
+      unoptimized
+      className="h-full w-full object-contain"
+      onError={onError}
+    />
+  );
+}
+
 function ConferenceMark({
   meta,
   showLogo,
@@ -119,37 +148,33 @@ function ConferenceMark({
   size: "sm" | "md" | "lg";
   className?: string;
 }) {
-  const { tile, logo } = MARK_SIZES[size];
+  const { frame, logo } = MARK_SIZES[size];
 
-  return (
+  const tile = (
     <span
-      className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-md border p-0.5",
-        isChampion
-          ? "border-tag-gold-border bg-tag-gold-bg"
-          : "border-border bg-logo-surface",
-        className,
-      )}
-      style={{ width: tile, height: tile }}
+      className={logoSurfaceFrameClass(className)}
+      style={{ width: frame, height: frame }}
       aria-label={meta.displayName}
     >
       {showLogo ? (
-        <Image
+        <ConferenceLogoImage
           src={meta.logoUrl!}
-          alt=""
-          width={logo}
-          height={logo}
-          unoptimized
-          className="h-full w-full object-contain"
+          logoSize={logo}
           onError={logoError}
         />
       ) : (
-        <span className="text-[0.6rem] font-bold text-muted-foreground">
+        <span className="text-[0.55rem] font-bold text-muted-foreground">
           {meta.shortLabel}
         </span>
       )}
     </span>
   );
+
+  if (isChampion) {
+    return <span className={championLogoRingClass()}>{tile}</span>;
+  }
+
+  return tile;
 }
 
 function ConferenceChip({
@@ -167,7 +192,7 @@ function ConferenceChip({
   size: "sm" | "md" | "lg";
   className?: string;
 }) {
-  const logoSize = size === "lg" ? 14 : size === "md" ? 13 : 12;
+  const { frame, logo } = CHIP_LOGO_SIZES[size];
 
   return (
     <Badge
@@ -179,15 +204,16 @@ function ConferenceChip({
       )}
     >
       {showLogo ? (
-        <Image
-          src={meta.logoUrl!}
-          alt=""
-          width={logoSize}
-          height={logoSize}
-          unoptimized
-          className="shrink-0 object-contain"
-          onError={logoError}
-        />
+        <span
+          className={logoSurfaceFrameClass("p-px")}
+          style={{ width: frame, height: frame }}
+        >
+          <ConferenceLogoImage
+            src={meta.logoUrl!}
+            logoSize={logo}
+            onError={logoError}
+          />
+        </span>
       ) : null}
       <span className="truncate">{meta.shortLabel}</span>
     </Badge>
