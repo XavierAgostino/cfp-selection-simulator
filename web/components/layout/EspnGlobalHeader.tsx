@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
@@ -71,9 +72,14 @@ export function EspnGlobalHeader() {
             className="group flex shrink-0 items-center self-center rounded-sm py-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
             aria-label="Selection Room home"
           >
-            <span className="text-[17px] font-extrabold uppercase leading-none tracking-[-0.04em] text-[#cc0000] transition-opacity duration-200 group-hover:opacity-90 sm:text-[18px]">
-              Selection Room
-            </span>
+            <Image
+              src="/brand/selection-room-icon-128.png"
+              alt=""
+              width={28}
+              height={28}
+              className="h-7 w-7 shrink-0 transition-opacity duration-200 group-hover:opacity-90"
+              priority
+            />
           </Link>
 
           <nav
