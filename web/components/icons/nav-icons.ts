@@ -1,5 +1,6 @@
 import {
   AmericanFootballIcon,
+  BeakerIcon,
   Book02Icon,
   DashboardSquare01Icon,
   FilterHorizontalIcon,
@@ -14,6 +15,7 @@ export const NAV_HUGEICONS = {
   "/bracket": AmericanFootballIcon,
   "/rankings": LeftToRightListNumberIcon,
   "/bubble": FilterHorizontalIcon,
+  "/scenario-lab": BeakerIcon,
   "/methodology": Book02Icon,
 } as const satisfies Record<(typeof PRIMARY_NAV)[number]["href"], unknown>;
 

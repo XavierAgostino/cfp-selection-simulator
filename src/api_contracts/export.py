@@ -119,9 +119,15 @@ def _regenerate_runs_index_unlocked() -> Path:
     scored.sort(key=lambda item: item[0])
     entries = [entry for _, entry in scored]
 
+    # The default view follows the newest *base* run. Scenario runs are reached
+    # explicitly via ?run=<stem> and must never become the site's default, even
+    # though a just-launched scenario has the newest manifest mtime.
     latest_ref: Optional[LatestRef] = None
-    if scored:
-        _, newest = max(scored, key=lambda item: item[0])
+    base_scored = [
+        item for item in scored if item[1].scenario_id == BASE_SCENARIO_ID
+    ]
+    if base_scored:
+        _, newest = max(base_scored, key=lambda item: item[0])
         latest_ref = LatestRef(season=newest.season, week=newest.week, stem=newest.stem)
 
     index = RunsIndex(generated_at=_now_iso(), latest=latest_ref, runs=entries)
@@ -232,7 +238,11 @@ def export_run_api(
         "sensitivity": sensitivity_payload,
     }
 
-    is_latest = _is_latest_run(paths)
+    # Only base runs own the site's default view. A scenario run is reached
+    # explicitly via ?run=<stem>; it must never promote itself to latest.json or
+    # the flat API files, or launching a what-if would silently flip the default.
+    is_base_run = paths.scenario_id == BASE_SCENARIO_ID
+    is_latest = is_base_run and _is_latest_run(paths)
     with export_lock():
         try:
             write_run_to_store(

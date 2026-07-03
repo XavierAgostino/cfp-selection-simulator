@@ -44,6 +44,7 @@ Full pipeline: load games → rank → select → seed → bracket → manifest.
 
 ```bash
 sroom run --year 2025 --week 15 [--sample] [--config PATH] [--html/--no-html]
+          [--weights "resume=0.45,predictive=0.25,sor=0.20,sos=0.10"] [--scenario-id ID]
 ```
 
 | Option | Description |
@@ -53,6 +54,8 @@ sroom run --year 2025 --week 15 [--sample] [--config PATH] [--html/--no-html]
 | `--sample` | Use bundled sample games (no API key) |
 | `--config` | YAML config file (`configs/2025.yaml`) |
 | `--html` / `--no-html` | Write bracket HTML (default: on) |
+| `--weights` | Scenario Lab override for the four composite weights (`resume,predictive,sor,sos`), each `0–1` and summing to 1. Derives a `scenario_id` (`w45-25-20-10`); default weights map to `base` |
+| `--scenario-id` | Override the derived scenario id explicitly. A non-base scenario writes a `{run_id}__{scenario_id}` stem and never becomes `latest` |
 
 ---
 

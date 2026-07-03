@@ -14,6 +14,13 @@ import {
   RUNS_JSON_PATH,
 } from "@/lib/paths";
 import { loadRepoEnv } from "@/lib/repoEnv";
+import {
+  BASE_SCENARIO_ID,
+  formatWeightSpec,
+  parseScenarioWeights,
+  weightsScenarioId,
+  type ScenarioWeights,
+} from "@/lib/scenarioWeights";
 
 loadRepoEnv();
 
@@ -30,6 +37,8 @@ export interface RunJobRequest {
   season: number;
   week: number;
   data_source: DataSource;
+  /** Scenario Lab weight overrides. Absent ⇒ a base run with engine defaults. */
+  weights?: ScenarioWeights;
 }
 
 export interface RunJobRecord {
@@ -315,11 +324,14 @@ async function resolveStemFromRunsJson(job: RunJobRecord): Promise<string | null
 
   const runId = `${job.request.season}_week${job.request.week}`;
   const startedAt = job.started_at ?? job.created_at;
+  const expectedScenarioId = job.request.weights
+    ? weightsScenarioId(job.request.weights)
+    : BASE_SCENARIO_ID;
 
   const matches = index.runs.filter(
     (entry) =>
       entry.run_id === runId &&
-      entry.scenario_id === "base" &&
+      entry.scenario_id === expectedScenarioId &&
       entry.data_source === job.request.data_source &&
       entry.generated_at >= startedAt,
   );
@@ -368,6 +380,9 @@ function spawnEngine(job: RunJobRecord): ChildProcess {
     String(job.request.week),
   ];
   if (job.request.data_source === "sample") args.push("--sample");
+  if (job.request.weights) {
+    args.push("--weights", formatWeightSpec(job.request.weights));
+  }
 
   return spawn(python, args, {
     cwd: REPO_DIR,
@@ -536,5 +551,21 @@ export function parseRunRequest(body: unknown): RunJobRequest | null {
     return null;
   }
 
-  return { season: seasonRaw, week: weekRaw, data_source: dataSource };
+  const request: RunJobRequest = {
+    season: seasonRaw,
+    week: weekRaw,
+    data_source: dataSource,
+  };
+
+  // Optional Scenario Lab weights. Present-but-invalid is a hard reject (not a
+  // silent base run). Weights equal to the defaults collapse to a base run.
+  if (record.weights !== undefined) {
+    const weights = parseScenarioWeights(record.weights);
+    if (weights === null) return null;
+    if (weightsScenarioId(weights) !== BASE_SCENARIO_ID) {
+      request.weights = weights;
+    }
+  }
+
+  return request;
 }

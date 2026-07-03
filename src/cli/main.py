@@ -19,12 +19,15 @@ from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.cache_paths import games_cache_write_path
 from src.pipeline.paths import (
+    BASE_SCENARIO_ID,
     DATA_OUTPUT,
     RunOutputPaths,
     find_latest_manifest,
     paths_from_manifest,
+    weights_scenario_id,
 )
 from src.pipeline.run import REPO_ROOT, run_pipeline
+from src.pipeline.weights import parse_weight_overrides
 from src.validation.backtest import run_era_validation
 
 app = typer.Typer(
@@ -61,8 +64,11 @@ def _run_and_report(
     *,
     sample: bool,
     write_html: bool = True,
+    scenario_id: str = BASE_SCENARIO_ID,
 ) -> dict:
-    result = run_pipeline(cfg, use_sample=sample, write_html=write_html)
+    result = run_pipeline(
+        cfg, use_sample=sample, write_html=write_html, scenario_id=scenario_id
+    )
     print_run_summary(
         cfg,
         data_source=result["data_source"],
@@ -161,10 +167,35 @@ def run_cmd(
     config: Optional[Path] = typer.Option(None, "--config", help="YAML config file"),
     sample: bool = typer.Option(False, help="Use bundled sample dataset"),
     html: bool = typer.Option(True, "--html/--no-html", help="Write HTML bracket"),
+    weights: Optional[str] = typer.Option(
+        None,
+        "--weights",
+        help=(
+            "Scenario weight overrides, e.g. "
+            "'resume=0.45,predictive=0.25,sor=0.20,sos=0.10'. Routes output to a "
+            "scenario stem; base artifacts and latest.json are untouched."
+        ),
+    ),
+    scenario_id: Optional[str] = typer.Option(
+        None,
+        "--scenario-id",
+        help="Override the derived scenario id (advanced; normally inferred from --weights).",
+    ),
 ) -> None:
-    """Run full pipeline with manifest."""
+    """Run full pipeline with manifest. Pass --weights to produce a scenario run."""
     cfg = _resolve_config(year, week, config)
-    _run_and_report(cfg, sample=sample, write_html=html)
+
+    resolved_scenario = BASE_SCENARIO_ID
+    if weights is not None:
+        try:
+            cfg.weights = parse_weight_overrides(weights, cfg.weights)
+        except ValueError as exc:
+            raise typer.BadParameter(str(exc), param_hint="--weights") from exc
+        resolved_scenario = weights_scenario_id(cfg.weights)
+    if scenario_id is not None:
+        resolved_scenario = scenario_id
+
+    _run_and_report(cfg, sample=sample, write_html=html, scenario_id=resolved_scenario)
 
 
 @app.command()

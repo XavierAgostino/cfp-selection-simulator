@@ -30,6 +30,30 @@ def scenario_stem(run_id_value: str, scenario_id: str) -> str:
     return f"{run_id_value}__{scenario_id}"
 
 
+def weights_scenario_id(weights) -> str:
+    """Deterministic scenario id from the four composite weights.
+
+    ``w{resume}-{predictive}-{sor}-{sos}`` using whole-percent rounding, e.g.
+    resume 0.45 / predictive 0.25 / sor 0.20 / sos 0.10 -> ``w45-25-20-10``.
+    Idempotent: the same weights always map to the same id (and stem), so
+    relaunching a scenario overwrites it instead of piling up runs. Weights
+    equal to the engine defaults collapse to :data:`BASE_SCENARIO_ID`.
+    """
+    from src.pipeline.weights import RankingWeights
+
+    components = component_weights(weights)
+    defaults = component_weights(RankingWeights())
+    if all(
+        abs(components.get(key, 0.0) - value) < 1e-9
+        for key, value in defaults.items()
+    ):
+        return BASE_SCENARIO_ID
+    return "w" + "-".join(
+        str(round(components[key] * 100))
+        for key in ("resume", "predictive", "sor", "sos")
+    )
+
+
 def build_run_label(season: int, week: int, scenario_id: str) -> str:
     base = f"{season} Week {week}"
     if scenario_id == BASE_SCENARIO_ID:
@@ -67,10 +91,11 @@ def ensure_output_dirs() -> None:
 class RunOutputPaths:
     year: int
     week: int
+    scenario_id: str = BASE_SCENARIO_ID
 
     @property
     def stem(self) -> str:
-        return run_stem(self.year, self.week)
+        return scenario_stem(run_stem(self.year, self.week), self.scenario_id)
 
     @property
     def rankings(self) -> Path:
@@ -158,4 +183,5 @@ def paths_from_manifest(manifest_path: Path) -> Optional[RunOutputPaths]:
     week = data.get("week")
     if season is None or week is None:
         return None
-    return RunOutputPaths(year=int(season), week=int(week))
+    scenario_id = data.get("scenario_id", BASE_SCENARIO_ID)
+    return RunOutputPaths(year=int(season), week=int(week), scenario_id=scenario_id)

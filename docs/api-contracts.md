@@ -17,7 +17,7 @@ data/output/api/
     rankings.json field.json bracket.json audit.json team-resumes.json sensitivity.json
 ```
 
-Example scenario directory: `runs/2025_week15__a13f9c2b4e5d6f70/`
+Example scenario directory: `runs/2025_week15__w45-25-20-10/`
 
 All top-level payloads carry `schema_version: 1`.
 
@@ -78,16 +78,16 @@ All top-level payloads carry `schema_version: 1`.
 }
 ```
 
-**Run identity:** `run_id` groups season/week (`2025_week15`). `scenario_id` distinguishes weight variants under the same week. Base pipeline runs use `scenario_id: "base"` and `stem === run_id`. Scenario runs use `stem: "{run_id}__{scenario_id}"` (typically the config hash) so API directories never collide.
+**Run identity:** `run_id` groups season/week (`2025_week15`). `scenario_id` distinguishes weight variants under the same week. Base pipeline runs use `scenario_id: "base"` and `stem === run_id`. Scenario runs use `stem: "{run_id}__{scenario_id}"` so API directories never collide. Scenario Lab derives `scenario_id` deterministically from the four composite weights as whole percents — `w{resume}-{predictive}-{sor}-{sos}` (e.g. `w45-25-20-10`) — so identical weights always map to the same stem and default weights collapse to `base`.
 
 Example scenario entry:
 
 ```jsonc
 {
-  "stem": "2025_week15__a13f9c2b4e5d6f70",
+  "stem": "2025_week15__w45-25-20-10",
   "run_id": "2025_week15",
-  "scenario_id": "a13f9c2b4e5d6f70",
-  "label": "2025 Week 15 · a13f9c2b4e5d6f70",
+  "scenario_id": "w45-25-20-10",
+  "label": "2025 Week 15 · w45-25-20-10",
   ...
 }
 ```

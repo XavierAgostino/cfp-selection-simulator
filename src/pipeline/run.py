@@ -92,7 +92,7 @@ def write_manifest(
 ) -> Path:
     """Write run manifest JSON for reproducibility."""
     rid = run_id(config.year, config.week)
-    scenario_id = BASE_SCENARIO_ID
+    scenario_id = paths.scenario_id
     manifest = {
         "simulator_version": __version__,
         "ruleset": config.playoff_format.name if config.playoff_format else None,
@@ -232,10 +232,18 @@ def run_pipeline(
     write_html: bool = True,
     select_field: bool = True,
     export_api: bool = True,
+    scenario_id: str = BASE_SCENARIO_ID,
 ) -> Dict[str, Any]:
-    """Run full fetch → rank → select → bracket pipeline."""
+    """Run full fetch → rank → select → bracket pipeline.
+
+    ``scenario_id`` routes output to a scenario stem (``{run_id}__{scenario_id}``)
+    so weight variants never overwrite the base run. Base runs keep the run_id
+    stem and remain the site's default view (see ``export_run_api``).
+    """
     ensure_output_dirs()
-    paths = RunOutputPaths(year=config.year, week=config.week)
+    paths = RunOutputPaths(
+        year=config.year, week=config.week, scenario_id=scenario_id
+    )
     data_source = "sample" if use_sample else "cfbd"
     steps: List[str] = []
 

@@ -89,10 +89,11 @@ the UI points you at `make setup`.
 | Route | Purpose |
 |-------|---------|
 | `GET /api/run/capabilities` | Deployment probe (`run_generation_enabled`, `live_cfbd_enabled`, etc.) |
-| `POST /api/run` | Create job (`{ season, week, data_source }`) → 202 + `job_id` |
+| `POST /api/run` | Create job (`{ season, week, data_source, weights? }`) → 202 + `job_id`. Optional `weights` (four `0–1` numbers summing to ~1) launches a Scenario Lab run; equal-to-default weights collapse to a base run |
 | `GET /api/run` | Active or most recent job (legacy compat) |
 | `GET /api/run/[jobId]` | Full job record (status, stem, error, pid, exit_code) |
 | `GET /api/run/[jobId]/logs` | Redacted log tail (~200 lines) |
+| `GET /api/scenario/diff` | `?base=<stem>&scenario=<stem>` (same `run_id`) → field/seed/bubble/rank diff |
 
 Job files live under `data/output/jobs/` (not served via `/api/data/`).
 
@@ -104,6 +105,7 @@ Job files live under `data/output/jobs/` (not served via `/api/data/`).
 | `/bracket` | Flagship bracket viewer (full bracket / rounds / matchup cards) |
 | `/rankings` | Full composite table with score bars, search, and sorting |
 | `/bubble` | Last four in / first four out / next four out + selection audit + **Selection Stability** board |
+| `/scenario-lab` | **Scenario Lab**: reweight the composite and diff the projected field against a base run |
 | `/teams/[team]` | Team resume: schedule, score breakdown, selection case + **Selection Stability** strip |
 | `/methodology` | Live weights, 5+7 field rules, seeding eras, data sources |
 
@@ -125,8 +127,30 @@ outcomes. See [Sensitivity Analysis](research/sensitivity-analysis.md).
 
 ## Scenario Lab
 
-Scenario Lab (interactive weight sliders and field diff) is **planned** but not
-yet shipped. Do not expect in-app scenario editing today.
+`/scenario-lab` lets you fork a base run, reweight the four composite
+components with sliders, and re-run selection to see how the projected field
+responds. It is a **weights-only** what-if: like Selection Stability, it never
+simulates future game outcomes and never speaks in win probabilities — only a
+projected reordering under different assumptions.
+
+- **Sliders** work in whole percents that always sum to 100 (moving one
+  rebalances the others). The four are converted to `0–1` weights and mapped to
+  a deterministic `scenario_id` (`w45-25-20-10`); the engine defaults
+  (40/30/20/10) collapse to `base`, so you cannot launch a no-op scenario.
+- **Launch** goes through the same Option B job path as Run Analysis, passing
+  `weights` on `POST /api/run`. The scenario run writes its own
+  `{run_id}__{scenario_id}` stem and **never** promotes itself to `latest.json`,
+  the flat API files, or the `runs.json` `latest` pointer — the base run stays
+  the site default.
+- **Diff** is computed server-side by the ScenarioDiffService
+  (`web/lib/scenarioDiff.ts`, pure) from the two runs' `rankings.json` +
+  `field.json`, served at `GET /api/scenario/diff?base=<stem>&scenario=<stem>`
+  (same `run_id` required). It reports field entries/exits, seed movement,
+  bubble shifts (last four in / first four out, before vs after), and the
+  largest full-board rank movers.
+- **Saved scenarios** for the selected base run are listed for one-click
+  comparison, so the page stays useful even where live generation is disabled
+  (static/hosted): any already-generated scenario can be opened without a rerun.
 
 ## Data plumbing
 

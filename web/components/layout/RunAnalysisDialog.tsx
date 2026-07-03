@@ -46,6 +46,7 @@ import type { WeekDefaultsResponse } from "@/app/api/run/week-defaults/route";
 import { fetchWeekDefaults, weekOptionLabel } from "@/lib/defaultWeek";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
 import type { RunCapabilities, RunJobRecord } from "@/lib/runJob";
+import { weightsScenarioId } from "@/lib/scenarioWeights";
 import { invalidateRunPayloadCache } from "@/lib/runPayloadCache";
 import { truncateConfigHash } from "@/lib/recordMeta";
 import type { RunSummary } from "@/lib/types";
@@ -102,7 +103,10 @@ function statusBadgeVariant(
 function jobSummaryLine(job: RunJobRecord): string {
   const source =
     job.request.data_source === "cfbd" ? "Live CFBD" : "Sample demo";
-  return `${job.request.season} Week ${job.request.week} · ${source}`;
+  const base = `${job.request.season} Week ${job.request.week} · ${source}`;
+  return job.request.weights
+    ? `${base} · Scenario ${weightsScenarioId(job.request.weights)}`
+    : base;
 }
 
 interface CurrentRunBannerProps {

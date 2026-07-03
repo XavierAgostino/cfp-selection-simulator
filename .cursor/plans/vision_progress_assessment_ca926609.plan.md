@@ -1,6 +1,6 @@
 ---
 name: Vision Progress Assessment
-overview: Phases 1A–1C and 2A complete. Layer 2 platform foundation done locally. Layer 2H hosted production architecture designed (not implemented). Decision-support (Scenario Lab) not started. Next hosted arch docs + Run Analysis polish, then Scenario Lab MVP on local adapters.
+overview: Phases 1A–1C and 2A complete. Layer 2 platform foundation done locally. Layer 2H hosted production architecture designed (not implemented). Scenario Lab MVP shipped (Layer 3, weights-only what-if on local adapters). Next: richer scenarios (game outcomes) and the institutional/share layer; hosted adapters (H1–H7) remain future.
 todos:
   - id: land-wip
     content: "Commit working tree: logo pipeline (PR A) and bracket FullBracket/RulesetBanner refactor (PR B) as separate commits"
@@ -34,7 +34,7 @@ todos:
     status: pending
   - id: scenario-lab
     content: "Build Scenario Lab MVP: weight sliders, normalize to 100%, launch scenario run, moved in/out/stable + field/bracket/bubble diff"
-    status: pending
+    status: completed
   - id: phase3-validation
     content: "Phase 3: validation dashboard MVP surfacing Python backtest/committee alignment data"
     status: pending
@@ -61,10 +61,10 @@ isProject: false
 | **Layer 1 — Viewer** | Explainability, bracket, charts, stability UI | **Done** |
 | **Layer 2 — Platform foundation** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done locally** — JSON web contract; OSS workflow intact |
 | **Layer 2H — Hosted production** | Vercel + worker + object storage + Postgres adapters | **Designed, not implemented** — see [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
-| **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **Not started** |
+| **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **MVP shipped** — `/scenario-lab`: weight sliders → scenario run via Option B → server-side field/seed/bubble/rank diff |
 | **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Not started** |
 
-**Critical distinction:** Option B and DuckDB do **not** count as Scenario Lab. They **make Scenario Lab possible**. Future agents should not re-polish Phase 1 or treat infrastructure as product completion.
+**Critical distinction:** Option B and DuckDB do **not** count as Scenario Lab; they **made it possible**. The shipped Scenario Lab MVP is weights-only (no game-outcome simulation, custom champions, or share links yet). Future agents should not re-polish Phase 1 or treat infrastructure as product completion.
 
 ---
 
@@ -72,7 +72,7 @@ isProject: false
 
 Selection Room is no longer just a **polished JSON viewer**. It is a **run-capable analysis workspace** on localhost or a persistent Node server: browser run generation, in-page run switching, run-grounded team narratives, and a local analytical store.
 
-It is **not yet** a true **what-if decision platform** because Scenario Lab has not shipped. That remains the next product leap.
+With the Scenario Lab MVP shipped it now has its first **what-if decision** surface: reweight the composite and see the projected field, seeds, and bubble move. The remaining leaps toward a full decision platform are richer scenarios (game outcomes, custom champions) and the institutional/share layer.
 
 **Platform honesty:** Layer 2 platform foundation is **done locally**. Layer 2H hosted production architecture is **designed, not implemented**. Phrase as: *local OSS platform complete; hosted adapters and worker stack not built yet.*
 
@@ -90,7 +90,7 @@ The six-step user flow:
 | 2. Understand the rule path | **Strong** — Methodology uses centralized `MetricTooltip` + [`METRIC_EXPLANATIONS`](web/lib/explain.ts) via [`MethodologyWeightBreakdown.tsx`](web/components/methodology/MethodologyWeightBreakdown.tsx) |
 | 3. Inspect any team | **Strong** — Drawer + hover cards; `?run=` scoping; run-grounded `selection_case` |
 | 4. Understand the bubble | **Strong** — Cut-line chart + Selection Stability board + audit |
-| 5. Test what would change | **Not started** — No Scenario Lab UI |
+| 5. Test what would change | **MVP** — Scenario Lab (`/scenario-lab`): reweight sliders → scenario run → field/seed/bubble/rank diff. Weights-only; no game-outcome sim yet |
 | 6. Share or export the result | **Minimal** — Bracket share button only; brand/PWA metadata ahead of Phase 3 export layer |
 
 ### Platform enablers (not user-facing steps)
