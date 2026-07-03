@@ -75,18 +75,17 @@ function fallbackWeekDefaults(
   season: number,
   dataSource: "sample" | "cfbd",
 ): WeekDefaultsResponse {
-  const maxAvailable = dataSource === "sample" ? 15 : 16;
-  const defaultWeek = maxAvailable >= 16 ? 16 : 15;
+  // Fallback when the Python resolver can't be spawned. Both the sample fixture
+  // and the current-era live cache top out at the championship-weekend field
+  // (week 15); week 16 carries no additional games, so we never surface it here.
+  const maxAvailable = 15;
   return {
     season,
     data_source: dataSource,
-    default_week: defaultWeek,
+    default_week: 15,
     max_available_week: maxAvailable,
     week_labels: {
-      "15": "Week 15 · Pre-final / championship window",
-      ...(maxAvailable >= 16
-        ? { "16": "Week 16 · Final selection window" }
-        : {}),
+      "15": "Week 15 · Championship weekend · final field",
     },
   };
 }

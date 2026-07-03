@@ -1,6 +1,13 @@
 import type { TeamAsset, TeamAssetsPayload } from "@/lib/types";
 
-/** ESPN numeric ids for common FBS schools — offline logo fallback when cache misses. */
+/**
+ * ESPN numeric ids for FBS schools — offline logo fallback when the per-run
+ * team-assets.json cache misses (e.g. the Validation view references historical
+ * teams outside the active run's ~12-team payload).
+ *
+ * Source of truth is `src/assets/teams.py::ESPN_TEAM_IDS`; keep this mirror in
+ * sync so any team the engine can reference resolves to a real logo here.
+ */
 export const ESPN_TEAM_IDS: Record<string, number> = {
   Georgia: 61,
   "Ohio State": 194,
@@ -68,21 +75,75 @@ export const ESPN_TEAM_IDS: Record<string, number> = {
   Northwestern: 77,
   Purdue: 2509,
   Rutgers: 164,
-  Syracuse: 183,
-  Virginia: 258,
-  "Boston College": 103,
-  "Wake Forest": 154,
-  "NC State": 152,
-  "Mississippi State": 344,
+  Maryland: 120,
+  California: 25,
+  Stanford: 24,
+  Arizona: 12,
+  Kansas: 2305,
+  Houston: 248,
+  "James Madison": 256,
+  UConn: 41,
+  Connecticut: 41,
+  "South Florida": 58,
+  Toledo: 2649,
+  "Northern Illinois": 2459,
+  "North Texas": 249,
   "San Diego State": 21,
+  "Fresno State": 278,
   "App State": 2026,
   "Appalachian State": 2026,
+  "Coastal Carolina": 324,
+  Marshall: 276,
+  Louisiana: 309,
+  Troy: 2653,
+  "Western Kentucky": 98,
+  "East Carolina": 151,
+  "South Alabama": 2654,
+  "Georgia Southern": 290,
+  "Old Dominion": 295,
+  Buffalo: 2084,
+  "Bowling Green": 189,
+  Ohio: 195,
+  "Miami (OH)": 193,
+  "Ball State": 2050,
+  Akron: 2006,
+  "Central Michigan": 2117,
+  "Eastern Michigan": 2199,
+  "Western Michigan": 2711,
+  "Air Force": 2005,
+  "Colorado State": 36,
+  Wyoming: 2751,
+  Hawaii: 62,
+  Nevada: 2440,
+  "San Jose State": 23,
+  "New Mexico": 167,
+  "Utah State": 328,
+  "Florida Atlantic": 2226,
+  FIU: 2229,
+  "Florida International": 2229,
+  Charlotte: 2429,
+  UTSA: 2636,
+  Rice: 242,
+  "North Carolina State": 152,
+  "NC State": 152,
+  Virginia: 258,
+  "Boston College": 103,
+  Syracuse: 183,
+  "Wake Forest": 154,
+  "Mississippi State": 344,
+  "Missouri State": 2623,
+  "Kennesaw State": 338,
 };
 
+// Mirrors src/assets/teams.py::TEAM_NAME_ALIASES (plus a few display-only forms).
 const NAME_ALIASES: Record<string, string> = {
+  "Connecticut Huskies": "Connecticut",
+  "James Madison Dukes": "James Madison",
+  "App State": "Appalachian State",
+  FIU: "Florida International",
+  "Miami (FL)": "Miami",
   Pitt: "Pittsburgh",
   "Southern Miss": "Southern Mississippi",
-  "App State": "Appalachian State",
   USF: "South Florida",
   UMass: "Massachusetts",
 };

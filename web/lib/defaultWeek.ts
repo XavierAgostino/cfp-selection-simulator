@@ -3,13 +3,20 @@ import type { WeekDefaultsResponse } from "@/app/api/run/week-defaults/route";
 export const FINAL_SELECTION_WEEK = 16;
 export const PRE_FINAL_SELECTION_WEEK = 15;
 
+/**
+ * First week the CFP committee publishes rankings (early November). Weeks before
+ * this have no selection meaning, so the Run Analysis picker starts here rather
+ * than at week 1.
+ */
+export const SELECTION_WINDOW_START_WEEK = 10;
+
 /** Client-side label when API labels are not loaded yet. */
 export function weekOptionLabelFallback(week: number): string {
   if (week === FINAL_SELECTION_WEEK) {
     return "Week 16 · Final selection window";
   }
   if (week === PRE_FINAL_SELECTION_WEEK) {
-    return "Week 15 · Pre-final / championship window";
+    return "Week 15 · Championship weekend · final field";
   }
   return `Week ${week}`;
 }
