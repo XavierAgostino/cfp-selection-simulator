@@ -19,7 +19,12 @@ export type ExplainMetricKey =
   | ScoreMetricKey
   | "cut_line"
   | "record"
-  | "selection_stability";
+  | "selection_stability"
+  | "composite_profile"
+  | "resume_edge"
+  | "predictive_edge"
+  | "sor_edge"
+  | "sos_edge";
 
 export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = {
   composite: {
@@ -60,6 +65,28 @@ export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = 
     label: "Selection Stability",
     description:
       "The share of Monte Carlo weight scenarios where a team remains in the projected field. It varies model weights, not future game results.",
+  },
+  composite_profile: {
+    label: "Composite Profile",
+    description:
+      "A normalized comparison of the two teams' composite scores for this matchup. It is not a game win probability.",
+  },
+  resume_edge: {
+    label: "Resume Edge",
+    description: "Which team has the stronger earned-results profile.",
+  },
+  predictive_edge: {
+    label: "Predictive Edge",
+    description:
+      "Which team rates stronger on forward-looking team-strength measures.",
+  },
+  sor_edge: {
+    label: "SOR Edge",
+    description: "Which team has the stronger strength-of-record profile.",
+  },
+  sos_edge: {
+    label: "SOS Edge",
+    description: "Which team faced the tougher schedule.",
   },
 };
 
