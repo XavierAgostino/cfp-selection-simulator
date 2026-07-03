@@ -5,6 +5,7 @@ import { BidBadge } from "@/components/team/BidBadge";
 import { SeedBadge } from "@/components/team/SeedBadge";
 import { ConferenceBadge, ConferenceCaption } from "@/components/team/ConferenceBadge";
 import { ScoreBars } from "@/components/team/ScoreBars";
+import { ResumeStabilityBlock } from "@/components/team/ResumeStabilityBlock";
 import { ResumeScheduleList } from "@/components/team/ResumeScheduleList";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatRecord } from "@/lib/format";
@@ -114,6 +115,7 @@ export function ResumeContent({ resume, variant, footer }: ResumeContentProps) {
           <div className="rounded-xl bg-card/60 p-4">
             <ScoreBars resume={resume} />
           </div>
+          <ResumeStabilityBlock team={resume.team} />
           <WhyInConcerns resume={resume} />
         </div>
         <div className="flex flex-col gap-3">
@@ -132,6 +134,7 @@ export function ResumeContent({ resume, variant, footer }: ResumeContentProps) {
     <div className="flex h-full flex-col gap-5">
       <ResumeHeader resume={resume} />
       <ScoreBars resume={resume} />
+      <ResumeStabilityBlock team={resume.team} />
       <WhyInConcerns resume={resume} />
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
