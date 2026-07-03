@@ -2,15 +2,51 @@
 
 All notable changes to the Selection Room project.
 
-## 3.0.0
+## [3.0.0-beta] - 2026-07-03
+
+**Selection Room v1 — first feature-complete release under the Selection Room name.**
+
+Selection Room is an independent CFP selection analysis workspace. It is not
+affiliated with, endorsed by, or a replication of the College Football Playoff
+selection committee. This release is local / open-source first: hosted production
+architecture is documented but not implemented.
+
+### Added
+
+- **Selection Room web app** (Next.js under `web/`) — the primary UI over the
+  engine's JSON exports.
+- **Projected field & rankings** — dashboard field view and full composite
+  rankings table (resume, predictive, SOR, SOS) with score bars, search, sorting.
+- **Bracket viewer** — format-aware 12-team bracket (full bracket / rounds /
+  matchup cards) under 2024 and 2025+ seeding rules.
+- **Team resume drawers** — schedule, score breakdown, and run-grounded selection
+  case (`why_in` / concerns), reachable from any team name.
+- **Bubble & cut-line analysis** — last four in / first four out / next four out,
+  the selection audit trail, and the **Selection Stability** board.
+- **Selection Stability** — Monte Carlo weight perturbation exported as
+  `sensitivity.json` (`src/validation/sensitivity.py`); see [Sensitivity Analysis](docs/research/sensitivity-analysis.md).
+- **In-browser run generation** — Run Analysis launches a season/week run from
+  sample or live CFBD data without leaving the site.
+- **Scenario Lab** — reweight the four composite pillars and diff the resulting
+  field, seeds, and bubble against a base run (weights-only what-if).
+- **Validation Dashboard** — retrospective committee-alignment, field-accuracy,
+  and predictive-signal tracks across seasons, with a seeded offline fixture.
+- **Export / share primitives** — rankings CSV download, bracket share image
+  (branded PNG), and per-team resume cards, all scoped to the active run.
+- **JSON API contract layer** (`docs/api-contracts.md`) plus a local DuckDB run
+  store for analytical queries (`sroom store`).
+- **Fumadocs documentation site** at `/docs`.
 
 ### Changed
+
 - **Renamed to Selection Room**: new `sroom` CLI (the legacy `cfp-sim` alias has been removed)
 - **Removed Docker/Jupyter setup path**: local development now goes through `make setup` (`.venv` + pip install), no container required
 
-### Added
-- **JSON API contract layer** (`docs/api-contracts.md`) and a Next.js web app under `web/`
-- **Selection Stability**: Monte Carlo weight perturbation exported as `sensitivity.json` (`src/validation/sensitivity.py`); see [Sensitivity Analysis](docs/research/sensitivity-analysis.md)
+### Not included (documented future work)
+
+- Shareable scenario URLs (deep-linked Scenario Lab diffs).
+- Hosted production adapters (Vercel + worker + object storage + Postgres) — see
+  [`docs/architecture/hosted-production.md`](docs/architecture/hosted-production.md).
 
 ## [2.0.0] - 2026-07-02
 

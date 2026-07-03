@@ -1,6 +1,6 @@
 ---
 name: Vision Progress Assessment
-overview: Layers 1–3 complete. Scenario Lab shipped (d81e91a). Validation Dashboard shipped (98f1934) + hardened (d1b3f38). Export primitives shipped (rankings CSV, bracket share image, resume card). Remaining product gap is shareable scenario URLs; hosted adapters (H1–H7) stay future.
+overview: Selection Room v1 is feature-complete as a local/open-source product. All four layers shipped — Scenario Lab (d81e91a), Validation Dashboard (98f1934 + d1b3f38 hardening), and export/share primitives (rankings CSV, bracket share image, resume card). Next work is release hardening, documentation consistency, and optional hosted production planning. Shareable scenario URLs and hosted adapters (H1–H7) are future (v1.1+), not v1 blockers.
 todos:
   - id: land-wip
     content: "Commit working tree: logo pipeline (PR A) and bracket FullBracket/RulesetBanner refactor (PR B) as separate commits"
@@ -52,11 +52,11 @@ isProject: false
 
 # Selection Room Vision — Progress Assessment
 
-**Last updated:** 2026-07-03 (post export primitives slice)
+**Last updated:** 2026-07-03 (v1 release hardening pass)
 
-**Sources:** [`selection_room_vision_5f27cf0d.plan.md`](selection_room_vision_5f27cf0d.plan.md), [`vision_status_cleanup.plan.md`](vision_status_cleanup.plan.md), [`validation_dashboard_mvp.plan.md`](validation_dashboard_mvp.plan.md). Implementation history for shipped layers lives in [`archive/`](archive/) — do not re-read those for current work.
+**Sources:** [`selection_room_vision_5f27cf0d.plan.md`](selection_room_vision_5f27cf0d.plan.md) (vision/doctrine), [`archive/vision_status_cleanup.plan.md`](archive/vision_status_cleanup.plan.md), [`archive/validation_dashboard_mvp.plan.md`](archive/validation_dashboard_mvp.plan.md). Implementation history for shipped layers lives in [`archive/`](archive/) — do not re-read those for current work.
 
-**Mental model:** The local OSS product is nearly complete. Export primitives (rankings CSV, bracket share image, resume card) are shipped; the remaining product gap is **shareable scenario URLs**, not more infrastructure and not another analysis surface.
+**Current state:** **Selection Room v1 is feature-complete as a local/open-source product:** field/ranking/bracket/bubble explainability, browser run generation, dynamic team cases, Scenario Lab, Validation Dashboard, and export/share primitives are shipped. The next work is **release hardening, documentation consistency, and optional hosted production planning** — not more feature scope. Shareable scenario URLs are a v1.1 nice-to-have; hosted adapters (H1–H7) stay future.
 
 ---
 
@@ -68,7 +68,7 @@ isProject: false
 | **Layer 2 — Platform foundation** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done locally** — JSON web contract; OSS workflow intact |
 | **Layer 2H — Hosted production** | Vercel + worker + object storage + Postgres adapters | **Designed, not implemented** — see [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
 | **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **Shipped** (`d81e91a`) — weights-only what-if with field/seed/bubble/rank diff, empty-state preview, honest copy |
-| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Validation shipped** (`98f1934` + hardening); **export primitives shipped** (CSV, bracket image, resume card); scenario share URLs remain |
+| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Shipped (v1)** — validation (`98f1934` + hardening) + export primitives (CSV, bracket image, resume card). Scenario share URLs deferred to v1.1 |
 
 ---
 
@@ -82,9 +82,9 @@ isProject: false
 | 2. Understand the rule path | **Done** — Methodology + centralized tooltips |
 | 3. Inspect any team | **Done** — Drawer + hover cards; `?run=` scoping; run-grounded `selection_case` |
 | 4. Understand the bubble | **Done** — Cut-line chart + Selection Stability board + audit |
-| 5. Test what would change | **Shipped (MVP)** — Scenario Lab: reweight sliders → scenario run → diff. Weights-only; no game-outcome sim |
-| 6. Validate (trust layer) | **Shipped** — `/validation`: committee / field / predictive tracks, trust-hierarchy copy, seeded fixture, honest aggregation |
-| 7. Share / export | **Shipped** — rankings CSV, bracket share image, resume card (`web/components/share/`); scenario share URLs next |
+| 5. Test what would change | **Done, MVP** — Scenario Lab: reweight sliders → scenario run → diff. Weights-only; no game-outcome sim |
+| 6. Validate (trust layer) | **Done** — `/validation`: committee / field / predictive tracks, trust-hierarchy copy, seeded fixture, honest aggregation |
+| 7. Share / export | **Done, v1 primitives** — rankings CSV, bracket share image, resume card (`web/components/share/`) |
 
 ---
 
@@ -129,18 +129,27 @@ refresh after launch without full reload; `?run=` deep-link on `/scenario-lab`.
 | Layer 2H hosted architecture | **Designed** — adapters not built |
 | Scenario Lab | **Shipped** (`d81e91a`) |
 | Validation dashboard | **Shipped** (`98f1934` + hardening) |
-| Export/share layer | **Not started — the next move** |
+| Export/share layer | **Shipped (v1 primitives)** — rankings CSV, bracket image, resume card |
 
 ---
 
-## Locked next moves
+## v1 is feature-complete — the job is now release, not scope
 
-1. **Run Analysis preflight** — local UX polish only (not a new phase)
-2. ~~**Export primitives**~~ — shipped: bracket share image, rankings CSV download, resume card export
-3. **Shareable scenario URLs** — the next product move
-4. **Hosted Architecture H1–H7** — after the local OSS product feels complete; before serious public launch
+The local OSS product has crossed the v1 finish line. **Do not start new features.**
+The sequence from here is **freeze → verify → document → tag release**:
 
-**Doctrine (unchanged):** JSON under `data/output/api/` is the web contract. DuckDB is local analytics only — do **not** expand it into web page reads. Scenario runs never own `latest.json`. Do **not** build hosted adapters before export/share unless local architecture actively blocks. Do **not** re-polish Phase 1.
+1. **Freeze v1 feature scope** — no new analysis surfaces or product layers.
+2. **Verify** — Python tests, web typecheck, web build, fresh-clone path, export flows, Fumadocs.
+3. **Document** — README/docs reflect v1 feature-complete status; archive completed plans.
+4. **Tag** — `v1.0.0-beta` (or `v1.0.0-local`) now; public hosted release becomes `v1.1.0`+.
+
+### Future (v1.1+), not active work
+
+- **Shareable scenario URLs** — deep-link a scenario diff (nice-to-have; not a v1 blocker).
+- **Hosted Architecture H1–H7** — adapters, worker, Postgres; before serious public launch.
+- **v2 research** — `sroom calibrate`, PPA/EPA work, accounts, DB page-read architecture. **Not started; do not start.**
+
+**Doctrine (unchanged):** JSON under `data/output/api/` is the web contract. DuckDB is local analytics only — do **not** expand it into web page reads. Scenario runs never own `latest.json`. Do **not** build hosted adapters before there is a reason to host. Do **not** re-polish Phase 1.
 
 ---
 
@@ -164,11 +173,14 @@ refresh after launch without full reload; `?run=` deep-link on `/scenario-lab`.
 
 ## Bottom line
 
-Selection Room is a local run-capable CFP selection analysis workspace with
-field/ranking/bracket/bubble explainability, browser run generation, dynamic
-team cases, a weight-based Scenario Lab, a shipped, hardened validation
-dashboard, and export primitives (rankings CSV, bracket share image, resume
-card via `web/components/share/`). Every north-star step through "Validate"
-and "Export" is done. The one remaining gap before the local OSS product feels
-complete is **shareable scenario URLs** (deep-link a scenario diff). Hosted
-adapters come after that.
+**Selection Room v1 is a complete local/open-source product.** It is a local
+run-capable CFP selection analysis workspace with field/ranking/bracket/bubble
+explainability, browser run generation, dynamic team cases, a weight-based
+Scenario Lab, a shipped and hardened validation dashboard, and export/share
+primitives (rankings CSV, bracket share image, resume card via
+`web/components/share/`). Every north-star step — through "Validate" and
+"Share / export" — is done.
+
+The next move is **release hardening, not more product scope**: freeze → verify
+→ document → tag (`v1.0.0-beta`/`v1.0.0-local`). Shareable scenario URLs and
+hosted production (H1–H7) are future work (v1.1+), documented but not active.

@@ -14,6 +14,13 @@ A transparent, reproducible decision-support simulator for College Football Play
 
 The simulator runs from sample data in under a minute, generates a 12-team playoff field, explains why teams made or missed the bracket, and compares model outputs against CFP-style selection rules.
 
+> [!NOTE]
+> **Status: v1 — feature-complete as a local / open-source product.** Field, ranking,
+> bracket, and bubble explainability; in-browser run generation; team resume drawers;
+> the Scenario Lab (weight what-ifs); the Validation Dashboard; and export/share
+> primitives (rankings CSV, bracket image, resume card) are all shipped. Hosted
+> production is documented but not implemented — see [Roadmap](#roadmap).
+
 > [!TIP]
 > **Primary UI:** Run `make web` for the Selection Room site. The CLI and CSV/JSON exports are the engine; the web app is how most people explore results.
 
@@ -34,11 +41,21 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 
 ## What it does
 
+**Engine**
+
 - Composite rankings (resume, predictive, SOR, SOS)
 - 12-team field selection under **2024** or **2025+** CFP rules
 - Format-aware seeding and bracket generation
 - Structured audit trail and reproducibility manifest
 - Historical validation against published CFP rankings
+
+**Selection Room web app**
+
+- Projected field, rankings, and bubble/cut-line views with per-team resume drawers
+- In-browser **Run Analysis** — launch a season/week run from sample or live CFBD data
+- **Scenario Lab** — reweight the pillars and diff the resulting field, seeds, and bubble
+- **Validation Dashboard** — committee alignment, field accuracy, and predictive-signal tracks across seasons
+- **Export / share** — rankings CSV, bracket share image, and per-team resume cards
 
 ---
 
@@ -179,6 +196,21 @@ One composite pipeline with explainable components.
 make setup
 make verify
 ```
+
+---
+
+## Roadmap
+
+**v1 (now) — local / open-source, feature-complete.** Everything under
+[What it does](#what-it-does) ships and runs locally from a fresh clone.
+
+**Future (v1.1+), documented but not implemented:**
+
+- **Shareable scenario URLs** — deep-link a Scenario Lab diff.
+- **Hosted production** — Vercel + worker + object storage + Postgres adapters, so
+  runs can be generated and shared on the web. Architecture is written up in
+  [docs/architecture/hosted-production.md](docs/architecture/hosted-production.md);
+  none of it is required for local use.
 
 ---
 
