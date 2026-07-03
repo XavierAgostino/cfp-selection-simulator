@@ -8,8 +8,8 @@ from src.pipeline.default_week import (
     cfbd_max_cached_week,
     resolve_default_week,
     sample_max_available_week,
-    week_option_label,
     week_defaults_payload,
+    week_option_label,
 )
 
 
