@@ -46,6 +46,7 @@ from app.components.bracket_viewer import (
     render_bracket_component,
 )
 from app.styles import inject_global_css
+from src.api_contracts.build import _bid_type_lookup, _champion_of, component_ranks_by_team
 from src.assets.logos import ensure_team_assets_loaded
 from src.assets.teams import load_team_assets
 from src.config.formats import get_format_for_year
@@ -55,7 +56,7 @@ from src.pipeline.live import enrich_live_rankings
 from src.pipeline.paths import DATA_OUTPUT, RunOutputPaths
 from src.pipeline.run import SAMPLE_GAMES, load_games, run_select
 from src.pipeline.sample import enrich_sample_rankings
-from src.api_contracts.build import component_ranks_by_team, _bid_type_lookup, _champion_of
+from src.playoff.bracket import BracketMatchup
 
 st.set_page_config(page_title="Selection Room — Analyst Console", layout="wide")
 inject_global_css()
