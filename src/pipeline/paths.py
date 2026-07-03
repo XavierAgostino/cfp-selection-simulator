@@ -15,6 +15,39 @@ def run_stem(year: int, week: int) -> str:
     return f"{year}_week{week}"
 
 
+BASE_SCENARIO_ID = "base"
+
+
+def run_id(year: int, week: int) -> str:
+    """Season/week identity shared by base and scenario variants."""
+    return run_stem(year, week)
+
+
+def scenario_stem(run_id_value: str, scenario_id: str) -> str:
+    """Unique API directory stem. Base runs keep the run_id; scenarios append the id."""
+    if scenario_id == BASE_SCENARIO_ID:
+        return run_id_value
+    return f"{run_id_value}__{scenario_id}"
+
+
+def build_run_label(season: int, week: int, scenario_id: str) -> str:
+    base = f"{season} Week {week}"
+    if scenario_id == BASE_SCENARIO_ID:
+        return f"{base} · Base"
+    return f"{base} · {scenario_id}"
+
+
+def component_weights(weights) -> dict[str, float]:
+    """The four sum-to-1 composite weights (excludes resume-internal colley_share)."""
+    from dataclasses import asdict
+
+    return {
+        k: float(v)
+        for k, v in asdict(weights).items()
+        if k in ("resume", "predictive", "sor", "sos")
+    }
+
+
 def ensure_output_dirs() -> None:
     for subdir in (
         "rankings",

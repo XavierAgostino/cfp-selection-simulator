@@ -47,6 +47,8 @@ export interface TeamSlot {
 
 export interface RunSummary {
   stem: string;
+  run_id: string;
+  scenario_id: string;
   season: number;
   week: number;
   ruleset: Ruleset;
@@ -56,6 +58,9 @@ export interface RunSummary {
   has_bracket: boolean;
   has_sensitivity: boolean;
   simulator_version: string;
+  config_hash: string;
+  weights: Record<"resume" | "predictive" | "sor" | "sos", number>;
+  label: string;
 }
 
 export interface RunsPayload {

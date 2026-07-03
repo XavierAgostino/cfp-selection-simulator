@@ -17,7 +17,14 @@ from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.cache_paths import games_cache_candidates, games_cache_write_path
 from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.live import enrich_live_rankings, filter_games_to_fbs
-from src.pipeline.paths import RunOutputPaths, ensure_output_dirs
+from src.pipeline.paths import (
+    BASE_SCENARIO_ID,
+    RunOutputPaths,
+    build_run_label,
+    component_weights,
+    ensure_output_dirs,
+    run_id,
+)
 from src.pipeline.sample import SAMPLE_GAMES, enrich_sample_rankings
 from src.playoff.bracket import create_bracket_matchups, visualize_bracket_html
 from src.selection.field import select_playoff_field
@@ -65,12 +72,19 @@ def write_manifest(
     data_source: str = "cfbd",
 ) -> Path:
     """Write run manifest JSON for reproducibility."""
+    rid = run_id(config.year, config.week)
+    scenario_id = BASE_SCENARIO_ID
     manifest = {
         "simulator_version": __version__,
         "ruleset": config.playoff_format.name if config.playoff_format else None,
         "data_source": data_source,
         "season": config.year,
         "week": config.week,
+        "stem": paths.stem,
+        "run_id": rid,
+        "scenario_id": scenario_id,
+        "label": build_run_label(config.year, config.week, scenario_id),
+        "weights": component_weights(config.weights),
         "ranking_model": "composite_v1",
         "config_hash": config.config_hash,
         "generated_at": datetime.now(timezone.utc).isoformat(),

@@ -42,6 +42,17 @@ def test_runs_index_lists_run(sample_run):
     assert index.latest.stem in stems
 
 
+def test_runs_index_scenario_identity(sample_run):
+    index = RunsIndex.model_validate(_load("runs.json"))
+    entry = next(run for run in index.runs if run.stem == "2025_week15")
+    assert entry.run_id == "2025_week15"
+    assert entry.scenario_id == "base"
+    assert entry.label == "2025 Week 15 · Base"
+    assert entry.config_hash
+    assert set(entry.weights) == {"resume", "predictive", "sor", "sos"}
+    assert pytest.approx(sum(entry.weights.values())) == 1.0
+
+
 def test_latest_meta_contract(sample_run):
     latest = LatestMeta.model_validate(_load("latest.json"))
     assert latest.product == "Selection Room"

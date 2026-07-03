@@ -40,6 +40,7 @@ from src.api_contracts.selection_case import build_selection_case
 from src.assets.logos import get_team_logo_url
 from src.assets.teams import TeamAsset, get_team_asset
 from src.config.simulator import SimulatorConfig
+from src.pipeline.paths import BASE_SCENARIO_ID, build_run_label, component_weights, run_id
 from src.playoff.bracket_view import build_bracket_pods, build_bracket_rounds
 from src.selection.audit import AuditStep
 from src.selection.field import PlayoffSelection
@@ -585,10 +586,15 @@ def build_runs_index_entry(
     champion_source: str,
     generated_at: str,
     has_bracket: bool,
+    has_sensitivity: bool,
     simulator_version: str,
+    scenario_id: str = BASE_SCENARIO_ID,
 ) -> RunsIndexEntry:
+    rid = run_id(config.year, config.week)
     return RunsIndexEntry(
         stem=stem,
+        run_id=rid,
+        scenario_id=scenario_id,
         season=config.year,
         week=config.week,
         ruleset=_ruleset_name(config),  # type: ignore[arg-type]
@@ -596,5 +602,9 @@ def build_runs_index_entry(
         champion_source=champion_source,
         generated_at=generated_at,
         has_bracket=has_bracket,
+        has_sensitivity=has_sensitivity,
         simulator_version=simulator_version,
+        config_hash=config.config_hash,
+        weights=component_weights(config.weights),
+        label=build_run_label(config.year, config.week, scenario_id),
     )

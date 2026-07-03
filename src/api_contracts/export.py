@@ -36,7 +36,16 @@ from src.api_contracts.models import (
 )
 from src.assets.teams import load_team_assets
 from src.config.simulator import SimulatorConfig
-from src.pipeline.paths import API_ROOT, DATA_OUTPUT, RunOutputPaths, run_stem
+from src.pipeline.paths import (
+    API_ROOT,
+    BASE_SCENARIO_ID,
+    DATA_OUTPUT,
+    RunOutputPaths,
+    build_run_label,
+    component_weights,
+    run_id,
+    run_stem,
+)
 from src.validation.sensitivity import run_weight_perturbation
 
 FLAT_FILE_NAMES = {
@@ -76,10 +85,15 @@ def regenerate_runs_index() -> Path:
         week = data.get("week")
         if season is None or week is None:
             continue
-        stem = run_stem(int(season), int(week))
+        stem = manifest_path.name[: -len("_manifest.json")]
+        rid = data.get("run_id", run_stem(int(season), int(week)))
+        scenario_id = data.get("scenario_id", BASE_SCENARIO_ID)
         run_api_dir = API_ROOT / "runs" / stem
+        weights = data.get("weights") or {}
         entry = RunsIndexEntry(
             stem=stem,
+            run_id=rid,
+            scenario_id=scenario_id,
             season=int(season),
             week=int(week),
             ruleset=data.get("ruleset"),
@@ -89,6 +103,12 @@ def regenerate_runs_index() -> Path:
             has_bracket=(run_api_dir / "bracket.json").exists(),
             has_sensitivity=(run_api_dir / "sensitivity.json").exists(),
             simulator_version=data.get("simulator_version", ""),
+            config_hash=data.get("config_hash", ""),
+            weights=weights,
+            label=data.get(
+                "label",
+                build_run_label(int(season), int(week), scenario_id),
+            ),
         )
         scored.append((manifest_path.stat().st_mtime, entry))
 

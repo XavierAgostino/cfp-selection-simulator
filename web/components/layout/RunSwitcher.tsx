@@ -17,7 +17,7 @@ interface RunSwitcherProps {
 }
 
 function runLabel(run: RunSummary): string {
-  return `${run.season} · Week ${run.week}`;
+  return run.label ?? `${run.season} · Week ${run.week}`;
 }
 
 /**

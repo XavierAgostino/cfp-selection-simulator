@@ -58,6 +58,8 @@ class TeamSlot(BaseModel):
 
 class RunsIndexEntry(BaseModel):
     stem: str
+    run_id: str
+    scenario_id: str
     season: int
     week: int
     ruleset: Optional[Ruleset] = None
@@ -67,6 +69,9 @@ class RunsIndexEntry(BaseModel):
     has_bracket: bool
     has_sensitivity: bool = False
     simulator_version: str
+    config_hash: str
+    weights: Dict[str, float]
+    label: str
 
 
 class LatestRef(BaseModel):

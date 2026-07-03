@@ -52,6 +52,8 @@ All top-level payloads carry `schema_version: 1`.
   "runs": [
     {
       "stem": "2025_week15",
+      "run_id": "2025_week15",
+      "scenario_id": "base",
       "season": 2025,
       "week": 15,
       "ruleset": "2025_plus",          // "2024" | "2025_plus"
@@ -60,9 +62,31 @@ All top-level payloads carry `schema_version: 1`.
       "generated_at": "...",
       "has_bracket": true,              // false if rank-only run
       "has_sensitivity": true,          // false if run predates Selection Stability
-      "simulator_version": "3.0.0"
+      "simulator_version": "3.0.0",
+      "config_hash": "a13f9c2b4e5d6f70",
+      "weights": {
+        "resume": 0.40,
+        "predictive": 0.30,
+        "sor": 0.20,
+        "sos": 0.10
+      },
+      "label": "2025 Week 15 · Base"
     }
   ]
+}
+```
+
+**Run identity:** `run_id` groups season/week (`2025_week15`). `scenario_id` distinguishes weight variants under the same week. Base pipeline runs use `scenario_id: "base"` and `stem === run_id`. Scenario runs use `stem: "{run_id}__{scenario_id}"` (typically the config hash) so API directories never collide.
+
+Example scenario entry:
+
+```jsonc
+{
+  "stem": "2025_week15__a13f9c2b4e5d6f70",
+  "run_id": "2025_week15",
+  "scenario_id": "a13f9c2b4e5d6f70",
+  "label": "2025 Week 15 · a13f9c2b4e5d6f70",
+  ...
 }
 ```
 
