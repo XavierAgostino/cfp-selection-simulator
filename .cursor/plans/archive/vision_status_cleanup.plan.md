@@ -28,6 +28,12 @@ isProject: false
 
 # Vision Status Cleanup — Living Handoff
 
+> **SUPERSEDED (2026-07-03).** The "finish validation → export/share → local OSS
+> feels complete" sequence this doc tracks is **done** — validation and
+> export/share both shipped and Selection Room v1 is feature-complete. Archived
+> for history. Current status lives in
+> [`vision_progress_assessment_ca926609.plan.md`](vision_progress_assessment_ca926609.plan.md).
+
 **Last updated:** 2026-07-03 (post validation/scenario design review)
 
 **Product state in one sentence:** Selection Room is a local run-capable CFP selection analysis workspace with field/ranking/bracket/bubble explainability, browser-run generation, dynamic team cases, weight-based Scenario Lab, and a validation dashboard mostly implemented. The remaining gap is **not** Scenario Lab — it is **finish validation → export/share → local OSS feels complete**.

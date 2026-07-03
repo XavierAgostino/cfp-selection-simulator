@@ -16,14 +16,20 @@ todos:
     status: completed
   - id: phase2b-scenario-lab
     content: "Phase 2B: Scenario Lab UI — weight sliders, ruleset toggle, field/bracket/bubble diff, SSI badges, parameterized run launcher"
-    status: pending
+    status: completed
   - id: phase3-institutional
-    content: "Phase 3: Validation dashboard → export tools → share URLs → optional FastAPI/run store"
-    status: pending
+    content: "Phase 3: Validation dashboard + export tools shipped (v1). Share URLs + optional FastAPI/run store are future (v1.1+)"
+    status: completed
 isProject: false
 ---
 
 # Selection Room Vision and Roadmap (Locked)
+
+> **Status (2026-07-03): this roadmap is fully delivered for v1.** Phases 1A–3
+> shipped as a feature-complete local/open-source product. This document is
+> retained as the product **doctrine and thesis** reference — for current status
+> and next moves see [`vision_progress_assessment_ca926609.plan.md`](vision_progress_assessment_ca926609.plan.md).
+> Remaining items (shareable scenario URLs, hosted API/store) are future (v1.1+).
 
 ## Product thesis (internal doctrine)
 
@@ -426,6 +432,9 @@ Add ResumePredictiveScatter ("Who has a strong resume versus strong predictive p
 5. **Phase 2B** — Scenario Lab
 6. **Phase 3** — Validation dashboard → export → share URLs → optional API/store
 
-**Status:** Locked. Do not revise the roadmap further. Use this document as source of truth.
+**Status:** Locked and **delivered (v1)**. Phases 1A–3 shipped. Do not revise the
+roadmap further; this document is the vision/doctrine source of truth.
 
-**Next move:** implement Phase 1A only (see PR framing + checklist above).
+**Next move:** none for v1 — the roadmap is complete. Release hardening and
+future work (shareable scenario URLs, hosted API/store) are tracked in
+[`vision_progress_assessment_ca926609.plan.md`](vision_progress_assessment_ca926609.plan.md).
