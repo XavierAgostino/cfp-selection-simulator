@@ -13,7 +13,7 @@ todos:
     status: completed
   - id: phase2a-scenario-contracts
     content: "Phase 2A: Scenario contracts — scenario_id, config_hash/weights in runs.json, sensitivity.json, real SSI Monte Carlo"
-    status: in_progress
+    status: completed
   - id: phase2b-scenario-lab
     content: "Phase 2B: Scenario Lab UI — weight sliders, ruleset toggle, field/bracket/bubble diff, SSI badges, parameterized run launcher"
     status: pending
