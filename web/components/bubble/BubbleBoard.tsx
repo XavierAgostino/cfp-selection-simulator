@@ -1,8 +1,14 @@
-import { UserX } from "lucide-react";
+import { ChevronDown, UserX } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { BubbleColumn } from "@/components/bubble/BubbleColumn";
 import { BubbleCutlineChart } from "@/components/charts/BubbleCutlineChart";
 import { SelectionStabilityBoard } from "@/components/charts/SelectionStabilityBoard";
+import { SelectionStabilitySummary } from "@/components/charts/SelectionStabilitySummary";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import type { FieldPayload, SensitivityPayload } from "@/lib/types";
@@ -18,6 +24,11 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
   const { last_four_in, first_four_out, next_four_out, displaced_team } = field;
   const cutLineScore =
     last_four_in[last_four_in.length - 1]?.composite_score ?? 0;
+  // A run is "contested" when at least one team sits in the 25-75% bubble
+  // band; otherwise every team held its spot and the full board would render
+  // as two flush columns of 0% and 100% dots.
+  const hasContestedBubble =
+    sensitivity?.teams.some((team) => team.status === "bubble") ?? false;
 
   return (
     <div className="flex flex-col gap-6">
@@ -58,13 +69,37 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
               {METRIC_EXPLANATIONS.selection_stability.label}
             </CardTitle>
             <p className="text-xs text-muted-foreground">
-              How often each bubble team makes the projected field when model
-              weights are reasonably perturbed. Hover a logo for the scenario
-              breakdown; click to open the team resume.
+              {hasContestedBubble
+                ? "How often each bubble team makes the projected field when model weights are reasonably perturbed. Hover a logo for the scenario breakdown; click to open the team resume."
+                : `The projected field is stable under ±${Math.round(sensitivity.perturbation_spec.relative_range * 100)}% weight perturbations — no team landed in the 25–75% bubble band for this run.`}
             </p>
           </CardHeader>
           <CardContent className="px-4">
-            <SelectionStabilityBoard sensitivity={sensitivity} />
+            {hasContestedBubble ? (
+              <SelectionStabilityBoard sensitivity={sensitivity} />
+            ) : (
+              <div className="flex flex-col gap-2">
+                <SelectionStabilitySummary sensitivity={sensitivity} />
+                <Collapsible>
+                  <CollapsibleTrigger className="group inline-flex items-center gap-1.5 rounded-md px-1 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
+                    View all stability scores
+                    <ChevronDown
+                      aria-hidden
+                      className="h-3.5 w-3.5 transition-transform duration-200 group-data-[panel-open]:rotate-180"
+                    />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="pt-2">
+                      <SelectionStabilityBoard
+                        sensitivity={sensitivity}
+                        showLegend={false}
+                        showFootnote={false}
+                      />
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
+            )}
           </CardContent>
         </Card>
       ) : null}

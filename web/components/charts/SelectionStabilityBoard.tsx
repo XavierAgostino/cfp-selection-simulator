@@ -28,7 +28,7 @@ interface StabilityDatum extends SelectionStabilityTeam {
   row: number;
 }
 
-const STATUS_LABEL: Record<StabilityStatus, string> = {
+export const STATUS_LABEL: Record<StabilityStatus, string> = {
   lock: "Lock",
   likely_in: "Likely In",
   bubble: "Bubble",
@@ -36,7 +36,7 @@ const STATUS_LABEL: Record<StabilityStatus, string> = {
   out: "Out",
 };
 
-const STATUS_ORDER: StabilityStatus[] = [
+export const STATUS_ORDER: StabilityStatus[] = [
   "lock",
   "likely_in",
   "bubble",
@@ -62,15 +62,50 @@ const RISK_LABEL: Record<SelectionStabilityTeam["primary_risk"], string | null> 
     composite_gap: "Composite gap to the cut line",
   };
 
-function ringColor(status: StabilityStatus): string {
+export function ringColor(status: StabilityStatus): string {
   if (status === "lock" || status === "likely_in") return "var(--accent-blue)";
   if (status === "bubble") return "var(--accent-gold)";
   return "var(--border)";
 }
 
-function formatPct(frequency: number): string {
+export function formatPct(frequency: number): string {
   const pct = Math.round(frequency * 1000) / 10;
   return `${pct % 1 === 0 ? pct.toFixed(0) : pct.toFixed(1)}%`;
+}
+
+/** Chip row with per-status team counts; zero-count statuses stay visible but dimmed. */
+export function StabilityStatusChips({
+  teams,
+}: {
+  teams: SelectionStabilityTeam[];
+}) {
+  const counts = new Map<StabilityStatus, number>();
+  for (const team of teams) {
+    counts.set(team.status, (counts.get(team.status) ?? 0) + 1);
+  }
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {STATUS_ORDER.map((status) => {
+        const count = counts.get(status) ?? 0;
+        return (
+          <span
+            key={status}
+            className={`inline-flex items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-[0.65rem] font-medium ${
+              count > 0 ? "text-foreground" : "text-muted-foreground/60"
+            }`}
+          >
+            <span
+              aria-hidden
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: ringColor(status) }}
+            />
+            {STATUS_LABEL[status]}
+            <span className="tabular-nums text-muted-foreground">{count}</span>
+          </span>
+        );
+      })}
+    </div>
+  );
 }
 
 function StabilityTooltip({
@@ -150,29 +185,32 @@ function StabilityTooltip({
  */
 export function SelectionStabilityBoard({
   sensitivity,
+  showLegend = true,
+  showFootnote = true,
 }: {
   sensitivity: SensitivityPayload;
+  /** Set false when the caller already renders the status-count chips (e.g. the stable-run summary). */
+  showLegend?: boolean;
+  /** Set false when the caller already renders the scenario-count footnote (e.g. the stable-run summary). */
+  showFootnote?: boolean;
 }) {
   const { openTeam } = useTeamDrawer();
 
-  const { data, statusCounts } = useMemo(() => {
-    const rows = [...sensitivity.teams]
-      .sort(
-        (a, b) =>
-          b.selection_frequency - a.selection_frequency ||
-          a.base_rank - b.base_rank,
-      )
-      .map((team, index) => ({
-        ...team,
-        pct: team.selection_frequency * 100,
-        row: index,
-      }));
-    const counts = new Map<StabilityStatus, number>();
-    for (const team of rows) {
-      counts.set(team.status, (counts.get(team.status) ?? 0) + 1);
-    }
-    return { data: rows, statusCounts: counts };
-  }, [sensitivity.teams]);
+  const data = useMemo(
+    () =>
+      [...sensitivity.teams]
+        .sort(
+          (a, b) =>
+            b.selection_frequency - a.selection_frequency ||
+            a.base_rank - b.base_rank,
+        )
+        .map((team, index) => ({
+          ...team,
+          pct: team.selection_frequency * 100,
+          row: index,
+        })),
+    [sensitivity.teams],
+  );
 
   if (data.length === 0) return null;
 
@@ -181,31 +219,7 @@ export function SelectionStabilityBoard({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-1.5">
-        {STATUS_ORDER.map((status) => {
-          const count = statusCounts.get(status) ?? 0;
-          return (
-            <span
-              key={status}
-              className={`inline-flex items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-[0.65rem] font-medium ${
-                count > 0
-                  ? "text-foreground"
-                  : "text-muted-foreground/60"
-              }`}
-            >
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: ringColor(status) }}
-              />
-              {STATUS_LABEL[status]}
-              <span className="tabular-nums text-muted-foreground">
-                {count}
-              </span>
-            </span>
-          );
-        })}
-      </div>
+      {showLegend ? <StabilityStatusChips teams={sensitivity.teams} /> : null}
 
       <div
         role="img"
@@ -295,14 +309,16 @@ export function SelectionStabilityBoard({
         </ResponsiveContainer>
       </div>
 
-      <p className="text-[0.65rem] text-muted-foreground">
-        Based on {sensitivity.n_scenarios.toLocaleString()} scenarios that vary
-        each model weight by ±
-        {Math.round(sensitivity.perturbation_spec.relative_range * 100)}%.
-        Selection Stability changes model weights around the current run — it
-        does not simulate future game outcomes, and conference champions stay
-        fixed.
-      </p>
+      {showFootnote ? (
+        <p className="text-[0.65rem] text-muted-foreground">
+          Based on {sensitivity.n_scenarios.toLocaleString()} scenarios that
+          vary each model weight by ±
+          {Math.round(sensitivity.perturbation_spec.relative_range * 100)}%.
+          Selection Stability changes model weights around the current run — it
+          does not simulate future game outcomes, and conference champions stay
+          fixed.
+        </p>
+      ) : null}
     </div>
   );
 }
