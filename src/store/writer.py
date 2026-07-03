@@ -151,10 +151,10 @@ def write_run_to_store(
 
     audit_steps = map_audit(audit_payload, stem) if audit_payload else []
     resume_rows, schedule_rows = map_team_resumes(team_resumes_payload, stem)
-    sensitivity_rows = (
-        map_sensitivity(sensitivity_payload, stem) if sensitivity_payload else []
+    sensitivity_rows = map_sensitivity(sensitivity_payload, stem) if sensitivity_payload else []
+    record_game_rows = (
+        map_record_games(record_games_df, stem) if record_games_df is not None else []
     )
-    record_game_rows = map_record_games(record_games_df, stem) if record_games_df is not None else []
 
     return upsert_run_data(
         stem,

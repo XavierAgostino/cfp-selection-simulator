@@ -29,6 +29,7 @@ from src.api_contracts.models import (
     RecordMeta,
     RunsIndexEntry,
     ScheduleGame,
+    SelectionCase,
     SelectionStabilityTeam,
     SemifinalGroup,
     SensitivityPayload,
@@ -37,7 +38,6 @@ from src.api_contracts.models import (
     TeamResumesPayload,
     TeamSlot,
 )
-from src.api_contracts.models import SelectionCase
 from src.api_contracts.selection_case import build_selection_case
 from src.assets.logos import get_team_logo_url
 from src.assets.teams import TeamAsset, get_team_asset

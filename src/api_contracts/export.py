@@ -246,15 +246,11 @@ def export_run_api(
         except StoreWriteError as exc:
             if store_required():
                 raise
-            logger.warning(
-                "DuckDB store write failed (SELECTION_ROOM_STORE_REQUIRED=0): %s", exc
-            )
+            logger.warning("DuckDB store write failed (SELECTION_ROOM_STORE_REQUIRED=0): %s", exc)
         except Exception as exc:
             if store_required():
                 raise StoreWriteError(str(exc)) from exc
-            logger.warning(
-                "DuckDB store write failed (SELECTION_ROOM_STORE_REQUIRED=0): %s", exc
-            )
+            logger.warning("DuckDB store write failed (SELECTION_ROOM_STORE_REQUIRED=0): %s", exc)
 
         if is_latest:
             for key, payload in (

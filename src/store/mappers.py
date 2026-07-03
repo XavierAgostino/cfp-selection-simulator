@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
+from src import __version__
 from src.api_contracts.models import (
     AuditPayload,
     BracketPayload,
@@ -16,7 +17,6 @@ from src.api_contracts.models import (
     TeamResumesPayload,
     TeamSlot,
 )
-from src import __version__
 from src.config.simulator import SimulatorConfig
 from src.pipeline.paths import BASE_SCENARIO_ID, RunOutputPaths, build_run_label, run_id
 
@@ -283,9 +283,9 @@ def map_team_resumes(payload: TeamResumesPayload, run_stem: str) -> tuple[List[d
                 "component_rank_predictive": resume.component_ranks.predictive,
                 "component_rank_sor": resume.component_ranks.sor,
                 "component_rank_sos": resume.component_ranks.sos,
-                "selection_case": _json(resume.selection_case.model_dump())
-                if resume.selection_case
-                else None,
+                "selection_case": (
+                    _json(resume.selection_case.model_dump()) if resume.selection_case else None
+                ),
                 "why_in": _json(resume.why_in),
                 "concerns": _json(resume.concerns),
             }

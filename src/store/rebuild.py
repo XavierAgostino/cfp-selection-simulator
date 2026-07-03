@@ -142,9 +142,7 @@ def rebuild_from_api(api_root: Path | None = None) -> dict[str, Any]:
 
         audit_steps = map_audit(audit_payload, stem) if audit_payload else []
         resume_rows, schedule_rows = map_team_resumes(team_resumes, stem)
-        sensitivity_rows = (
-            map_sensitivity(sensitivity_payload, stem) if sensitivity_payload else []
-        )
+        sensitivity_rows = map_sensitivity(sensitivity_payload, stem) if sensitivity_payload else []
 
         upsert_run_data(
             stem,

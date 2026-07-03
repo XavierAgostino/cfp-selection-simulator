@@ -62,9 +62,7 @@ def _next_four_out_names(
     return {row["team"] for _, row in pool.head(4).iterrows()}
 
 
-def _composite_gap_text(
-    team_row: pd.Series, reference: dict, *, direction: str
-) -> Optional[str]:
+def _composite_gap_text(team_row: pd.Series, reference: dict, *, direction: str) -> Optional[str]:
     team_score = float(team_row.get("composite_score", 0.0))
     ref_score = float(reference.get("composite_score", 0.0))
     gap = abs(ref_score - team_score)
@@ -74,9 +72,7 @@ def _composite_gap_text(
             f"Finished above the final at-large cutoff ({ref_team}) "
             f"by {gap:.3f} composite points."
         )
-    return (
-        f"First team out behind {ref_team} by {gap:.3f} composite points."
-    )
+    return f"First team out behind {ref_team} by {gap:.3f} composite points."
 
 
 def _component_concerns(
@@ -128,9 +124,7 @@ def _component_concerns(
 def _record_meta_notes(record_meta: Optional[RecordMeta]) -> List[str]:
     if record_meta is None or not record_meta.is_demo_fixture:
         return []
-    return [
-        "Demo fixture with a partial schedule; records and resume details are illustrative."
-    ]
+    return ["Demo fixture with a partial schedule; records and resume details are illustrative."]
 
 
 def _bye_reason(
@@ -147,14 +141,10 @@ def _bye_reason(
             "Receives a first-round bye as one of the top four conference champions "
             "under the 2024 ruleset."
         )
-    return (
-        "Receives a first-round bye as a top-four overall seed under this ruleset."
-    )
+    return "Receives a first-round bye as a top-four overall seed under this ruleset."
 
 
-def _conference_champion_label(
-    row: pd.Series, champion_of: Optional[str] = None
-) -> str:
+def _conference_champion_label(row: pd.Series, champion_of: Optional[str] = None) -> str:
     if champion_of:
         return champion_of
     conference = row.get("conference")
@@ -226,9 +216,7 @@ def build_selection_case(
             reasons.append(
                 "Detailed schedule notes are available for projected field and bubble teams."
             )
-        concerns.extend(
-            _component_concerns(rank, comp_ranks, row, bubble_scope=bubble_scope)
-        )
+        concerns.extend(_component_concerns(rank, comp_ranks, row, bubble_scope=bubble_scope))
         concerns.extend(_record_meta_notes(record_meta))
         return SelectionCaseResult(
             status=status, headline=headline, reasons=reasons, concerns=concerns
@@ -287,7 +275,9 @@ def build_selection_case(
             if gap_line:
                 reasons.append(gap_line)
         if selection.displaced_team and selection.displaced_team.get("team") == team_name:
-            reasons.append("Displaced from the projected field by an automatic conference champion.")
+            reasons.append(
+                "Displaced from the projected field by an automatic conference champion."
+            )
 
     elif team_name in next_four_names:
         status = "bubble"
@@ -310,12 +300,8 @@ def build_selection_case(
     concerns.extend(_component_concerns(rank, comp_ranks, row, bubble_scope=bubble_scope))
 
     if stability_status in ("bubble", "likely_out"):
-        concerns.append(
-            "Selection depends heavily on model-weight assumptions under this run."
-        )
+        concerns.append("Selection depends heavily on model-weight assumptions under this run.")
 
     concerns.extend(_record_meta_notes(record_meta))
 
-    return SelectionCaseResult(
-        status=status, headline=headline, reasons=reasons, concerns=concerns
-    )
+    return SelectionCaseResult(status=status, headline=headline, reasons=reasons, concerns=concerns)

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pandas as pd
 
+from src.config.simulator import SimulatorConfig
 from src.pipeline.cache_paths import games_cache_covers, games_cache_write_path
 from src.pipeline.run import load_games
-from src.config.simulator import SimulatorConfig
 
 
 def test_games_cache_covers_requires_full_window():

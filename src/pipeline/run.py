@@ -76,9 +76,7 @@ def load_games(
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         games.to_parquet(cache_path, index=False)
 
-    games = games[
-        (games["week"] >= config.start_week) & (games["week"] <= config.week)
-    ]
+    games = games[(games["week"] >= config.start_week) & (games["week"] <= config.week)]
 
     if config.fbs_only:
         key = api_key or get_api_key()

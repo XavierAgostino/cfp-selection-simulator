@@ -16,6 +16,7 @@ from src.api_contracts.export import export_run_api, regenerate_runs_index
 from src.assets.logos import refresh_team_assets_cache
 from src.cli.console import print_doctor_report, print_latest_outputs, print_run_summary
 from src.cli.doctor import run_doctor_checks
+from src.cli.store_commands import store_app
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.cache_paths import games_cache_write_path
@@ -26,7 +27,6 @@ from src.pipeline.paths import (
     paths_from_manifest,
 )
 from src.pipeline.run import REPO_ROOT, run_pipeline
-from src.cli.store_commands import store_app
 from src.validation.backtest import run_era_validation
 
 app = typer.Typer(

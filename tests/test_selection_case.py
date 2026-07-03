@@ -108,9 +108,39 @@ def test_first_team_out_gets_why_missed_explanation(sample_pipeline):
 def test_displaced_team_gets_displacement_explanation():
     rankings = pd.DataFrame(
         [
-            {"team": "Alpha", "rank": 1, "composite_score": 0.9, "resume_score": 0.5, "predictive_score": 0.5, "sor": 0.5, "sos": 0.5, "conference": "A", "conf_champ": None},
-            {"team": "Beta", "rank": 12, "composite_score": 0.5, "resume_score": 0.5, "predictive_score": 0.5, "sor": 0.5, "sos": 0.5, "conference": "B", "conf_champ": None},
-            {"team": "Gamma", "rank": 13, "composite_score": 0.49, "resume_score": 0.5, "predictive_score": 0.5, "sor": 0.5, "sos": 0.5, "conference": "C", "conf_champ": "C"},
+            {
+                "team": "Alpha",
+                "rank": 1,
+                "composite_score": 0.9,
+                "resume_score": 0.5,
+                "predictive_score": 0.5,
+                "sor": 0.5,
+                "sos": 0.5,
+                "conference": "A",
+                "conf_champ": None,
+            },
+            {
+                "team": "Beta",
+                "rank": 12,
+                "composite_score": 0.5,
+                "resume_score": 0.5,
+                "predictive_score": 0.5,
+                "sor": 0.5,
+                "sos": 0.5,
+                "conference": "B",
+                "conf_champ": None,
+            },
+            {
+                "team": "Gamma",
+                "rank": 13,
+                "composite_score": 0.49,
+                "resume_score": 0.5,
+                "predictive_score": 0.5,
+                "sor": 0.5,
+                "sos": 0.5,
+                "conference": "C",
+                "conf_champ": "C",
+            },
         ]
     )
     selection = PlayoffSelection(
