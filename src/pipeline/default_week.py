@@ -24,7 +24,7 @@ def week_option_suffix(week: int) -> Optional[str]:
     if week == FINAL_SELECTION_WEEK:
         return "Final selection window"
     if week == PRE_FINAL_SELECTION_WEEK:
-        return "Pre-final / championship window"
+        return "Championship weekend · final field"
     return None
 
 
@@ -46,7 +46,14 @@ def sample_max_available_week() -> int:
 
 
 def cfbd_max_cached_week(season: int) -> Optional[int]:
-    """Highest week with a cached CFBD games parquet for the season, if any."""
+    """Highest week with actual games in the latest cached CFBD parquet.
+
+    The filename week (``games_w16_s1.parquet``) is only the fetch *cutoff*; a
+    late-season snapshot can carry an empty trailing week (e.g. a w16 pull whose
+    newest games are still week-15 conference championships). Trust the games in
+    the file so we never surface a redundant selection week that resolves to the
+    exact same field as the week before it.
+    """
     base = DATA_CACHE / "cfbd" / str(season)
     if not base.is_dir():
         legacy = DATA_CACHE / str(season)
@@ -54,7 +61,8 @@ def cfbd_max_cached_week(season: int) -> Optional[int]:
             return None
         base = legacy
 
-    best: Optional[int] = None
+    best_cutoff: Optional[int] = None
+    best_path: Optional[Path] = None
     for path in base.iterdir():
         if not path.is_file():
             continue
@@ -62,9 +70,21 @@ def cfbd_max_cached_week(season: int) -> Optional[int]:
         if not match:
             continue
         week = int(match.group(1))
-        if best is None or week > best:
-            best = week
-    return best
+        if best_cutoff is None or week > best_cutoff:
+            best_cutoff = week
+            best_path = path
+
+    if best_path is None:
+        return best_cutoff
+
+    try:
+        games = pd.read_parquet(best_path, columns=["week"])
+    except Exception:
+        # Unreadable/empty snapshot: fall back to the filename cutoff.
+        return best_cutoff
+    if games.empty:
+        return best_cutoff
+    return min(best_cutoff, int(games["week"].max()))
 
 
 def max_available_week(season: int, *, use_sample: bool) -> int:

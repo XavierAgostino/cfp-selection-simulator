@@ -86,6 +86,7 @@ function MobileNavRow({
   return (
     <li>
       <SheetClose
+        nativeButton={false}
         render={
           <Link
             href={href}

@@ -298,7 +298,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
                 </p>
               </div>
               {resultStem ? (
-                <Button variant="outline" size="sm" render={
+                <Button variant="outline" size="sm" nativeButton={false} render={
                   <Link href={`/?run=${encodeURIComponent(resultStem)}`} className="gap-1.5">
                     <ExternalLink className="size-4" />
                     Open full run

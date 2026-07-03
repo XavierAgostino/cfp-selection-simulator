@@ -48,7 +48,11 @@ import {
   WEEK_OPTIONS,
 } from "@/lib/runDisplay";
 import type { WeekDefaultsResponse } from "@/app/api/run/week-defaults/route";
-import { fetchWeekDefaults, weekOptionLabel } from "@/lib/defaultWeek";
+import {
+  fetchWeekDefaults,
+  weekOptionLabel,
+  SELECTION_WINDOW_START_WEEK,
+} from "@/lib/defaultWeek";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
 import type { RunCapabilities, RunJobRecord } from "@/lib/runJob";
 import { weightsScenarioId } from "@/lib/scenarioWeights";
@@ -401,7 +405,10 @@ export function RunAnalysisDialog({
 
   const weekChoices = React.useMemo(() => {
     const maxWeek = weekDefaults?.max_available_week ?? WEEK_OPTIONS.length;
-    return WEEK_OPTIONS.filter((w) => w <= maxWeek);
+    // Start at the first committee-ranking week; clamp down early-season so the
+    // list is never empty when fewer than that many weeks are available.
+    const minWeek = Math.min(SELECTION_WINDOW_START_WEEK, maxWeek);
+    return WEEK_OPTIONS.filter((w) => w >= minWeek && w <= maxWeek);
   }, [weekDefaults]);
 
   React.useEffect(() => {
