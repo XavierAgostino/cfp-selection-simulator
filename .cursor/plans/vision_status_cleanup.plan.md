@@ -4,22 +4,22 @@ overview: Selection Room has crossed the Scenario Lab threshold. Scenario Lab is
 todos:
   - id: validation-data-slice
     content: "Validation data slice: review WIP, commit, fixture, docs, composite-only predictive aggregation, outlier handling, export error logging"
-    status: pending
+    status: completed
   - id: validation-design-polish
     content: "Validation + Scenario Lab design/copy polish — trust hierarchy, scope labels, caveat strip, verdict lines, empty-state preview (no backend/math changes)"
-    status: pending
+    status: completed
   - id: refresh-handoff
     content: "Refresh vision_progress_assessment — Scenario Lab shipped, validation in progress/done, export/share not started"
-    status: pending
+    status: completed
   - id: archive-plans
     content: "Archive (do not delete) completed plans to .cursor/plans/archive/"
-    status: pending
+    status: completed
   - id: fix-stale-copy
     content: "Fix stale copy — hosted-production table, configuration.md, RunAnalysisDialog Create tab"
-    status: pending
+    status: completed
   - id: scenario-lab-labels
-    content: "Scenario Lab — human-readable base run label (2025 Week 15 · Base); catalog refresh after launch (lower priority)"
-    status: pending
+    content: "Scenario Lab — human-readable base run label (2025 Week 15 · Base) shipped; catalog refresh after launch still open (lower priority)"
+    status: completed
   - id: export-layer
     content: "After validation ships — export primitives (bracket PNG/share card, rankings CSV, resume card); then shareable scenario URLs"
     status: pending

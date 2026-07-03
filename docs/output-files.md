@@ -148,6 +148,12 @@ Path: `data/output/validation/` (multiple files)
 
 Produced by `sroom validate`. See [Historical Validation](research/historical-validation.md) for `committee_replication.csv`, `era_selection_validation.csv`, `predictive_validation.csv`, and legacy `backtest_results.csv`.
 
+`sroom validate` also refreshes `data/output/api/validation.json` — the web
+contract behind the `/validation` dashboard (schema in
+[api-contracts.md](api-contracts.md)). Its headline summary mirrors the
+Markdown report: committee/selection means exclude outlier seasons, and the
+predictive summary covers composite rows only.
+
 ---
 
 ## Inspecting latest outputs
@@ -173,6 +179,7 @@ data/output/api/
 ├── audit.json          Latest selection audit
 ├── team-resumes.json   Latest per-team resumes (summary for all ranked teams; full detail for field, bubble, and top-ranked teams)
 ├── sensitivity.json    Latest Selection Stability (when generated)
+├── validation.json     Historical validation summary (repo-level, written by sroom validate)
 ├── team-assets.json    Logos and colors keyed by team name
 └── runs/{stem}/        Per-run copies of the payloads above, e.g.:
     └── 2025_week15/

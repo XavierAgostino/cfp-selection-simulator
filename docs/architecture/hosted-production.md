@@ -183,14 +183,14 @@ See [`docs/hosting/render-feasibility-checklist.md`](../hosting/render-feasibili
 
 | Order | Work | Status |
 |-------|------|--------|
-| 0 | This doc + vision assessment update | **Done** (when committed) |
+| 0 | This doc + vision assessment update | **Done** |
 | 0b | Run Analysis UX polish (local) | Pending |
-| 1 | **Scenario Lab MVP** on local adapters | Not started |
-| 2 | Hosted Architecture H1–H7 (before public launch) | Not started |
-| 3 | Validation dashboard MVP | Not started |
-| 4 | Share / export layer | Not started |
+| 1 | **Scenario Lab MVP** on local adapters | **Shipped** (`d81e91a`) |
+| 2 | Validation dashboard MVP | **Shipped** (`98f1934`) |
+| 3 | Share / export layer | Next — before hosted work |
+| 4 | Hosted Architecture H1–H7 (before public launch) | Not started |
 
-**Do not build hosted adapters before Scenario Lab** unless local architecture actively blocks you. Scenario Lab should prove the workflow; hosting hardens around it.
+**Do not build hosted adapters before the share/export layer** — Scenario Lab and the validation dashboard proved the local workflow; export/share completes the local OSS product, then hosting hardens around it.
 
 ### Hosted phase steps (H1–H7, future)
 

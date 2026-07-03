@@ -55,10 +55,10 @@ def _selection(year: int, *, overlap: float, correct: bool, fto_match: bool, wit
     )
 
 
-def _predictive(year: int, *, brier: float, win_acc: float, mae: float):
+def _predictive(year: int, *, brier: float, win_acc: float, mae: float, model: str = "composite"):
     return PredictiveMetrics(
         year=year,
-        model="composite",
+        model=model,
         brier_score=brier,
         win_accuracy=win_acc,
         margin_mae=mae,
@@ -78,6 +78,9 @@ def test_payload_shape_and_summaries():
     predictive = [
         _predictive(2014, brier=0.20, win_acc=0.70, mae=10.0),
         _predictive(2015, brier=0.30, win_acc=0.60, mae=12.0),
+        # Baseline rows must never blend into the headline predictive summary.
+        _predictive(2014, brier=0.50, win_acc=0.10, mae=30.0, model="elo"),
+        _predictive(2015, brier=0.50, win_acc=0.10, mae=30.0, model="srs"),
     ]
 
     payload = build_validation_payload(
@@ -95,22 +98,26 @@ def test_payload_shape_and_summaries():
     assert payload.outlier_years == [2015]
     assert payload.schema_version >= 1
 
-    # Committee track + mean aggregation.
+    # Committee track: rows keep every season, but the summary means exclude
+    # outliers to match the CSV/Markdown "excl. outliers" aggregates.
     assert [r.year for r in payload.committee] == [2014, 2015]
     assert payload.summary.committee is not None
-    assert payload.summary.committee.seasons == 2
-    assert payload.summary.committee.mean_spearman_top12 == 0.85
-    assert payload.summary.committee.mean_top12_overlap == 0.75
+    assert payload.summary.committee.seasons == 1
+    assert payload.summary.committee.mean_spearman_top12 == 0.90
+    assert payload.summary.committee.mean_top12_overlap == 1.0
 
-    # Selection track: correct-field and first-team-out are *rates* over 2 seasons.
+    # Selection track: 2015 is an outlier year, so the summary covers 2014 only.
     assert payload.summary.selection is not None
-    assert payload.summary.selection.correct_field_rate == 0.5
-    assert payload.summary.selection.first_team_out_match_rate == 0.5
-    assert payload.summary.selection.mean_field_overlap == 0.875
-    assert payload.summary.selection.mean_seeding_within_one == 0.75
+    assert payload.summary.selection.seasons == 1
+    assert payload.summary.selection.correct_field_rate == 1.0
+    assert payload.summary.selection.first_team_out_match_rate == 1.0
+    assert payload.summary.selection.mean_field_overlap == 1.0
+    assert payload.summary.selection.mean_seeding_within_one == 1.0
 
-    # Predictive track.
+    # Predictive track: composite-only headline; baseline rows still ship as rows.
+    assert len(payload.predictive) == 4
     assert payload.summary.predictive is not None
+    assert payload.summary.predictive.seasons == 2
     assert payload.summary.predictive.mean_brier == 0.25
     assert payload.summary.predictive.mean_win_accuracy == 0.65
 

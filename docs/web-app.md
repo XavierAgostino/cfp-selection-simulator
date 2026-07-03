@@ -106,6 +106,7 @@ Job files live under `data/output/jobs/` (not served via `/api/data/`).
 | `/rankings` | Full composite table with score bars, search, and sorting |
 | `/bubble` | Last four in / first four out / next four out + selection audit + **Selection Stability** board |
 | `/scenario-lab` | **Scenario Lab**: reweight the composite and diff the projected field against a base run |
+| `/validation` | **Validation Dashboard**: retrospective accuracy vs the real committee (committee, field, predictive tracks) |
 | `/teams/[team]` | Team resume: schedule, score breakdown, selection case + **Selection Stability** strip |
 | `/methodology` | Live weights, 5+7 field rules, seeding eras, data sources |
 
@@ -151,6 +152,29 @@ projected reordering under different assumptions.
 - **Saved scenarios** for the selected base run are listed for one-click
   comparison, so the page stays useful even where live generation is disabled
   (static/hosted): any already-generated scenario can be opened without a rerun.
+
+## Validation Dashboard
+
+`/validation` is the trust layer: a retrospective accuracy check of the model
+against the real CFP Selection Committee on **completed seasons only**. It
+renders `data/output/api/validation.json` (repo-level, written by
+`sroom validate` — see [api-contracts.md](api-contracts.md)) and shows three
+trust dimensions:
+
+- **Committee alignment** — how closely the composite reproduces the
+  committee's top-12 ordering (Spearman + overlap), per season.
+- **Era-correct field selection** — each season judged against the playoff
+  format that actually applied that year (4-team, then 12-team), with the
+  teams the model added/dropped and first-team-out comparison.
+- **Predictive Signal** — how the composite's game-level signal scored
+  completed games next to simpler baselines (Elo, SRS, home-field).
+  Retrospective scoring, never a live forecast or win probability.
+
+Headline summary numbers mirror the CSV/Markdown reports: committee/selection
+means exclude outlier seasons, and the predictive headline is composite-only.
+A scope strip and footer metadata row state exactly which seasons the artifact
+covers. If `validation.json` is missing, the page shows an empty state with the
+command to generate it.
 
 ## Data plumbing
 

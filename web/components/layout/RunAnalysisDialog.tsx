@@ -709,7 +709,7 @@ export function RunAnalysisDialog({
                     {formatWeightsLabeled(DEFAULT_WEIGHTS)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Custom weights come later in Scenario Lab.
+                    To rerun with custom weights, use Scenario Lab.
                   </p>
                 </div>
 

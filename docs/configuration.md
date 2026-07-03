@@ -105,7 +105,7 @@ Loads games from `data/processed/sample/sample_games.csv` and applies `sample_ch
 
 Each run writes `config_hash` and active `weights` in the manifest, `runs.json`, and `latest.json`, computed from year, week, weights, and ruleset. Same config + same data → same hash.
 
-Future scenario runs (when Scenario Lab ships) will use config hash / scenario id for API stem collision avoidance (`2025_week15__{scenario_id}`). Scenario Lab is not yet available from the CLI.
+Scenario runs use the scenario id for API stem collision avoidance (`2025_week15__{scenario_id}`). Launch them from the web app's [Scenario Lab](web-app.md) or from the CLI with `sroom run --weights` (see [CLI Reference](cli-reference.md)); the base run always keeps `latest.json`.
 
 ---
 

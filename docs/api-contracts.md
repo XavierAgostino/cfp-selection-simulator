@@ -12,6 +12,7 @@ data/output/api/
   runs.json                      # index across all runs (drives season/week switcher)
   latest.json                    # meta for most recent run
   rankings.json  field.json  bracket.json  audit.json  team-resumes.json  sensitivity.json   # latest run (flat copies)
+  validation.json                # repo-level historical validation (written by sroom validate, not per-run)
   team-assets.json               # passthrough of data/cache/team_assets.json (or sample)
   runs/{stem}/                   # per-run dirs (base or scenario stem), same 6 files
     rankings.json field.json bracket.json audit.json team-resumes.json sensitivity.json
@@ -312,6 +313,60 @@ are 0–1 on the wire (the UI renders percentages).
 `n_scenarios` + `random_seed` + `perturbation_spec` fully reproduce a run.
 Missing file ⇒ the web UI omits Selection Stability surfaces entirely (no proxy).
 See `docs/research/sensitivity-analysis.md` for methodology.
+
+## validation.json
+
+Historical validation for the `/validation` dashboard, written by
+`sroom validate` (`src/api_contracts/build.py::build_validation_payload`). It is
+**repo-level, not per-run** — one artifact for the whole deployment, refreshed
+whenever validation reruns. Missing file ⇒ the web UI shows the validation
+empty state (no proxy values).
+
+```jsonc
+{
+  "schema_version": 1,
+  "generated_at": "...",
+  "years": [2024],                     // seasons actually validated, sorted
+  "target": "all",                     // all | committee | selection | predictive
+  "outlier_years": [],                 // outliers *within `years`* (global outliers out of range are dropped)
+  "summary": {
+    // Mirrors the CSV/Markdown aggregates: committee/selection means EXCLUDE
+    // outlier seasons; predictive covers composite rows only (never blended
+    // across baseline models). `seasons` = rows included in the means.
+    "committee":  { "seasons": 1, "mean_spearman_top12": 0.8252,
+                    "mean_top12_overlap": 0.8333, "mean_bubble_overlap": 0.3333 },
+    "selection":  { "seasons": 1, "correct_field_rate": 1.0, "mean_field_overlap": 0.9167,
+                    "first_team_out_match_rate": 0.0, "mean_seeding_within_one": 0.5455 },
+    "predictive": { "seasons": 1, "mean_brier": 0.1835,
+                    "mean_win_accuracy": 0.6991, "mean_margin_mae": 13.7387 }
+  },                                   // each track is null when that track was not run
+  "committee": [                       // one row per season
+    { "year": 2024, "spearman_top25": 0.83, "spearman_top12": 0.8252,
+      "top12_overlap_ratio": 0.8333, "top12_overlap_label": "10/12",
+      "bubble_overlap_ratio": 0.3333, "bubble_overlap_label": "1/3",
+      "is_outlier": false, "notes": "" }
+  ],
+  "selection": [                       // era-correct field selection, one row per season
+    { "year": 2024, "era": "twelve_team_2024", "ruleset": "2024",
+      "rule_target": "5+7 champion-byes",
+      "field_overlap_ratio": 0.9167, "field_overlap_label": "11/12",
+      "correct_field_size": true,
+      "false_positives": ["Alabama"], "false_negatives": ["Tennessee"],
+      "first_team_out_match": false, "first_team_out_ref": "Alabama",
+      "first_team_out_sim": "Miami", "displacement_count": 1,
+      "seeding_exact_match": 0.4545, "seeding_within_one": 0.5455,
+      "is_outlier": false, "notes": "5+7 champion-byes" }
+  ],
+  "predictive": [                      // one row per (season, model); composite + baselines
+    { "year": 2024, "model": "composite",  // composite | elo | srs | home_field
+      "brier_score": 0.1835, "win_accuracy": 0.6991,
+      "margin_mae": 13.7387, "margin_rmse": 17.1 }
+  ]
+}
+```
+
+Fixture: `web/lib/fixtures/validation.json` (seeded by `pnpm seed-fixtures`).
+Contract tests: `tests/test_validation_contract.py`.
 
 ## team-assets.json
 

@@ -1,6 +1,6 @@
 ---
 name: Vision Progress Assessment
-overview: Phases 1A–1C and 2A complete. Layer 2 platform foundation done locally. Layer 2H hosted production architecture designed (not implemented). Scenario Lab MVP shipped (Layer 3, weights-only what-if on local adapters). Next: richer scenarios (game outcomes) and the institutional/share layer; hosted adapters (H1–H7) remain future.
+overview: Layers 1–3 complete. Scenario Lab shipped (d81e91a). Validation Dashboard shipped (98f1934) with data-slice hardening (fixture, docs, composite-only aggregation, export error logging). Remaining product gap is export/share; hosted adapters (H1–H7) stay future.
 todos:
   - id: land-wip
     content: "Commit working tree: logo pipeline (PR A) and bracket FullBracket/RulesetBanner refactor (PR B) as separate commits"
@@ -26,31 +26,34 @@ todos:
   - id: hosted-architecture-doc
     content: "Write docs/architecture/hosted-production.md + render bootstrap appendix; vision update"
     status: completed
-  - id: run-analysis-preflight
-    content: "Preflight: Run Analysis UX polish locally (not a new phase)"
-    status: pending
-  - id: hosted-adapters-h1
-    content: "Future: Hosted Architecture H1–H7 (adapters, worker, Postgres) — after Scenario Lab"
-    status: pending
   - id: scenario-lab
     content: "Build Scenario Lab MVP: weight sliders, normalize to 100%, launch scenario run, moved in/out/stable + field/bracket/bubble diff"
     status: completed
   - id: phase3-validation
     content: "Phase 3: validation dashboard MVP surfacing Python backtest/committee alignment data"
-    status: pending
-  - id: update-plans-docs
-    content: Fix stale copy in README, user-guide, web-app, api-contracts, output-files (Run Analysis, resume coverage)
     status: completed
+  - id: validation-data-slice
+    content: "Validation hardening: fixture, docs, composite-only summary aggregation, outlier exclusion, export error logging"
+    status: completed
+  - id: run-analysis-preflight
+    content: "Preflight: Run Analysis UX polish locally (not a new phase)"
+    status: pending
+  - id: export-share
+    content: "Export/share layer: bracket PNG/share card, rankings CSV download, resume card; then shareable scenario URLs"
+    status: pending
+  - id: hosted-adapters-h1
+    content: "Future: Hosted Architecture H1–H7 (adapters, worker, Postgres) — after export/share"
+    status: pending
 isProject: false
 ---
 
 # Selection Room Vision — Progress Assessment
 
-**Last updated:** 2026-07-03 (post platform layer + hosted architecture design doc)
+**Last updated:** 2026-07-03 (post validation data slice + plan cleanup)
 
-**Sources:** [`.cursor/plans/selection_room_vision_5f27cf0d.plan.md`](.cursor/plans/selection_room_vision_5f27cf0d.plan.md), [`.cursor/plans/selection_stability_visual_6f4f62ca.plan.md`](.cursor/plans/selection_stability_visual_6f4f62ca.plan.md), [`.cursor/plans/option_b_run_jobs_e25d06fb.plan.md`](.cursor/plans/option_b_run_jobs_e25d06fb.plan.md), [`.cursor/plans/duckdb_run_store_39aea488.plan.md`](.cursor/plans/duckdb_run_store_39aea488.plan.md).
+**Sources:** [`selection_room_vision_5f27cf0d.plan.md`](selection_room_vision_5f27cf0d.plan.md), [`vision_status_cleanup.plan.md`](vision_status_cleanup.plan.md), [`validation_dashboard_mvp.plan.md`](validation_dashboard_mvp.plan.md). Implementation history for shipped layers lives in [`archive/`](archive/) — do not re-read those for current work.
 
-**Mental model:** Platform foundation is mostly done. Decision-support product is still not done. Do not confuse the two.
+**Mental model:** The local OSS product is nearly complete. The remaining product gap is **export/share**, not more infrastructure and not another analysis surface.
 
 ---
 
@@ -61,20 +64,8 @@ isProject: false
 | **Layer 1 — Viewer** | Explainability, bracket, charts, stability UI | **Done** |
 | **Layer 2 — Platform foundation** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done locally** — JSON web contract; OSS workflow intact |
 | **Layer 2H — Hosted production** | Vercel + worker + object storage + Postgres adapters | **Designed, not implemented** — see [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
-| **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **MVP shipped** — `/scenario-lab`: weight sliders → scenario run via Option B → server-side field/seed/bubble/rank diff |
-| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Not started** |
-
-**Critical distinction:** Option B and DuckDB do **not** count as Scenario Lab; they **made it possible**. The shipped Scenario Lab MVP is weights-only (no game-outcome simulation, custom champions, or share links yet). Future agents should not re-polish Phase 1 or treat infrastructure as product completion.
-
----
-
-## Current-state framing
-
-Selection Room is no longer just a **polished JSON viewer**. It is a **run-capable analysis workspace** on localhost or a persistent Node server: browser run generation, in-page run switching, run-grounded team narratives, and a local analytical store.
-
-With the Scenario Lab MVP shipped it now has its first **what-if decision** surface: reweight the composite and see the projected field, seeds, and bubble move. The remaining leaps toward a full decision platform are richer scenarios (game outcomes, custom champions) and the institutional/share layer.
-
-**Platform honesty:** Layer 2 platform foundation is **done locally**. Layer 2H hosted production architecture is **designed, not implemented**. Phrase as: *local OSS platform complete; hosted adapters and worker stack not built yet.*
+| **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **Shipped** (`d81e91a`) — weights-only what-if with field/seed/bubble/rank diff, empty-state preview, honest copy |
+| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Validation shipped** (`98f1934` + hardening slice); **export/share not started** |
 
 ---
 
@@ -82,55 +73,44 @@ With the Scenario Lab MVP shipped it now has its first **what-if decision** surf
 
 > Selection Room is a **guided decision platform**, not a dashboard.
 
-The six-step user flow:
-
 | Step | Status |
 |------|--------|
-| 1. See the field | **Strong** — Dashboard projected field, rankings, bubble board |
-| 2. Understand the rule path | **Strong** — Methodology uses centralized `MetricTooltip` + [`METRIC_EXPLANATIONS`](web/lib/explain.ts) via [`MethodologyWeightBreakdown.tsx`](web/components/methodology/MethodologyWeightBreakdown.tsx) |
-| 3. Inspect any team | **Strong** — Drawer + hover cards; `?run=` scoping; run-grounded `selection_case` |
-| 4. Understand the bubble | **Strong** — Cut-line chart + Selection Stability board + audit |
-| 5. Test what would change | **MVP** — Scenario Lab (`/scenario-lab`): reweight sliders → scenario run → field/seed/bubble/rank diff. Weights-only; no game-outcome sim yet |
-| 6. Share or export the result | **Minimal** — Bracket share button only; brand/PWA metadata ahead of Phase 3 export layer |
-
-### Platform enablers (not user-facing steps)
-
-| Enabler | Helps step | How |
-|---------|------------|-----|
-| Option B jobs | 5, 6 | Launch engine runs from browser without terminal |
-| `scenario_id` + `config_hash` (2A) | 5 | Scenario runs do not collide with base |
-| DuckDB store | 5 | Diff queries for field/bubble/bracket (CLI + future Scenario Lab). **Pages still read JSON.** |
-| Run Analysis modal | 1, 5, 6 | Create / switch / job status in-page — no admin `/runs` route |
-| `selection_case` | 3, 4 | Run-grounded why-in/concerns, not static blurbs |
-
-**DuckDB doctrine (repeat everywhere):** DuckDB powers run catalog, dev analytics, and future diffs; **JSON remains the page-rendering contract.** Do not convert the whole app to DB reads early.
+| 1. See the field | **Done** — Dashboard projected field, rankings, bubble board |
+| 2. Understand the rule path | **Done** — Methodology + centralized tooltips |
+| 3. Inspect any team | **Done** — Drawer + hover cards; `?run=` scoping; run-grounded `selection_case` |
+| 4. Understand the bubble | **Done** — Cut-line chart + Selection Stability board + audit |
+| 5. Test what would change | **Shipped (MVP)** — Scenario Lab: reweight sliders → scenario run → diff. Weights-only; no game-outcome sim |
+| 6. Validate (trust layer) | **Shipped** — `/validation`: committee / field / predictive tracks, trust-hierarchy copy, seeded fixture, honest aggregation |
+| 7. Share / export | **Next** — bracket share button only today |
 
 ---
 
-## Roadmap progress (locked build order)
+## Validation Dashboard — shipped and hardened
 
-```mermaid
-flowchart LR
-  P1[Layer1_Viewer]
-  P2A[Phase2A_Contracts]
-  P2B1[OptionB_Jobs]
-  P2B2[RunAnalysis_UX]
-  P2B3[DynamicResumes]
-  P2C[DuckDB_Store]
-  SL[ScenarioLab_MVP]
-  P3[Layer4_Institutional]
+The `98f1934` commit shipped the page, exporter, nav, and trust-hierarchy copy
+(Predictive Signal rename, interpretation chips, scope strip, verdict lines,
+footer metadata). The follow-up data slice completed the vertical:
 
-  P1 --> P2A --> P2B1 --> P2B2 --> P2B3 --> P2C --> SL --> P3
+- `web/lib/fixtures/validation.json` — `/validation` renders offline via `pnpm seed-fixtures`
+- Docs: `docs/api-contracts.md` (schema), `docs/web-app.md` (page), `docs/cli-reference.md`, `docs/output-files.md`
+- **Honest aggregation** in `build_validation_payload`: committee/selection summary means exclude outlier seasons (matching CSV/Markdown), predictive headline is **composite-only** — never blended across baseline models
+- Validation web-export failures are logged (`src/validation/reports.py`), not swallowed
+- Contract tests updated: `tests/test_validation_contract.py`
 
-  P1 --- d1[Done]
-  P2A --- d2[Done]
-  P2B1 --- d3[Done]
-  P2B2 --- d4[Done]
-  P2B3 --- d5[Done]
-  P2C --- d6["Done locally · JSON web contract"]
-  SL --- t1[Not started]
-  P3 --- t2[Not started]
-```
+**Tone constraints (permanent):** honest, non-official; no "official," no "committee got it wrong," no future win-probability language anywhere in validation or Scenario Lab.
+
+---
+
+## Scenario Lab — shipped
+
+`/scenario-lab` with weight sliders (whole percents summing to 100), scenario
+stems (`{run_id}__{scenario_id}`), server-side diff via
+`GET /api/scenario/diff`, saved-scenario list, empty-state preview checklist,
+and human-readable base run labels ("2025 Week 15 · Base"). Scenario runs never
+own `latest.json`.
+
+Remaining nice-to-haves (low priority, do not block export/share): catalog
+refresh after launch without full reload; `?run=` deep-link on `/scenario-lab`.
 
 ---
 
@@ -141,143 +121,23 @@ flowchart LR
 | Phase 1A–1C Explainability / Bracket / Charts | **Done** |
 | Phase 2A Contracts + SSI | **Done** |
 | Phase 2B SSI UI | **Done** |
-| Option B run jobs | **Done** (local/persistent-server) |
-| Run Analysis workspace | **Done** |
-| Dynamic resume explanations | **Done** |
+| Option B run jobs · Run Analysis workspace · dynamic resumes | **Done** (local/persistent-server) |
 | Phase 2C DuckDB store | **Done** (local analytics; JSON web contract) |
-| Layer 2H Hosted architecture | **Designed** — [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md); adapters not built |
-| Scenario Lab | **Not started** |
-| Phase 3 validation/export/share | **Not started** |
-
-**Progress (qualitative):**
-
-- **Visualization/explainability:** mature
-- **Platform foundation:** strong locally; hosted production designed but not implemented
-- **Decision-support:** incomplete until Scenario Lab ships
-- **Institutional layer:** not started
-
-**Progress (optional numeric):**
-
-- ~90% front-end visualization/explainability
-- ~55% platform foundation — because hosting/deployment is not proven
-- ~40% true decision-support platform
-
-The next major product gap is **not** bracket polish, logos, or more hover cards. It is **Scenario Lab MVP** — because that completes north-star step 5.
+| Layer 2H hosted architecture | **Designed** — adapters not built |
+| Scenario Lab | **Shipped** (`d81e91a`) |
+| Validation dashboard | **Shipped** (`98f1934` + hardening) |
+| Export/share layer | **Not started — the next move** |
 
 ---
 
-## Phase details
+## Locked next moves
 
-### Phase 1A — Explainability — **Done**
+1. **Run Analysis preflight** — local UX polish only (not a new phase)
+2. **Export primitives** — bracket PNG / share card, rankings CSV download from web, team resume card export
+3. **Shareable scenario URLs** — after export primitives
+4. **Hosted Architecture H1–H7** — after the local OSS product feels complete; before serious public launch
 
-- [`InfoTooltip`](web/components/explain/InfoTooltip.tsx) (+ Metric/Badge variants)
-- Central copy in [`web/lib/explain.ts`](web/lib/explain.ts)
-- [`TeamHoverCard`](web/components/team/TeamHoverCard.tsx), [`MatchupHoverCard`](web/components/bracket/MatchupHoverCard.tsx)
-- Drawer `?run=` scoping via [`useActiveRun`](web/components/team/useActiveRun.ts) + [`useTeamResumes`](web/components/team/useTeamResumes.ts)
-- Methodology + dashboard wired to centralized tooltips
-
-Optional remaining: native `title=` fallbacks on logos/conference badges (acceptable per plan).
-
----
-
-### Phase 1B — Bracket flagship — **Done**
-
-- Pod-first CFP layout ([`FullBracket.tsx`](web/components/bracket/FullBracket.tsx), [`RulesetBanner.tsx`](web/components/bracket/RulesetBanner.tsx))
-- Full / Round / Matchups modes + matchup edge cards
-- Share button on bracket viewer (copies current URL including `?run=`)
-
----
-
-### Phase 1C — Signature visuals — **Done**
-
-- `ResumePredictiveScatter` on Rankings
-- `BubbleCutlineChart` on Bubble + dashboard mini
-- Collapsible bubble audit
-
----
-
-### Phase 2A — Scenario contracts + SSI — **Done**
-
-| Deliverable | Status |
-|-------------|--------|
-| Real Monte Carlo + `sensitivity.json` | Done |
-| Scenario identity in `runs.json` | Done — `run_id`, `scenario_id`, `config_hash`, `weights`, `label` |
-| `scenario_stem()` helpers | Done — [`src/pipeline/paths.py`](src/pipeline/paths.py) |
-| Tests | Done — [`tests/test_run_identity.py`](tests/test_run_identity.py), [`tests/test_api_contracts.py`](tests/test_api_contracts.py) |
-
-**Platform unlock:** Scenario outputs cannot overwrite base runs.
-
-Minor doc gaps resolved in user-facing copy (Run Analysis, resume coverage wording). Master vision plan files are unchanged unless explicitly scoped.
-
----
-
-### Phase 2B — SSI UI — **Done**
-
-- Bubble `SelectionStabilityBoard`, drawer stability block, explain copy + fixtures
-
-**Scenario Lab (rest of 2B product):** **Not started** — weight sliders, diffs, scenario launcher UI.
-
----
-
-### Phase 2 platform (2B-infra + 2C) — **Done locally**
-
-Architecture complete for local OSS / persistent-server dev. **Hosted production adapters not built** — see Layer 2H.
-
-#### Option B — file-backed run jobs
-
-- [`web/lib/runJob.ts`](web/lib/runJob.ts), [`web/app/api/run/`](web/app/api/run/)
-- File-backed `data/output/jobs/` (metadata, logs, `active.json`)
-- `POST /api/run` → 202 + `job_id`; capabilities probe; export lock
-- Stem resolution: `SELECTION_ROOM_EXPORT stem=…` + `runs.json` fallback
-- Gate: `SELECTION_ROOM_ENABLE_RUN_JOBS=1`
-
-#### Run Analysis workspace
-
-- [`RunAnalysisDialog.tsx`](web/components/layout/RunAnalysisDialog.tsx) — Create | Runs | Jobs tabs
-- [`RunHeader.tsx`](web/components/layout/RunHeader.tsx), [`RunHeaderActions.tsx`](web/components/layout/RunHeaderActions.tsx)
-- Shared catalog: [`useRunCatalog.ts`](web/lib/useRunCatalog.ts) + [`GET /api/runs/catalog`](web/app/api/runs/catalog/route.ts)
-- Switcher shows current run label; same catalog as modal (no duplicate fetch)
-
-#### Dynamic resume explanations
-
-- [`src/api_contracts/selection_case.py`](src/api_contracts/selection_case.py) — run-grounded bullets
-- [`tests/test_selection_case.py`](tests/test_selection_case.py)
-- UI: [`ResumeContent.tsx`](web/components/team/ResumeContent.tsx)
-
-#### Phase 2C — DuckDB run store
-
-- [`src/store/`](src/store/), `data/output/selection_room.duckdb`
-- Dual-write in [`export_run_api`](src/api_contracts/export.py); `SELECTION_ROOM_STORE_REQUIRED` policy
-- CLI: `sroom store status | runs | query | rebuild --from-api`
-- Tests: `tests/test_store_writer.py`, `tests/test_store_rebuild.py`, `tests/test_store_failure_policy.py`
-- **Web pages still read JSON.** Catalog API uses DuckDB when available, `runs.json` fallback.
-
-**Scenario Lab prerequisites now met:**
-
-- Parameterized run launcher (Option B)
-- Scenario-safe identity (2A)
-- Local diff-friendly store (2C)
-- In-app run switching (Run Analysis)
-
-**Still to build for Scenario Lab:**
-
-- Custom weights on `/api/run` or engine flag
-- `ScenarioDiffService` boundary — `getScenarioDiff(baseStem, scenarioStem)`; local DuckDB/JSON vs hosted Postgres/artifact (see hosted architecture doc)
-- Diff UI consuming that service — not scattered React compare logic
-- Scenario Lab page + sliders
-
----
-
-### Phase 3 — Institutional / share layer — **Not started**
-
-| Priority | Status |
-|----------|--------|
-| Validation dashboard MVP | Not started — Python validation suite exists as CSV only |
-| Export tools (bracket PNG, rankings CSV, resume card) | Not started |
-| Shareable scenario URLs | Not started |
-| Hosted adapters (H1–H7) | Designed — [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md); implement before serious public launch |
-
-Brand/PWA assets do not satisfy user flow step 6.
+**Doctrine (unchanged):** JSON under `data/output/api/` is the web contract. DuckDB is local analytics only — do **not** expand it into web page reads. Scenario runs never own `latest.json`. Do **not** build hosted adapters before export/share unless local architecture actively blocks. Do **not** re-polish Phase 1.
 
 ---
 
@@ -287,55 +147,24 @@ Brand/PWA assets do not satisfy user flow step 6.
 |---------|-------|
 | Run generation (Option B) | [`web/lib/runJob.ts`](web/lib/runJob.ts), [`web/app/api/run/`](web/app/api/run/) |
 | Run catalog | [`web/lib/runCatalog.ts`](web/lib/runCatalog.ts), [`web/lib/useRunCatalog.ts`](web/lib/useRunCatalog.ts), [`web/app/api/runs/catalog/route.ts`](web/app/api/runs/catalog/route.ts) |
-| Run UI / header | [`web/components/layout/RunHeader.tsx`](web/components/layout/RunHeader.tsx), [`web/components/layout/RunHeaderActions.tsx`](web/components/layout/RunHeaderActions.tsx), [`web/components/layout/RunAnalysisDialog.tsx`](web/components/layout/RunAnalysisDialog.tsx), [`web/components/layout/RunSwitcher.tsx`](web/components/layout/RunSwitcher.tsx) |
+| Run UI / header | [`web/components/layout/RunHeader.tsx`](web/components/layout/RunHeader.tsx), [`web/components/layout/RunAnalysisDialog.tsx`](web/components/layout/RunAnalysisDialog.tsx) |
+| Scenario Lab | [`web/components/scenario/`](web/components/scenario/), [`web/lib/scenarioDiff.ts`](web/lib/scenarioDiff.ts), [`web/lib/scenarioWeights.ts`](web/lib/scenarioWeights.ts) |
+| Validation dashboard | [`web/components/validation/`](web/components/validation/), [`web/lib/validationFormat.ts`](web/lib/validationFormat.ts), [`web/app/(app)/validation/page.tsx`](web/app/(app)/validation/page.tsx) |
+| Validation exporter | [`src/api_contracts/build.py`](src/api_contracts/build.py) (`build_validation_payload`), [`src/validation/reports.py`](src/validation/reports.py), [`tests/test_validation_contract.py`](tests/test_validation_contract.py) |
 | JSON API contract | [`src/api_contracts/`](src/api_contracts/), [`docs/api-contracts.md`](docs/api-contracts.md) |
-| Dynamic resume explanations | [`src/api_contracts/selection_case.py`](src/api_contracts/selection_case.py), [`tests/test_selection_case.py`](tests/test_selection_case.py) |
-| Record metadata | [`src/api_contracts/records.py`](src/api_contracts/records.py), [`tests/test_team_records.py`](tests/test_team_records.py) |
+| Dynamic resume explanations | [`src/api_contracts/selection_case.py`](src/api_contracts/selection_case.py) |
 | Run identity / scenario stems | [`src/pipeline/paths.py`](src/pipeline/paths.py), [`tests/test_run_identity.py`](tests/test_run_identity.py) |
-| DuckDB store (local analytics) | [`src/store/`](src/store/), [`docs/development.md`](docs/development.md) (DuckDB section) |
+| DuckDB store (local analytics) | [`src/store/`](src/store/), [`docs/development.md`](docs/development.md) |
 | Hosted production architecture | [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
-| Render bootstrap (secondary) | [`docs/hosting/render-feasibility-checklist.md`](../../docs/hosting/render-feasibility-checklist.md) |
-
----
-
-## Locked next moves
-
-0. **Hosted architecture doc + adapter design** — [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) (done); Run Analysis UX polish locally
-1. **Scenario Lab MVP** — local adapters only; introduce `ScenarioDiffService` boundary
-2. **Hosted Architecture H1–H7** — before serious public launch; not before Scenario Lab unless local architecture blocks
-3. **Validation dashboard MVP** — credibility layer
-4. **Share/export layer** — share URL, bracket PNG, rankings CSV
-5. **Docs cleanup** — ongoing; Run Analysis and resume coverage wording updated in README, user-guide, web-app, api-contracts, output-files
-
-**Doctrine:** JSON payload shape stays the web contract. Postgres holds metadata; object storage holds payloads. Do **not** expand DuckDB into web page reads. Do **not** build hosted adapters before Scenario Lab unless blocked. Do **not** re-polish Phase 1.
-
-**Current true next move:** Run Analysis polish → Scenario Lab MVP on local adapters.
-
----
-
-## Scenario Lab MVP scope (first version)
-
-**In scope:**
-
-- Start from a selected run
-- Adjust model weights; normalize to 100%
-- Launch scenario run
-- Show moved in / moved out / stable
-- Show updated field, bracket, bubble diff
-
-**Out of scope for MVP:**
-
-- User accounts
-- Hosted adapters (H1–H7)
-- Live simulation queue
-- Complex animations
-- Full Selection Stability recomputation UI
-- Shareable scenario URLs
-
-**Note:** Local DuckDB store exists for analytics/diffs; it is **not** a substitute for Scenario Lab UI.
 
 ---
 
 ## Bottom line
 
-Phases 1 and 2A remain complete, and the platform layer is now in place for local or persistent-server usage: browser run generation, Run Analysis workspace, dynamic run-grounded resumes, and a local DuckDB analytical store. Selection Room is no longer just a JSON viewer; it is a run-capable analysis workspace. It is not yet a true what-if decision platform because Scenario Lab has not shipped. Scenario Lab is the next product leap because it completes north-star step 5, "Test what would change." Option B and DuckDB exist to make scenario launches, run switching, and diff queries boring to implement.
+Selection Room is a local run-capable CFP selection analysis workspace with
+field/ranking/bracket/bubble explainability, browser run generation, dynamic
+team cases, a weight-based Scenario Lab, and a shipped, hardened validation
+dashboard. Every north-star step through "Validate" is done. The one remaining
+gap before the local OSS product feels complete is **export/share**: bracket
+PNG / share card, rankings CSV, resume card, then shareable scenario URLs.
+Hosted adapters come after that.

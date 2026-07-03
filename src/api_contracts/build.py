@@ -714,28 +714,34 @@ def build_validation_payload(
         for r in predictive
     ]
 
+    # Summary aggregation mirrors the CSV/Markdown reports (src.validation.reports):
+    # committee/selection means exclude outlier seasons, and the predictive headline
+    # covers composite rows only — never a blend across baseline models.
     summary = ValidationSummary()
     if committee_rows:
+        included = [r for r in committee_rows if not r.is_outlier]
         summary.committee = CommitteeSummary(
-            seasons=len(committee_rows),
-            mean_spearman_top12=_mean([r.spearman_top12 for r in committee_rows]),
-            mean_top12_overlap=_mean([r.top12_overlap_ratio for r in committee_rows]),
-            mean_bubble_overlap=_mean([r.bubble_overlap_ratio for r in committee_rows]),
+            seasons=len(included),
+            mean_spearman_top12=_mean([r.spearman_top12 for r in included]),
+            mean_top12_overlap=_mean([r.top12_overlap_ratio for r in included]),
+            mean_bubble_overlap=_mean([r.bubble_overlap_ratio for r in included]),
         )
     if selection_rows:
+        included_sel = [r for r in selection_rows if not r.is_outlier]
         summary.selection = SelectionSummary(
-            seasons=len(selection_rows),
-            correct_field_rate=_rate([r.correct_field_size for r in selection_rows]),
-            mean_field_overlap=_mean([r.field_overlap_ratio for r in selection_rows]),
-            first_team_out_match_rate=_rate([r.first_team_out_match for r in selection_rows]),
-            mean_seeding_within_one=_mean([r.seeding_within_one for r in selection_rows]),
+            seasons=len(included_sel),
+            correct_field_rate=_rate([r.correct_field_size for r in included_sel]),
+            mean_field_overlap=_mean([r.field_overlap_ratio for r in included_sel]),
+            first_team_out_match_rate=_rate([r.first_team_out_match for r in included_sel]),
+            mean_seeding_within_one=_mean([r.seeding_within_one for r in included_sel]),
         )
     if predictive_rows:
+        composite_rows = [r for r in predictive_rows if r.model == "composite"]
         summary.predictive = PredictiveSummary(
-            seasons=len(predictive_rows),
-            mean_brier=_mean([r.brier_score for r in predictive_rows]),
-            mean_win_accuracy=_mean([r.win_accuracy for r in predictive_rows]),
-            mean_margin_mae=_mean([r.margin_mae for r in predictive_rows]),
+            seasons=len(composite_rows),
+            mean_brier=_mean([r.brier_score for r in composite_rows]),
+            mean_win_accuracy=_mean([r.win_accuracy for r in composite_rows]),
+            mean_margin_mae=_mean([r.margin_mae for r in composite_rows]),
         )
 
     # Only surface outlier seasons that are actually in this run's range — the

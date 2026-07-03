@@ -120,6 +120,10 @@ Outputs in `data/output/validation/`:
 - `validation_manifest.json`
 - `backtest_results.csv` (legacy)
 
+Also refreshes the web artifact `data/output/api/validation.json`, the contract
+behind the [`/validation` dashboard](web-app.md). A failure in that export is
+logged as a warning and never blocks the CSV/Markdown outputs above.
+
 ## `sroom reproduce`
 
 Re-run a season with current code and write manifest.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,8 @@ from src.validation.era import get_era_spec
 from src.validation.historical import OUTLIER_YEARS
 from src.validation.predictive_validation import PredictiveMetrics
 from src.validation.selection_validation import SelectionValidationResult, selection_result_to_row
+
+logger = logging.getLogger(__name__)
 
 
 def _fmt_float(value: Optional[float], digits: int = 3) -> str:
@@ -98,8 +101,13 @@ def write_validation_outputs(
                 target=target,
                 outlier_years=sorted(OUTLIER_YEARS),
             )
-        except Exception:  # noqa: BLE001 - web artifact is optional/non-fatal
-            pass
+        except Exception as exc:  # noqa: BLE001 - web artifact is optional/non-fatal
+            logger.warning(
+                "validation.json web export failed (CSV/Markdown artifacts were "
+                "still written): %s",
+                exc,
+                exc_info=True,
+            )
 
     return paths
 

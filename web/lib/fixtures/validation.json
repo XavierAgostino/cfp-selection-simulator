@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-03T18:04:58.452421+00:00",
+  "years": [
+    2024
+  ],
+  "target": "all",
+  "outlier_years": [],
+  "summary": {
+    "committee": {
+      "seasons": 1,
+      "mean_spearman_top12": 0.8252,
+      "mean_top12_overlap": 0.8333,
+      "mean_bubble_overlap": 0.3333
+    },
+    "selection": {
+      "seasons": 1,
+      "correct_field_rate": 1.0,
+      "mean_field_overlap": 0.9167,
+      "first_team_out_match_rate": 0.0,
+      "mean_seeding_within_one": 0.5455
+    },
+    "predictive": {
+      "seasons": 1,
+      "mean_brier": 0.1835,
+      "mean_win_accuracy": 0.6991,
+      "mean_margin_mae": 13.7387
+    }
+  },
+  "committee": [
+    {
+      "year": 2024,
+      "spearman_top25": 0.9323076923076923,
+      "spearman_top12": 0.8251748251748254,
+      "top12_overlap_ratio": 0.8333333333333334,
+      "top12_overlap_label": "10/12",
+      "bubble_overlap_ratio": 0.3333333333333333,
+      "bubble_overlap_label": "1/3",
+      "is_outlier": false,
+      "notes": "First 12-team field; Clemson auto bid at rank #16; Alabama displaced"
+    }
+  ],
+  "selection": [
+    {
+      "year": 2024,
+      "era": "twelve_team_2024",
+      "ruleset": "2024",
+      "rule_target": "5+7 champion-byes",
+      "field_overlap_ratio": 0.9166666666666666,
+      "field_overlap_label": "11/12",
+      "correct_field_size": true,
+      "false_positives": [
+        "Alabama"
+      ],
+      "false_negatives": [
+        "Tennessee"
+      ],
+      "first_team_out_match": false,
+      "first_team_out_ref": "Alabama",
+      "first_team_out_sim": "Miami",
+      "displacement_count": 1,
+      "seeding_exact_match": 0.45454545454545453,
+      "seeding_within_one": 0.5454545454545454,
+      "is_outlier": false,
+      "notes": "5+7 champion-byes"
+    }
+  ],
+  "predictive": [
+    {
+      "year": 2024,
+      "model": "composite",
+      "brier_score": 0.18352956730506592,
+      "win_accuracy": 0.6990679094540613,
+      "margin_mae": 13.738674487025092,
+      "margin_rmse": 17.718700788337248
+    },
+    {
+      "year": 2024,
+      "model": "elo",
+      "brier_score": 0.2190149104906173,
+      "win_accuracy": 0.5885486018641811,
+      "margin_mae": 15.09770709810475,
+      "margin_rmse": 19.501237094447223
+    },
+    {
+      "year": 2024,
+      "model": "srs",
+      "brier_score": 0.2724582650836165,
+      "win_accuracy": 0.5885486018641811,
+      "margin_mae": 15.119770366565618,
+      "margin_rmse": 20.572936306679225
+    },
+    {
+      "year": 2024,
+      "model": "home_field",
+      "brier_score": 0.24230403280853047,
+      "win_accuracy": 0.5912117177097204,
+      "margin_mae": 15.918109187749668,
+      "margin_rmse": 20.36269826649725
+    }
+  ]
+}
