@@ -4,7 +4,7 @@
  * One source of truth so the same term reads identically in the rankings
  * table, dashboard cards, bubble board, bracket, drawer, and methodology
  * page. Copy standard: say "projected"/"simulated", never "official";
- * explain assumptions plainly; "Resume", not "Résumé".
+ * explain assumptions plainly; always use "Resume" (no accent).
  */
 
 import type { ScoreMetricKey } from "@/lib/scoreBars";
@@ -40,7 +40,7 @@ export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = 
   predictive: {
     label: "Predictive",
     description:
-      "Estimated true team strength — how good the team looks independent of who it has played. Blends margin-aware ratings (Massey) with Elo.",
+      "Estimated true team strength: how good the team looks independent of who it has played. Blends margin-aware ratings (Massey) with Elo.",
   },
   sor: {
     label: "SOR",
@@ -59,7 +59,8 @@ export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = 
   },
   record: {
     label: "Record",
-    description: "Wins and losses across all games in this run's data window.",
+    description:
+      "Wins and losses across all games in this run's data window. The column header reflects the record type (FBS, demo, or model-window).",
   },
   selection_stability: {
     label: "Selection Stability",
@@ -124,7 +125,7 @@ export const BADGE_EXPLANATIONS: Record<ExplainBadgeKey, BadgeExplanation> = {
   first_out: {
     label: "FIRST OUT",
     description:
-      "The highest-ranked team left out of the projected field — the very top of the bubble.",
+      "The highest-ranked team left out of the projected field. This is the very top of the bubble.",
   },
   out: {
     label: "OUT",

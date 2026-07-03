@@ -100,7 +100,9 @@ Loads games from `data/processed/sample/sample_games.csv` and applies `sample_ch
 
 ## Reproducibility
 
-Each run writes `config_hash` in the manifest, computed from year, week, weights, and ruleset. Same config + same data → same hash.
+Each run writes `config_hash` and active `weights` in the manifest, `runs.json`, and `latest.json`, computed from year, week, weights, and ruleset. Same config + same data → same hash.
+
+Future scenario runs (when Scenario Lab ships) will use config hash / scenario id for API stem collision avoidance (`2025_week15__{scenario_id}`). Scenario Lab is not yet available from the CLI.
 
 ---
 

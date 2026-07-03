@@ -153,13 +153,14 @@ export function MatchupEdgeCard({ game, byeTeam }: MatchupEdgeCardProps) {
           </span>
         </div>
         <span className="text-[0.6rem] text-muted-foreground/70">
-          Profile share — not a win probability
+          Profile share, not a win probability
         </span>
       </div>
 
       <p className="px-4 text-xs leading-relaxed text-muted-foreground">
-        <span className="font-medium text-foreground/90">{summary.lead}</span>{" "}
-        — {summary.detail}.
+        <span className="font-medium text-foreground/90">{summary.lead}.</span>{" "}
+        {summary.detail.charAt(0).toUpperCase()}
+        {summary.detail.slice(1)}.
       </p>
 
       <div className="flex flex-col gap-1.5 px-4">
@@ -180,7 +181,7 @@ export function MatchupEdgeCard({ game, byeTeam }: MatchupEdgeCardProps) {
 
       <div className="flex flex-wrap items-center justify-between gap-1 border-t border-border px-4 pt-3 text-xs text-muted-foreground">
         <span>
-          Campus site — at{" "}
+          Campus site at{" "}
           <span className="font-medium text-foreground/80">{host.team}</span>
         </span>
         <span>

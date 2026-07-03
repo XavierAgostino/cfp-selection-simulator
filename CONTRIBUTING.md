@@ -2,7 +2,10 @@
 
 Thanks for contributing to the Selection Room.
 
-Author: **Xavier Agostino**
+## AI-assisted contributions
+
+Do not add `Co-Authored-By` trailers or list AI tools as project authors. Commits
+should be authored by human contributors only.
 
 ---
 

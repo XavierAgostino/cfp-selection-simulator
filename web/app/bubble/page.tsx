@@ -1,4 +1,4 @@
-import { RunContextBar } from "@/components/layout/RunContextBar";
+import { RunHeader } from "@/components/layout/RunHeader";
 import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { EmptyState } from "@/components/common/EmptyState";
 import { BubbleBoard } from "@/components/bubble/BubbleBoard";
@@ -61,11 +61,11 @@ export default async function BubblePage({ searchParams }: BubblePageProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar stem={stem} />
+      <RunHeader stem={stem} />
       <div>
         <h1 className="text-xl font-semibold text-foreground">Bubble watch</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          The last teams in and the first teams out — and how close it is.
+          The last teams in and the first teams out, and how close it is.
         </p>
       </div>
       {field ? (

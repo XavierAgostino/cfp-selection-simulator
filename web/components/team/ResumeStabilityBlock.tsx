@@ -80,7 +80,7 @@ export function ResumeStabilityBlock({ team }: { team: string }) {
           {entry.in_field_count.toLocaleString()} of{" "}
           {entry.n_scenarios.toLocaleString()}
         </span>{" "}
-        weight scenarios. Varies model weights only — not future game results.
+        weight scenarios. Varies model weights only, not future game results.
       </p>
     </div>
   );

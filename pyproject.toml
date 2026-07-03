@@ -37,6 +37,7 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "pyarrow>=14.0.0",
     "pydantic>=2.7",
+    "duckdb>=1.0",
 ]
 
 [project.optional-dependencies]

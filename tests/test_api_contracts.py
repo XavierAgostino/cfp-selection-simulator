@@ -58,6 +58,15 @@ def test_latest_meta_contract(sample_run):
     assert latest.product == "Selection Room"
     assert set(latest.weights) == {"resume", "predictive", "sor", "sos"}
     assert pytest.approx(sum(latest.weights.values())) == 1.0
+    assert latest.record_meta is not None
+    assert latest.record_meta.record_label == "demo_record"
+
+
+def test_rankings_record_meta(sample_run):
+    rankings = RankingsPayload.model_validate(_load("rankings.json"))
+    assert rankings.record_meta is not None
+    assert rankings.record_meta.is_demo_fixture is True
+    assert rankings.record_meta.record_start_week >= 5
 
 
 def test_field_payload_contract(sample_run):
@@ -86,7 +95,11 @@ def test_bracket_payload_contract(sample_run):
 def test_rankings_and_resumes_agree(sample_run):
     rankings = RankingsPayload.model_validate(_load("rankings.json"))
     resumes = TeamResumesPayload.model_validate(_load("team-resumes.json"))
+    assert resumes.record_meta is not None
+    assert resumes.record_meta == rankings.record_meta
+    assert resumes.generated_at
     assert [t.rank for t in rankings.teams] == sorted(t.rank for t in rankings.teams)
+    assert len(resumes.teams) == len(rankings.teams)
     in_field = [t for t in rankings.teams if t.in_field]
     assert len(in_field) == 12
     for team in in_field:
@@ -94,6 +107,20 @@ def test_rankings_and_resumes_agree(sample_run):
         assert resume is not None, f"{team.team} is in the field but has no resume"
         assert resume.in_field
         assert resume.rank == team.rank
+        assert resume.detail_level == "full"
+
+
+def test_summary_resumes_for_lower_ranks(sample_run):
+    rankings = RankingsPayload.model_validate(_load("rankings.json"))
+    resumes = TeamResumesPayload.model_validate(_load("team-resumes.json"))
+    low_rank = max(rankings.teams, key=lambda t: t.rank)
+    if low_rank.rank <= 40:
+        pytest.skip("sample has fewer than 40 teams")
+    resume = resumes.teams[low_rank.team]
+    assert resume.detail_level == "summary"
+    assert resume.schedule == []
+    assert len(resume.why_in) >= 2
+    assert resume.selection_case is not None
 
 
 def test_per_run_dir_matches_flat_copies(sample_run):

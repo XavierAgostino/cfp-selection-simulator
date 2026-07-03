@@ -38,7 +38,7 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
         five highest-ranked conference champions earn automatic bids, and the
         seven best remaining teams by composite score fill the at-large
         slots. Everything below is measured against the composite-score gap
-        to that final at-large cutoff — the cut line.
+        to that final at-large cutoff, the cut line.
       </div>
 
       {last_four_in.length > 0 ? (
@@ -47,8 +47,8 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
             <CardTitle>The Cut Line</CardTitle>
             <p className="text-xs text-muted-foreground">
               Who is closest to the selection cut line, and why? Every bubble
-              team placed by composite score — in-field teams above the spine,
-              teams out of the field below it, the cut gap shaded. Hover a logo
+              team placed by composite score. In-field teams sit above the spine,
+              teams out of the field below it, with the cut gap shaded. Hover a logo
               for the exact margin; click to open the team resume.
             </p>
           </CardHeader>
@@ -71,7 +71,7 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
             <p className="text-xs text-muted-foreground">
               {hasContestedBubble
                 ? "How often each bubble team makes the projected field when model weights are reasonably perturbed. Hover a logo for the scenario breakdown; click to open the team resume."
-                : `The projected field is stable under ±${Math.round(sensitivity.perturbation_spec.relative_range * 100)}% weight perturbations — no team landed in the 25–75% bubble band for this run.`}
+                : `The projected field is stable under ±${Math.round(sensitivity.perturbation_spec.relative_range * 100)}% weight perturbations. No team landed in the 25–75% bubble band for this run.`}
             </p>
           </CardHeader>
           <CardContent className="px-4">
@@ -116,7 +116,7 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
             />
             <div className="flex flex-col">
               <span className="text-sm font-medium text-foreground">
-                {displaced_team.team} — displaced by an auto-bid champion
+                {displaced_team.team}, displaced by an auto-bid champion
               </span>
               <span className="text-xs text-muted-foreground">
                 This team ranked inside the field on composite score alone,
@@ -139,7 +139,7 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
         />
         <BubbleColumn
           title="First Four Out"
-          description="The top of the bubble — closest to claiming the final at-large spot."
+          description="The top of the bubble, closest to claiming the final at-large spot."
           accent="red"
           teams={first_four_out}
           cutLineScore={cutLineScore}

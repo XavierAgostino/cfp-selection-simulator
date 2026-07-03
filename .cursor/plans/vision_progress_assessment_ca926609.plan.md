@@ -1,6 +1,6 @@
 ---
 name: Vision Progress Assessment
-overview: Phases 1A–1C and 2A complete. Platform layer (Option B jobs, DuckDB store, Run Analysis workspace, dynamic resumes) done for local/persistent-server architecture. Decision-support (Scenario Lab) not started. Next preflight Run Analysis polish/hosting-readiness, then Scenario Lab MVP.
+overview: Phases 1A–1C and 2A complete. Layer 2 platform foundation done locally. Layer 2H hosted production architecture designed (not implemented). Decision-support (Scenario Lab) not started. Next hosted arch docs + Run Analysis polish, then Scenario Lab MVP on local adapters.
 todos:
   - id: land-wip
     content: "Commit working tree: logo pipeline (PR A) and bracket FullBracket/RulesetBanner refactor (PR B) as separate commits"
@@ -23,8 +23,14 @@ todos:
   - id: duckdb-store
     content: "Phase 2C DuckDB run store — dual-write, CLI, catalog API; JSON remains page contract"
     status: completed
+  - id: hosted-architecture-doc
+    content: "Write docs/architecture/hosted-production.md + render bootstrap appendix; vision update"
+    status: completed
   - id: run-analysis-preflight
-    content: "Preflight: Run Analysis polish + hosted deployment readiness check (not a new phase)"
+    content: "Preflight: Run Analysis UX polish locally (not a new phase)"
+    status: pending
+  - id: hosted-adapters-h1
+    content: "Future: Hosted Architecture H1–H7 (adapters, worker, Postgres) — after Scenario Lab"
     status: pending
   - id: scenario-lab
     content: "Build Scenario Lab MVP: weight sliders, normalize to 100%, launch scenario run, moved in/out/stable + field/bracket/bubble diff"
@@ -33,14 +39,14 @@ todos:
     content: "Phase 3: validation dashboard MVP surfacing Python backtest/committee alignment data"
     status: pending
   - id: update-plans-docs
-    content: Fix stale SSI stub references in CHANGELOG.md and limitations-and-ethics.md; sync web-app.md Run Analysis copy
-    status: pending
+    content: Fix stale copy in README, user-guide, web-app, api-contracts, output-files (Run Analysis, resume coverage)
+    status: completed
 isProject: false
 ---
 
 # Selection Room Vision — Progress Assessment
 
-**Last updated:** 2026-07-03 (post platform layer: Option B, DuckDB, Run Analysis, dynamic resumes)
+**Last updated:** 2026-07-03 (post platform layer + hosted architecture design doc)
 
 **Sources:** [`.cursor/plans/selection_room_vision_5f27cf0d.plan.md`](.cursor/plans/selection_room_vision_5f27cf0d.plan.md), [`.cursor/plans/selection_stability_visual_6f4f62ca.plan.md`](.cursor/plans/selection_stability_visual_6f4f62ca.plan.md), [`.cursor/plans/option_b_run_jobs_e25d06fb.plan.md`](.cursor/plans/option_b_run_jobs_e25d06fb.plan.md), [`.cursor/plans/duckdb_run_store_39aea488.plan.md`](.cursor/plans/duckdb_run_store_39aea488.plan.md).
 
@@ -53,7 +59,8 @@ isProject: false
 | Layer | Description | Status |
 |-------|-------------|--------|
 | **Layer 1 — Viewer** | Explainability, bracket, charts, stability UI | **Done** |
-| **Layer 2 — Platform** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done for local/persistent-server architecture** — hosting hardening not yet validated |
+| **Layer 2 — Platform foundation** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done locally** — JSON web contract; OSS workflow intact |
+| **Layer 2H — Hosted production** | Vercel + worker + object storage + Postgres adapters | **Designed, not implemented** — see [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
 | **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **Not started** |
 | **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Not started** |
 
@@ -67,7 +74,7 @@ Selection Room is no longer just a **polished JSON viewer**. It is a **run-capab
 
 It is **not yet** a true **what-if decision platform** because Scenario Lab has not shipped. That remains the next product leap.
 
-**Platform honesty:** Layer 2 is done in **architecture** (Option B jobs + DuckDB + Run Analysis). **Public hosted deployment is not yet proven.** Phrase as: *local/persistent-server platform, not proven public hosted platform.*
+**Platform honesty:** Layer 2 platform foundation is **done locally**. Layer 2H hosted production architecture is **designed, not implemented**. Phrase as: *local OSS platform complete; hosted adapters and worker stack not built yet.*
 
 ---
 
@@ -138,13 +145,14 @@ flowchart LR
 | Run Analysis workspace | **Done** |
 | Dynamic resume explanations | **Done** |
 | Phase 2C DuckDB store | **Done** (local analytics; JSON web contract) |
+| Layer 2H Hosted architecture | **Designed** — [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md); adapters not built |
 | Scenario Lab | **Not started** |
 | Phase 3 validation/export/share | **Not started** |
 
 **Progress (qualitative):**
 
 - **Visualization/explainability:** mature
-- **Platform foundation:** strong locally; hosting/deployment not yet validated
+- **Platform foundation:** strong locally; hosted production designed but not implemented
 - **Decision-support:** incomplete until Scenario Lab ships
 - **Institutional layer:** not started
 
@@ -199,7 +207,7 @@ Optional remaining: native `title=` fallbacks on logos/conference badges (accept
 
 **Platform unlock:** Scenario outputs cannot overwrite base runs.
 
-Minor non-blocking gaps: stale "SSI stub" in [`CHANGELOG.md`](CHANGELOG.md) and [`docs/research/limitations-and-ethics.md`](docs/research/limitations-and-ethics.md).
+Minor doc gaps resolved in user-facing copy (Run Analysis, resume coverage wording). Master vision plan files are unchanged unless explicitly scoped.
 
 ---
 
@@ -213,7 +221,7 @@ Minor non-blocking gaps: stale "SSI stub" in [`CHANGELOG.md`](CHANGELOG.md) and 
 
 ### Phase 2 platform (2B-infra + 2C) — **Done locally**
 
-Architecture complete for persistent-server dev. **Not proven on public hosted production.**
+Architecture complete for local OSS / persistent-server dev. **Hosted production adapters not built** — see Layer 2H.
 
 #### Option B — file-backed run jobs
 
@@ -254,7 +262,8 @@ Architecture complete for persistent-server dev. **Not proven on public hosted p
 **Still to build for Scenario Lab:**
 
 - Custom weights on `/api/run` or engine flag
-- Diff UI (DuckDB queries or client-side JSON compare)
+- `ScenarioDiffService` boundary — `getScenarioDiff(baseStem, scenarioStem)`; local DuckDB/JSON vs hosted Postgres/artifact (see hosted architecture doc)
+- Diff UI consuming that service — not scattered React compare logic
 - Scenario Lab page + sliders
 
 ---
@@ -266,7 +275,7 @@ Architecture complete for persistent-server dev. **Not proven on public hosted p
 | Validation dashboard MVP | Not started — Python validation suite exists as CSV only |
 | Export tools (bracket PNG, rankings CSV, resume card) | Not started |
 | Shareable scenario URLs | Not started |
-| Hosted Postgres / FastAPI | Not started — local DuckDB only; expand only if multi-user hosting needs it |
+| Hosted adapters (H1–H7) | Designed — [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md); implement before serious public launch |
 
 Brand/PWA assets do not satisfy user flow step 6.
 
@@ -284,20 +293,23 @@ Brand/PWA assets do not satisfy user flow step 6.
 | Record metadata | [`src/api_contracts/records.py`](src/api_contracts/records.py), [`tests/test_team_records.py`](tests/test_team_records.py) |
 | Run identity / scenario stems | [`src/pipeline/paths.py`](src/pipeline/paths.py), [`tests/test_run_identity.py`](tests/test_run_identity.py) |
 | DuckDB store (local analytics) | [`src/store/`](src/store/), [`docs/development.md`](docs/development.md) (DuckDB section) |
+| Hosted production architecture | [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
+| Render bootstrap (secondary) | [`docs/hosting/render-feasibility-checklist.md`](../../docs/hosting/render-feasibility-checklist.md) |
 
 ---
 
 ## Locked next moves
 
-0. **Run Analysis polish + hosting-readiness preflight** — not a new phase; validate modal UX and persistent-server deploy before charging into Scenario Lab
-1. **Scenario Lab MVP** — the main product leap (north-star step 5)
-2. **Validation dashboard MVP** — credibility layer
-3. **Share/export layer** — share URL, bracket PNG, rankings CSV
-4. **Docs cleanup** — CHANGELOG + limitations SSI stubs; web-app.md Run Analysis copy
+0. **Hosted architecture doc + adapter design** — [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) (done); Run Analysis UX polish locally
+1. **Scenario Lab MVP** — local adapters only; introduce `ScenarioDiffService` boundary
+2. **Hosted Architecture H1–H7** — before serious public launch; not before Scenario Lab unless local architecture blocks
+3. **Validation dashboard MVP** — credibility layer
+4. **Share/export layer** — share URL, bracket PNG, rankings CSV
+5. **Docs cleanup** — ongoing; Run Analysis and resume coverage wording updated in README, user-guide, web-app, api-contracts, output-files
 
-Do **not** expand DuckDB into web page reads or Postgres until Scenario Lab proves query patterns. Do **not** re-polish Phase 1. Optional hosted DB only if multi-user hosting requires it.
+**Doctrine:** JSON payload shape stays the web contract. Postgres holds metadata; object storage holds payloads. Do **not** expand DuckDB into web page reads. Do **not** build hosted adapters before Scenario Lab unless blocked. Do **not** re-polish Phase 1.
 
-**Current true next move:** Polish Run Analysis modal → Scenario Lab MVP.
+**Current true next move:** Run Analysis polish → Scenario Lab MVP on local adapters.
 
 ---
 
@@ -314,7 +326,7 @@ Do **not** expand DuckDB into web page reads or Postgres until Scenario Lab prov
 **Out of scope for MVP:**
 
 - User accounts
-- Hosted database
+- Hosted adapters (H1–H7)
 - Live simulation queue
 - Complex animations
 - Full Selection Stability recomputation UI

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowLeft, SearchX } from "lucide-react";
-import { RunContextBar } from "@/components/layout/RunContextBar";
+import { RunHeader } from "@/components/layout/RunHeader";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ResumeContent } from "@/components/team/ResumeContent";
 import { getRunFile, NotFoundError } from "@/lib/data";
-import type { TeamResumesPayload } from "@/lib/types";
+import { synthesizeSummaryResume } from "@/lib/synthesizeResume";
+import type { RankingsPayload, TeamResumesPayload } from "@/lib/types";
 
 interface TeamPageProps {
   params: Promise<{ team: string }>;
@@ -22,10 +23,19 @@ async function loadTeamResumes(
   }
 }
 
+async function loadRankings(stem: string | null): Promise<RankingsPayload | null> {
+  try {
+    return await getRunFile(stem, "rankings");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}
+
 function NotFound({ description }: { description: string }) {
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar />
+      <RunHeader />
       <EmptyState
         icon={<SearchX className="h-5 w-5" />}
         title="Team not found"
@@ -48,26 +58,39 @@ export default async function TeamPage({ params, searchParams }: TeamPageProps) 
   const { team: encodedTeam } = await params;
   const { run } = await searchParams;
   const team = decodeURIComponent(encodedTeam);
+  const stem = run ?? null;
 
-  const payload = await loadTeamResumes(run ?? null);
+  const [payload, rankings] = await Promise.all([
+    loadTeamResumes(stem),
+    loadRankings(stem),
+  ]);
 
-  if (!payload) {
-    return (
-      <NotFound description="The selection engine hasn't produced team-resumes.json for this run yet." />
-    );
-  }
+  const resume =
+    payload?.teams[team] ??
+    (() => {
+      const row = rankings?.teams.find((t) => t.team === team);
+      return row ? synthesizeSummaryResume(row) : null;
+    })();
 
-  const resume = payload.teams[team];
   if (!resume) {
+    if (!payload && !rankings) {
+      return (
+        <NotFound description="The selection engine hasn't produced team-resumes.json for this run yet." />
+      );
+    }
     return (
-      <NotFound description={`${team} isn't in the tracked resume set for this run — it may be ranked outside the top 40 and out of the bubble picture.`} />
+      <NotFound description={`${team} is not in the rankings for this run.`} />
     );
   }
 
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar />
-      <ResumeContent resume={resume} variant="page" />
+      <RunHeader stem={stem} />
+      <ResumeContent
+        resume={resume}
+        recordMeta={payload?.record_meta ?? rankings?.record_meta ?? null}
+        variant="page"
+      />
     </div>
   );
 }

@@ -4,6 +4,23 @@ Every run writes reproducible artifacts under `data/output/`. Generated files ar
 
 ---
 
+## Run identity
+
+| Term | Meaning | Example |
+|------|---------|---------|
+| `run_id` | Season/week group | `2025_week15` |
+| `scenario_id` | `base` or config-hash variant | `base`, `a13f9c2b4e5d6f70` |
+| `stem` | Output-safe identifier | base: `2025_week15`; scenario: `2025_week15__a13f9c2b4e5d6f70` |
+
+Base pipeline runs use `scenario_id: "base"` and `stem === run_id`. Future weight-variant runs use `stem: "{run_id}__{scenario_id}"` so API directories never collide.
+
+**Naming:**
+
+- **CSV/HTML artifacts** (rankings, fields, brackets, audits, manifests): `{run_id}_{artifact}.{ext}` for base runs, e.g. `2025_week15_rankings.csv`
+- **API exports** (`data/output/api/`): scenario-safe stems under `runs/{stem}/`
+
+---
+
 ## Directory layout
 
 ```
@@ -18,15 +35,13 @@ data/output/
 └── runs/         Manifest JSON per run
 ```
 
-Naming convention: `{year}_week{week}_{artifact}.{ext}`
-
-Example: `2025_week15_rankings.csv`
+Example base run: `2025_week15_rankings.csv`
 
 ---
 
 ## Rankings CSV
 
-Path: `data/output/rankings/{year}_week{week}_rankings.csv`
+Path: `data/output/rankings/{run_id}_rankings.csv`
 
 | Column | Description |
 |--------|-------------|
@@ -48,7 +63,7 @@ When using sample mode, `conference` and `conf_champ` are added during enrichmen
 
 ## Field CSV
 
-Path: `data/output/fields/{year}_week{week}_field.csv`
+Path: `data/output/fields/{run_id}_field.csv`
 
 | Column | Description |
 |--------|-------------|
@@ -63,7 +78,7 @@ Path: `data/output/fields/{year}_week{week}_field.csv`
 
 ## Bracket CSV
 
-Path: `data/output/brackets/{year}_week{week}_bracket.csv`
+Path: `data/output/brackets/{run_id}_bracket.csv`
 
 | Column | Description |
 |--------|-------------|
@@ -80,7 +95,7 @@ Path: `data/output/brackets/{year}_week{week}_bracket.csv`
 
 ## Bracket HTML
 
-Path: `data/output/brackets/{year}_week{week}_bracket.html`
+Path: `data/output/brackets/{run_id}_bracket.html`
 
 Standalone HTML bracket visualization. Open with `sroom open --latest`.
 
@@ -88,7 +103,7 @@ Standalone HTML bracket visualization. Open with `sroom open --latest`.
 
 ## Audit JSON
 
-Path: `data/output/audits/{year}_week{week}_audit.json`
+Path: `data/output/audits/{run_id}_audit.json`
 
 ```json
 {
@@ -106,16 +121,19 @@ Path: `data/output/audits/{year}_week{week}_audit.json`
 
 ## Manifest JSON
 
-Path: `data/output/runs/{year}_week{week}_manifest.json`
+Path: `data/output/runs/{run_id}_manifest.json`
 
 | Field | Description |
 |-------|-------------|
 | `simulator_version` | Package version |
+| `run_id` | Season/week identity (`2025_week15`) |
+| `scenario_id` | `base` or config-hash variant |
 | `ruleset` | `2024` or `2025_plus` |
 | `data_source` | `sample` or `cfbd` |
 | `season` / `week` | Run parameters |
 | `ranking_model` | e.g. `composite_v1` |
 | `config_hash` | Hash of config + weights |
+| `weights` | Active resume/predictive/SOR/SOS weights |
 | `generated_at` | ISO timestamp (UTC) |
 | `outputs` | Map of artifact keys to paths |
 | `n_games` / `n_teams` | Dataset stats |
@@ -126,9 +144,9 @@ Use manifests with `sroom reproduce` to re-run seasons.
 
 ## Validation CSV
 
-Path: `data/output/validation/backtest_results.csv`
+Path: `data/output/validation/` (multiple files)
 
-Produced by `sroom validate`. Columns vary by backtest version; see [Historical Validation](research/historical-validation.md).
+Produced by `sroom validate`. See [Historical Validation](research/historical-validation.md) for `committee_replication.csv`, `era_selection_validation.csv`, `predictive_validation.csv`, and legacy `backtest_results.csv`.
 
 ---
 
@@ -140,14 +158,6 @@ sroom outputs --latest
 
 ---
 
-## Related
-
-- [User Guide](user-guide.md)
-- [Configuration](configuration.md)
-- [CLI Reference](cli-reference.md)
-
----
-
 ## JSON API (`data/output/api/`)
 
 Written automatically at the end of every `sroom run` (re-exportable with
@@ -156,15 +166,37 @@ Written automatically at the end of every `sroom run` (re-exportable with
 ```
 data/output/api/
 ├── runs.json           Index of all exported runs + which one is latest
-├── latest.json         Metadata for the latest run (weights, counts, ruleset)
+├── latest.json         Metadata for the latest run (weights, config_hash, counts)
+├── rankings.json       Latest full composite table
 ├── field.json          Latest 12-team field, bids, bubble, audit trail
 ├── bracket.json        Latest seeded bracket (pods + rounds)
-├── rankings.json       Latest full composite table
-├── team-resumes.json   Latest per-team schedules and score breakdowns
+├── audit.json          Latest selection audit
+├── team-resumes.json   Latest per-team resumes (summary for all ranked teams; full detail for field, bubble, and top-ranked teams)
+├── sensitivity.json    Latest Selection Stability (when generated)
 ├── team-assets.json    Logos and colors keyed by team name
-└── runs/{stem}/        The same five payloads per run, e.g. runs/2025_week15/
+└── runs/{stem}/        Per-run copies of the payloads above, e.g.:
+    └── 2025_week15/
+        rankings.json field.json bracket.json audit.json
+        team-resumes.json sensitivity.json
 ```
+
+Scenario stems prevent weight-variant collisions, e.g. `runs/2025_week15__a13f9c2b4e5d6f70/`.
 
 Schema: [api-contracts.md](api-contracts.md) (`schema_version: 1`), validated
 by the pydantic models in `src/api_contracts/models.py` and round-trip tested
 in `tests/test_api_contracts.py`.
+
+**Records vs rankings:** Composite rankings use `ranking_games_df` (model window).
+Displayed W-L in JSON and the web app use `record_games_df`, which may include
+conference championship games when live data is available. `record_meta` on
+`rankings.json` and `latest.json` describes the label and window (demo fixture,
+FBS-only, model-window, CCG inclusion).
+
+---
+
+## Related
+
+- [User Guide](user-guide.md)
+- [Configuration](configuration.md)
+- [CLI Reference](cli-reference.md)
+- [Web App](web-app.md)

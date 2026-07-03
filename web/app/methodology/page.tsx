@@ -34,7 +34,7 @@ export default async function MethodologyPage() {
         </CardHeader>
         <CardContent className="flex flex-col gap-5 px-4">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Every team gets one number between 0 and 1 — the composite score —
+            Every team gets one number between 0 and 1, the composite score,
             built from four components. Each component is computed from game
             results only: no polls, no preseason priors, no brand names. The
             weights below are the exact values used for the current run.
@@ -58,7 +58,7 @@ export default async function MethodologyPage() {
               </Badge>
               <span>
                 The five highest-ranked conference champions receive automatic
-                bids — no matter where they sit in the rankings. If a champion
+                bids no matter where they sit in the rankings. If a champion
                 ranks outside the top 12, it still gets in, displacing the
                 lowest-ranked at-large team.
               </span>
@@ -69,14 +69,14 @@ export default async function MethodologyPage() {
               </Badge>
               <span>
                 The seven best remaining teams by composite score fill the
-                at-large slots. There are no conference caps and no eye test —
-                the score is the committee.
+                at-large slots. There are no conference caps and no eye test.
+                The score is the committee.
               </span>
             </li>
           </ol>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Every selection decision — champions identified, bids awarded,
-            displacement, seeding — is logged step by step in the audit trail
+            Every selection decision (champions identified, bids awarded,
+            displacement, seeding) is logged step by step in the audit trail
             on the Bubble page, so you can trace exactly why a team is in or
             out.
           </p>
@@ -91,7 +91,7 @@ export default async function MethodologyPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5 rounded-md border border-border bg-secondary/30 p-3.5">
               <span className="text-sm font-semibold text-foreground">
-                2024 format — champion byes
+                2024 format: champion byes
               </span>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 The four highest-ranked conference champions get seeds 1–4 and
@@ -102,7 +102,7 @@ export default async function MethodologyPage() {
             </div>
             <div className="flex flex-col gap-1.5 rounded-md border border-border bg-secondary/30 p-3.5">
               <span className="text-sm font-semibold text-foreground">
-                2025+ format — straight seeding
+                2025+ format: straight seeding
               </span>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 Teams are seeded 1–12 strictly by ranking. The top four seeds
@@ -137,7 +137,7 @@ export default async function MethodologyPage() {
             </a>{" "}
             API, with team logos and colors from ESPN&apos;s public assets.
             Sample runs use a bundled synthetic season so the whole product
-            works offline — every page here renders the same either way.
+            works offline. Every page here renders the same either way.
           </p>
           {latest ? (
             <p className="text-xs text-muted-foreground">

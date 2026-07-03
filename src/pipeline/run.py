@@ -11,10 +11,15 @@ import pandas as pd
 
 from src import __version__
 from src.api_contracts.export import export_run_api
+from src.api_contracts.records import build_record_games_df, build_record_meta
 from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
-from src.pipeline.cache_paths import games_cache_candidates, games_cache_write_path
+from src.pipeline.cache_paths import (
+    games_cache_candidates,
+    games_cache_covers,
+    games_cache_write_path,
+)
 from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.live import enrich_live_rankings, filter_games_to_fbs
 from src.pipeline.paths import (
@@ -45,19 +50,35 @@ def load_games(
         return games[games["week"] <= config.week]
 
     cache_path = None
-    for candidate in games_cache_candidates(config.year, config.week):
-        if candidate.exists():
+    games: pd.DataFrame | None = None
+    for candidate in games_cache_candidates(config.year, config.week, config.start_week):
+        if not candidate.exists():
+            continue
+        cached = pd.read_parquet(candidate)
+        if games_cache_covers(
+            cached,
+            start_week=config.start_week,
+            through_week=config.week,
+        ):
+            games = cached
             cache_path = candidate
             break
-    if cache_path is not None:
-        games = pd.read_parquet(cache_path)
-    else:
+
+    if games is None:
         key = api_key or get_api_key()
         games = fetch_season_games(config.year, start_week=config.start_week, api_key=key)
         games = games[games["week"] <= config.week]
-        cache_path = games_cache_write_path(config.year, config.week)
+        cache_path = games_cache_write_path(
+            config.year,
+            config.week,
+            config.start_week,
+        )
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         games.to_parquet(cache_path, index=False)
+
+    games = games[
+        (games["week"] >= config.start_week) & (games["week"] <= config.week)
+    ]
 
     if config.fbs_only:
         key = api_key or get_api_key()
@@ -221,10 +242,24 @@ def run_pipeline(
     steps: List[str] = []
 
     games = load_games(config, api_key=api_key, use_sample=use_sample)
-    steps.append(f"Loaded {len(games)} games")
+    ranking_games_df = games
+    record_games_df, includes_ccg = build_record_games_df(
+        ranking_games_df,
+        config,
+        use_sample=use_sample,
+        api_key=api_key,
+    )
+    record_meta = build_record_meta(
+        config,
+        ranking_games_df,
+        record_games_df,
+        use_sample=use_sample,
+        includes_ccg=includes_ccg,
+    )
+    steps.append(f"Loaded {len(ranking_games_df)} games")
 
     rankings, _, champion_source = run_rank(
-        config, games, paths, use_sample=use_sample, api_key=api_key
+        config, ranking_games_df, paths, use_sample=use_sample, api_key=api_key
     )
     steps.append(f"Generated rankings for {len(rankings)} teams")
     if not use_sample:
@@ -232,7 +267,9 @@ def run_pipeline(
 
     result: Dict[str, Any] = {
         "config": config,
-        "games": games,
+        "games": ranking_games_df,
+        "record_games": record_games_df,
+        "record_meta": record_meta,
         "rankings": rankings,
         "paths": paths.as_dict(),
         "data_source": data_source,
@@ -259,9 +296,10 @@ def run_pipeline(
         config,
         paths,
         extra={
-            "n_games": len(games),
+            "n_games": len(ranking_games_df),
             "n_teams": len(rankings),
             "champion_source": champion_source if not use_sample else "sample_fixture",
+            "record_meta": record_meta,
         },
         data_source=data_source,
     )

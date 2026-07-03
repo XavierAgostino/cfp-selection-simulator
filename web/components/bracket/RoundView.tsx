@@ -45,7 +45,7 @@ export function RoundView({ bracket }: RoundViewProps) {
     <div className="flex flex-col gap-8">
       <BracketRound
         title="First Round"
-        subtitle={`${rounds.first_round.length} games · campus sites — higher seed hosts`}
+        subtitle={`${rounds.first_round.length} games · campus sites, higher seed hosts`}
       >
         {rounds.first_round.map((game) => {
           const host = firstRoundHost(game.team_a, game.team_b);
@@ -110,7 +110,7 @@ export function RoundView({ bracket }: RoundViewProps) {
                   key={quarterfinalId}
                   label={
                     pod
-                      ? `Winner: Pod ${podMeta(pod).letter} — No. ${pod.bye.seed} ${pod.bye.team} pod (${quarterfinalId})`
+                      ? `Winner: Pod ${podMeta(pod).letter}, No. ${pod.bye.seed} ${pod.bye.team} pod (${quarterfinalId})`
                       : `Winner of ${quarterfinalId}`
                   }
                 />

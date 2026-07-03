@@ -1,13 +1,17 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { isBaseRun, runRowSecondary } from "@/lib/runDisplay";
+import { truncateConfigHash } from "@/lib/recordMeta";
 import type { RunSummary } from "@/lib/types";
 
 interface RunSwitcherProps {
@@ -16,51 +20,96 @@ interface RunSwitcherProps {
   latestStem: string;
 }
 
-function runLabel(run: RunSummary): string {
-  return run.label ?? `${run.season} · Week ${run.week}`;
+function navigateToRun(
+  stem: string,
+  currentStem: string,
+  latestStem: string,
+  pathname: string,
+  searchParams: URLSearchParams,
+  router: ReturnType<typeof useRouter>,
+) {
+  if (stem === currentStem) return;
+  const params = new URLSearchParams(searchParams.toString());
+  if (stem === latestStem) {
+    params.delete("run");
+  } else {
+    params.set("run", stem);
+  }
+  const query = params.toString();
+  router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  router.refresh();
 }
 
 /**
- * Season/week run switcher driven by runs.json. Selecting the latest run
- * clears the ?run= param (pages then read the flat latest copies); any other
- * run pins ?run={stem}.
+ * Compact run switcher — same catalog as Run Analysis → Runs tab, no extra fetch.
  */
 export function RunSwitcher({ runs, currentStem, latestStem }: RunSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  function handleChange(stem: string | null) {
-    if (!stem || stem === currentStem) return;
-    const params = new URLSearchParams(searchParams.toString());
-    if (stem === latestStem) {
-      params.delete("run");
-    } else {
-      params.set("run", stem);
-    }
-    const query = params.toString();
-    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  const currentRun = runs.find((run) => run.stem === currentStem);
+
+  function selectRun(stem: string) {
+    navigateToRun(stem, currentStem, latestStem, pathname, searchParams, router);
   }
 
   return (
-    <Select value={currentStem} onValueChange={handleChange}>
-      <SelectTrigger
-        size="sm"
-        aria-label="Switch run"
-        className="bg-card font-medium tabular-nums"
-      >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent align="end">
-        {runs.map((run) => (
-          <SelectItem key={run.stem} value={run.stem}>
-            <span className="tabular-nums">{runLabel(run)}</span>
-            {run.stem === latestStem ? (
-              <span className="ml-1.5 text-xs text-muted-foreground">latest</span>
-            ) : null}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-w-36 max-w-52 justify-between gap-1.5 font-medium"
+            aria-label="Switch run"
+          >
+            <span className="truncate">
+              {currentRun?.label ?? "Switch run"}
+            </span>
+            <ChevronDown className="size-4 shrink-0 opacity-60" />
+          </Button>
+        }
+      />
+      <DropdownMenuContent align="end" className="min-w-72 p-1">
+        {runs.map((run) => {
+          const isCurrent = run.stem === currentStem;
+          return (
+            <DropdownMenuItem
+              key={run.stem}
+              disabled={isCurrent}
+              onClick={() => selectRun(run.stem)}
+              className="flex cursor-pointer flex-col items-start gap-1 py-2.5"
+            >
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="font-medium leading-snug">{run.label}</span>
+                {isCurrent ? (
+                  <Badge variant="chip-neutral" className="text-[10px]">
+                    Current
+                  </Badge>
+                ) : null}
+                {!isBaseRun(run) ? (
+                  <Badge variant="chip-neutral" className="text-[10px]">
+                    Scenario
+                  </Badge>
+                ) : (
+                  <Badge variant="chip-neutral" className="text-[10px]">
+                    Base
+                  </Badge>
+                )}
+              </div>
+              <span className="text-xs leading-snug text-muted-foreground">
+                {runRowSecondary(run)}
+              </span>
+              <span className="font-mono text-[10px] text-muted-foreground/60">
+                {truncateConfigHash(run.config_hash)}
+              </span>
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
+
+export { navigateToRun };

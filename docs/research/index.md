@@ -1,32 +1,63 @@
 # Research Methodology
 
-This simulator is designed as a **transparent decision-support tool**, not a replacement for human committee judgment.
+Institutional documentation for how Selection Room models CFP selection. These docs explain the transparent ranking engine, validation harness, and responsible interpretation — not committee deliberations.
+
+---
+
+## Which doc answers which question?
+
+| Question | Start here |
+|----------|------------|
+| What CFP rules apply by era? | [CFP Format History](cfp-format-history.md) |
+| How does the simulator relate to the committee? | [CFP Committee Alignment](cfp-committee-alignment.md) |
+| What are the default weights and pipeline? | [Model Methodology](model-methodology.md) |
+| What does each metric mean? | [Metric Definitions](metric-definitions.md) |
+| Where does data come from? | [Data Sources](data-sources.md) |
+| How close is the model to committee rankings? | [Historical Validation](historical-validation.md) — committee replication track |
+| Did the simulator pick the right field under era rules? | [Historical Validation](historical-validation.md) — era-correct selection track |
+| How stable is a bubble team under weight changes? | [Sensitivity Analysis](sensitivity-analysis.md) |
+| What are the known limits and ethics? | [Limitations & Ethics](limitations-and-ethics.md) |
 
 ---
 
 ## Core principles
 
-1. **Reproducibility** — Every run writes a manifest with config hash and output paths.
+1. **Reproducibility** — Every run writes a manifest with config hash, weights, and output paths.
 2. **Format-aware rules** — 2024 champion-bye vs 2025+ straight seeding are implemented separately.
-3. **Separation of résumé and predictive strength** — Composite pipeline exposes both views.
+3. **Separation of resume and predictive strength** — Composite pipeline exposes both views.
 4. **Explainability** — Structured audit trail for field selection.
-5. **Historical validation** — Backtests against published CFP rankings where data exists.
-6. **Sensitivity testing** — Framework for selection stability under weight perturbations.
+5. **Historical validation** — Three-track backtests against published CFP data where available.
+6. **Selection Stability** — Monte Carlo weight perturbation for bubble uncertainty (implemented; see [sensitivity-analysis.md](sensitivity-analysis.md)).
 
 ---
 
-## Research documents
+## A. Rules and committee context
 
 | Document | Focus |
 |----------|-------|
 | [CFP Format History](cfp-format-history.md) | Rule changes by era |
 | [CFP Committee Alignment](cfp-committee-alignment.md) | Simulator vs official committee practice |
-| [Model Methodology](model-methodology.md) | Composite pipeline |
-| [Metric Definitions](metric-definitions.md) | SOR, SOS, résumé, predictive |
-| [Historical Validation](historical-validation.md) | Backtest design and results |
-| [Sensitivity Analysis](sensitivity-analysis.md) | Selection Stability Index |
-| [Data Sources](data-sources.md) | CFBD, caching, logos |
-| [Limitations & Ethics](limitations-and-ethics.md) | Scope and responsible use |
+
+## B. Model methodology
+
+| Document | Focus |
+|----------|-------|
+| [Model Methodology](model-methodology.md) | **Canonical** composite pipeline and default weights |
+| [Metric Definitions](metric-definitions.md) | **Canonical** metric glossary |
+| [Data Sources](data-sources.md) | CFBD, caching, conference championships |
+
+## C. Validation and uncertainty
+
+| Document | Focus |
+|----------|-------|
+| [Historical Validation](historical-validation.md) | **Canonical** validation — committee replication, era-correct selection, predictive |
+| [Sensitivity Analysis](sensitivity-analysis.md) | **Canonical** Selection Stability |
+
+## D. Responsible interpretation
+
+| Document | Focus |
+|----------|-------|
+| [Limitations & Ethics](limitations-and-ethics.md) | Scope, non-affiliation, responsible use |
 
 ---
 
@@ -43,5 +74,7 @@ Notable selection debates with simulator context:
 
 ## Related
 
+- [Documentation home](../index.md)
 - [User Guide](../user-guide.md)
 - [Output Files](../output-files.md)
+- [API Contracts](../api-contracts.md)

@@ -6,7 +6,7 @@ CFP selection involves judgment. The simulator tests how stable each team's sele
 
 ## Why sensitivity matters
 
-Small changes to résumé vs predictive vs schedule weighting can move bubble teams in or out of the field. Reporting a single deterministic bracket without uncertainty overstates model confidence.
+Small changes to resume vs predictive vs schedule weighting can move bubble teams in or out of the field. Reporting a single deterministic bracket without uncertainty overstates model confidence.
 
 ---
 

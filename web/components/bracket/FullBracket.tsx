@@ -188,7 +188,7 @@ function ChampionshipCard({ label }: { label: string }) {
         <div className="text-sm font-semibold text-foreground">{label}</div>
       </div>
       <div className="flex flex-col gap-1.5 px-4">
-        {["Winner — Left semifinal", "Winner — Right semifinal"].map((row, i) => (
+        {["Winner, left semifinal", "Winner, right semifinal"].map((row, i) => (
           <div key={row}>
             {i === 1 ? (
               <div className="mb-1.5 text-center text-[0.6rem] uppercase tracking-wide text-muted-foreground">

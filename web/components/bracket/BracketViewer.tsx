@@ -23,7 +23,7 @@ export function BracketViewer({ bracket }: BracketViewerProps) {
 
   async function handleShare() {
     const url = window.location.href;
-    const title = `Projected ${bracket.season} CFP bracket — Week ${bracket.week}`;
+    const title = `Projected ${bracket.season} CFP bracket, Week ${bracket.week}`;
     if (typeof navigator.share === "function") {
       try {
         await navigator.share({ title, url });

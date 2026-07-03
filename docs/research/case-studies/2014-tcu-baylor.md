@@ -10,7 +10,7 @@ The v2.0 simulator focuses on the **12-team era (2024+)**. For 2014, use `sroom 
 
 ## Questions to explore
 
-- How did résumé vs predictive components rank TCU and Baylor?
+- How did resume vs predictive components rank TCU and Baylor?
 - What was SOR/SOS differential?
 - Would a different weight blend change relative ordering?
 

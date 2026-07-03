@@ -28,7 +28,7 @@ export function BracketSummaries({ bracket }: BracketSummariesProps) {
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Card className="gap-3 border-border bg-card shadow-none">
         <CardHeader className="px-4">
-          <CardTitle>Campus Sites — First Round</CardTitle>
+          <CardTitle>Campus Sites: First Round</CardTitle>
           <p className="text-xs text-muted-foreground">
             Seeds 5–8 host on campus. Hover a game for the head-to-head.
           </p>
@@ -47,7 +47,7 @@ export function BracketSummaries({ bracket }: BracketSummariesProps) {
 
       <Card className="gap-3 border-border bg-card shadow-none">
         <CardHeader className="px-4">
-          <CardTitle>First-Round Byes — Quarterfinals</CardTitle>
+          <CardTitle>First-Round Byes: Quarterfinals</CardTitle>
           <p className="text-xs text-muted-foreground">
             The top four seeds wait at the bowl-site quarterfinals.
           </p>

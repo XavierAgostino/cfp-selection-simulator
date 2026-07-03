@@ -26,6 +26,7 @@ from src.api_contracts.models import (
     RankingsPayload,
     RankingsTeam,
     Record,
+    RecordMeta,
     RunsIndexEntry,
     ScheduleGame,
     SelectionStabilityTeam,
@@ -36,6 +37,7 @@ from src.api_contracts.models import (
     TeamResumesPayload,
     TeamSlot,
 )
+from src.api_contracts.models import SelectionCase
 from src.api_contracts.selection_case import build_selection_case
 from src.assets.logos import get_team_logo_url
 from src.assets.teams import TeamAsset, get_team_asset
@@ -234,6 +236,7 @@ def build_rankings_payload(
     seeded_df: Optional[pd.DataFrame],
     records: Dict[str, Dict[str, int]],
     use_sample: bool,
+    record_meta: Optional[RecordMeta] = None,
 ) -> RankingsPayload:
     seed_rows = _seed_lookup(seeded_df)
     bid_lookup = _bid_type_lookup(selection)
@@ -269,7 +272,11 @@ def build_rankings_payload(
             )
         )
     return RankingsPayload(
-        season=config.year, week=config.week, generated_at=_now_iso(), teams=teams
+        season=config.year,
+        week=config.week,
+        generated_at=_now_iso(),
+        record_meta=record_meta,
+        teams=teams,
     )
 
 
@@ -476,29 +483,59 @@ def build_team_resumes_payload(
     games_df: Optional[pd.DataFrame],
     records: Dict[str, Dict[str, int]],
     use_sample: bool,
+    record_meta: Optional[RecordMeta] = None,
+    stability_by_team: Optional[Dict[str, Any]] = None,
 ) -> TeamResumesPayload:
     comp_ranks = component_ranks_by_team(rankings_df)
     rank_lookup = {row["team"]: int(row["rank"]) for _, row in rankings_df.iterrows()}
     seed_rows = _seed_lookup(seeded_df)
     bid_lookup = _bid_type_lookup(selection)
 
-    scope_names = set(rankings_df.sort_values("rank").head(TEAM_RESUME_TOP_N)["team"])
+    full_detail_names = set(rankings_df.sort_values("rank").head(TEAM_RESUME_TOP_N)["team"])
     in_field_names: set = set()
     if selection is not None:
         in_field_names = {t["team"] for t in selection.playoff_teams}
-        scope_names |= in_field_names
-        scope_names |= {t["team"] for t in selection.first_four_out}
-        scope_names |= {t["team"] for t in _next_four_out(rankings_df, selection)}
+        full_detail_names |= in_field_names
+        full_detail_names |= {t["team"] for t in selection.first_four_out}
+        full_detail_names |= {t["team"] for t in _next_four_out(rankings_df, selection)}
 
     teams: Dict[str, TeamResume] = {}
     for _, row in rankings_df.iterrows():
         team_name = row["team"]
-        if team_name not in scope_names:
-            continue
         asset = _team_asset(team_name, use_sample)
         seed_row = seed_rows.get(team_name)
-        why, concerns = build_selection_case(team_name, row, selection, seeded_df)
+        is_full = team_name in full_detail_names
         default_ranks = {"resume": 0, "predictive": 0, "sor": 0, "sos": 0}
+        schedule: List[ScheduleGame] = []
+        if is_full:
+            schedule = build_schedule(team_name, games_df, rank_lookup)
+
+        stability = (stability_by_team or {}).get(team_name)
+        stability_status = getattr(stability, "status", None) if stability else None
+        case = build_selection_case(
+            team_name,
+            row,
+            selection,
+            seeded_df,
+            component_ranks=comp_ranks.get(team_name, default_ranks),
+            ruleset=_ruleset_name(config),
+            seeding_mode=_seeding_mode(config),
+            in_field=team_name in in_field_names,
+            bid_type=bid_lookup.get(team_name),
+            detail_level="full" if is_full else "summary",
+            record_meta=record_meta,
+            stability_status=stability_status,
+            rankings_df=rankings_df,
+            champion_of=_champion_of(row.get("conf_champ"), row.get("conference")),
+        )
+        why = case.reasons
+        concerns = case.concerns
+        selection_case = SelectionCase(
+            status=case.status,
+            headline=case.headline,
+            reasons=case.reasons,
+            concerns=case.concerns,
+        )
         teams[team_name] = TeamResume(
             team=team_name,
             abbreviation=_abbreviation(asset),
@@ -521,12 +558,20 @@ def build_team_resumes_payload(
                 sos=float(row.get("sos", 0.0)),
             ),
             component_ranks=ComponentRanks(**comp_ranks.get(team_name, default_ranks)),
+            detail_level="full" if is_full else "summary",
+            selection_case=selection_case,
             why_in=why,
             concerns=concerns,
-            schedule=build_schedule(team_name, games_df, rank_lookup),
+            schedule=schedule,
         )
 
-    return TeamResumesPayload(season=config.year, week=config.week, teams=teams)
+    return TeamResumesPayload(
+        season=config.year,
+        week=config.week,
+        generated_at=_now_iso(),
+        record_meta=record_meta,
+        teams=teams,
+    )
 
 
 def build_sensitivity_payload(

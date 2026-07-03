@@ -13,9 +13,11 @@ data/output/api/
   latest.json                    # meta for most recent run
   rankings.json  field.json  bracket.json  audit.json  team-resumes.json  sensitivity.json   # latest run (flat copies)
   team-assets.json               # passthrough of data/cache/team_assets.json (or sample)
-  runs/{year}_week{week}/        # per-run dirs, same 6 files
+  runs/{stem}/                   # per-run dirs (base or scenario stem), same 6 files
     rankings.json field.json bracket.json audit.json team-resumes.json sensitivity.json
 ```
+
+Example scenario directory: `runs/2025_week15__a13f9c2b4e5d6f70/`
 
 All top-level payloads carry `schema_version: 1`.
 
@@ -106,17 +108,43 @@ Example scenario entry:
   "config_hash": "...",
   "generated_at": "...",
   "assets_source": "cache",             // "cache" | "sample"
-  "weights": { "resume": 0.5, "predictive": 0.3, "sor": 0.1, "sos": 0.1 },
+  "weights": { "resume": 0.40, "predictive": 0.30, "sor": 0.20, "sos": 0.10 },
   "counts": { "n_games": 800, "n_teams": 134 },
-  "has_bracket": true
+  "has_bracket": true,
+  "record_meta": { /* RecordMeta — see below */ }
 }
 ```
+
+### RecordMeta
+
+Displayed team records can use a different game set than ranking model inputs.
+`record_meta` is exported on `latest.json`, `rankings.json`, and run manifests.
+
+```jsonc
+{
+  "record_universe": "fbs",
+  "record_game_scope": "display",
+  "model_start_week": 1,
+  "record_start_week": 5,
+  "through_week": 15,
+  "includes_ccg": false,
+  "data_source": "sample",              // "sample" | "cfbd"
+  "is_demo_fixture": true,
+  "record_label": "demo_record"         // "fbs_record" | "demo_record" | "model_window_record"
+}
+```
+
+The web app maps `record_label` to column headers (FBS record / Demo record /
+Model-window record). **`ranking_games_df`** feeds Colley, Massey, Elo, SOR, SOS,
+and composite; **`record_games_df`** feeds displayed W-L only (may include CCG
+when live and week ≥ 14).
 
 ## rankings.json
 
 ```jsonc
 {
   "schema_version": 1, "season": 2025, "week": 15, "generated_at": "...",
+  "record_meta": { /* RecordMeta */ },
   "teams": [
     {
       "rank": 1, "team": "...", "abbreviation": "...", "conference": "...",
@@ -210,8 +238,15 @@ Step values come from `src/selection/audit.py` `AuditStep` enum.
       "record": { "wins": 0, "losses": 0 },
       "scores": { "composite": 0.0, "resume": 0.0, "predictive": 0.0, "sor": 0.0, "sos": 0.0 },
       "component_ranks": { "resume": 1, "predictive": 3, "sor": 2, "sos": 40 },
-      "why_in": [ "..." ],                // from src/api_contracts/selection_case.py
-      "concerns": [ "..." ],
+      "detail_level": "full",             // "full" | "summary"
+      "selection_case": {                 // run-grounded selection narrative (optional on older runs)
+        "status": "selected",             // "selected" | "out" | "bubble" | "summary"
+        "headline": "Projected selection",
+        "reasons": [ "..." ],
+        "concerns": [ "..." ]
+      },
+      "why_in": [ "..." ],                // mirrors selection_case.reasons for compatibility
+      "concerns": [ "..." ],              // mirrors selection_case.concerns
       "schedule": [
         { "week": 1, "opponent": "...", "opponent_rank": 14,   // int | null
           "location": "home",            // "home" | "away" | "neutral"
@@ -222,7 +257,14 @@ Step values come from `src/selection/audit.py` `AuditStep` enum.
 }
 ```
 
-Scope: top 40 teams by rank plus everyone in field/first-four-out/next-four-out.
+**Coverage:** every team in `rankings.json` has an entry.
+
+- **`detail_level: "full"`** — projected field, first-four-out, next-four-out, and highest-ranked teams. Includes `schedule`, `selection_case`, `why_in`, and `concerns`.
+- **`detail_level: "summary"`** — all other ranked teams. Core scores, record, component ranks, and a basic `selection_case`; empty schedule.
+
+Selection case bullets are generated from the active run in `src/api_contracts/selection_case.py` (rank, seed, bid type, ruleset, cutoffs, component ranks, displacement, stability, and record metadata). They are not static team blurbs.
+
+The web drawer synthesizes a summary from `rankings.json` when an older run lacks expanded resumes.
 
 ## sensitivity.json
 

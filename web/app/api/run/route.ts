@@ -1,19 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import { currentJob, engineAvailable, startRun } from "@/lib/runJob";
+import {
+  createAndStartRun,
+  getActiveJob,
+  getCapabilities,
+  parseRunRequest,
+} from "@/lib/runJob";
 
 export const dynamic = "force-dynamic";
 
 const noStore = { "Cache-Control": "no-store" };
 
 export async function GET() {
-  const job = currentJob();
-  return NextResponse.json(job ?? { status: "idle" }, { headers: noStore });
+  const active = await getActiveJob();
+  if (!active) {
+    return NextResponse.json({ status: "idle" }, { headers: noStore });
+  }
+  return NextResponse.json(active, { headers: noStore });
 }
 
 export async function POST(request: NextRequest) {
-  if (!engineAvailable()) {
+  const caps = await getCapabilities();
+  if (!caps.run_generation_enabled) {
     return NextResponse.json(
-      { error: "engine_unavailable" },
+      { error: "run_generation_disabled" },
       { status: 501, headers: noStore },
     );
   }
@@ -28,23 +37,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { year, week, sample } = (body ?? {}) as {
-    year?: unknown;
-    week?: unknown;
-    sample?: unknown;
-  };
-
-  if (
-    typeof year !== "number" ||
-    !Number.isInteger(year) ||
-    year < 2014 ||
-    year > 2035 ||
-    typeof week !== "number" ||
-    !Number.isInteger(week) ||
-    week < 1 ||
-    week > 16 ||
-    typeof sample !== "boolean"
-  ) {
+  const runRequest = parseRunRequest(body);
+  if (!runRequest) {
     return NextResponse.json(
       { error: "invalid_arguments" },
       { status: 400, headers: noStore },
@@ -52,8 +46,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const job = startRun(year, week, sample);
-    return NextResponse.json(job, { status: 202, headers: noStore });
+    const job = await createAndStartRun(runRequest);
+    return NextResponse.json({ job_id: job.job_id }, { status: 202, headers: noStore });
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown";
     if (message === "run_in_progress") {
@@ -62,8 +56,20 @@ export async function POST(request: NextRequest) {
         { status: 409, headers: noStore },
       );
     }
+    if (message === "cfbd_unavailable") {
+      return NextResponse.json(
+        { error: "cfbd_unavailable" },
+        { status: 400, headers: noStore },
+      );
+    }
+    if (message === "live_run_throttled") {
+      return NextResponse.json(
+        { error: "live_run_throttled" },
+        { status: 429, headers: noStore },
+      );
+    }
     return NextResponse.json(
-      { error: "engine_unavailable" },
+      { error: "run_generation_disabled" },
       { status: 501, headers: noStore },
     );
   }

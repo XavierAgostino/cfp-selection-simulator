@@ -4,6 +4,14 @@ For analysts, researchers, and fans who want to understand what the simulator pr
 
 ---
 
+## Where to explore results
+
+The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product surface — dashboard, bracket, bubble watch, team resumes, and Selection Stability. Run `make web` to start it.
+
+The **Streamlit dashboard** ([Dashboard Guide](dashboard-guide.md)) is a legacy analyst console for local exploration. It does not include Selection Stability UI.
+
+---
+
 ## What the simulator produces
 
 | Output | Description |
@@ -13,7 +21,8 @@ For analysts, researchers, and fans who want to understand what the simulator pr
 | **Seeds** | Seeds 1–12 with bye flags |
 | **Bracket** | First-round matchups and HTML visualization |
 | **Audit trail** | Step-by-step selection log (JSON) |
-| **Manifest** | Run metadata for reproducibility |
+| **Manifest** | Run metadata for reproducibility (includes active weights and config hash) |
+| **Selection Stability** | Monte Carlo weight-perturbation frequency for bubble-scope teams (when `sensitivity.json` exists) |
 
 ---
 
@@ -46,15 +55,36 @@ Details: [CFP Format History](research/cfp-format-history.md)
 
 ## How to read the outputs
 
-See [Output Files](output-files.md) for full column definitions.
+See [Output Files](output-files.md) for full column definitions and run identity (`run_id`, `scenario_id`, `stem`).
 
 **Quick tips:**
 
-- **Rankings CSV** — `composite_score` is the primary sort key; component columns show résumé vs predictive breakdown.
+- **Rankings CSV** — `composite_score` is the primary sort key; component columns show resume vs predictive breakdown.
+- **Record column (web)** — labeled FBS record, Demo record, or Model-window record from `record_meta`. Sample runs use a partial mid-season fixture (week 5+), so demo records are not full-season totals.
 - **Field CSV** — `bid_type` is `AUTO` or `AT-LARGE`.
 - **Bracket CSV** — `is_bye` marks teams with first-round byes; `seed` is final bracket seed.
 - **Audit JSON** — `steps` are structured; `log` is human-readable text.
-- **Manifest JSON** — records ruleset, config hash, data source, and output paths.
+- **Manifest JSON** — records ruleset, config hash, active weights, data source, output paths, and `record_meta`.
+
+### Team resumes
+
+Every ranked team has a resume entry in `team-resumes.json`. Top 40, field, and bubble teams get **full** detail (schedule, why-in, concerns). Other ranked teams get a **summary** with scores and record only. Click any ranked team in the web app to open the drawer.
+
+---
+
+## How to read Selection Stability
+
+Selection Stability measures how often a team remains in the **projected field** when model weights are perturbed (Monte Carlo). It appears on the web app's Bubble and Team Resume views when `sensitivity.json` exists for the run.
+
+**What it means:** A bubble team with low selection frequency is sensitive to methodology assumptions; a high frequency team is more robust under tested weight changes.
+
+**What it does not mean:**
+
+- Not win probability or matchup prediction
+- Not simulation of future game outcomes, injuries, or alternate championship results
+- Conference champion labels stay fixed per run
+
+Full methodology: [Sensitivity Analysis](research/sensitivity-analysis.md)
 
 ---
 
@@ -66,6 +96,8 @@ See [Output Files](output-files.md) for full column definitions.
 export CFBD_API_KEY="..."
 sroom run --year 2025 --week 15
 ```
+
+Or use **Run Analysis** in the web app (Create tab in the run header).
 
 ### Run sample demo (offline)
 
@@ -94,10 +126,10 @@ Requires CFBD API key and cached or fetched game data.
 ### Historical validation
 
 ```bash
-sroom validate --years 2014:2023
+sroom validate --years 2014:2024
 ```
 
-Results: `data/output/validation/backtest_results.csv`. See [Historical Validation](research/historical-validation.md).
+Three tracks: committee replication, era-correct selection, and predictive validation. Results under `data/output/validation/`. See [Historical Validation](research/historical-validation.md).
 
 ### Export bracket report
 
@@ -121,7 +153,9 @@ Demo mode uses 110-game sample data with five labeled conference champions so by
 
 ## Related docs
 
+- [Web App](web-app.md)
 - [Quickstart](quickstart.md)
 - [CLI Reference](cli-reference.md)
-- [Dashboard Guide](dashboard-guide.md)
+- [Dashboard Guide](dashboard-guide.md) (Streamlit legacy console)
 - [Configuration](configuration.md)
+- [Research index](research/index.md)

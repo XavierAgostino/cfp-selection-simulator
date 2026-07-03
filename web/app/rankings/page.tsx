@@ -1,4 +1,4 @@
-import { RunContextBar } from "@/components/layout/RunContextBar";
+import { RunHeader } from "@/components/layout/RunHeader";
 import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { EmptyState } from "@/components/common/EmptyState";
 import { RankingTable } from "@/components/rankings/RankingTable";
@@ -30,7 +30,7 @@ export default async function RankingsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar stem={stem} />
+      <RunHeader stem={stem} />
       <div>
         <h1 className="text-xl font-semibold text-foreground">Rankings</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -42,7 +42,10 @@ export default async function RankingsPage({
         rankings.teams.length > 0 ? (
           <>
             <ResumePredictiveScatter teams={rankings.teams} />
-            <RankingTable teams={rankings.teams} />
+            <RankingTable
+              teams={rankings.teams}
+              recordMeta={rankings.record_meta}
+            />
           </>
         ) : (
           <EmptyState

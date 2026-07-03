@@ -9,7 +9,8 @@ All notable changes to the Selection Room project.
 - **Removed Docker/Jupyter setup path**: local development now goes through `make setup` (`.venv` + pip install), no container required
 
 ### Added
-- **JSON API contract layer** (`docs/api-contracts.md`) and a Next.js web app under `web/` (in progress)
+- **JSON API contract layer** (`docs/api-contracts.md`) and a Next.js web app under `web/`
+- **Selection Stability**: Monte Carlo weight perturbation exported as `sensitivity.json` (`src/validation/sensitivity.py`); see [Sensitivity Analysis](docs/research/sensitivity-analysis.md)
 
 ## [2.0.0] - 2026-07-02
 
@@ -28,11 +29,11 @@ All notable changes to the Selection Room project.
 - **Composite pipeline**: Extracted ranking algorithms and composite scoring (`src/rankings/algorithms.py`, `src/pipeline/composite.py`)
 - **CLI**: `sroom` Typer commands for fetch, rank, select, bracket, run, validate, dashboard
 - **Pipeline runner**: Full orchestration with reproducibility manifest (`src/pipeline/run.py`)
-- **Streamlit dashboard**: Field, bracket, résumé, audit, and component views (`app/streamlit_app.py`)
+- **Streamlit dashboard**: Field, bracket, resume, audit, and component views (`app/streamlit_app.py`)
 - **Team asset registry**: Logo/color lookup with CFBD → ESPN → placeholder fallbacks (`src/assets/`)
 - **Sample team assets**: Offline logo cache at `data/cache/team_assets.sample.json`
 - **Research docs**: Methodology, metrics, validation, limitations, data sources under `docs/research/`
-- **Sensitivity stub**: Selection stability placeholder (`src/validation/sensitivity.py`)
+- **Selection Stability (initial framework)**: Weight-perturbation module in `src/validation/sensitivity.py` (later releases added full Monte Carlo export to `sensitivity.json`)
 - **Tests**: Seeding (2024/2025), field selection, composite pipeline
 
 ### Changed

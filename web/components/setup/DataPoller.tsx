@@ -43,7 +43,7 @@ export function DataPoller() {
       {found ? (
         <>
           <span className="h-2 w-2 rounded-full bg-result-win" aria-hidden />
-          Run detected — loading your field…
+          Run detected. Loading your field…
         </>
       ) : (
         <>
@@ -51,7 +51,7 @@ export function DataPoller() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
           </span>
-          Watching for your first run — this page updates automatically.
+          Watching for your first run. This page updates automatically.
         </>
       )}
     </div>

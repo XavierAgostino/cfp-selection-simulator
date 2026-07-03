@@ -55,7 +55,7 @@ from src.pipeline.live import enrich_live_rankings
 from src.pipeline.paths import DATA_OUTPUT, RunOutputPaths
 from src.pipeline.run import SAMPLE_GAMES, load_games, run_select
 from src.pipeline.sample import enrich_sample_rankings
-from src.playoff.bracket import BracketMatchup
+from src.api_contracts.build import component_ranks_by_team, _bid_type_lookup, _champion_of
 
 st.set_page_config(page_title="Selection Room — Analyst Console", layout="wide")
 inject_global_css()
@@ -511,21 +511,41 @@ with tab_resume:
     with m5:
         render_metric_card("SOS", f"{row['sos']:.3f}", small=True)
 
-    why, concerns = build_selection_case(team, row, selection, seeded)
+    comp_ranks = component_ranks_by_team(rankings)
+    bid_lookup = _bid_type_lookup(selection)
+    in_field_names = (
+        {t["team"] for t in selection.playoff_teams} if selection is not None else set()
+    )
+    playoff_fmt = get_format_for_year(season) if season >= 2024 else None
+    default_ranks = {"resume": 0, "predictive": 0, "sor": 0, "sos": 0}
+    case = build_selection_case(
+        team,
+        row,
+        selection,
+        seeded,
+        component_ranks=comp_ranks.get(team, default_ranks),
+        ruleset=payload.get("format_name"),
+        seeding_mode=playoff_fmt.seeding if playoff_fmt else None,
+        in_field=team in in_field_names,
+        bid_type=bid_lookup.get(team),
+        detail_level="full",
+        rankings_df=rankings,
+        champion_of=_champion_of(row.get("conf_champ"), row.get("conference")),
+    )
     col_why, col_con = st.columns(2)
     with col_why:
-        if why:
-            render_case_panel("Why they are in", why, variant="positive")
+        if case.reasons:
+            render_case_panel(case.headline, case.reasons, variant="positive")
         else:
             st.markdown(
-                '<div class="case-panel"><h4>Why they are in</h4>'
+                '<div class="case-panel"><h4>Selection case</h4>'
                 '<p style="color:#9CA3AF;margin:0;font-size:0.86rem">'
                 "Not in the projected playoff field.</p></div>",
                 unsafe_allow_html=True,
             )
     with col_con:
-        if concerns:
-            render_case_panel("Potential concerns", concerns, variant="warning")
+        if case.concerns:
+            render_case_panel("Potential concerns", case.concerns, variant="warning")
         else:
             st.markdown(
                 '<div class="case-panel"><h4>Potential concerns</h4>'

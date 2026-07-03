@@ -11,6 +11,8 @@ export type Ruleset = "2024" | "2025_plus";
 export type SeedingMode = "champion_byes" | "straight";
 export type DataSource = "cfbd" | "sample";
 export type BidType = "auto" | "at_large";
+export type RecordLabel = "fbs_record" | "demo_record" | "model_window_record";
+export type DetailLevel = "summary" | "full";
 export type Location = "home" | "away" | "neutral";
 export type SemifinalSide = "top" | "bottom";
 export type PodId = "top_1" | "top_2" | "bottom_1" | "bottom_2";
@@ -100,6 +102,19 @@ export interface LatestPayload {
     n_teams: number;
   };
   has_bracket: boolean;
+  record_meta?: RecordMeta | null;
+}
+
+export interface RecordMeta {
+  record_universe: "fbs";
+  record_game_scope: "display";
+  model_start_week: number;
+  record_start_week: number;
+  through_week: number;
+  includes_ccg: boolean;
+  data_source: DataSource;
+  is_demo_fixture: boolean;
+  record_label: RecordLabel;
 }
 
 // ---------------------------------------------------------------------------
@@ -132,6 +147,7 @@ export interface RankingsPayload {
   season: number;
   week: number;
   generated_at: string;
+  record_meta?: RecordMeta | null;
   teams: RankingRow[];
 }
 
@@ -242,6 +258,15 @@ export interface ScheduleGame {
   points_against: number;
 }
 
+export type SelectionCaseStatus = "selected" | "out" | "bubble" | "summary";
+
+export interface SelectionCase {
+  status: SelectionCaseStatus;
+  headline: string;
+  reasons: string[];
+  concerns: string[];
+}
+
 export interface TeamResume {
   team: string;
   abbreviation: string | null;
@@ -269,6 +294,8 @@ export interface TeamResume {
     sor: number;
     sos: number;
   };
+  detail_level?: DetailLevel;
+  selection_case?: SelectionCase | null;
   why_in: string[];
   concerns: string[];
   schedule: ScheduleGame[];
@@ -278,6 +305,8 @@ export interface TeamResumesPayload {
   schema_version: 1;
   season: number;
   week: number;
+  generated_at: string;
+  record_meta?: RecordMeta | null;
   teams: Record<string, TeamResume>;
 }
 

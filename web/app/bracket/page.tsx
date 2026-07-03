@@ -1,4 +1,4 @@
-import { RunContextBar } from "@/components/layout/RunContextBar";
+import { RunHeader } from "@/components/layout/RunHeader";
 import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { EmptyState } from "@/components/common/EmptyState";
 import { BracketViewer } from "@/components/bracket/BracketViewer";
@@ -25,7 +25,7 @@ export default async function BracketPage({ searchParams }: BracketPageProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar stem={stem} />
+      <RunHeader stem={stem} />
       <div>
         <h1 className="text-xl font-semibold text-foreground">Bracket</h1>
         <p className="mt-1 text-sm text-muted-foreground">

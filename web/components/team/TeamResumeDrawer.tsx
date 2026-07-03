@@ -14,7 +14,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ResumeContent } from "@/components/team/ResumeContent";
 import { useActiveRun } from "@/components/team/useActiveRun";
+import { useRankings } from "@/components/team/useRankings";
 import { useTeamResumes } from "@/components/team/useTeamResumes";
+import { synthesizeSummaryResume } from "@/lib/synthesizeResume";
+import type { TeamResume } from "@/lib/types";
 
 export type TeamResumeDrawerProps = {
   team: string | null;
@@ -34,8 +37,37 @@ export function TeamResumeDrawer({
   onOpenChange,
 }: TeamResumeDrawerProps) {
   const stem = useActiveRun();
-  const state = useTeamResumes(stem);
-  const resume = team && state.status === "ready" ? state.data.teams[team] : null;
+  const resumeState = useTeamResumes(stem);
+  const rankingsState = useRankings(stem);
+
+  const resume: TeamResume | null = React.useMemo(() => {
+    if (!team) return null;
+    if (resumeState.status === "ready" && resumeState.data.teams[team]) {
+      return resumeState.data.teams[team];
+    }
+    if (rankingsState.status === "ready") {
+      const row = rankingsState.data.teams.find((t) => t.team === team);
+      if (row) return synthesizeSummaryResume(row);
+    }
+    return null;
+  }, [team, resumeState, rankingsState]);
+
+  const recordMeta = React.useMemo(() => {
+    if (resumeState.status === "ready" && resumeState.data.record_meta) {
+      return resumeState.data.record_meta;
+    }
+    if (rankingsState.status === "ready") {
+      return rankingsState.data.record_meta ?? null;
+    }
+    return null;
+  }, [resumeState, rankingsState]);
+
+  const loading =
+    resumeState.status === "loading" ||
+    (resumeState.status === "ready" &&
+      team &&
+      !resumeState.data.teams[team] &&
+      rankingsState.status === "loading");
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -46,7 +78,7 @@ export function TeamResumeDrawer({
         </SheetHeader>
 
         <div className="flex min-h-0 flex-1 flex-col px-4 pb-4">
-          {state.status === "loading" ? (
+          {loading ? (
             <div className="flex flex-col gap-4 pt-2">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-13 w-13 rounded-full" />
@@ -59,7 +91,7 @@ export function TeamResumeDrawer({
               <Skeleton className="h-24 w-full" />
               <Skeleton className="h-full w-full flex-1" />
             </div>
-          ) : state.status === "error" ? (
+          ) : resumeState.status === "error" && rankingsState.status === "error" ? (
             <div className="pt-2">
               <EmptyState
                 icon={<SearchX className="h-5 w-5" />}
@@ -70,6 +102,7 @@ export function TeamResumeDrawer({
           ) : !team ? null : resume ? (
             <ResumeContent
               resume={resume}
+              recordMeta={recordMeta}
               variant="drawer"
               footer={
                 <Link
@@ -87,7 +120,7 @@ export function TeamResumeDrawer({
               <EmptyState
                 icon={<SearchX className="h-5 w-5" />}
                 title={`No resume for ${team}`}
-                description="This team falls outside the top 40 tracked in team-resumes.json this week."
+                description="This team is not in the rankings for this run."
               />
             </div>
           )}

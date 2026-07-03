@@ -25,6 +25,8 @@ StabilityStatus = Literal["lock", "likely_in", "bubble", "likely_out", "out"]
 StabilityBaseStatus = Literal["in_field", "first_out", "next_out", "out"]
 StabilityOutcome = Literal["in_field", "first_out", "out"]
 StabilityRisk = Literal["none", "weight_sensitivity", "auto_bid_displacement", "composite_gap"]
+RecordLabel = Literal["fbs_record", "demo_record", "model_window_record"]
+DetailLevel = Literal["summary", "full"]
 
 
 class Record(BaseModel):
@@ -90,6 +92,18 @@ class RunsIndex(BaseModel):
 # --- latest.json ---------------------------------------------------------------
 
 
+class RecordMeta(BaseModel):
+    record_universe: Literal["fbs"] = "fbs"
+    record_game_scope: Literal["display"] = "display"
+    model_start_week: int
+    record_start_week: int
+    through_week: int
+    includes_ccg: bool
+    data_source: DataSource
+    is_demo_fixture: bool
+    record_label: RecordLabel
+
+
 class LatestMeta(BaseModel):
     schema_version: int = SCHEMA_VERSION
     product: str = "Selection Room"
@@ -108,6 +122,7 @@ class LatestMeta(BaseModel):
     weights: Dict[str, float]
     counts: Dict[str, int]
     has_bracket: bool
+    record_meta: Optional[RecordMeta] = None
 
 
 # --- rankings.json ---------------------------------------------------------------
@@ -139,7 +154,8 @@ class RankingsPayload(BaseModel):
     season: int
     week: int
     generated_at: str
-    teams: List[RankingsTeam]
+    record_meta: Optional[RecordMeta] = None
+    teams: List[RankingsTeam] = Field(default_factory=list)
 
 
 # --- field.json ---------------------------------------------------------------
@@ -264,6 +280,16 @@ class ComponentRanks(BaseModel):
     sos: int
 
 
+SelectionCaseStatus = Literal["selected", "out", "bubble", "summary"]
+
+
+class SelectionCase(BaseModel):
+    status: SelectionCaseStatus
+    headline: str
+    reasons: List[str] = Field(default_factory=list)
+    concerns: List[str] = Field(default_factory=list)
+
+
 class TeamResume(BaseModel):
     team: str
     abbreviation: Optional[str] = None
@@ -280,6 +306,8 @@ class TeamResume(BaseModel):
     record: Record
     scores: TeamResumeScores
     component_ranks: ComponentRanks
+    detail_level: DetailLevel = "full"
+    selection_case: Optional[SelectionCase] = None
     why_in: List[str] = Field(default_factory=list)
     concerns: List[str] = Field(default_factory=list)
     schedule: List[ScheduleGame] = Field(default_factory=list)
@@ -289,6 +317,8 @@ class TeamResumesPayload(BaseModel):
     schema_version: int = SCHEMA_VERSION
     season: int
     week: int
+    generated_at: str
+    record_meta: Optional[RecordMeta] = None
     teams: Dict[str, TeamResume] = Field(default_factory=dict)
 
 

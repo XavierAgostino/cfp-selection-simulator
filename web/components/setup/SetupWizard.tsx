@@ -16,7 +16,7 @@ const STEPS: {
   },
   {
     title: "Produce your first field",
-    body: "Runs the full pipeline on the bundled sample season — rankings, selection, bracket, and the JSON this app reads. No API key needed.",
+    body: "Runs the full pipeline on the bundled sample season: rankings, selection, bracket, and the JSON this app reads. No API key needed.",
     commands: ["make demo"],
   },
   {
@@ -43,8 +43,8 @@ export function SetupWizard() {
           Let&apos;s put a field on the board.
         </h1>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          This app renders whatever the selection engine last produced — and it
-          hasn&apos;t produced anything yet. Two commands in your terminal fix
+          This app renders whatever the selection engine last produced, and it
+          has not produced anything yet. Two commands in your terminal fix
           that.
         </p>
       </div>

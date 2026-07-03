@@ -1,4 +1,4 @@
-import { RunContextBar } from "@/components/layout/RunContextBar";
+import { RunHeader } from "@/components/layout/RunHeader";
 import { PageNavIcon } from "@/components/icons/PageNavIcon";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { ProjectedFieldPanel } from "@/components/dashboard/ProjectedFieldPanel";
@@ -38,7 +38,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   return (
     <div className="flex flex-col gap-6">
-      <RunContextBar stem={stem} />
+      <RunHeader stem={stem} />
 
       <div>
         <h1 className="text-xl font-semibold text-foreground">Who&apos;s in?</h1>

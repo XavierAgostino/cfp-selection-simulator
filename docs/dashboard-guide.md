@@ -1,6 +1,8 @@
 # Dashboard Guide
 
-The Streamlit dashboard provides an interactive view of rankings, field selection, brackets, and audit trails.
+The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product surface. This guide covers the **Streamlit analyst/legacy console** (`app/streamlit_app.py`).
+
+The Streamlit dashboard does **not** include Selection Stability UI (Bubble board and resume stability blocks are web-only).
 
 ---
 
@@ -62,7 +64,7 @@ Export **HTML** (standalone file) or **CSV** (pod data) from the sidebar or Brac
 
 ### Bubble Watch
 
-Last Four In (#8–#11), First Four Out (#12–#15), Next Four Out (#16–#19).
+Last Four In (#8–#11), First Four Out (#12–#15), Next Four Out (#16–#19). No Selection Stability board (see [Web App](web-app.md)).
 
 ### Team Resume
 
@@ -78,7 +80,7 @@ Step-by-step timeline with badges (not raw log text).
 
 ### Methodology
 
-Short summary cards with links to full docs in `docs/research/` and `docs/METHODOLOGY.md`.
+Short summary cards with links to full docs in [docs/research/](research/index.md).
 
 ---
 
@@ -97,8 +99,8 @@ If live data fails, the dashboard shows an error with guidance to use sample fix
 
 From the dashboard sidebar or Bracket tab:
 
-- **Export bracket HTML** → `data/output/brackets/{year}_week{week}_bracket.html`
-- **Export bracket CSV** → `data/output/brackets/{year}_week{week}_bracket_pods.csv`
+- **Export bracket HTML** → `data/output/brackets/{run_id}_bracket.html`
+- **Export bracket CSV** → `data/output/brackets/{run_id}_bracket_pods.csv`
 
 Full pipeline exports via CLI:
 
@@ -111,6 +113,7 @@ sroom open --latest
 
 ## Related
 
+- [Web App](web-app.md) — primary product surface
 - [Quickstart](quickstart.md)
 - [User Guide](user-guide.md)
 - [Output Files](output-files.md)

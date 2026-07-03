@@ -51,7 +51,7 @@ make web       # Selection Room site at http://localhost:3000
 ```
 
 The site walks you through setup if you open it first, and new analyses can
-be launched straight from the run bar (**New run**) — season, week, sample or
+be launched from the run bar (**Run Analysis**) — season, week, sample or
 live CFBD data. `make dashboard` still opens the legacy Streamlit console.
 
 One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web-app.md)
@@ -64,7 +64,7 @@ One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web
 cp .env.example .env   # put your CFBD_API_KEY in .env
 make run YEAR=2025 WEEK=15
 # or: ./bin/sroom run --year 2025 --week 15
-# or: the New run button on the site
+# or: the Run Analysis button on the site
 ```
 
 Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key).
@@ -86,6 +86,8 @@ Use `make` or `./bin/sroom` from the repo root. Bare `sroom` requires `source .v
 | Validation (all tracks) | `make validate` |
 | Field validation only | `make validate-selection` |
 | Predictive metrics only | `make validate-predictive` |
+| DuckDB store status | `./bin/sroom store status` |
+| Query run store | `./bin/sroom store query "SELECT * FROM runs LIMIT 5"` |
 | Dev verification | `make verify` |
 
 See [CLI Reference](docs/cli-reference.md) for all options.
@@ -107,6 +109,8 @@ After `make demo`:
 
 Details: [Output Files](docs/output-files.md)
 
+**Data contracts:** JSON under `data/output/api/` powers the web app. Each export also writes a local DuckDB store at `data/output/selection_room.duckdb` for analytical queries (`sroom store`). See [Development Guide](docs/development.md#duckdb-run-store).
+
 ---
 
 ## Dashboard
@@ -115,6 +119,8 @@ Details: [Output Files](docs/output-files.md)
 make dashboard
 # or: sroom dashboard
 ```
+
+Streamlit **legacy/analyst console** — the [Next.js web app](docs/web-app.md) is the primary product surface.
 
 Tabs: Overview, Rankings, Playoff Field, Bracket, Bubble Watch, Team Resume, Components, Selection Audit, Methodology.
 
@@ -126,9 +132,12 @@ Guide: [Dashboard Guide](docs/dashboard-guide.md)
 
 One composite pipeline with explainable components. The simulator is a **decision-support tool**, not a claim to replicate committee deliberations.
 
+**Documentation home:** [docs/index.md](docs/index.md) · **Research methodology:** [docs/research/index.md](docs/research/index.md)
+
 | Topic | Doc |
 |-------|-----|
 | CFP format rules | [Format History](docs/research/cfp-format-history.md) |
+| Committee alignment | [CFP Committee Alignment](docs/research/cfp-committee-alignment.md) |
 | Ranking model | [Model Methodology](docs/research/model-methodology.md) |
 | Metrics | [Metric Definitions](docs/research/metric-definitions.md) |
 | Backtests | [Historical Validation](docs/research/historical-validation.md) |

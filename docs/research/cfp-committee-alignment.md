@@ -1,5 +1,7 @@
 # CFP Committee Alignment
 
+Selection Room is an independent analytics project and is not affiliated with, endorsed by, or sponsored by the College Football Playoff.
+
 How this simulator relates to official [College Football Playoff](https://collegefootballplayoff.com/) selection practice and published research.
 
 ## What the committee actually does
@@ -18,11 +20,11 @@ The committee explicitly says it picks the **best** teams, not necessarily the m
 
 | Layer | Simulator | Committee |
 |-------|-----------|-----------|
-| **Ranking** | Fixed composite: 50% résumé, 30% predictive, 10% SOR, 10% SOS | Subjective multi-factor ballot |
+| **Ranking** | Configurable composite combining resume, predictive, SOR, and SOS; active weights stored in each run manifest (defaults in [model-methodology.md](model-methodology.md)) | Subjective multi-factor ballot |
 | **Algorithms** | Colley, Massey, Elo, Poisson-binomial SOR, SOS+OOR | Proprietary SportSource metrics + eye test |
 | **Selection rules** | Published 5 auto + 7 at-large protocol | Same published bracket rules (2024+) |
-| **Conference champs** | Sample: hand-labeled; Live: CFBD week-15 CCG results, else conf-record tiebreaks | Actual conference championship results |
-| **Data** | CFBD FBS regular season, weeks ≥ start_week (default 5) | Full season + CCG + contextual factors |
+| **Conference champs** | Data-dependent: CFBD CCG results when available; else conference-record tiebreakers and simulated CCG | Actual conference championship results |
+| **Data** | CFBD FBS regular season through analysis week (weeks ≥ start_week, default 1) | Full season + CCG + contextual factors |
 
 **We model the rules and a transparent ranking engine. We do not replicate committee votes.**
 
@@ -42,10 +44,9 @@ See [metric-definitions.md](metric-definitions.md) and [model-methodology.md](mo
 ## Known gaps (document honestly)
 
 1. **No injury / availability adjustments**
-2. **Regular season only** in live CFBD fetch (no CCG, bowls, playoffs)
-3. **Conference auto bids** prefer CFBD **week-15 CCG results**; fall back to conference-record leaders with waterfall tiebreaks and simulated CCG when records tie
-4. **MinMax normalization** makes scores relative to the team pool (sample 20 vs live ~130 are not comparable)
-5. **Weights are defaults**, not fitted to historical committee rankings (validation in [historical-validation.md](historical-validation.md))
+2. **Conference championship handling is data-dependent.** When CFBD CCG results are available (regular-season weeks 14–16), Selection Room uses them for auto-bid labels. Before those results exist, it falls back to conference-record leaders, documented tiebreakers, and simulated CCG resolution where needed. Bowls and playoff games are not modeled in ranking inputs.
+3. **MinMax normalization** makes scores relative to the team pool (sample 20 vs live ~130 are not comparable)
+4. **Weights are configurable defaults**, not secret committee weights. Historical validation is informative, not proof of committee replication (see [historical-validation.md](historical-validation.md))
 
 ## Tiebreakers and champions (implemented)
 
@@ -55,26 +56,29 @@ Conference champion ties use the notebook waterfall protocol: pool H2H when bala
 
 Independents (including Notre Dame) never receive conference-champion auto-bid labels.
 
+## Selection Stability
+
+**Selection Stability** measures how often a team remains in the projected field across Monte Carlo perturbations of model weights. It does not simulate future game outcomes, injuries, or alternate championship results. Details: [Sensitivity Analysis](sensitivity-analysis.md).
+
 ## Validation
 
-Run backtests against historical CFP top-12 proxies:
+Validation is split into three tracks: committee replication, era-correct selection, and predictive validation. Full methodology, metrics, and interpretation: [Historical Validation](historical-validation.md).
 
 ```bash
-sroom validate --years 2014:2023
+sroom validate --years 2014:2024
 ```
-
-Report Spearman correlation and selection overlap from `data/output/validation/backtest_results.csv`. Treat aggregate accuracy as indicative, not proof of committee replication.
 
 ## Responsible interpretation
 
 - Use **sample mode** for demos and rule audits (controlled 20-team universe)
 - Use **live mode** for schedule-realistic stress tests (~130 FBS teams)
 - Compare simulator output to committee rankings as **one transparent model**, not ground truth
-- When auto bids look wrong mid-season, check whether CFBD conference leaders differ from composite rank inference (dashboard shows source in info callout)
+- When auto bids look wrong mid-season, check whether CFBD conference leaders differ from composite rank inference (the web app and dashboard show champion source when available)
 
 ## References
 
 - [CFP format history](cfp-format-history.md)
+- [Historical validation](historical-validation.md)
 - [Limitations & ethics](limitations-and-ethics.md)
 - [CFP Selection Committee Prepares for 2025-26](https://collegefootballplayoff.com/news/2025/8/20/selection-committee-prepares-for-2025-26.aspx)
 - [ESPN: Enhanced CFP metrics 2025](https://www.espn.com/college-football/story/_/id/46027603/cfp-selection-committee-use-enhanced-metrics)

@@ -37,7 +37,7 @@ interface BubbleCutlineChartProps {
 }
 
 const GROUP_LABEL: Record<CutGroup, string> = {
-  "last-in": "In the field — last four in",
+  "last-in": "In the field, last four in",
   "first-out": "First four out",
   "next-out": "Next four out",
 };

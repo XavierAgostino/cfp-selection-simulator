@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Selection Room uses a **single composite pipeline** with exposed component views (résumé, predictive, schedule). It does not claim to replicate committee deliberations exactly.
+The Selection Room uses a **single composite pipeline** with exposed component views (resume, predictive, schedule). It does not claim to replicate committee deliberations exactly.
 
 ## Composite Formula
 
@@ -10,14 +10,14 @@ Default weights (`RankingWeights`):
 
 | Component | Weight | Source |
 |-----------|--------|--------|
-| Résumé | 40% | Colley (60%) + Win% (40%), normalized |
+| Resume | 40% | Colley (60%) + Win% (40%), normalized |
 | Predictive | 30% | Massey (50%) + Elo (50%), normalized |
 | SOR | 20% | Strength of Record |
 | SOS | 10% | Strength of Schedule with OOR |
 
 Weights were selected by the 2014-2024 historical backtest (`make validate`):
 the SOR-heavy 40/30/20/10 mix matched or beat the previous 50/30/10/10
-defaults on committee-field overlap in every season.
+defaults on committee-field overlap in every season. See [Historical Validation](historical-validation.md) for the validation harness that selected these defaults.
 
 ## Algorithms
 

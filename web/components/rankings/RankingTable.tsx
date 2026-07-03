@@ -19,20 +19,21 @@ import {
 } from "@/components/ui/table";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
-import { rankingColumns } from "@/components/rankings/columns";
+import { createRankingColumns } from "@/components/rankings/columns";
 import {
   TableToolbar,
   type BidStatusFilter,
 } from "@/components/rankings/TableToolbar";
-import type { RankingRow } from "@/lib/types";
+import type { RankingRow, RecordMeta } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 interface RankingTableProps {
   teams: RankingRow[];
+  recordMeta?: RecordMeta | null;
 }
 
 /** Sortable, filterable rankings table over rankings.json.teams. */
-export function RankingTable({ teams }: RankingTableProps) {
+export function RankingTable({ teams, recordMeta }: RankingTableProps) {
   const { openTeam } = useTeamDrawer();
   const [search, setSearch] = React.useState("");
   const [conference, setConference] = React.useState("all");
@@ -85,9 +86,16 @@ export function RankingTable({ teams }: RankingTableProps) {
     });
   }, [teams, search, conference, bidStatus, cutRank]);
 
+  const columns = React.useMemo(
+    () => createRankingColumns(recordMeta),
+    [recordMeta],
+  );
+
+  // TanStack Table returns unstable function refs; React Compiler skips this hook by design.
+  // eslint-disable-next-line react-hooks/incompatible-library -- useReactTable
   const table = useReactTable({
     data: filtered,
-    columns: rankingColumns,
+    columns,
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
@@ -165,7 +173,7 @@ export function RankingTable({ teams }: RankingTableProps) {
               {table.getRowModel().rows.length === 0 ? (
                 <TableRow className="hover:bg-transparent">
                   <TableCell
-                    colSpan={rankingColumns.length}
+                    colSpan={columns.length}
                     className="py-16 text-center"
                   >
                     <div className="flex flex-col items-center gap-2 text-muted-foreground">

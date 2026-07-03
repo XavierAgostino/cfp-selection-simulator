@@ -91,7 +91,7 @@ export function SelectionStabilitySummary({
         Based on {sensitivity.n_scenarios.toLocaleString()} scenarios that vary
         each model weight by ±
         {Math.round(sensitivity.perturbation_spec.relative_range * 100)}%.
-        Selection Stability changes model weights around the current run — it
+        Selection Stability changes model weights around the current run. It
         does not simulate future game outcomes, and conference champions stay
         fixed.
       </p>

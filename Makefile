@@ -83,7 +83,7 @@ dashboard:
 	$(SROOM) dashboard
 
 web:
-	cd web && pnpm install --silent && pnpm dev
+	cd web && pnpm install --silent && SELECTION_ROOM_ENABLE_RUN_JOBS=1 SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES=0 pnpm dev
 
 validate:
 	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target $(or $(TARGET),all)

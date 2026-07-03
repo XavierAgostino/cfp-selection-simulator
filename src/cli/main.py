@@ -26,6 +26,7 @@ from src.pipeline.paths import (
     paths_from_manifest,
 )
 from src.pipeline.run import REPO_ROOT, run_pipeline
+from src.cli.store_commands import store_app
 from src.validation.backtest import run_era_validation
 
 app = typer.Typer(
@@ -36,6 +37,7 @@ app = typer.Typer(
     ),
     no_args_is_help=True,
 )
+app.add_typer(store_app, name="store")
 
 
 def _resolve_config(
@@ -95,7 +97,7 @@ def fetch(
     games_df = games_df[games_df["week"] <= end_week]
     cache_dir = REPO_ROOT / "data" / "cache" / "cfbd" / str(year)
     cache_dir.mkdir(parents=True, exist_ok=True)
-    out = games_cache_write_path(year, end_week)
+    out = games_cache_write_path(year, end_week, start_week)
     games_df.to_parquet(out, index=False)
     typer.echo(f"Saved {len(games_df)} games to {out}")
 
