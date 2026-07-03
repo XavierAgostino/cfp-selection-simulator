@@ -8,6 +8,12 @@ For analysts, researchers, and fans who want to understand what the simulator pr
 
 The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product surface — dashboard, bracket, bubble watch, team resumes, and Selection Stability. Run `make web` to start it.
 
+> [!TIP]
+> Use **Run Analysis** in the site header to launch sample or live runs without leaving the browser (requires a persistent Node server and Python on the same machine).
+
+> [!NOTE]
+> Selection Room explains model outputs under published CFP rules. It does not replicate private committee deliberations. See [Limitations & Ethics](research/limitations-and-ethics.md).
+
 ---
 
 ## What the simulator produces
@@ -45,6 +51,9 @@ If an automatic bid team ranks outside the top 12 by composite score, they still
 | **2024** | Top 4 conference champions → seeds 1–4 | Champion byes |
 | **2025+** | Straight by final ranking | Top 4 overall |
 
+> [!IMPORTANT]
+> **2024 vs 2025+** use different bye rules. Always check the run's `ruleset` in the manifest or web run header before comparing seeding across seasons.
+
 First-round pairings: 5 vs 12, 6 vs 11, 7 vs 10, 8 vs 9.
 
 Details: [CFP Format History](research/cfp-format-history.md)
@@ -71,6 +80,9 @@ Every ranked team has a resume entry in `team-resumes.json`. Top 40, field, and 
 ---
 
 ## How to read Selection Stability
+
+> [!NOTE]
+> Selection Stability varies **model weights only**. It does not simulate future games, injuries, or alternate championship outcomes.
 
 Selection Stability measures how often a team remains in the **projected field** when model weights are perturbed (Monte Carlo). It appears on the web app's Bubble and Team Resume views when `sensitivity.json` exists for the run.
 

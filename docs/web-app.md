@@ -4,6 +4,9 @@ The **primary product surface**: a Next.js app under [`web/`](../web/) that rend
 the engine's exported JSON as a broadcast-style selection show — dashboard,
 bracket, rankings, bubble watch, team resumes, and methodology.
 
+> [!TIP]
+> Read-only browsing works with zero config after `make demo`. Run generation from the browser needs extra setup (see below).
+
 ---
 
 ## Running it
@@ -25,16 +28,20 @@ No environment variables are required for **read-only** browsing. The app reads
 the engine's exports from `data/output/api/` at the repo root (override with
 `SELECTION_ROOM_DATA_DIR`).
 
-To **generate runs from the browser**, you need a persistent Node server (not
-static export or serverless-only hosting), Python installed, writable
-`data/output/`, and `SELECTION_ROOM_ENABLE_RUN_JOBS=1`. See
-[Development Guide](development.md) for env vars and stuck-job recovery.
+> [!IMPORTANT]
+> **Run Analysis from the browser** requires a persistent Node server (not static export or serverless-only hosting), Python installed, writable `data/output/`, and `SELECTION_ROOM_ENABLE_RUN_JOBS=1`. See [Development Guide](development.md) for env vars and stuck-job recovery.
+
+> [!WARNING]
+> Live CFBD runs use the **server's** `CFBD_API_KEY`. The key is never sent to the browser, but it must exist in the server's environment for live jobs to succeed.
 
 ## First-run experience
 
 If `data/output/api/runs.json` doesn't exist yet, every page shows the setup
 wizard with copy-paste commands (`make setup`, `make demo`). The wizard polls
 for data and switches to the dashboard automatically once the first run lands.
+
+> [!TIP]
+> You can open `make web` before running the engine. The wizard stays visible until the first export completes.
 
 ## Running analyses from the site
 
@@ -110,6 +117,9 @@ Scenario Lab (interactive weight sliders and field diff) is **planned** but not
 yet shipped. Do not expect in-app scenario editing today.
 
 ## Data plumbing
+
+> [!NOTE]
+> JSON under `data/output/api/` is the web contract. Pages never read DuckDB directly; the Python exporter is the single source of truth.
 
 - `GET /api/data/<path>.json` serves `data/output/api/` verbatim
   (404 → `{"error": "not_found"}`), never cached.

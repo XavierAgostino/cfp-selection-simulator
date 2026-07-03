@@ -3,7 +3,7 @@
 _a CFP selection simulator_
 
 <p align="center">
-  <img src="web/public/brand/selection-room-1600x800.png" alt="Selection Room — CFP Selection, Explained" width="800" />
+  <img src="web/public/brand/selection-room-1600x800.png" alt="Selection Room — CFP Selection, Explained" width="480" />
 </p>
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
@@ -14,8 +14,11 @@ A transparent, reproducible decision-support simulator for College Football Play
 
 The simulator runs from sample data in under a minute, generates a 12-team playoff field, explains why teams made or missed the bracket, and compares model outputs against CFP-style selection rules.
 
+> [!TIP]
+> **Primary UI:** Run `make web` for the Selection Room site. The CLI and CSV/JSON exports are the engine; the web app is how most people explore results.
+
 <p align="center">
-  <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" width="44" alt="Ohio State" />
+  <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/84.png" width="44" alt="Indiana" />
   <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" width="44" alt="Georgia" />
   <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" width="44" alt="Alabama" />
   <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" width="44" alt="Texas" />
@@ -41,6 +44,9 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 
 ## Quickstart
 
+> [!NOTE]
+> No API key is required for `make demo`. Sample fixtures include conference champions so auto-bids and byes look realistic.
+
 ```bash
 git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
 cd cfp-selection-simulator
@@ -59,14 +65,15 @@ One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web
 
 ## Run with live data
 
+> [!IMPORTANT]
+> Live runs need a free [College Football Data API](https://collegefootballdata.com/key) key in `.env` as `CFBD_API_KEY`.
+
 ```bash
 cp .env.example .env   # put your CFBD_API_KEY in .env
 make run YEAR=2025 WEEK=15
 # or: ./bin/sroom run --year 2025 --week 15
 # or: the Run Analysis button on the site
 ```
-
-Get a free key at [CollegeFootballData.com](https://collegefootballdata.com/key).
 
 ---
 
@@ -114,7 +121,10 @@ Details: [Output Files](docs/output-files.md)
 
 ## Research-backed methodology
 
-One composite pipeline with explainable components. The simulator is a **decision-support tool**, not a claim to replicate committee deliberations.
+> [!NOTE]
+> Selection Room is a **decision-support simulator**, not a claim to replicate closed-door committee deliberations.
+
+One composite pipeline with explainable components.
 
 **Documentation home:** [docs/index.md](docs/index.md) · **Research methodology:** [docs/research/index.md](docs/research/index.md)
 

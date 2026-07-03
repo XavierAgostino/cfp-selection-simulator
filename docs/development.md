@@ -2,6 +2,9 @@
 
 For contributors working on the simulator codebase.
 
+> [!TIP]
+> Before opening a PR, run `make verify` (tests + lint + sample smoke run). It matches what CI expects.
+
 ---
 
 ## Setup

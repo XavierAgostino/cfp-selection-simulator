@@ -2,6 +2,29 @@
 
 Documentation funnel: **Quickstart → Web App → User Guide → CLI / Output Files / Configuration → Research → Development**
 
+> [!TIP]
+> New here? Start with [Quickstart](quickstart.md), then open [Web App](web-app.md) and run `make web`.
+
+---
+
+## Reading these docs
+
+Docs use [GitHub alert syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) for callouts. They render on GitHub and in most Markdown previews.
+
+| Block | Use for |
+|-------|---------|
+| `> [!TIP]` | Shortcuts, recommended paths, quality-of-life hints |
+| `> [!NOTE]` | Context that helps but is not required to proceed |
+| `> [!IMPORTANT]` | Requirements, constraints, or decisions that affect behavior |
+| `> [!WARNING]` | Misconfiguration, data loss, or security-sensitive setup |
+
+Example:
+
+```markdown
+> [!TIP]
+> Run `make demo` before touching live CFBD data.
+```
+
 ---
 
 ## Start here

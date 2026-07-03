@@ -4,6 +4,9 @@ Mechanical reference for the `sroom` command. For tutorials, see [Quickstart](qu
 
 Install: `make setup` or `pip install -e ".[dev]"`
 
+> [!TIP]
+> Use `./bin/sroom` or `make` targets from the repo root without activating `.venv`.
+
 **Run without activating the venv** (pick one):
 
 ```bash

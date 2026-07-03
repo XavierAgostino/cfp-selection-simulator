@@ -21,6 +21,9 @@ weights:
   sos: 0.10
 ```
 
+> [!IMPORTANT]
+> Ranking `weights` must sum to **1.0**. Invalid configs fail at load time.
+
 ---
 
 ## Available configs
