@@ -35,7 +35,6 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 - 12-team field selection under **2024** or **2025+** CFP rules
 - Format-aware seeding and bracket generation
 - Structured audit trail and reproducibility manifest
-- Streamlit dashboard for exploration
 - Historical validation against published CFP rankings
 
 ---
@@ -52,7 +51,7 @@ make web       # Selection Room site at http://localhost:3000
 
 The site walks you through setup if you open it first, and new analyses can
 be launched from the run bar (**Run Analysis**) — season, week, sample or
-live CFBD data. `make dashboard` still opens the legacy Streamlit console.
+live CFBD data.
 
 One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web-app.md)
 
@@ -80,7 +79,7 @@ Use `make` or `./bin/sroom` from the repo root. Bare `sroom` requires `source .v
 | Environment check | `./bin/sroom doctor` |
 | Sample demo | `make demo` |
 | Full pipeline | `make run YEAR=2025 WEEK=15` |
-| Dashboard | `make dashboard` |
+| Web app | `make web` |
 | Bracket HTML | `make bracket YEAR=2025 WEEK=15` |
 | Latest outputs | `./bin/sroom outputs --latest` |
 | Validation (all tracks) | `make validate` |
@@ -110,21 +109,6 @@ After `make demo`:
 Details: [Output Files](docs/output-files.md)
 
 **Data contracts:** JSON under `data/output/api/` powers the web app. Each export also writes a local DuckDB store at `data/output/selection_room.duckdb` for analytical queries (`sroom store`). See [Development Guide](docs/development.md#duckdb-run-store).
-
----
-
-## Dashboard
-
-```bash
-make dashboard
-# or: sroom dashboard
-```
-
-Streamlit **legacy/analyst console** — the [Next.js web app](docs/web-app.md) is the primary product surface.
-
-Tabs: Overview, Rankings, Playoff Field, Bracket, Bubble Watch, Team Resume, Components, Selection Audit, Methodology.
-
-Guide: [Dashboard Guide](docs/dashboard-guide.md)
 
 ---
 
@@ -164,7 +148,6 @@ One composite pipeline with explainable components. The simulator is a **decisio
 - [Quickstart](docs/quickstart.md)
 - [User Guide](docs/user-guide.md)
 - [CLI Reference](docs/cli-reference.md)
-- [Dashboard Guide](docs/dashboard-guide.md)
 - [Output Files](docs/output-files.md)
 - [Configuration](docs/configuration.md)
 

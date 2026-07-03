@@ -35,7 +35,7 @@ make verify
 - Tests (`tests/`)
 - Documentation (`docs/`)
 - Sample data improvements (`data/processed/sample/`)
-- Dashboard polish (`app/streamlit_app.py`)
+- Web UI polish (`web/`)
 - Visualization and bracket UX
 
 ---

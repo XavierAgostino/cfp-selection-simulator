@@ -1,4 +1,4 @@
-"""Team identity, logos, and colors for dashboard visuals."""
+"""Team identity, logos, and colors for web and export visuals."""
 
 from src.assets.colors import get_primary_color, get_team_colors
 from src.assets.logos import get_team_logo, placeholder_logo_url

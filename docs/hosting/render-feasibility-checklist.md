@@ -52,7 +52,7 @@ Mount persistent disk at `/app/data/output` so jobs, API JSON, and DuckDB share 
 ## Reference Docker outline (not committed)
 
 ```dockerfile
-# Build: pip install -e ".[app]" && cd web && pnpm install && pnpm build
+# Build: pip install -e ".[dev]" && cd web && pnpm install && pnpm build
 # Runtime: WORKDIR /app/web, CMD pnpm start
 # Volume: /app/data/output
 ```

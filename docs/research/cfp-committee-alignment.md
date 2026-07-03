@@ -73,7 +73,7 @@ sroom validate --years 2014:2024
 - Use **sample mode** for demos and rule audits (controlled 20-team universe)
 - Use **live mode** for schedule-realistic stress tests (~130 FBS teams)
 - Compare simulator output to committee rankings as **one transparent model**, not ground truth
-- When auto bids look wrong mid-season, check whether CFBD conference leaders differ from composite rank inference (the web app and dashboard show champion source when available)
+- When auto bids look wrong mid-season, check whether CFBD conference leaders differ from composite rank inference (the web app shows champion source when available)
 
 ## References
 

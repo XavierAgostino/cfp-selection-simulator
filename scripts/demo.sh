@@ -12,7 +12,7 @@ else
   PY="$PYTHON"
 fi
 
-"$PY" -m pip install -e ".[app,dev]"
+"$PY" -m pip install -e ".[dev]"
 "$PY" -m src.cli.main doctor
 "$PY" -m src.cli.main run --year 2025 --week 15 --sample
 "$PY" -m src.cli.main bracket --year 2025 --week 15 --sample --html

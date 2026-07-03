@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import shutil
 import sys
-from importlib import util
 from typing import List, Tuple
 
 from src.data.fetcher import get_api_key
@@ -12,10 +11,6 @@ from src.pipeline.paths import DATA_OUTPUT, REPO_ROOT, ensure_output_dirs
 from src.pipeline.sample import SAMPLE_CHAMPIONS, SAMPLE_GAMES
 
 CheckResult = Tuple[str, bool, str, bool]
-
-
-def _module_available(name: str) -> bool:
-    return util.find_spec(name) is not None
 
 
 def run_doctor_checks() -> List[CheckResult]:
@@ -69,11 +64,6 @@ def run_doctor_checks() -> List[CheckResult]:
     except OSError as exc:
         checks.append(("Output directory", False, str(exc), False))
 
-    if _module_available("streamlit"):
-        checks.append(("Streamlit", True, "installed", False))
-    else:
-        checks.append(("Streamlit", False, 'not installed (pip install -e ".[app]")', False))
-
     if shutil.which("sroom"):
         checks.append(("sroom CLI", True, "on PATH", False))
     else:
@@ -81,7 +71,7 @@ def run_doctor_checks() -> List[CheckResult]:
             (
                 "sroom CLI",
                 True,
-                'available via python -m (install with pip install -e ".[app]")',
+                'available via python -m (install with pip install -e ".[dev]")',
                 True,
             )
         )

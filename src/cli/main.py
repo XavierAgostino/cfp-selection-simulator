@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 import shutil
-import subprocess
-import sys
 import webbrowser
 from pathlib import Path
 from typing import Optional
@@ -343,13 +341,6 @@ def clean(
             if target.exists():
                 shutil.rmtree(target)
                 typer.echo(f"Removed {target}")
-
-
-@app.command()
-def dashboard() -> None:
-    """Launch Streamlit dashboard."""
-    app_path = REPO_ROOT / "app" / "streamlit_app.py"
-    subprocess.run([sys.executable, "-m", "streamlit", "run", str(app_path)], check=False)
 
 
 if __name__ == "__main__":

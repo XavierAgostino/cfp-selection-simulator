@@ -131,7 +131,6 @@ CI runs all three on every push (see `.github/workflows/ci.yml`).
 
 ## Related
 
-- [Dashboard Guide](dashboard-guide.md) — Streamlit legacy/analyst console
 - [User Guide](user-guide.md)
 - [Output Files](output-files.md)
 - [API Contracts](api-contracts.md)

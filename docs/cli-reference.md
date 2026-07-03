@@ -2,7 +2,7 @@
 
 Mechanical reference for the `sroom` command. For tutorials, see [Quickstart](quickstart.md).
 
-Install: `make setup` or `pip install -e ".[app,dev]"`
+Install: `make setup` or `pip install -e ".[dev]"`
 
 **Run without activating the venv** (pick one):
 
@@ -31,7 +31,7 @@ Check environment readiness.
 sroom doctor
 ```
 
-Verifies Python, package import, API key (warns if missing), sample data, team assets, output directory writability, Streamlit, and CLI availability.
+Verifies Python, package import, API key (warns if missing), sample data, team assets, output directory writability, and CLI availability.
 
 ---
 
@@ -163,21 +163,12 @@ sroom clean [--outputs/--all]
 
 ---
 
-## `sroom dashboard`
-
-Launch Streamlit dashboard.
-
-```bash
-sroom dashboard
-```
-
----
-
 ## Makefile shortcuts
 
 | Make target | CLI equivalent |
 |-------------|----------------|
 | `make demo` | `sroom run --year 2025 --week 15 --sample` |
+| `make web` | Next.js dev server at `http://localhost:3000` |
 | `make run` | `sroom run --year $(YEAR) --week $(WEEK)` |
 | `make bracket` | `sroom bracket ... --sample --html` |
 | `make validate` | `./bin/sroom validate --years 2014:2024 --target all` |

@@ -8,8 +8,6 @@ For analysts, researchers, and fans who want to understand what the simulator pr
 
 The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product surface — dashboard, bracket, bubble watch, team resumes, and Selection Stability. Run `make web` to start it.
 
-The **Streamlit dashboard** ([Dashboard Guide](dashboard-guide.md)) is a legacy analyst console for local exploration. It does not include Selection Stability UI.
-
 ---
 
 ## What the simulator produces
@@ -156,6 +154,5 @@ Demo mode uses 110-game sample data with five labeled conference champions so by
 - [Web App](web-app.md)
 - [Quickstart](quickstart.md)
 - [CLI Reference](cli-reference.md)
-- [Dashboard Guide](dashboard-guide.md) (Streamlit legacy console)
 - [Configuration](configuration.md)
 - [Research index](research/index.md)

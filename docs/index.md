@@ -12,7 +12,6 @@ Documentation funnel: **Quickstart → Web App → User Guide → CLI / Output F
 | [Web App](web-app.md) | Everyone | **Primary product surface** — Next.js Selection Room app |
 | [User Guide](user-guide.md) | Analysts, fans | Understand outputs and workflows |
 | [CLI Reference](cli-reference.md) | Power users | Complete command reference |
-| [Dashboard Guide](dashboard-guide.md) | Analysts | Streamlit **legacy/analyst console** (not the primary public UI) |
 | [Output Files](output-files.md) | Data explorers | CSV/JSON column reference and run identity |
 | [Configuration](configuration.md) | Researchers | YAML configs and reproducibility |
 | [API Contracts](api-contracts.md) | Developers | JSON contract mirror for Python exports ↔ web app |

@@ -12,7 +12,7 @@ cd cfp-selection-simulator
 make setup
 ```
 
-This runs `pip install -e ".[app,dev]"` and installs the `sroom` CLI.
+This runs `pip install -e ".[dev]"` and installs the `sroom` CLI.
 
 Verify your environment:
 
@@ -66,13 +66,13 @@ Column reference: [Output Files](output-files.md)
 
 ---
 
-## 4. Launch dashboard
+## 4. Launch the web app
 
 ```bash
-make dashboard
+make web
 ```
 
-Use the sidebar to toggle sample vs live data. See [Dashboard Guide](dashboard-guide.md).
+Opens the Selection Room site at `http://localhost:3000`. See [Web App Guide](web-app.md).
 
 ---
 
@@ -107,6 +107,6 @@ Installs, runs doctor, executes sample pipeline, generates bracket HTML, and lis
 ## Next steps
 
 - [User Guide](user-guide.md) — how selection and seeding work
+- [Web App](web-app.md) — Next.js product surface
 - [CLI Reference](cli-reference.md) — all commands and flags
-- [Dashboard Guide](dashboard-guide.md) — Streamlit tabs
 - [Research Methodology](research/index.md) — model and validation

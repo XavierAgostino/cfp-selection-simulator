@@ -15,15 +15,13 @@ cfp-selection-simulator/
 │   ├── app/                  # Routes + API handlers
 │   ├── components/           # UI components
 │   └── lib/                  # Types, data helpers
-├── app/
-│   └── streamlit_app.py      # Streamlit analyst/legacy dashboard
 ├── src/
 │   ├── api_contracts/        # JSON API builder/models for web app
 │   ├── config/               # Formats, SimulatorConfig
 │   ├── selection/            # Field, seeding, audit
 │   ├── pipeline/             # Composite, run orchestration, paths
 │   ├── rankings/             # Colley, Massey, Elo algorithms
-│   ├── playoff/              # Bracket viz (HTML, Plotly)
+│   ├── playoff/              # Bracket HTML export
 │   ├── cli/                  # sroom Typer commands
 │   ├── store/                # DuckDB run store (local analytics)
 │   ├── assets/               # Team logos/colors registry
@@ -59,7 +57,6 @@ cfp-selection-simulator/
 | `src/pipeline/sample.py` | Sample champion enrichment |
 | `src/validation/sensitivity.py` | Selection Stability / Monte Carlo weight perturbation |
 | `src/cli/main.py` | CLI entry point |
-| `app/streamlit_app.py` | Streamlit analyst/legacy dashboard (not primary product surface) |
 
 ---
 

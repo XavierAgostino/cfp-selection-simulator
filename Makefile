@@ -18,7 +18,7 @@ BIN := $(VENV_BIN)
 SROOM := $(VENV_BIN)/sroom
 endif
 
-.PHONY: help setup demo run rank select bracket dashboard web validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean
+.PHONY: help setup demo run rank select bracket web validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean
 
 YEAR ?= 2025
 WEEK ?= 15
@@ -34,7 +34,6 @@ help:
 	@echo "Getting started"
 	@echo "  make setup              Create .venv and install package"
 	@echo "  make demo               Run sample demo (no API key)"
-	@echo "  make dashboard          Launch Streamlit dashboard"
 	@echo "  make web                Launch the Selection Room web app"
 	@echo ""
 	@echo "Simulator"
@@ -60,7 +59,7 @@ help:
 setup:
 	@test -d $(VENV_DIR) || $(PYTHON) -m venv $(VENV_DIR)
 	$(VENV_PY) -m pip install --upgrade pip
-	$(VENV_PY) -m pip install -e ".[app,dev]"
+	$(VENV_PY) -m pip install -e ".[dev]"
 	@echo ""
 	@echo "Setup complete. Commands use $(VENV_DIR)/ automatically."
 
@@ -78,9 +77,6 @@ select:
 
 bracket:
 	$(SROOM) bracket --year $(YEAR) --week $(WEEK) --sample --html
-
-dashboard:
-	$(SROOM) dashboard
 
 web:
 	cd web && pnpm install --silent && SELECTION_ROOM_ENABLE_RUN_JOBS=1 SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES=0 pnpm dev
@@ -104,13 +100,13 @@ test:
 	$(PY) -m pytest tests/ -v
 
 lint:
-	$(PY) -m black --check src/ tests/ app/
-	$(PY) -m isort --check-only src/ tests/ app/
-	$(PY) -m flake8 src/ tests/ app/ --select=E9,F63,F7,F82
+	$(PY) -m black --check src/ tests/
+	$(PY) -m isort --check-only src/ tests/
+	$(PY) -m flake8 src/ tests/ --select=E9,F63,F7,F82
 
 format:
-	$(PY) -m black src/ tests/ app/
-	$(PY) -m isort src/ tests/ app/
+	$(PY) -m black src/ tests/
+	$(PY) -m isort src/ tests/
 
 verify: test lint
 	$(SROOM) run --year $(YEAR) --week $(WEEK) --sample

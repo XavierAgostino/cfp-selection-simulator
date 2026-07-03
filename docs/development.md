@@ -12,7 +12,7 @@ cd cfp-selection-simulator
 make setup
 ```
 
-Installs `pip install -e ".[app,dev]"` including `sroom`, pytest, black, isort, flake8.
+Installs `pip install -e ".[dev]"` including `sroom`, pytest, black, isort, flake8.
 
 For the web app:
 
