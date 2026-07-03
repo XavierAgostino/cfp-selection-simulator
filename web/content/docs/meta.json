@@ -1,0 +1,18 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "getting-started",
+    "---Research---",
+    "methodology",
+    "---Product---",
+    "scenario-lab",
+    "validation",
+    "---Developers---",
+    "api-contracts",
+    "local-development",
+    "hosted-production",
+    "---Project---",
+    "limitations-and-ethics"
+  ]
+}

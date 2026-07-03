@@ -66,9 +66,7 @@ def _run_and_report(
     write_html: bool = True,
     scenario_id: str = BASE_SCENARIO_ID,
 ) -> dict:
-    result = run_pipeline(
-        cfg, use_sample=sample, write_html=write_html, scenario_id=scenario_id
-    )
+    result = run_pipeline(cfg, use_sample=sample, write_html=write_html, scenario_id=scenario_id)
     print_run_summary(
         cfg,
         data_source=result["data_source"],

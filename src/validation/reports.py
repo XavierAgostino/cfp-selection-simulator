@@ -82,6 +82,25 @@ def write_validation_outputs(
         legacy.to_csv(legacy_path, index=False)
         paths["legacy"] = legacy_path
 
+    # Refresh the repo-level web contract (data/output/api/validation.json) so the
+    # /validation dashboard reflects this run. Lazy import keeps the validation
+    # package free of an api_contracts import at module load. Best-effort: a web
+    # export failure must not lose the CSV/Markdown artifacts above.
+    if committee or selection or predictive:
+        try:
+            from src.api_contracts.export import export_validation_api
+
+            paths["api"] = export_validation_api(
+                committee,
+                selection,
+                predictive,
+                years=years,
+                target=target,
+                outlier_years=sorted(OUTLIER_YEARS),
+            )
+        except Exception:  # noqa: BLE001 - web artifact is optional/non-fatal
+            pass
+
     return paths
 
 

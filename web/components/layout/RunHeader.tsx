@@ -15,6 +15,7 @@ import {
   runProjectionSubtitle,
   SAMPLE_DEMO_HELPER,
 } from "@/lib/runDisplay";
+import { formatRunCapabilityLabel, formatRunKindLabel } from "@/lib/displayLabels";
 import type { RunsPayload, RunSummary } from "@/lib/types";
 
 async function loadRuns(): Promise<RunsPayload | null> {
@@ -102,9 +103,9 @@ export async function RunHeader({ stem }: RunHeaderProps) {
 
           <div className="flex flex-wrap items-center gap-2">
             {isScenario ? (
-              <Badge variant="chip-neutral">Scenario</Badge>
+              <Badge variant="chip-neutral">{formatRunKindLabel(true)}</Badge>
             ) : (
-              <Badge variant="chip-neutral">Base run</Badge>
+              <Badge variant="chip-neutral">{formatRunKindLabel(false)}</Badge>
             )}
             <RulesetBadge ruleset={run.ruleset} />
             <BadgeTooltip badge={isLive ? "live_data" : "sample_data"}>
@@ -115,7 +116,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
             {run.has_bracket ? (
               <BadgeTooltip badge="bracket_ready">
                 <Badge variant="chip-neutral" tabIndex={0}>
-                  Bracket ready
+                  {formatRunCapabilityLabel("bracket")}
                 </Badge>
               </BadgeTooltip>
             ) : null}

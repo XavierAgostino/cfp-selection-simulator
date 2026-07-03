@@ -1,13 +1,18 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScaleToFitCanvas } from "@/components/common/ScaleToFitCanvas";
 import { CfpPlayoffLogo } from "@/components/brand/CfpPlayoffLogo";
 import { SeedBadge } from "@/components/team/SeedBadge";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { BracketGame } from "@/components/bracket/BracketGame";
 import { podMeta, splitPodsBySide } from "@/components/bracket/types";
 import type { BracketPayload, BracketPod } from "@/lib/types";
+
+/** Fixed column widths for the 5-column bracket grid (px). */
+const BRACKET_COLUMNS = "300px 230px 280px 230px 300px";
+/** Design canvas width: columns + four gap-x-8 gutters (~1468px). */
+export const BRACKET_CANVAS_WIDTH = 1468;
 
 interface FullBracketProps {
   bracket: BracketPayload;
@@ -46,13 +51,13 @@ export function FullBracket({ bracket }: FullBracketProps) {
   const rightBottom = bottom[1];
 
   return (
-    <ScrollArea className="w-full">
-      <div className="min-w-[1180px] py-2">
+    <ScaleToFitCanvas designWidth={BRACKET_CANVAS_WIDTH}>
+      <div className="py-2" style={{ width: BRACKET_CANVAS_WIDTH }}>
         {/* Column labels */}
         <div
-          className="mb-2 grid gap-x-10"
+          className="mb-2 grid gap-x-8"
           style={{
-            gridTemplateColumns: "300px 230px 280px 230px 300px",
+            gridTemplateColumns: BRACKET_COLUMNS,
           }}
         >
           <ColumnLabel title="First Round" subtitle="Campus sites · pods" />
@@ -64,9 +69,9 @@ export function FullBracket({ bracket }: FullBracketProps) {
 
         {/* Bracket grid */}
         <div
-          className="grid items-center gap-x-10"
+          className="grid items-center gap-x-8"
           style={{
-            gridTemplateColumns: "300px 230px 280px 230px 300px",
+            gridTemplateColumns: BRACKET_COLUMNS,
             gridTemplateRows: "1fr auto 1fr",
             minHeight: "420px",
           }}
@@ -116,8 +121,7 @@ export function FullBracket({ bracket }: FullBracketProps) {
           ) : null}
         </div>
       </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </ScaleToFitCanvas>
   );
 }
 

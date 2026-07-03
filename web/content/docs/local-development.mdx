@@ -1,0 +1,41 @@
+---
+title: Local development
+description: Contributor setup for the Python engine and Next.js web app.
+---
+
+Selection Room is a monorepo: Python analytics under `src/`, Next.js UI under `web/`, and shared docs at the repo root.
+
+## What this page covers
+
+- Prerequisites
+- Python and web dev commands
+- Fixture sync for the web app
+
+## Prerequisites
+
+- Python 3.11+ with `make setup` / `pip install -e ".[dev]"`
+- Node via mise or your preferred manager; **pnpm** for the web app
+- Optional: CFBD API key for Live CFBD runs
+
+## Common commands
+
+```bash
+make demo          # Sample pipeline run
+make web           # Next.js dev server (web/)
+make test          # Python tests
+cd web && pnpm build
+```
+
+## Web data sync
+
+The web app reads JSON from `data/output/api/`. Use fixture seeding scripts documented in the repo when you need a predictable catalog without running the full pipeline.
+
+<Callout type="success" title="Tip">
+Run `sroom doctor` after environment changes. It catches missing keys and path issues early.
+</Callout>
+
+<NextSteps links={[
+  { href: "/docs/getting-started", label: "Getting started" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/development.md", label: "Full development guide on GitHub", external: true },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/project-structure.md", label: "Project structure on GitHub", external: true }
+]} />

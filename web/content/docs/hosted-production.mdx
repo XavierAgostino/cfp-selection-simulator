@@ -1,0 +1,47 @@
+---
+title: Hosted production architecture
+description: Target topology for a hosted Selection Room deployment.
+---
+
+Selection Room supports local open-source mode today and defines a hosted production target for a public deployment. **No hosted adapters are implemented yet.**
+
+## Local mode today
+
+| Concern | Local (today) |
+|---------|---------------|
+| Web UI | Next.js self-host |
+| Long Python jobs | Subprocess on the same machine |
+| Artifacts | `data/output/api/` on disk |
+| Run metadata | DuckDB + JSON files |
+
+This is the supported workflow for development and self-hosted demos. The web app reads exports directly from the filesystem via API routes.
+
+## Hosted target later
+
+| Concern | Hosted (target) |
+|---------|-----------------|
+| Web UI | Vercel (or equivalent edge host) |
+| Long Python jobs | External worker service |
+| Artifacts | Object storage (S3-compatible) |
+| Run metadata | Postgres |
+
+Vercel must not run multi-minute Python jobs in standard serverless handlers. The intended pattern: API creates a job record, a worker executes the engine, the web app polls job status and reads artifacts from storage.
+
+## Why hosted adapters are not implemented yet
+
+Hosted mode requires durable job queues, artifact upload/download, and auth boundaries that do not exist in the local OSS path. The adapters are **designed** (see repository architecture doc) but deliberately unbuilt until local mode and JSON contracts are stable.
+
+Design doctrine that survives either mode:
+
+- JSON payload shape stays the web contract
+- Python remains the analytics source of truth
+- Local OSS workflow must keep working
+
+<Callout type="info" title="Note">
+This page is a summary. DDL, migration order, and adapter boundaries are documented in the repository architecture doc.
+</Callout>
+
+<NextSteps links={[
+  { href: "/docs/api-contracts", label: "API contracts summary" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/architecture/hosted-production.md", label: "Full hosted architecture on GitHub", external: true }
+]} />

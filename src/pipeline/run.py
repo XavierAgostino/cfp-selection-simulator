@@ -241,9 +241,7 @@ def run_pipeline(
     stem and remain the site's default view (see ``export_run_api``).
     """
     ensure_output_dirs()
-    paths = RunOutputPaths(
-        year=config.year, week=config.week, scenario_id=scenario_id
-    )
+    paths = RunOutputPaths(year=config.year, week=config.week, scenario_id=scenario_id)
     data_source = "sample" if use_sample else "cfbd"
     steps: List[str] = []
 

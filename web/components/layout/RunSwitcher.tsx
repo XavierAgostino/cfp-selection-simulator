@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { isBaseRun, runRowSecondary } from "@/lib/runDisplay";
+import { formatRunKindLabel } from "@/lib/displayLabels";
 import { truncateConfigHash } from "@/lib/recordMeta";
 import type { RunSummary } from "@/lib/types";
 
@@ -90,11 +91,11 @@ export function RunSwitcher({ runs, currentStem, latestStem }: RunSwitcherProps)
                 ) : null}
                 {!isBaseRun(run) ? (
                   <Badge variant="chip-neutral" className="text-[10px]">
-                    Scenario
+                    {formatRunKindLabel(true)}
                   </Badge>
                 ) : (
                   <Badge variant="chip-neutral" className="text-[10px]">
-                    Base
+                    {formatRunKindLabel(false)}
                   </Badge>
                 )}
               </div>

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -255,14 +257,124 @@
   font-variant-numeric: tabular-nums;
 }
 
-.espn-global-header {
+.app-global-header {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .espn-global-header .espn-nav-link span {
-    transition: none;
-  }
+/* Fumadocs docs shell (Selection Room theme) */
+.dark {
+  --color-fd-background: var(--background);
+  --color-fd-foreground: var(--foreground);
+  --color-fd-muted: var(--muted);
+  --color-fd-muted-foreground: var(--muted-foreground);
+  --color-fd-border: var(--border);
+  --color-fd-primary: var(--accent-gold);
+  --color-fd-primary-foreground: var(--foreground);
+  --color-fd-accent: var(--muted);
+  --color-fd-accent-foreground: var(--foreground);
+  --color-fd-card: var(--card);
+  --color-fd-card-foreground: var(--card-foreground);
+  --color-fd-ring: var(--ring);
+}
+
+.docs-layout {
+  flex: 1;
+  min-height: var(--fd-docs-height);
+}
+
+/* Drop Fumadocs' left gutter column — sidebar was aligned end inside a 2-col span */
+.docs-layout#nd-docs-layout {
+  grid-template:
+    "sidebar toc-popover toc"
+    "sidebar main toc"
+    1fr / var(--fd-sidebar-col) minmax(0, 1fr) var(--fd-toc-width) !important;
+}
+
+.docs-layout [data-sidebar-placeholder] aside#nd-sidebar {
+  align-items: stretch;
+}
+
+.docs-layout [data-sidebar-placeholder] aside#nd-sidebar > * {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.docs-layout #nd-page {
+  color: var(--foreground);
+  max-width: min(1040px, 100%);
+}
+
+.docs-layout #nd-sidebar {
+  border-color: var(--border);
+}
+
+.docs-layout #nd-sidebar [data-slot="scroll-area-viewport"] > p {
+  margin-top: 1.25rem;
+  margin-bottom: 0.375rem;
+  padding-inline: 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.72;
+}
+
+.docs-layout #nd-sidebar [data-slot="scroll-area-viewport"] > p:first-child {
+  margin-top: 0;
+}
+
+.docs-layout #nd-sidebar a[data-active="true"] {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
+}
+
+.docs-layout #nd-sidebar a[data-active="true"]::before {
+  display: none;
+}
+
+.docs-layout #nd-sidebar a:not([data-active="true"]) {
+  color: var(--muted-foreground);
+}
+
+.docs-layout #nd-sidebar a:not([data-active="true"]):hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--foreground);
+}
+
+.docs-layout #nd-toc a {
+  color: var(--muted-foreground);
+}
+
+.docs-layout #nd-toc a:hover {
+  color: var(--foreground);
+}
+
+.docs-layout #nd-toc a[data-active="true"] {
+  color: var(--accent-gold);
+  font-weight: 500;
+}
+
+.docs-layout pre,
+.docs-layout table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.docs-layout pre {
+  border-radius: var(--radius);
+}
+
+.docs-layout [data-search-full] {
+  width: 100%;
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted-foreground);
+}
+
+.docs-layout [data-search-full]:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
 }

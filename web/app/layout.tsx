@@ -4,11 +4,10 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { AppShell } from "@/components/layout/AppShell";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { TeamAssetsProvider } from "@/components/team/TeamAssetsProvider";
 import { TeamDrawerProvider } from "@/components/team/TeamDrawerProvider";
-import { FirstRunGate } from "@/components/setup/FirstRunGate";
+import { RootProvider } from "fumadocs-ui/provider/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -64,18 +63,19 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <ThemeProvider>
-          <TooltipProvider delay={300}>
-            <AppLayout>
-              <TeamAssetsProvider>
-                <TeamDrawerProvider>
-                  <AppShell>
-                    <FirstRunGate>{children}</FirstRunGate>
-                  </AppShell>
-                </TeamDrawerProvider>
-              </TeamAssetsProvider>
-            </AppLayout>
-            <Toaster position="bottom-right" />
-          </TooltipProvider>
+          <RootProvider
+            theme={{ enabled: false }}
+            search={{ options: { api: "/api/search" } }}
+          >
+            <TooltipProvider delay={300}>
+              <AppLayout>
+                <TeamAssetsProvider>
+                  <TeamDrawerProvider>{children}</TeamDrawerProvider>
+                </TeamAssetsProvider>
+              </AppLayout>
+              <Toaster position="bottom-right" />
+            </TooltipProvider>
+          </RootProvider>
         </ThemeProvider>
       </body>
     </html>

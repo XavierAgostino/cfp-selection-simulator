@@ -27,6 +27,14 @@ const BID_STATUS_OPTIONS: { value: BidStatusFilter; label: string }[] = [
   { value: "out", label: "Out" },
 ];
 
+function conferenceFilterLabel(conference: string): string {
+  return conference === "all" ? "All conferences" : conference;
+}
+
+function bidStatusFilterLabel(bidStatus: BidStatusFilter): string {
+  return BID_STATUS_OPTIONS.find((opt) => opt.value === bidStatus)?.label ?? bidStatus;
+}
+
 interface TableToolbarProps {
   search: string;
   onSearchChange: (value: string) => void;
@@ -68,7 +76,9 @@ export function TableToolbar({
           onValueChange={(v) => onConferenceChange(v ?? "all")}
         >
           <SelectTrigger className="w-full sm:w-44">
-            <SelectValue placeholder="Conference" />
+            <SelectValue placeholder="Conference">
+              {conferenceFilterLabel(conference)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All conferences</SelectItem>
@@ -84,7 +94,9 @@ export function TableToolbar({
           onValueChange={(v) => onBidStatusChange((v ?? "all") as BidStatusFilter)}
         >
           <SelectTrigger className="w-full sm:w-44">
-            <SelectValue placeholder="Bid status" />
+            <SelectValue placeholder="Bid status">
+              {bidStatusFilterLabel(bidStatus)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {BID_STATUS_OPTIONS.map((opt) => (

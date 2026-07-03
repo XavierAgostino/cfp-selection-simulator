@@ -63,7 +63,7 @@ export default async function BubblePage({ searchParams }: BubblePageProps) {
     <div className="flex flex-col gap-6">
       <RunHeader stem={stem} />
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Bubble watch</h1>
+        <h1 className="text-xl font-semibold text-foreground">Bubble Watch</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           The last teams in and the first teams out, and how close it is.
         </p>

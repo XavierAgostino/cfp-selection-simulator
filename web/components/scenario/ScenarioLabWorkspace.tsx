@@ -20,6 +20,10 @@ import {
 } from "@/components/ui/select";
 import { WeightSliders } from "@/components/scenario/WeightSliders";
 import { ScenarioDiffView } from "@/components/scenario/ScenarioDiffView";
+import { ScenarioLabTerm } from "@/components/explain/ScenarioLabTerm";
+import { InfoTooltip } from "@/components/explain/InfoTooltip";
+import { SCENARIO_LAB_EXPLANATIONS } from "@/lib/scenarioLabExplain";
+import { formatScenarioChipLabel } from "@/lib/displayLabels";
 import { useScenarioRun } from "@/components/scenario/useScenarioRun";
 import { isBaseRun } from "@/lib/runDisplay";
 import type { RunCapabilities } from "@/lib/runJob";
@@ -132,7 +136,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
         <div className="rounded-xl border border-border/60 bg-card px-5 py-4">
           <div className="mb-4 flex flex-col gap-1">
             <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Fork from
+              <ScenarioLabTerm term="base_run" className="normal-case" />
             </label>
             <Select value={baseStem} onValueChange={(v) => v && setBaseStem(v)}>
               <SelectTrigger className="w-full">
@@ -152,10 +156,18 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
 
           <div className="mt-4 flex items-center justify-between gap-2 border-t border-border/40 pt-4">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Scenario</span>
-              <Badge variant={matchesBase ? "chip-neutral" : "chip-gold"} className="font-mono">
-                {matchesBase ? "base" : scenarioId}
-              </Badge>
+              <ScenarioLabTerm term="scenario" className="text-xs normal-case" />
+              <InfoTooltip
+                title={SCENARIO_LAB_EXPLANATIONS.config_hash.label}
+                content={SCENARIO_LAB_EXPLANATIONS.config_hash.description}
+              >
+                <Badge
+                  variant={matchesBase ? "chip-neutral" : "chip-gold"}
+                  className="cursor-help font-mono"
+                >
+                  {formatScenarioChipLabel(scenarioId, { matchesBase })}
+                </Badge>
+              </InfoTooltip>
             </div>
             <Button
               type="button"
@@ -203,13 +215,14 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
 
             {matchesBase ? (
               <p className="text-xs text-muted-foreground">
-                Move a slider — these are the base weights, so there is nothing to compare yet.
+                Adjust one or more weights to create a scenario. Base weights match
+                the current run, so there is nothing to compare yet.
               </p>
             ) : null}
             {!generationEnabled && capabilities !== null && !existingMatch ? (
               <p className="text-xs text-muted-foreground">
-                Live simulation is off in this deployment. You can still open any
-                scenario that has already been generated.
+                This deployment can open existing scenarios, but cannot create new
+                ones.
               </p>
             ) : null}
           </div>
@@ -254,7 +267,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
           <div className="rounded-xl border border-border/60 bg-card px-5 py-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <LoaderCircle className="size-4 animate-spin" />
-              Simulating the {scenarioId} scenario — reranking, reselecting, reseeding…
+              Simulating the {scenarioId} scenario: reranking, reselecting, reseeding…
             </div>
             {run.logLines.length > 0 ? (
               <pre className="mt-3 max-h-40 overflow-y-auto rounded-lg bg-secondary p-3 font-mono text-[11px] leading-relaxed text-muted-foreground">
@@ -298,15 +311,36 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
         ) : null}
 
         {!diff && !run.running && run.phase !== "failed" && !diffError ? (
-          <div className="flex h-full min-h-64 flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-card/40 px-6 py-16 text-center">
-            <div className="flex size-12 items-center justify-center rounded-full border border-border bg-secondary text-muted-foreground">
-              <FlaskConical className="size-5" />
+          <div className="flex min-h-64 flex-col rounded-xl border border-border/60 bg-card px-6 py-8">
+            <div className="flex flex-col items-center text-center">
+              <h2 className="text-base font-medium text-foreground">
+                Reweight the model
+              </h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                Shift how much the four components drive the composite, then run a
+                scenario to compare against the base run.
+              </p>
             </div>
-            <h2 className="text-base font-medium text-foreground">Reweight the model</h2>
-            <p className="max-w-sm text-sm text-muted-foreground">
-              Shift how much the four components drive the composite, then run the
-              scenario to see how the projected field, seeds, and bubble respond.
-            </p>
+
+            <div className="mx-auto mt-8 w-full max-w-md rounded-lg border border-border/60 bg-secondary/30 px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                After running a scenario, this panel shows
+              </p>
+              <ul className="mt-3 flex flex-col gap-3">
+                {(
+                  [
+                    "field_changes",
+                    "seed_changes",
+                    "bubble_movement",
+                    "bracket_impact",
+                  ] as const
+                ).map((term) => (
+                  <li key={term} className="text-sm text-muted-foreground">
+                    <ScenarioLabTerm term={term} className="font-medium text-foreground" />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         ) : null}
       </div>

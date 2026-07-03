@@ -1,0 +1,33 @@
+---
+title: Data sources
+description: CFBD, caching, conference championships, and Sample demo inputs.
+---
+
+Selection Room pulls game, ranking, and team metadata from documented external sources with local caching for reproducible runs.
+
+## What this page covers
+
+- Live CFBD vs Sample demo
+- Caching behavior
+- Conference championship handling
+
+## Live CFBD
+
+Live runs use [CollegeFootballData.com](https://collegefootballdata.com/) (CFBD) for schedules, scores, and team metadata. An API key is required for live mode; Sample demo does not need one.
+
+## Sample demo
+
+Sample demo ships a fixed CSV subset under `data/processed/sample/` so contributors and CI can run without network access.
+
+## Conference championships
+
+When CFBD championship results exist (weeks 14–16), Selection Room uses them. Before results are available, documented tiebreakers and simulated resolution may apply.
+
+<Callout type="info" title="Note">
+Team logos and colors may come from ESPN CDN URLs embedded in cached team assets.
+</Callout>
+
+<NextSteps links={[
+  { href: "/docs/methodology", label: "Methodology overview" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/research/data-sources.md", label: "Full data sources doc on GitHub", external: true }
+]} />

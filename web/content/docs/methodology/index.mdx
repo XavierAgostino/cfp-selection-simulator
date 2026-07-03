@@ -1,0 +1,39 @@
+---
+title: Methodology
+description: How Selection Room builds composite rankings and projected CFP fields.
+---
+
+Selection Room models committee-style selection from transparent inputs: resume metrics, predictive ratings, strength of schedule, and configurable weights.
+
+## What this page covers
+
+- Composite ranking pipeline
+- Default weight philosophy
+- Links to in-app and research docs
+
+## Composite pipeline
+
+Each team receives normalized sub-scores (resume, predictive, SOR, SOS, and related inputs). A weighted composite rank drives field selection and bracket seeding. Weights are configurable in Scenario Lab; defaults are documented in run metadata.
+
+## Key concepts
+
+| Concept | Summary |
+|---------|---------|
+| Composite | Weighted blend of resume and predictive inputs |
+| Selection Stability | Weight perturbation sensitivity (not game simulation) |
+| Sample demo | Fixed ~20-team universe for offline demos |
+| Live CFBD | Full FBS universe from CollegeFootballData.com |
+
+<Callout type="warn" title="Important">
+Scores are min-max normalized within each run universe. Sample demo and Live CFBD runs are not directly comparable across modes.
+</Callout>
+
+## In-app reference
+
+The live [Methodology page](/methodology) mirrors metric definitions used in rankings tables and tooltips.
+
+<NextSteps links={[
+  { href: "/docs/methodology/data-sources", label: "Data sources" },
+  { href: "/methodology", label: "Open in-app Methodology" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/tree/main/docs/research", label: "Full research docs on GitHub", external: true }
+]} />

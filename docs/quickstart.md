@@ -28,7 +28,7 @@ sroom doctor
 
 ---
 
-## 2. Run sample demo
+## 2. Run Sample demo
 
 ```bash
 make demo

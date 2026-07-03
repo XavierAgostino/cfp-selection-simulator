@@ -1,0 +1,71 @@
+---
+title: Getting started
+description: Install Selection Room and launch the web app in under five minutes.
+---
+
+Get the simulator running with Sample demo mode. No CFBD API key is required for the first run.
+
+## What this page covers
+
+- Clone and install
+- Run Sample demo
+- Launch the Next.js web app
+- Where outputs land on disk
+
+## 1. Install
+
+```bash
+git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
+cd cfp-selection-simulator
+make setup
+```
+
+Verify your environment:
+
+```bash
+sroom doctor
+```
+
+<Callout type="info" title="Note">
+A missing CFBD API key is fine for Sample demo. Doctor may warn but still pass.
+</Callout>
+
+## 2. Run Sample demo
+
+```bash
+make demo
+```
+
+Equivalent:
+
+```bash
+sroom run --year 2025 --week 15 --sample
+```
+
+## 3. Launch the web app
+
+From the repo root:
+
+```bash
+make web
+```
+
+Open the local URL shown in the terminal. The setup wizard walks you through first-run configuration when pipeline data is missing.
+
+## 4. Inspect outputs
+
+```bash
+sroom outputs --latest
+```
+
+Artifacts land under `data/output/` (rankings, fields, brackets, audits, manifests).
+
+<Callout type="success" title="Tip">
+Prefer the UI? Run `make web` after `make demo` and explore Dashboard, Rankings, and Bracket without touching the CLI again.
+</Callout>
+
+<NextSteps links={[
+  { href: "/docs/methodology", label: "Methodology overview" },
+  { href: "/docs/local-development", label: "Local development" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/quickstart.md", label: "Full quickstart on GitHub", external: true }
+]} />

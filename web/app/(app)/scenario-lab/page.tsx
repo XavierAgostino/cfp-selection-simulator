@@ -1,4 +1,3 @@
-import { FlaskConical } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ScenarioLabWorkspace } from "@/components/scenario/ScenarioLabWorkspace";
 import { getRuns, NotFoundError } from "@/lib/data";
@@ -26,28 +25,21 @@ export default async function ScenarioLabPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex items-start gap-3">
-        <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-secondary text-foreground">
-          <FlaskConical className="size-4.5" />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-            Scenario Lab
-          </h1>
-          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Change how much each component drives the composite, then re-run
-            selection to compare against the base weights. Every result is a
-            projected reordering under different assumptions — never a win
-            probability.
-          </p>
-        </div>
+      <header>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          Scenario Lab
+        </h1>
+        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+          Change how much each component drives the composite, then re-run
+          selection to compare against the base weights. Every result is a
+          projected reordering under different assumptions, not a win probability.
+        </p>
       </header>
 
       {runs && baseRuns.length > 0 ? (
         <ScenarioLabWorkspace runs={runs.runs} latestStem={runs.latest.stem} />
       ) : (
         <EmptyState
-          icon={<FlaskConical className="size-5" />}
           title="No base runs to fork"
           description="Scenario Lab reweights an existing base run. Generate at least one run first, then come back to explore what-ifs."
         />

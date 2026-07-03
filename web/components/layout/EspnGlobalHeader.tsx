@@ -3,73 +3,194 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { ChevronRight, Menu } from "lucide-react";
+import { AppIcon } from "@/components/icons/AppIcon";
 import { LucideAppIcon } from "@/components/icons/LucideAppIcon";
+import {
+  DOCS_NAV_ICON,
+  NAV_HUGEICONS,
+} from "@/components/icons/nav-icons";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { PRIMARY_NAV } from "@/lib/nav";
+import {
+  FOOTER_PRODUCT_NAME,
+  FOOTER_TAGLINE,
+  MOBILE_NAV_GROUPS,
+  PRIMARY_NAV,
+} from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+  if (href === "/docs") {
+    return pathname === "/docs" || pathname.startsWith("/docs/");
+  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function HeaderNavLink({
+function DesktopNavLink({
   href,
   label,
   active,
-  className,
-  onNavigate,
 }: {
   href: string;
   label: string;
   active: boolean;
-  className?: string;
-  onNavigate?: () => void;
 }) {
   return (
     <Link
       href={href}
-      onClick={onNavigate}
       className={cn(
-        "espn-nav-link group relative inline-flex items-center px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1b1c]",
-        active ? "text-white" : "text-[#9a9a9a] hover:text-[#ececec]",
-        className,
+        "inline-flex items-center rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors duration-150",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        active
+          ? "bg-white/5 text-foreground"
+          : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground",
       )}
       aria-current={active ? "page" : undefined}
     >
       {label}
-      <span
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-x-2 bottom-0 h-[2px] origin-center bg-[#cc0000] transition-transform duration-200 ease-out motion-reduce:transition-none",
-          active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
-        )}
-      />
     </Link>
   );
 }
 
-/** Global nav — dark chrome, Selection Room wordmark, section links. */
+function NavItemIcon({ href }: { href: string }) {
+  const icon =
+    href in NAV_HUGEICONS
+      ? NAV_HUGEICONS[href as keyof typeof NAV_HUGEICONS]
+      : DOCS_NAV_ICON;
+
+  return <AppIcon icon={icon} size={18} strokeWidth={1.75} className="opacity-80" />;
+}
+
+function MobileNavRow({
+  href,
+  label,
+  active,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <li>
+      <SheetClose
+        render={
+          <Link
+            href={href}
+            className={cn(
+              "flex items-center gap-3 rounded-md py-2.5 pr-2 pl-3 text-sm font-medium transition-colors duration-150",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+              active
+                ? "bg-white/5 text-foreground"
+                : "text-muted-foreground hover:bg-muted/40 hover:text-foreground",
+            )}
+            aria-current={active ? "page" : undefined}
+          >
+            <NavItemIcon href={href} />
+            <span className="min-w-0 flex-1 truncate">{label}</span>
+            <LucideAppIcon
+              icon={ChevronRight}
+              size={16}
+              strokeWidth={2}
+              className="shrink-0 text-muted-foreground/50"
+            />
+          </Link>
+        }
+      />
+    </li>
+  );
+}
+
+function MobileNav({ pathname }: { pathname: string }) {
+  return (
+    <Sheet>
+      <SheetTrigger
+        render={
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
+            aria-label="Open menu"
+          />
+        }
+      >
+        <LucideAppIcon icon={Menu} size={18} strokeWidth={2} />
+      </SheetTrigger>
+      <SheetContent
+        side="left"
+        className="flex h-full w-[min(90vw,420px)] max-w-[420px] flex-col gap-0 border-border bg-background p-0 sm:max-w-[420px]"
+      >
+        <SheetHeader className="space-y-0 border-b border-border px-4 py-4 pr-12 text-left">
+          <div className="flex items-start gap-3">
+            <Image
+              src="/brand/selection-room-mark-128.png"
+              alt=""
+              width={32}
+              height={32}
+              className="mt-0.5 h-8 w-8 shrink-0 rounded-sm"
+            />
+            <div className="min-w-0 flex-1">
+              <SheetTitle className="text-base font-semibold tracking-normal text-foreground">
+                {FOOTER_PRODUCT_NAME}
+              </SheetTitle>
+              <SheetDescription className="mt-0.5 text-xs leading-snug">
+                {FOOTER_TAGLINE}
+              </SheetDescription>
+            </div>
+          </div>
+        </SheetHeader>
+
+        <ScrollArea className="min-h-0 flex-1">
+          <nav aria-label="Mobile navigation" className="px-2 py-3">
+            {MOBILE_NAV_GROUPS.map((group, groupIndex) => (
+              <div key={group.title}>
+                {groupIndex > 0 ? <Separator className="my-3" /> : null}
+                <p className="px-3 py-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                  {group.title}
+                </p>
+                <ul className="flex flex-col gap-0.5">
+                  {group.links.map((item) => (
+                    <MobileNavRow
+                      key={item.href}
+                      href={item.href}
+                      label={item.label}
+                      active={isActive(pathname, item.href)}
+                    />
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+/** Global nav — compact header, grouped mobile drawer. */
 export function EspnGlobalHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="espn-global-header sticky top-0 z-50 border-b border-black/40 bg-[#1a1b1c] text-[#9a9a9a] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
-      <div className="mx-auto flex h-11 max-w-none items-stretch gap-3 px-3 sm:px-5">
-        <div className="flex min-w-0 flex-1 items-stretch gap-1 sm:gap-2">
+    <header className="app-global-header sticky top-0 z-50 border-b border-border bg-background/95 text-muted-foreground shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] backdrop-blur-sm supports-[backdrop-filter]:bg-background/80">
+      <div className="mx-auto flex h-11 max-w-none items-center gap-3 px-3 sm:px-5">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <Link
             href="/"
-            className="group flex shrink-0 items-center self-center rounded-sm py-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+            className="group flex shrink-0 items-center gap-2.5 rounded-sm py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
             aria-label="Selection Room home"
           >
             <Image
@@ -80,14 +201,17 @@ export function EspnGlobalHeader() {
               className="h-7 w-7 shrink-0 transition-opacity duration-200 group-hover:opacity-90"
               priority
             />
+            <span className="hidden text-sm font-semibold text-foreground sm:inline">
+              {FOOTER_PRODUCT_NAME}
+            </span>
           </Link>
 
           <nav
             aria-label="Selection Room sections"
-            className="ml-1 hidden min-w-0 flex-1 items-stretch overflow-x-auto lg:flex"
+            className="ml-1 hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto lg:flex"
           >
             {PRIMARY_NAV.map((item) => (
-              <HeaderNavLink
+              <DesktopNavLink
                 key={item.href}
                 href={item.href}
                 label={item.label}
@@ -107,47 +231,5 @@ export function EspnGlobalHeader() {
         </ul>
       </div>
     </header>
-  );
-}
-
-function MobileNav({ pathname }: { pathname: string }) {
-  return (
-    <Sheet>
-      <SheetTrigger
-        render={
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 text-[#9a9a9a] hover:bg-white/[0.06] hover:text-white"
-            aria-label="Open menu"
-          />
-        }
-      >
-        <LucideAppIcon icon={Menu} size={18} strokeWidth={2} />
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[min(100vw-2rem,18rem)] border-border/60 bg-background">
-        <SheetHeader className="border-b border-border/60 pb-4 text-left">
-          <SheetTitle className="text-sm font-extrabold uppercase tracking-wide text-[#cc0000]">
-            Selection Room
-          </SheetTitle>
-        </SheetHeader>
-        <nav aria-label="Mobile navigation" className="flex flex-col gap-0.5 py-4">
-          {PRIMARY_NAV.map((item) => (
-            <SheetClose
-              key={item.href}
-              render={
-                <HeaderNavLink
-                  href={item.href}
-                  label={item.label}
-                  active={isActive(pathname, item.href)}
-                  className="w-full justify-start rounded-md px-3 py-2.5 normal-case tracking-normal"
-                />
-              }
-            />
-          ))}
-        </nav>
-      </SheetContent>
-    </Sheet>
   );
 }

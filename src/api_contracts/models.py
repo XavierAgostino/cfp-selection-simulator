@@ -372,6 +372,103 @@ class SensitivityPayload(BaseModel):
     teams: List[SelectionStabilityTeam] = Field(default_factory=list)
 
 
+# --- validation.json ----------------------------------------------------------------
+#
+# Repo-level (not per-run) historical validation of the model against the real
+# CFP committee across a span of seasons. Optional artifact: absent until
+# `sroom validate` runs over historical seasons. Never speaks in win-probability
+# terms — this measures how the model *differs from* the committee.
+
+
+class CommitteeValidationRow(BaseModel):
+    """Per-season committee replication (how closely the model reproduces the
+    committee's top-25/top-12 ordering)."""
+
+    year: int
+    spearman_top25: Optional[float] = None
+    spearman_top12: Optional[float] = None
+    top12_overlap_ratio: float
+    top12_overlap_label: str
+    bubble_overlap_ratio: float
+    bubble_overlap_label: str
+    is_outlier: bool = False
+    notes: str = ""
+
+
+class SelectionValidationRow(BaseModel):
+    """Per-season era-correct field selection (does the model pick the right
+    bracket under that season's actual playoff format)."""
+
+    year: int
+    era: str
+    ruleset: str
+    rule_target: str
+    field_overlap_ratio: float
+    field_overlap_label: str
+    correct_field_size: bool
+    false_positives: List[str] = Field(default_factory=list)
+    false_negatives: List[str] = Field(default_factory=list)
+    first_team_out_match: Optional[bool] = None
+    first_team_out_ref: Optional[str] = None
+    first_team_out_sim: Optional[str] = None
+    displacement_count: int = 0
+    seeding_exact_match: Optional[float] = None
+    seeding_within_one: Optional[float] = None
+    is_outlier: bool = False
+    notes: str = ""
+
+
+class PredictiveValidationRow(BaseModel):
+    """Per-season predictive forecasting accuracy (game outcomes/margins)."""
+
+    year: int
+    model: str
+    brier_score: float
+    win_accuracy: float
+    margin_mae: float
+    margin_rmse: float
+
+
+class CommitteeSummary(BaseModel):
+    seasons: int
+    mean_spearman_top12: Optional[float] = None
+    mean_top12_overlap: Optional[float] = None
+    mean_bubble_overlap: Optional[float] = None
+
+
+class SelectionSummary(BaseModel):
+    seasons: int
+    correct_field_rate: Optional[float] = None
+    mean_field_overlap: Optional[float] = None
+    first_team_out_match_rate: Optional[float] = None
+    mean_seeding_within_one: Optional[float] = None
+
+
+class PredictiveSummary(BaseModel):
+    seasons: int
+    mean_brier: Optional[float] = None
+    mean_win_accuracy: Optional[float] = None
+    mean_margin_mae: Optional[float] = None
+
+
+class ValidationSummary(BaseModel):
+    committee: Optional[CommitteeSummary] = None
+    selection: Optional[SelectionSummary] = None
+    predictive: Optional[PredictiveSummary] = None
+
+
+class ValidationPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    generated_at: str
+    years: List[int] = Field(default_factory=list)
+    target: str = "all"
+    outlier_years: List[int] = Field(default_factory=list)
+    summary: ValidationSummary = Field(default_factory=ValidationSummary)
+    committee: List[CommitteeValidationRow] = Field(default_factory=list)
+    selection: List[SelectionValidationRow] = Field(default_factory=list)
+    predictive: List[PredictiveValidationRow] = Field(default_factory=list)
+
+
 # --- team-assets.json ---------------------------------------------------------------
 
 

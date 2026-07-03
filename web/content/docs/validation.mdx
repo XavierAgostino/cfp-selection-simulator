@@ -1,0 +1,44 @@
+---
+title: Validation
+description: Historical backtests and model validation metrics in Selection Room.
+---
+
+The Validation dashboard compares model-selected fields and rankings against historical CFP outcomes and committee-published lists.
+
+## What validation measures
+
+Validation surfaces metrics such as:
+
+- **Field overlap**: how often the model's projected 4-team (pre-2024) or 12-team field matches actual participants.
+- **Ranking alignment**: correlation and rank error versus committee top-25 or top-12 lists where available.
+- **Team-level flags**: model-added, model-dropped, and first-out cases when the payload includes them.
+
+These metrics describe historical fit under documented assumptions, not real-time prediction accuracy.
+
+## What validation does not prove
+
+Validation does **not** prove that Selection Room replicates committee deliberation, insider criteria, or future outcomes. Pre-2024 field checks use actual participants; committee top-12 overlap is a separate metric with its own limits. Sample demo and Live CFBD runs are not directly comparable.
+
+## How to refresh validation artifacts
+
+Validation data ships with run exports under each run stem. To refresh:
+
+1. Regenerate runs with the Python engine (`make run` or the Run Analysis flow in the app).
+2. Confirm validation JSON is present in `data/output/api/runs/{stem}/` for the target season.
+3. Reload the Validation page with that run active in the catalog.
+
+If artifacts are missing for a season, the dashboard shows an empty or partial state rather than inferred numbers.
+
+<Callout type="warn" title="Important">
+Historical validation is informative, not proof of committee replication. Treat overlap scores as backtest summaries, not forecasts.
+</Callout>
+
+## Open the app
+
+Use [Validation](/validation) when validation artifacts are present in the active run catalog.
+
+<NextSteps links={[
+  { href: "/validation", label: "Open Validation dashboard" },
+  { href: "/docs/limitations-and-ethics", label: "Limitations & ethics" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/research/historical-validation.md", label: "Full validation doc on GitHub", external: true }
+]} />

@@ -63,9 +63,7 @@ def parse_weight_overrides(spec: str, base: "RankingWeights | None" = None) -> R
             raise ValueError(f"Malformed weight override '{pair}'; expected key=value")
         key, raw = (part.strip() for part in pair.split("=", 1))
         if key not in values:
-            raise ValueError(
-                f"Unknown weight '{key}'; expected one of {', '.join(COMPONENT_KEYS)}"
-            )
+            raise ValueError(f"Unknown weight '{key}'; expected one of {', '.join(COMPONENT_KEYS)}")
         try:
             values[key] = float(raw)
         except ValueError as exc:

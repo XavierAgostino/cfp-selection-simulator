@@ -1,0 +1,36 @@
+---
+title: Scenario Lab
+description: Explore how weight changes affect projected fields and bracket outcomes.
+---
+
+Scenario Lab lets you adjust ranking weights, compare diffs against the base run, and inspect how bubble teams move in and out of the projected field.
+
+## What changes
+
+Scenario Lab reweights the composite ranking inputs (resume, predictive, SOR, SOS) against the **same team universe and completed results** as the base run. A scenario produces a new stem in the run catalog, updated rankings, a revised projected field, and bracket diffs relative to the base run.
+
+## What does not change
+
+Scenario Lab does **not** simulate future games, injuries, suspensions, or hypothetical championship outcomes. It does not ingest new schedules or rewrite historical scores. The underlying team set and game results stay fixed.
+
+## How to interpret diffs
+
+- **Field diff**: teams added to or dropped from the projected CFP field under the new weights.
+- **Ranking diff**: movement in composite order; large jumps often trace to teams near the bubble cutoff.
+- **Bracket diff**: seeding and matchup changes that follow from the revised top 12.
+
+Compare scenario stems side by side in the run switcher. Scenario suffixes in the catalog keep exports traceable to the base run they were derived from.
+
+<Callout type="warn" title="Important">
+Scenario Lab varies weights only. It is sensitivity analysis on the ranking model, not a game simulator.
+</Callout>
+
+## Open the app
+
+Use [Scenario Lab](/scenario-lab) in the product nav when a base run is loaded.
+
+<NextSteps links={[
+  { href: "/scenario-lab", label: "Open Scenario Lab" },
+  { href: "/docs/methodology", label: "Methodology overview" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/web-app.md", label: "Web app guide on GitHub", external: true }
+]} />

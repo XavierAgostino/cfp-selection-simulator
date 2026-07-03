@@ -1,0 +1,55 @@
+---
+title: API contracts
+description: JSON contract between the Python engine and the Next.js web app.
+---
+
+The Python engine emits stable JSON under `data/output/api/`. The web app consumes these files with snake_case on the wire; TypeScript types mirror the same shape.
+
+## Current-run files
+
+Top-level copies of the **latest** run for fast page loads:
+
+| File | Purpose |
+|------|---------|
+| `latest.json` | Metadata pointer to the most recent stem |
+| `rankings.json` | Flat rankings for the latest run |
+| `field.json` | Projected CFP field for the latest run |
+| `bracket.json` | Bracket payload for the latest run |
+
+These files update when a new run completes. They carry `schema_version: 1`.
+
+## Per-run files
+
+Each completed run lives under `data/output/api/runs/{stem}/`:
+
+| File | Purpose |
+|------|---------|
+| `meta.json` | Season, week, mode, weights, timestamps |
+| `rankings.json` | Full ranking table for that stem |
+| `field.json` | Projected field for that stem |
+| `bracket.json` | Bracket structure and matchups |
+| `validation.json` | Backtest metrics when generated |
+| `audit.json` | Selection audit trail when exported |
+
+Scenario stems reuse the same layout with a distinct suffix so diffs stay traceable.
+
+## Run catalog files
+
+| File | Purpose |
+|------|---------|
+| `runs.json` | Catalog for the run switcher: all stems, labels, latest pointer |
+
+The web app reads `runs.json` once per session (shared catalog hook) and resolves per-run payloads by stem. There is no mapping layer between Python exports and TypeScript types.
+
+## Source of truth
+
+Pydantic v2 models in `src/api_contracts/models.py` define the contract. Breaking changes require a schema version bump and coordinated web updates.
+
+<Callout type="info" title="Note">
+The full contract includes TeamSlot shapes, audit payloads, sensitivity exports, and scenario stems. See the GitHub doc for complete JSONC examples.
+</Callout>
+
+<NextSteps links={[
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/api-contracts.md", label: "Full API contracts on GitHub", external: true },
+  { href: "/docs/local-development", label: "Local development" }
+]} />

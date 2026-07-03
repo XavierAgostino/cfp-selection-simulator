@@ -43,14 +43,10 @@ def weights_scenario_id(weights) -> str:
 
     components = component_weights(weights)
     defaults = component_weights(RankingWeights())
-    if all(
-        abs(components.get(key, 0.0) - value) < 1e-9
-        for key, value in defaults.items()
-    ):
+    if all(abs(components.get(key, 0.0) - value) < 1e-9 for key, value in defaults.items()):
         return BASE_SCENARIO_ID
     return "w" + "-".join(
-        str(round(components[key] * 100))
-        for key in ("resume", "predictive", "sor", "sos")
+        str(round(components[key] * 100)) for key in ("resume", "predictive", "sor", "sos")
     )
 
 

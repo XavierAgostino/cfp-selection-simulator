@@ -1,3 +1,4 @@
+import { formatDataSourceLabel as formatDataSourceChipLabel } from "@/lib/displayLabels";
 import { formatDateTime } from "@/lib/format";
 import { formatWeightPercents, truncateConfigHash } from "@/lib/recordMeta";
 import type { RunSummary } from "@/lib/types";
@@ -31,7 +32,7 @@ export function isLiveRun(run: RunSummary): boolean {
 
 /** User-facing data source label. */
 export function dataSourceLabel(run: RunSummary): string {
-  return isLiveRun(run) ? "Live CFBD" : "Sample demo";
+  return formatDataSourceChipLabel(run.data_source);
 }
 
 export function formatWeightsLabeled(weights: RunSummary["weights"]): string {

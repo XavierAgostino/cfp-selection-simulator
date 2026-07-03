@@ -26,6 +26,7 @@ from src.api_contracts.build import (
     build_rankings_payload,
     build_sensitivity_payload,
     build_team_resumes_payload,
+    build_validation_payload,
     team_records_from_games,
 )
 from src.api_contracts.models import (
@@ -72,6 +73,38 @@ def _write_text(path: Path, text: str) -> None:
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def export_validation_api(
+    committee: List[Any],
+    selection: List[Any],
+    predictive: List[Any],
+    *,
+    years: List[int],
+    target: str,
+    outlier_years: List[int],
+    api_root: Optional[Path] = None,
+) -> Path:
+    """Write the repo-level validation.json web contract from historical
+    validation results.
+
+    Repo-level (not per-run): validation spans a range of seasons and is not
+    tied to any selection run, so it lives flat at ``api/validation.json`` and
+    never touches ``latest.json`` or ``runs.json``. Optional artifact — only
+    written when ``sroom validate`` runs.
+    """
+    root = api_root or API_ROOT
+    payload = build_validation_payload(
+        committee,
+        selection,
+        predictive,
+        years=years,
+        target=target,
+        outlier_years=outlier_years,
+    )
+    path = root / "validation.json"
+    _write_text(path, payload.model_dump_json(indent=2))
+    return path
 
 
 def _regenerate_runs_index_unlocked() -> Path:
@@ -123,9 +156,7 @@ def _regenerate_runs_index_unlocked() -> Path:
     # explicitly via ?run=<stem> and must never become the site's default, even
     # though a just-launched scenario has the newest manifest mtime.
     latest_ref: Optional[LatestRef] = None
-    base_scored = [
-        item for item in scored if item[1].scenario_id == BASE_SCENARIO_ID
-    ]
+    base_scored = [item for item in scored if item[1].scenario_id == BASE_SCENARIO_ID]
     if base_scored:
         _, newest = max(base_scored, key=lambda item: item[0])
         latest_ref = LatestRef(season=newest.season, week=newest.week, stem=newest.stem)

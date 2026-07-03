@@ -9,6 +9,7 @@ import type {
   SensitivityPayload,
   TeamAssetsPayload,
   TeamResumesPayload,
+  ValidationPayload,
 } from "@/lib/types";
 
 /** Thrown when a requested data file does not exist yet (HTTP 404). */
@@ -94,4 +95,18 @@ export function getRunFile<K extends RunFileKind>(
 /** Team logo/color/id passthrough, keyed by team name. */
 export function getTeamAssets(): Promise<TeamAssetsPayload> {
   return fetchJson<TeamAssetsPayload>("team-assets.json");
+}
+
+/**
+ * Repo-level historical validation of the model against the real CFP committee.
+ * Optional artifact — only present after `sroom validate` runs over historical
+ * seasons. Returns null when absent so the page can show an honest empty state.
+ */
+export async function getValidationData(): Promise<ValidationPayload | null> {
+  try {
+    return await fetchJson<ValidationPayload>("validation.json");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
 }

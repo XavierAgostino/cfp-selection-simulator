@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MethodologyWeightBreakdown } from "@/components/methodology/MethodologyWeightBreakdown";
+import { formatDataSourceLabel } from "@/lib/displayLabels";
 import { getLatest, NotFoundError } from "@/lib/data";
 import type { LatestPayload } from "@/lib/types";
 
@@ -142,8 +143,8 @@ export default async function MethodologyPage() {
           {latest ? (
             <p className="text-xs text-muted-foreground">
               Current run: {latest.season} week {latest.week} ·{" "}
-              {latest.data_source === "cfbd" ? "live CFBD data" : "sample data"}{" "}
-              · engine v{latest.simulator_version}
+              {formatDataSourceLabel(latest.data_source)} · engine v
+              {latest.simulator_version}
             </p>
           ) : null}
         </CardContent>

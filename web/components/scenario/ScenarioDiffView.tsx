@@ -3,7 +3,14 @@
 import * as React from "react";
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ScenarioLabTerm } from "@/components/explain/ScenarioLabTerm";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
+import {
+  formatDroppedOutLabel,
+  formatMovedIntoFieldLabel,
+  formatRankShiftsLabel,
+  formatSeedChangesLabel,
+} from "@/lib/displayLabels";
 import { formatWeightsLabeled } from "@/lib/runDisplay";
 import type {
   DiffTeam,
@@ -14,7 +21,7 @@ import type {
 import { cn } from "@/lib/utils";
 
 interface SectionProps {
-  title: string;
+  title: React.ReactNode;
   hint?: string;
   children: React.ReactNode;
   className?: string;
@@ -183,25 +190,25 @@ export function ScenarioDiffView({ diff }: ScenarioDiffViewProps) {
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={summary.moved_in ? "chip-green" : "chip-neutral"} className="gap-1">
           <ArrowUpRight className="size-3" />
-          {summary.moved_in} moved into field
+          {formatMovedIntoFieldLabel(summary.moved_in)}
         </Badge>
         <Badge variant={summary.moved_out ? "chip-red" : "chip-neutral"} className="gap-1">
           <ArrowDownRight className="size-3" />
-          {summary.moved_out} dropped out
+          {formatDroppedOutLabel(summary.moved_out)}
         </Badge>
-        <Badge variant="chip-neutral">{summary.seed_changes} seed changes</Badge>
-        <Badge variant="chip-neutral">{summary.rank_changes} rank shifts</Badge>
+        <Badge variant="chip-neutral">{formatSeedChangesLabel(summary.seed_changes)}</Badge>
+        <Badge variant="chip-neutral">{formatRankShiftsLabel(summary.rank_changes)}</Badge>
       </div>
 
       {/* Field membership */}
       <Section
-        title="Field changes"
+        title={<ScenarioLabTerm term="field_changes" className="text-sm font-semibold" />}
         hint="Teams entering or leaving the projected 12-team field under these weights."
         style={delay()}
       >
         {fieldUnchanged ? (
           <p className="text-sm text-muted-foreground">
-            The same twelve teams make the field — only their seeding shifts.
+            The same twelve teams make the field. Only their seeding shifts.
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
@@ -256,7 +263,7 @@ export function ScenarioDiffView({ diff }: ScenarioDiffViewProps) {
       {/* Seed changes */}
       {diff.seed_changes.length > 0 ? (
         <Section
-          title="Seed movement"
+          title={<ScenarioLabTerm term="seed_changes" className="text-sm font-semibold" />}
           hint="Teams in both fields whose seed line changed. A positive delta means a better (lower) seed."
           style={delay()}
         >
@@ -270,13 +277,13 @@ export function ScenarioDiffView({ diff }: ScenarioDiffViewProps) {
 
       {/* Bubble */}
       <Section
-        title="Bubble watch"
-        hint="Last four in and first four out — before and after the reweight."
+        title={<ScenarioLabTerm term="bubble_movement" className="text-sm font-semibold" />}
+        hint="Last four in and first four out, before and after the reweight."
         style={delay()}
       >
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="flex flex-col gap-4">
-            <p className="text-xs font-semibold text-muted-foreground">Base run</p>
+            <p className="text-xs font-semibold text-muted-foreground">Base</p>
             <BubbleColumn label="Last four in" teams={diff.bubble.base.last_four_in} tone="in" />
             <BubbleColumn label="First four out" teams={diff.bubble.base.first_four_out} tone="out" />
           </div>
@@ -291,8 +298,8 @@ export function ScenarioDiffView({ diff }: ScenarioDiffViewProps) {
       {/* Rank movers */}
       {diff.rank_movers.length > 0 ? (
         <Section
-          title="Biggest rank movers"
-          hint="Largest full-board shifts, however the field membership lands."
+          title={<ScenarioLabTerm term="bracket_impact" className="text-sm font-semibold" />}
+          hint="Largest full-board shifts under the simulated weights."
           style={delay()}
         >
           <div className="divide-y divide-border/40">

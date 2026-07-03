@@ -379,6 +379,92 @@ export interface SensitivityPayload {
 }
 
 // ---------------------------------------------------------------------------
+// validation.json  (repo-level, optional — how the model differs from the
+// real CFP committee across historical seasons)
+// ---------------------------------------------------------------------------
+
+export interface CommitteeValidationRow {
+  year: number;
+  spearman_top25: number | null;
+  spearman_top12: number | null;
+  top12_overlap_ratio: number;
+  top12_overlap_label: string;
+  bubble_overlap_ratio: number;
+  bubble_overlap_label: string;
+  is_outlier: boolean;
+  notes: string;
+}
+
+export interface SelectionValidationRow {
+  year: number;
+  era: string;
+  ruleset: string;
+  rule_target: string;
+  field_overlap_ratio: number;
+  field_overlap_label: string;
+  correct_field_size: boolean;
+  false_positives: string[];
+  false_negatives: string[];
+  first_team_out_match: boolean | null;
+  first_team_out_ref: string | null;
+  first_team_out_sim: string | null;
+  displacement_count: number;
+  seeding_exact_match: number | null;
+  seeding_within_one: number | null;
+  is_outlier: boolean;
+  notes: string;
+}
+
+export interface PredictiveValidationRow {
+  year: number;
+  model: string;
+  brier_score: number;
+  win_accuracy: number;
+  margin_mae: number;
+  margin_rmse: number;
+}
+
+export interface CommitteeSummary {
+  seasons: number;
+  mean_spearman_top12: number | null;
+  mean_top12_overlap: number | null;
+  mean_bubble_overlap: number | null;
+}
+
+export interface SelectionSummary {
+  seasons: number;
+  correct_field_rate: number | null;
+  mean_field_overlap: number | null;
+  first_team_out_match_rate: number | null;
+  mean_seeding_within_one: number | null;
+}
+
+export interface PredictiveSummary {
+  seasons: number;
+  mean_brier: number | null;
+  mean_win_accuracy: number | null;
+  mean_margin_mae: number | null;
+}
+
+export interface ValidationSummary {
+  committee: CommitteeSummary | null;
+  selection: SelectionSummary | null;
+  predictive: PredictiveSummary | null;
+}
+
+export interface ValidationPayload {
+  schema_version: 1;
+  generated_at: string;
+  years: number[];
+  target: string;
+  outlier_years: number[];
+  summary: ValidationSummary;
+  committee: CommitteeValidationRow[];
+  selection: SelectionValidationRow[];
+  predictive: PredictiveValidationRow[];
+}
+
+// ---------------------------------------------------------------------------
 // team-assets.json
 // ---------------------------------------------------------------------------
 

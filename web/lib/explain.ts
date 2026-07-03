@@ -132,12 +132,12 @@ export const BADGE_EXPLANATIONS: Record<ExplainBadgeKey, BadgeExplanation> = {
     description: "Outside the projected field under this run's rankings.",
   },
   sample_data: {
-    label: "Sample data",
+    label: "Sample demo",
     description:
       "This run uses the bundled sample dataset, not live results. Launch a run with live CFBD data to see the real season.",
   },
   live_data: {
-    label: "Live CFBD data",
+    label: "Live CFBD",
     description:
       "This run was built from live College Football Data API game results.",
   },

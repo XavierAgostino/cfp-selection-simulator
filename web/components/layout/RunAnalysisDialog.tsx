@@ -30,6 +30,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { navigateToRun } from "@/components/layout/RunSwitcher";
+import {
+  formatDataSourceLabel,
+  formatRunCapabilityLabel,
+  formatRunKindLabel,
+} from "@/lib/displayLabels";
 import { cn } from "@/lib/utils";
 import {
   dataSourceLabel,
@@ -101,8 +106,7 @@ function statusBadgeVariant(
 }
 
 function jobSummaryLine(job: RunJobRecord): string {
-  const source =
-    job.request.data_source === "cfbd" ? "Live CFBD" : "Sample demo";
+  const source = formatDataSourceLabel(job.request.data_source);
   const base = `${job.request.season} Week ${job.request.week} · ${source}`;
   return job.request.weights
     ? `${base} · Scenario ${weightsScenarioId(job.request.weights)}`
@@ -191,21 +195,21 @@ function RunCatalogRows({
                 ) : null}
                 {isBaseRun(run) ? (
                   <Badge variant="chip-neutral" className="text-[10px]">
-                    Base
+                    {formatRunKindLabel(false)}
                   </Badge>
                 ) : (
                   <Badge variant="chip-neutral" className="text-[10px]">
-                    Scenario
+                    {formatRunKindLabel(true)}
                   </Badge>
                 )}
                 {run.has_sensitivity ? (
                   <Badge variant="chip-neutral" className="text-[10px]">
-                    Has stability
+                    {formatRunCapabilityLabel("sensitivity")}
                   </Badge>
                 ) : null}
                 {run.has_bracket ? (
                   <Badge variant="chip-neutral" className="text-[10px]">
-                    Bracket ready
+                    {formatRunCapabilityLabel("bracket")}
                   </Badge>
                 ) : null}
               </div>

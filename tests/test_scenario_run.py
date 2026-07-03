@@ -14,8 +14,8 @@ import pytest
 from src.config.simulator import SimulatorConfig
 from src.pipeline.paths import (
     API_ROOT,
-    DATA_OUTPUT,
     BASE_SCENARIO_ID,
+    DATA_OUTPUT,
     RunOutputPaths,
     run_id,
     scenario_stem,
@@ -23,7 +23,6 @@ from src.pipeline.paths import (
 )
 from src.pipeline.run import run_pipeline
 from src.pipeline.weights import RankingWeights, parse_weight_overrides
-
 
 # --- weight override parsing -------------------------------------------------
 

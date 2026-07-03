@@ -112,7 +112,7 @@ sroom run --year 2025 --week 15
 
 Or use **Run Analysis** in the web app (Create tab in the run header).
 
-### Run sample demo (offline)
+### Run Sample demo (offline)
 
 ```bash
 make demo

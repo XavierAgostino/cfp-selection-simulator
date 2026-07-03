@@ -18,10 +18,14 @@ from src.api_contracts.models import (
     BracketPod,
     BracketRounds,
     Championship,
+    CommitteeSummary,
+    CommitteeValidationRow,
     ComponentRanks,
     FieldPayload,
     FirstRoundGame,
     PerturbationSpec,
+    PredictiveSummary,
+    PredictiveValidationRow,
     QuarterfinalGame,
     RankingsPayload,
     RankingsTeam,
@@ -31,12 +35,16 @@ from src.api_contracts.models import (
     ScheduleGame,
     SelectionCase,
     SelectionStabilityTeam,
+    SelectionSummary,
+    SelectionValidationRow,
     SemifinalGroup,
     SensitivityPayload,
     TeamResume,
     TeamResumeScores,
     TeamResumesPayload,
     TeamSlot,
+    ValidationPayload,
+    ValidationSummary,
 )
 from src.api_contracts.selection_case import build_selection_case
 from src.assets.logos import get_team_logo_url
@@ -620,6 +628,128 @@ def build_sensitivity_payload(
         ),
         base_field_cutoff=BaseFieldCutoff(**sensitivity_result.base_field_cutoff),
         teams=teams,
+    )
+
+
+def _mean(values: List[Optional[float]]) -> Optional[float]:
+    """Mean of the non-None values, rounded to 4 dp; None if the list is empty."""
+    present = [v for v in values if v is not None]
+    if not present:
+        return None
+    return round(sum(present) / len(present), 4)
+
+
+def _rate(flags: List[Optional[bool]]) -> Optional[float]:
+    """Share of True among the non-None booleans; None if none are present."""
+    present = [b for b in flags if b is not None]
+    if not present:
+        return None
+    return round(sum(1 for b in present if b) / len(present), 4)
+
+
+def build_validation_payload(
+    committee: List[Any],
+    selection: List[Any],
+    predictive: List[Any],
+    *,
+    years: List[int],
+    target: str,
+    outlier_years: List[int],
+) -> ValidationPayload:
+    """Map the three historical validation result lists (from
+    src.validation.*) to the repo-level validation.json contract.
+
+    Pure transform — no IO, no live data. Accepts the dataclass result objects
+    produced by run_era_validation and aggregates per-track summaries.
+    """
+    outliers = set(outlier_years)
+
+    committee_rows = [
+        CommitteeValidationRow(
+            year=r.year,
+            spearman_top25=r.spearman_top25,
+            spearman_top12=r.spearman_top12,
+            top12_overlap_ratio=r.top12_overlap_ratio,
+            top12_overlap_label=r.top12_overlap_label,
+            bubble_overlap_ratio=r.bubble_overlap_ratio,
+            bubble_overlap_label=r.bubble_overlap_label,
+            is_outlier=bool(getattr(r, "is_outlier", r.year in outliers)),
+            notes=r.notes or "",
+        )
+        for r in committee
+    ]
+
+    selection_rows = [
+        SelectionValidationRow(
+            year=r.year,
+            era=r.era,
+            ruleset=r.ruleset,
+            rule_target=r.rule_target,
+            field_overlap_ratio=r.field_overlap_ratio,
+            field_overlap_label=r.field_overlap_label,
+            correct_field_size=bool(r.correct_field_size),
+            false_positives=list(r.false_positives or []),
+            false_negatives=list(r.false_negatives or []),
+            first_team_out_match=r.first_team_out_match,
+            first_team_out_ref=r.first_team_out_ref,
+            first_team_out_sim=r.first_team_out_sim,
+            displacement_count=r.displacement_count,
+            seeding_exact_match=r.seeding_exact_match,
+            seeding_within_one=r.seeding_within_one,
+            is_outlier=r.year in outliers,
+            notes=r.notes or "",
+        )
+        for r in selection
+    ]
+
+    predictive_rows = [
+        PredictiveValidationRow(
+            year=r.year,
+            model=r.model,
+            brier_score=r.brier_score,
+            win_accuracy=r.win_accuracy,
+            margin_mae=r.margin_mae,
+            margin_rmse=r.margin_rmse,
+        )
+        for r in predictive
+    ]
+
+    summary = ValidationSummary()
+    if committee_rows:
+        summary.committee = CommitteeSummary(
+            seasons=len(committee_rows),
+            mean_spearman_top12=_mean([r.spearman_top12 for r in committee_rows]),
+            mean_top12_overlap=_mean([r.top12_overlap_ratio for r in committee_rows]),
+            mean_bubble_overlap=_mean([r.bubble_overlap_ratio for r in committee_rows]),
+        )
+    if selection_rows:
+        summary.selection = SelectionSummary(
+            seasons=len(selection_rows),
+            correct_field_rate=_rate([r.correct_field_size for r in selection_rows]),
+            mean_field_overlap=_mean([r.field_overlap_ratio for r in selection_rows]),
+            first_team_out_match_rate=_rate([r.first_team_out_match for r in selection_rows]),
+            mean_seeding_within_one=_mean([r.seeding_within_one for r in selection_rows]),
+        )
+    if predictive_rows:
+        summary.predictive = PredictiveSummary(
+            seasons=len(predictive_rows),
+            mean_brier=_mean([r.brier_score for r in predictive_rows]),
+            mean_win_accuracy=_mean([r.win_accuracy for r in predictive_rows]),
+            mean_margin_mae=_mean([r.margin_mae for r in predictive_rows]),
+        )
+
+    # Only surface outlier seasons that are actually in this run's range — the
+    # global OUTLIER_YEARS constant may name seasons that weren't validated here.
+    validated_years = set(years)
+    return ValidationPayload(
+        generated_at=_now_iso(),
+        years=sorted(validated_years),
+        target=target,
+        outlier_years=sorted(outliers & validated_years),
+        summary=summary,
+        committee=committee_rows,
+        selection=selection_rows,
+        predictive=predictive_rows,
     )
 
 
