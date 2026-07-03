@@ -59,6 +59,18 @@ jobs (Option B MVP):
    `runs.json` (matching `run_id`, `scenario_id === "base"`, `data_source`, and
    `generated_at >= job.started_at`).
 
+### Default week semantics
+
+Run Analysis defaults to the **latest selection-relevant week** for the chosen season and data source, not a fixed demo week.
+
+| Week | Meaning (when shown) |
+|------|----------------------|
+| **16** | Final selection window — preferred when data includes conference championship results |
+| **15** | Pre-final / championship window — fallback when Week 16 is unavailable |
+
+> [!NOTE]
+> The bundled **sample demo** fixture currently stops at Week 15, so sample runs default to Week 15. **Live CFBD** runs prefer Week 16 when no local cache caps the season lower. The server resolves defaults via `GET /api/run/week-defaults`.
+
 **One job at a time.** A second POST while a job is active returns 409. Live CFBD
 runs without a server key return 400 (`cfbd_unavailable`). Live runs are throttled
 by `SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES` (default 5; set `0` for local dev).

@@ -42,6 +42,8 @@ import {
   SEASON_OPTIONS,
   WEEK_OPTIONS,
 } from "@/lib/runDisplay";
+import type { WeekDefaultsResponse } from "@/app/api/run/week-defaults/route";
+import { fetchWeekDefaults, weekOptionLabel } from "@/lib/defaultWeek";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
 import type { RunCapabilities, RunJobRecord } from "@/lib/runJob";
 import { invalidateRunPayloadCache } from "@/lib/runPayloadCache";
@@ -50,7 +52,6 @@ import type { RunSummary } from "@/lib/types";
 
 interface RunAnalysisDialogProps {
   defaultYear: number;
-  defaultWeek: number;
   currentRun: RunSummary;
   currentStem: string;
   latestStem: string;
@@ -341,7 +342,6 @@ function JobsPanel({
 /** Run workspace: create analyses, switch runs, inspect jobs — without leaving the page. */
 export function RunAnalysisDialog({
   defaultYear,
-  defaultWeek,
   currentRun,
   currentStem,
   latestStem,
@@ -356,8 +356,10 @@ export function RunAnalysisDialog({
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = React.useState<AnalysisTab>("create");
   const [year, setYear] = React.useState(String(defaultYear));
-  const [week, setWeek] = React.useState(String(defaultWeek));
+  const [week, setWeek] = React.useState("15");
   const [source, setSource] = React.useState<"sample" | "live">("sample");
+  const [weekDefaults, setWeekDefaults] =
+    React.useState<WeekDefaultsResponse | null>(null);
   const [capabilities, setCapabilities] = React.useState<RunCapabilities | null>(
     null,
   );
@@ -369,12 +371,12 @@ export function RunAnalysisDialog({
   }
 
   const [openFormKey, setOpenFormKey] = React.useState<string | null>(null);
-  const formResetKey = open ? `${defaultYear}-${defaultWeek}` : null;
+  const formResetKey = open ? "open" : null;
   if (formResetKey !== openFormKey) {
     setOpenFormKey(formResetKey);
     if (formResetKey !== null) {
       setYear(String(defaultYear));
-      setWeek(String(defaultWeek));
+      setSource("sample");
     }
   }
 
@@ -388,6 +390,34 @@ export function RunAnalysisDialog({
   const liveEnabled = capabilities?.live_cfbd_enabled ?? false;
   const catalogRuns = catalog.runs;
   const catalogLatestStem = catalog.latest_stem ?? latestStem;
+
+  const weekChoices = React.useMemo(() => {
+    const maxWeek = weekDefaults?.max_available_week ?? WEEK_OPTIONS.length;
+    return WEEK_OPTIONS.filter((w) => w <= maxWeek);
+  }, [weekDefaults]);
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    let cancelled = false;
+    const season = Number.parseInt(year, 10);
+    if (!Number.isFinite(season)) return;
+
+    fetchWeekDefaults(season, source)
+      .then((defaults) => {
+        if (cancelled) return;
+        setWeekDefaults(defaults);
+        setWeek(String(defaults.default_week));
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setWeekDefaults(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, year, source]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -408,7 +438,7 @@ export function RunAnalysisDialog({
     return () => {
       cancelled = true;
     };
-  }, [open, defaultYear, defaultWeek]);
+  }, [open, defaultYear]);
 
   React.useEffect(() => {
     if (!jobId || !running) return;
@@ -628,9 +658,9 @@ export function RunAnalysisDialog({
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="max-h-56">
-                        {WEEK_OPTIONS.map((w) => (
+                        {weekChoices.map((w) => (
                           <SelectItem key={w} value={String(w)}>
-                            Week {w}
+                            {weekOptionLabel(w, weekDefaults?.week_labels)}
                           </SelectItem>
                         ))}
                       </SelectContent>

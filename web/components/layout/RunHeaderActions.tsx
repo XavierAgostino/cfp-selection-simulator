@@ -67,7 +67,6 @@ export function RunHeaderActions({
       ) : null}
       <RunAnalysisDialog
         defaultYear={currentRun.season}
-        defaultWeek={currentRun.week}
         currentRun={currentRun}
         currentStem={currentStem}
         latestStem={latestStem}

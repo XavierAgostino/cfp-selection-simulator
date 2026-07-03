@@ -28,6 +28,9 @@ The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product sur
 | **Manifest** | Run metadata for reproducibility (includes active weights and config hash) |
 | **Selection Stability** | Monte Carlo weight-perturbation frequency for bubble-scope teams (when `sensitivity.json` exists) |
 
+> [!TIP]
+> For final CFP-style field analysis, prefer **Week 16** when your data source includes conference championship results. The sample demo stops at Week 15; live CFBD runs default to Week 16 unless cached data ends earlier.
+
 ---
 
 ## How selection works
