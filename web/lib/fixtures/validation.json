@@ -1,33 +1,155 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-03T18:04:58.452421+00:00",
+  "generated_at": "2026-07-03T18:39:44.291695+00:00",
   "years": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
     2024
   ],
   "target": "all",
-  "outlier_years": [],
+  "outlier_years": [
+    2022
+  ],
   "summary": {
     "committee": {
-      "seasons": 1,
-      "mean_spearman_top12": 0.8252,
-      "mean_top12_overlap": 0.8333,
-      "mean_bubble_overlap": 0.3333
+      "seasons": 10,
+      "mean_spearman_top12": 0.765,
+      "mean_top12_overlap": 0.7833,
+      "mean_bubble_overlap": 0.2
     },
     "selection": {
-      "seasons": 1,
+      "seasons": 10,
       "correct_field_rate": 1.0,
-      "mean_field_overlap": 0.9167,
+      "mean_field_overlap": 0.7667,
       "first_team_out_match_rate": 0.0,
       "mean_seeding_within_one": 0.5455
     },
     "predictive": {
-      "seasons": 1,
-      "mean_brier": 0.1835,
-      "mean_win_accuracy": 0.6991,
-      "mean_margin_mae": 13.7387
+      "seasons": 11,
+      "mean_brier": 0.1784,
+      "mean_win_accuracy": 0.7216,
+      "mean_margin_mae": 14.1027
     }
   },
   "committee": [
+    {
+      "year": 2014,
+      "spearman_top25": 0.8251748251748254,
+      "spearman_top12": 0.8251748251748254,
+      "top12_overlap_ratio": 0.75,
+      "top12_overlap_label": "9/12",
+      "bubble_overlap_ratio": 0.0,
+      "bubble_overlap_label": "0/3",
+      "is_outlier": false,
+      "notes": "TCU/Baylor co-champions excluded; committee controversy"
+    },
+    {
+      "year": 2015,
+      "spearman_top25": 0.8251748251748254,
+      "spearman_top12": 0.8251748251748254,
+      "top12_overlap_ratio": 0.75,
+      "top12_overlap_label": "9/12",
+      "bubble_overlap_ratio": 0.3333333333333333,
+      "bubble_overlap_label": "1/3",
+      "is_outlier": false,
+      "notes": ""
+    },
+    {
+      "year": 2016,
+      "spearman_top25": 0.9090909090909092,
+      "spearman_top12": 0.9090909090909092,
+      "top12_overlap_ratio": 0.8333333333333334,
+      "top12_overlap_label": "10/12",
+      "bubble_overlap_ratio": 0.3333333333333333,
+      "bubble_overlap_label": "1/3",
+      "is_outlier": false,
+      "notes": ""
+    },
+    {
+      "year": 2017,
+      "spearman_top25": 0.5664335664335665,
+      "spearman_top12": 0.5664335664335665,
+      "top12_overlap_ratio": 0.9166666666666666,
+      "top12_overlap_label": "11/12",
+      "bubble_overlap_ratio": 0.6666666666666666,
+      "bubble_overlap_label": "2/3",
+      "is_outlier": false,
+      "notes": "Alabama non-champion selected over Ohio State"
+    },
+    {
+      "year": 2018,
+      "spearman_top25": 0.8601398601398602,
+      "spearman_top12": 0.8601398601398602,
+      "top12_overlap_ratio": 0.75,
+      "top12_overlap_label": "9/12",
+      "bubble_overlap_ratio": 0.0,
+      "bubble_overlap_label": "0/3",
+      "is_outlier": false,
+      "notes": ""
+    },
+    {
+      "year": 2019,
+      "spearman_top25": 0.44755244755244755,
+      "spearman_top12": 0.44755244755244755,
+      "top12_overlap_ratio": 0.9166666666666666,
+      "top12_overlap_label": "11/12",
+      "bubble_overlap_ratio": 0.0,
+      "bubble_overlap_label": "0/3",
+      "is_outlier": false,
+      "notes": ""
+    },
+    {
+      "year": 2020,
+      "spearman_top25": 0.5664335664335665,
+      "spearman_top12": 0.5664335664335665,
+      "top12_overlap_ratio": 0.5,
+      "top12_overlap_label": "6/12",
+      "bubble_overlap_ratio": 0.0,
+      "bubble_overlap_label": "0/3",
+      "is_outlier": false,
+      "notes": ""
+    },
+    {
+      "year": 2021,
+      "spearman_top25": 0.965034965034965,
+      "spearman_top12": 0.965034965034965,
+      "top12_overlap_ratio": 0.75,
+      "top12_overlap_label": "9/12",
+      "bubble_overlap_ratio": 0.0,
+      "bubble_overlap_label": "0/3",
+      "is_outlier": false,
+      "notes": ""
+    },
+    {
+      "year": 2022,
+      "spearman_top25": 0.7762237762237763,
+      "spearman_top12": 0.7762237762237763,
+      "top12_overlap_ratio": 0.9166666666666666,
+      "top12_overlap_label": "11/12",
+      "bubble_overlap_ratio": 0.3333333333333333,
+      "bubble_overlap_label": "1/3",
+      "is_outlier": true,
+      "notes": "Outlier year: low committee-formula agreement (TCU, Kansas State)"
+    },
+    {
+      "year": 2023,
+      "spearman_top25": 0.8601398601398602,
+      "spearman_top12": 0.8601398601398602,
+      "top12_overlap_ratio": 0.8333333333333334,
+      "top12_overlap_label": "10/12",
+      "bubble_overlap_ratio": 0.3333333333333333,
+      "bubble_overlap_label": "1/3",
+      "is_outlier": false,
+      "notes": "Florida State undefeated ACC champion ranked #4"
+    },
     {
       "year": 2024,
       "spearman_top25": 0.9323076923076923,
@@ -41,6 +163,226 @@
     }
   ],
   "selection": [
+    {
+      "year": 2014,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 1.0,
+      "field_overlap_label": "4/4",
+      "correct_field_size": true,
+      "false_positives": [],
+      "false_negatives": [],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2015,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 0.75,
+      "field_overlap_label": "3/4",
+      "correct_field_size": true,
+      "false_positives": [
+        "Stanford"
+      ],
+      "false_negatives": [
+        "Oklahoma"
+      ],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2016,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 0.75,
+      "field_overlap_label": "3/4",
+      "correct_field_size": true,
+      "false_positives": [
+        "Michigan"
+      ],
+      "false_negatives": [
+        "Clemson"
+      ],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2017,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 0.5,
+      "field_overlap_label": "2/4",
+      "correct_field_size": true,
+      "false_positives": [
+        "Auburn",
+        "UCF"
+      ],
+      "false_negatives": [
+        "Alabama",
+        "Oklahoma"
+      ],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2018,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 0.75,
+      "field_overlap_label": "3/4",
+      "correct_field_size": true,
+      "false_positives": [
+        "Georgia"
+      ],
+      "false_negatives": [
+        "Oklahoma"
+      ],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2019,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 0.75,
+      "field_overlap_label": "3/4",
+      "correct_field_size": true,
+      "false_positives": [
+        "Penn State"
+      ],
+      "false_negatives": [
+        "Oklahoma"
+      ],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2020,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 0.25,
+      "field_overlap_label": "1/4",
+      "correct_field_size": true,
+      "false_positives": [
+        "BYU",
+        "Cincinnati",
+        "Coastal Carolina"
+      ],
+      "false_negatives": [
+        "Clemson",
+        "Notre Dame",
+        "Ohio State"
+      ],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2021,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 1.0,
+      "field_overlap_label": "4/4",
+      "correct_field_size": true,
+      "false_positives": [],
+      "false_negatives": [],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2022,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 1.0,
+      "field_overlap_label": "4/4",
+      "correct_field_size": true,
+      "false_positives": [],
+      "false_negatives": [],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": true,
+      "notes": "Top 4"
+    },
+    {
+      "year": 2023,
+      "era": "four_team",
+      "ruleset": "four_team_cfp",
+      "rule_target": "Top 4",
+      "field_overlap_ratio": 1.0,
+      "field_overlap_label": "4/4",
+      "correct_field_size": true,
+      "false_positives": [],
+      "false_negatives": [],
+      "first_team_out_match": null,
+      "first_team_out_ref": null,
+      "first_team_out_sim": null,
+      "displacement_count": 0,
+      "seeding_exact_match": null,
+      "seeding_within_one": null,
+      "is_outlier": false,
+      "notes": "Top 4"
+    },
     {
       "year": 2024,
       "era": "twelve_team_2024",
@@ -66,6 +408,326 @@
     }
   ],
   "predictive": [
+    {
+      "year": 2014,
+      "model": "composite",
+      "brier_score": 0.18067136275601034,
+      "win_accuracy": 0.7180555555555556,
+      "margin_mae": 14.06842699830082,
+      "margin_rmse": 18.006073736022092
+    },
+    {
+      "year": 2014,
+      "model": "elo",
+      "brier_score": 0.22478717934930334,
+      "win_accuracy": 0.5597222222222222,
+      "margin_mae": 15.706958802952618,
+      "margin_rmse": 20.052148364340447
+    },
+    {
+      "year": 2014,
+      "model": "srs",
+      "brier_score": 0.29608707542916946,
+      "win_accuracy": 0.5597222222222222,
+      "margin_mae": 16.194992643434407,
+      "margin_rmse": 22.32174210668091
+    },
+    {
+      "year": 2014,
+      "model": "home_field",
+      "brier_score": 0.24942156207516722,
+      "win_accuracy": 0.5638888888888889,
+      "margin_mae": 16.563194444444445,
+      "margin_rmse": 20.92522235379007
+    },
+    {
+      "year": 2015,
+      "model": "composite",
+      "brier_score": 0.16926813676745808,
+      "win_accuracy": 0.7569060773480663,
+      "margin_mae": 14.195964616264483,
+      "margin_rmse": 18.53951753087562
+    },
+    {
+      "year": 2015,
+      "model": "elo",
+      "brier_score": 0.21691579494941396,
+      "win_accuracy": 0.569060773480663,
+      "margin_mae": 15.987634539045652,
+      "margin_rmse": 20.60601114487707
+    },
+    {
+      "year": 2015,
+      "model": "srs",
+      "brier_score": 0.2996536817762435,
+      "win_accuracy": 0.569060773480663,
+      "margin_mae": 17.06552071498983,
+      "margin_rmse": 23.6884489334879
+    },
+    {
+      "year": 2015,
+      "model": "home_field",
+      "brier_score": 0.24902089522031332,
+      "win_accuracy": 0.5580110497237569,
+      "margin_mae": 17.078729281767956,
+      "margin_rmse": 21.622259351129657
+    },
+    {
+      "year": 2016,
+      "model": "composite",
+      "brier_score": 0.1830114931748289,
+      "win_accuracy": 0.7121001390820584,
+      "margin_mae": 14.717529415427475,
+      "margin_rmse": 19.238987148781398
+    },
+    {
+      "year": 2016,
+      "model": "elo",
+      "brier_score": 0.22023525863885582,
+      "win_accuracy": 0.5841446453407511,
+      "margin_mae": 16.1407692885981,
+      "margin_rmse": 20.97415310669971
+    },
+    {
+      "year": 2016,
+      "model": "srs",
+      "brier_score": 0.2931524831535915,
+      "win_accuracy": 0.5841446453407511,
+      "margin_mae": 16.766242979882602,
+      "margin_rmse": 23.228023926111405
+    },
+    {
+      "year": 2016,
+      "model": "home_field",
+      "brier_score": 0.24486732177480078,
+      "win_accuracy": 0.5757997218358831,
+      "margin_mae": 17.034075104311544,
+      "margin_rmse": 21.917827636179883
+    },
+    {
+      "year": 2017,
+      "model": "composite",
+      "brier_score": 0.17596054034116176,
+      "win_accuracy": 0.7255434782608695,
+      "margin_mae": 14.342562026354749,
+      "margin_rmse": 18.376962811785607
+    },
+    {
+      "year": 2017,
+      "model": "elo",
+      "brier_score": 0.21965715211005665,
+      "win_accuracy": 0.5760869565217391,
+      "margin_mae": 16.0508956600016,
+      "margin_rmse": 20.519398827020023
+    },
+    {
+      "year": 2017,
+      "model": "srs",
+      "brier_score": 0.2956684857665242,
+      "win_accuracy": 0.5760869565217391,
+      "margin_mae": 16.592832185065706,
+      "margin_rmse": 23.2727357423813
+    },
+    {
+      "year": 2017,
+      "model": "home_field",
+      "brier_score": 0.24543413408647644,
+      "win_accuracy": 0.5801630434782609,
+      "margin_mae": 16.96671195652174,
+      "margin_rmse": 21.42811383439989
+    },
+    {
+      "year": 2018,
+      "model": "composite",
+      "brier_score": 0.17705331802345356,
+      "win_accuracy": 0.7189631650750341,
+      "margin_mae": 14.416547874540013,
+      "margin_rmse": 18.467142459986174
+    },
+    {
+      "year": 2018,
+      "model": "elo",
+      "brier_score": 0.21526613036049333,
+      "win_accuracy": 0.592087312414734,
+      "margin_mae": 15.888233340325337,
+      "margin_rmse": 20.28188263082401
+    },
+    {
+      "year": 2018,
+      "model": "srs",
+      "brier_score": 0.2879366525286254,
+      "win_accuracy": 0.592087312414734,
+      "margin_mae": 16.0973186083403,
+      "margin_rmse": 22.722452302355727
+    },
+    {
+      "year": 2018,
+      "model": "home_field",
+      "brier_score": 0.24180476847669263,
+      "win_accuracy": 0.5934515688949522,
+      "margin_mae": 16.88130968622101,
+      "margin_rmse": 21.249556612018214
+    },
+    {
+      "year": 2019,
+      "model": "composite",
+      "brier_score": 0.17571698623734508,
+      "win_accuracy": 0.7316076294277929,
+      "margin_mae": 14.939361660660664,
+      "margin_rmse": 19.27282802582764
+    },
+    {
+      "year": 2019,
+      "model": "elo",
+      "brier_score": 0.2162429129121536,
+      "win_accuracy": 0.5994550408719346,
+      "margin_mae": 16.39588130032107,
+      "margin_rmse": 21.175879378004716
+    },
+    {
+      "year": 2019,
+      "model": "srs",
+      "brier_score": 0.2894506204797197,
+      "win_accuracy": 0.5994550408719346,
+      "margin_mae": 16.768445479295455,
+      "margin_rmse": 23.78068888346402
+    },
+    {
+      "year": 2019,
+      "model": "home_field",
+      "brier_score": 0.24022927402260325,
+      "win_accuracy": 0.5994550408719346,
+      "margin_mae": 17.220708446866485,
+      "margin_rmse": 22.090305738704203
+    },
+    {
+      "year": 2020,
+      "model": "composite",
+      "brier_score": 0.1728093042378936,
+      "win_accuracy": 0.7239263803680982,
+      "margin_mae": 13.943595593882247,
+      "margin_rmse": 18.15590470307552
+    },
+    {
+      "year": 2020,
+      "model": "elo",
+      "brier_score": 0.2141620057642477,
+      "win_accuracy": 0.5664621676891616,
+      "margin_mae": 15.55126586758215,
+      "margin_rmse": 20.134994492092012
+    },
+    {
+      "year": 2020,
+      "model": "srs",
+      "brier_score": 0.2997728517587899,
+      "win_accuracy": 0.5664621676891616,
+      "margin_mae": 17.068379698255807,
+      "margin_rmse": 24.256085324301026
+    },
+    {
+      "year": 2020,
+      "model": "home_field",
+      "brier_score": 0.24887688890205806,
+      "win_accuracy": 0.5644171779141104,
+      "margin_mae": 16.60327198364008,
+      "margin_rmse": 21.166034642674276
+    },
+    {
+      "year": 2021,
+      "model": "composite",
+      "brier_score": 0.17816756346150223,
+      "win_accuracy": 0.7213114754098361,
+      "margin_mae": 14.039573467837505,
+      "margin_rmse": 18.154967426061802
+    },
+    {
+      "year": 2021,
+      "model": "elo",
+      "brier_score": 0.22406630276605763,
+      "win_accuracy": 0.5778688524590164,
+      "margin_mae": 15.689815610191587,
+      "margin_rmse": 20.13489792969893
+    },
+    {
+      "year": 2021,
+      "model": "srs",
+      "brier_score": 0.29700067769707755,
+      "win_accuracy": 0.5778688524590164,
+      "margin_mae": 16.249667269653877,
+      "margin_rmse": 22.45381607738049
+    },
+    {
+      "year": 2021,
+      "model": "home_field",
+      "brier_score": 0.2445112529620795,
+      "win_accuracy": 0.5860655737704918,
+      "margin_mae": 16.41393442622951,
+      "margin_rmse": 20.986692374707385
+    },
+    {
+      "year": 2022,
+      "model": "composite",
+      "brier_score": 0.18955616717525037,
+      "win_accuracy": 0.6866485013623979,
+      "margin_mae": 13.40291547889681,
+      "margin_rmse": 17.562302643222196
+    },
+    {
+      "year": 2022,
+      "model": "elo",
+      "brier_score": 0.22041725198631773,
+      "win_accuracy": 0.5831062670299727,
+      "margin_mae": 14.605982612657712,
+      "margin_rmse": 19.12823034016666
+    },
+    {
+      "year": 2022,
+      "model": "srs",
+      "brier_score": 0.2768437361079607,
+      "win_accuracy": 0.5831062670299727,
+      "margin_mae": 14.711153020891,
+      "margin_rmse": 20.516117900329142
+    },
+    {
+      "year": 2022,
+      "model": "home_field",
+      "brier_score": 0.2440869864278363,
+      "win_accuracy": 0.5844686648501363,
+      "margin_mae": 15.393051771117166,
+      "margin_rmse": 20.006257536067437
+    },
+    {
+      "year": 2023,
+      "model": "composite",
+      "brier_score": 0.17617879486384277,
+      "win_accuracy": 0.744,
+      "margin_mae": 13.324465578864979,
+      "margin_rmse": 17.325085768250403
+    },
+    {
+      "year": 2023,
+      "model": "elo",
+      "brier_score": 0.22198544643009477,
+      "win_accuracy": 0.5813333333333334,
+      "margin_mae": 15.025743129256133,
+      "margin_rmse": 19.265291941928133
+    },
+    {
+      "year": 2023,
+      "model": "srs",
+      "brier_score": 0.2916439101928544,
+      "win_accuracy": 0.5813333333333334,
+      "margin_mae": 15.692504312688186,
+      "margin_rmse": 21.44182556941273
+    },
+    {
+      "year": 2023,
+      "model": "home_field",
+      "brier_score": 0.24463634548081725,
+      "win_accuracy": 0.5813333333333334,
+      "margin_mae": 15.754666666666667,
+      "margin_rmse": 20.133322295802714
+    },
     {
       "year": 2024,
       "model": "composite",
