@@ -114,6 +114,28 @@ Every team name is clickable and opens the resume drawer without leaving the
 page. Multiple runs can coexist; the run switcher (`?run=<stem>`) flips the
 whole site between them.
 
+## Export & share
+
+Three client-side export primitives, all scoped to the active run:
+
+- **Rankings CSV** — "Download CSV" in the `/rankings` toolbar exports the
+  full table in rank order (filters never change the artifact, so the file is
+  reproducible from the run alone). Columns mirror the engine's rankings CSV
+  plus web enrichment (record, bid type, seed).
+- **Bracket image** — "Download image" on `/bracket` renders the full bracket
+  as a branded share card (2× PNG). Titled "Projected … CFP Bracket", never
+  "official".
+- **Resume card** — "Download card" in the team drawer and on `/teams/[team]`
+  exports a team's resume as a share graphic: rank, record, score bars, and
+  the selection case.
+
+Share cards are captured with `html-to-image` from an off-screen render
+(`web/components/share/`). They force the dark broadcast theme so exports look
+identical regardless of the viewer's theme, and every card carries the
+independence disclaimer. Team logos come from ESPN's CDN, which serves
+`access-control-allow-origin: *`, so captures stay untainted; a logo that
+fails to fetch falls back to the initials tile.
+
 ## Selection Stability
 
 When `sensitivity.json` exists for the active run, the Bubble page shows a

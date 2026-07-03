@@ -45,6 +45,8 @@ export default async function RankingsPage({
             <RankingTable
               teams={rankings.teams}
               recordMeta={rankings.record_meta}
+              season={rankings.season}
+              week={rankings.week}
             />
           </>
         ) : (

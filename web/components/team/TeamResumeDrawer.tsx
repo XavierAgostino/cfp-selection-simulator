@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/EmptyState";
+import { ResumeExportButton } from "@/components/share/ResumeExportButton";
 import { ResumeContent } from "@/components/team/ResumeContent";
 import { useActiveRun } from "@/components/team/useActiveRun";
 import { useRankings } from "@/components/team/useRankings";
@@ -62,6 +63,19 @@ export function TeamResumeDrawer({
     return null;
   }, [resumeState, rankingsState]);
 
+  const seasonWeek = React.useMemo(() => {
+    if (resumeState.status === "ready") {
+      return { season: resumeState.data.season, week: resumeState.data.week };
+    }
+    if (rankingsState.status === "ready") {
+      return {
+        season: rankingsState.data.season,
+        week: rankingsState.data.week,
+      };
+    }
+    return null;
+  }, [resumeState, rankingsState]);
+
   const loading =
     resumeState.status === "loading" ||
     (resumeState.status === "ready" &&
@@ -105,14 +119,23 @@ export function TeamResumeDrawer({
               recordMeta={recordMeta}
               variant="drawer"
               footer={
-                <Link
-                  href={`/teams/${encodeURIComponent(team)}`}
-                  className="flex items-center justify-center gap-1.5 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-                  onClick={() => onOpenChange(false)}
-                >
-                  Full team page
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                <div className="grid grid-cols-2 gap-2">
+                  <ResumeExportButton
+                    resume={resume}
+                    recordMeta={recordMeta}
+                    season={seasonWeek?.season}
+                    week={seasonWeek?.week}
+                    className="w-full"
+                  />
+                  <Link
+                    href={`/teams/${encodeURIComponent(team)}`}
+                    className="flex items-center justify-center gap-1.5 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    Full team page
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               }
             />
           ) : (

@@ -35,9 +35,19 @@ function ColumnLabel({ title, subtitle }: { title: string; subtitle?: string }) 
 
 /**
  * Symmetrical 5-column × 3-row CFP bracket: left pods mirror right pods,
- * semifinals and championship centered on the middle row.
+ * semifinals and championship centered on the middle row. Scales to fit the
+ * viewport; use FullBracketCanvas for a fixed 1:1 render (share-card export).
  */
 export function FullBracket({ bracket }: FullBracketProps) {
+  return (
+    <ScaleToFitCanvas designWidth={BRACKET_CANVAS_WIDTH}>
+      <FullBracketCanvas bracket={bracket} />
+    </ScaleToFitCanvas>
+  );
+}
+
+/** The bracket grid at its natural BRACKET_CANVAS_WIDTH, no viewport scaling. */
+export function FullBracketCanvas({ bracket }: FullBracketProps) {
   const { top, bottom } = splitPodsBySide(bracket.pods);
   const topSF = bracket.rounds.semifinals.find((s) => s.side === "top");
   const bottomSF = bracket.rounds.semifinals.find((s) => s.side === "bottom");
@@ -51,8 +61,7 @@ export function FullBracket({ bracket }: FullBracketProps) {
   const rightBottom = bottom[1];
 
   return (
-    <ScaleToFitCanvas designWidth={BRACKET_CANVAS_WIDTH}>
-      <div className="py-2" style={{ width: BRACKET_CANVAS_WIDTH }}>
+    <div className="py-2" style={{ width: BRACKET_CANVAS_WIDTH }}>
         {/* Column labels */}
         <div
           className="mb-2 grid gap-x-8"
@@ -120,8 +129,7 @@ export function FullBracket({ bracket }: FullBracketProps) {
             </div>
           ) : null}
         </div>
-      </div>
-    </ScaleToFitCanvas>
+    </div>
   );
 }
 

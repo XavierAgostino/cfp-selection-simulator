@@ -19,21 +19,68 @@ import {
 } from "@/components/ui/table";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
+import { useActiveRun } from "@/components/team/useActiveRun";
 import { createRankingColumns } from "@/components/rankings/columns";
 import {
   TableToolbar,
   type BidStatusFilter,
 } from "@/components/rankings/TableToolbar";
+import { buildCsv, downloadCsv } from "@/lib/exportCsv";
 import type { RankingRow, RecordMeta } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 interface RankingTableProps {
   teams: RankingRow[];
   recordMeta?: RecordMeta | null;
+  /** Season/week of the payload, used to name the CSV download. */
+  season?: number;
+  week?: number;
+}
+
+/** Full-table CSV mirroring the engine's rankings CSV plus web enrichment. */
+function rankingsCsv(teams: RankingRow[]): string {
+  const headers = [
+    "rank",
+    "team",
+    "abbreviation",
+    "conference",
+    "wins",
+    "losses",
+    "composite_score",
+    "resume_score",
+    "predictive_score",
+    "sor",
+    "sos",
+    "conference_champion",
+    "in_field",
+    "bid_type",
+    "seed",
+  ];
+  const rows = [...teams]
+    .sort((a, b) => a.rank - b.rank)
+    .map((t) => [
+      t.rank,
+      t.team,
+      t.abbreviation,
+      t.conference,
+      t.record.wins,
+      t.record.losses,
+      t.composite_score,
+      t.resume_score,
+      t.predictive_score,
+      t.sor,
+      t.sos,
+      t.is_conference_champion,
+      t.in_field,
+      t.bid_type,
+      t.seed,
+    ]);
+  return buildCsv(headers, rows);
 }
 
 /** Sortable, filterable rankings table over rankings.json.teams. */
-export function RankingTable({ teams, recordMeta }: RankingTableProps) {
+export function RankingTable({ teams, recordMeta, season, week }: RankingTableProps) {
+  const stem = useActiveRun();
   const { openTeam } = useTeamDrawer();
   const [search, setSearch] = React.useState("");
   const [conference, setConference] = React.useState("all");
@@ -91,6 +138,14 @@ export function RankingTable({ teams, recordMeta }: RankingTableProps) {
     [recordMeta],
   );
 
+  // Always exports the full table in rank order — filters never change the
+  // artifact, so a downloaded CSV is reproducible from the run alone.
+  const handleDownloadCsv = React.useCallback(() => {
+    const runPart =
+      stem ?? (season && week ? `${season}_week${week}` : "latest");
+    downloadCsv(`selection-room_${runPart}_rankings.csv`, rankingsCsv(teams));
+  }, [teams, stem, season, week]);
+
   // TanStack Table returns unstable function refs; React Compiler skips this hook by design.
   // eslint-disable-next-line react-hooks/incompatible-library -- useReactTable
   const table = useReactTable({
@@ -113,6 +168,7 @@ export function RankingTable({ teams, recordMeta }: RankingTableProps) {
         bidStatus={bidStatus}
         onBidStatusChange={setBidStatus}
         resultCount={filtered.length}
+        onDownloadCsv={handleDownloadCsv}
       />
       <div className="overflow-hidden rounded-xl bg-card">
         <div className="max-h-[70vh] overflow-auto">

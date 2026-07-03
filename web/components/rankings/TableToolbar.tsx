@@ -1,6 +1,7 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Download, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -44,6 +45,8 @@ interface TableToolbarProps {
   bidStatus: BidStatusFilter;
   onBidStatusChange: (value: BidStatusFilter) => void;
   resultCount: number;
+  /** When set, renders a "Download CSV" button that exports the full rankings. */
+  onDownloadCsv?: () => void;
 }
 
 /** Search + conference filter + bid-status filter above the rankings table. */
@@ -56,6 +59,7 @@ export function TableToolbar({
   bidStatus,
   onBidStatusChange,
   resultCount,
+  onDownloadCsv,
 }: TableToolbarProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -107,8 +111,16 @@ export function TableToolbar({
           </SelectContent>
         </Select>
       </div>
-      <div className="shrink-0 text-xs text-muted-foreground">
-        {resultCount} {resultCount === 1 ? "team" : "teams"}
+      <div className="flex shrink-0 items-center gap-3">
+        <span className="text-xs text-muted-foreground">
+          {resultCount} {resultCount === 1 ? "team" : "teams"}
+        </span>
+        {onDownloadCsv ? (
+          <Button variant="outline" size="sm" onClick={onDownloadCsv}>
+            <Download data-icon="inline-start" />
+            Download CSV
+          </Button>
+        ) : null}
       </div>
     </div>
   );

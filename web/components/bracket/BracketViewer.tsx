@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Share2 } from "lucide-react";
+import { ImageDown, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { FullBracket } from "@/components/bracket/FullBracket";
@@ -12,6 +12,9 @@ import { RoundView } from "@/components/bracket/RoundView";
 import { MatchupCards } from "@/components/bracket/MatchupCards";
 import { BRACKET_VIEW_MODES } from "@/components/bracket/types";
 import type { BracketViewMode } from "@/components/bracket/types";
+import { BracketShareCard } from "@/components/share/BracketShareCard";
+import { OffscreenExportLayer } from "@/components/share/OffscreenExportLayer";
+import { exportNodeToPng } from "@/lib/exportImage";
 import type { BracketPayload } from "@/lib/types";
 
 interface BracketViewerProps {
@@ -20,6 +23,34 @@ interface BracketViewerProps {
 
 export function BracketViewer({ bracket }: BracketViewerProps) {
   const [mode, setMode] = useState<BracketViewMode>("full");
+  const [exporting, setExporting] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
+
+  // The share card mounts off-screen only while exporting; capture once it's
+  // in the DOM, then unmount it.
+  useEffect(() => {
+    if (!exporting) return;
+    const node = shareCardRef.current;
+    if (!node) return;
+    let active = true;
+    const capture = async () => {
+      try {
+        await exportNodeToPng(
+          node,
+          `selection-room_${bracket.season}_week${bracket.week}_bracket.png`,
+        );
+        if (active) toast.success("Bracket image saved");
+      } catch {
+        if (active) toast.error("Couldn't render the bracket image");
+      } finally {
+        if (active) setExporting(false);
+      }
+    };
+    void capture();
+    return () => {
+      active = false;
+    };
+  }, [exporting, bracket.season, bracket.week]);
 
   async function handleShare() {
     const url = window.location.href;
@@ -57,11 +88,30 @@ export function BracketViewer({ bracket }: BracketViewerProps) {
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
-        <Button variant="outline" size="sm" onClick={handleShare}>
-          <Share2 data-icon="inline-start" />
-          Share bracket
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setExporting(true)}
+            disabled={exporting}
+          >
+            <ImageDown data-icon="inline-start" />
+            {exporting ? "Rendering…" : "Download image"}
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShare}>
+            <Share2 data-icon="inline-start" />
+            Share bracket
+          </Button>
+        </div>
       </div>
+
+      {exporting ? (
+        <OffscreenExportLayer>
+          <div ref={shareCardRef}>
+            <BracketShareCard bracket={bracket} />
+          </div>
+        </OffscreenExportLayer>
+      ) : null}
 
       {mode === "full" ? (
         <>

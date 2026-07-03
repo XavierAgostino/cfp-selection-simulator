@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, SearchX } from "lucide-react";
 import { RunHeader } from "@/components/layout/RunHeader";
 import { EmptyState } from "@/components/common/EmptyState";
+import { ResumeExportButton } from "@/components/share/ResumeExportButton";
 import { ResumeContent } from "@/components/team/ResumeContent";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import { synthesizeSummaryResume } from "@/lib/synthesizeResume";
@@ -83,14 +84,22 @@ export default async function TeamPage({ params, searchParams }: TeamPageProps) 
     );
   }
 
+  const recordMeta = payload?.record_meta ?? rankings?.record_meta ?? null;
+  const season = payload?.season ?? rankings?.season;
+  const week = payload?.week ?? rankings?.week;
+
   return (
     <div className="flex flex-col gap-6">
       <RunHeader stem={stem} />
-      <ResumeContent
-        resume={resume}
-        recordMeta={payload?.record_meta ?? rankings?.record_meta ?? null}
-        variant="page"
-      />
+      <div className="flex justify-end">
+        <ResumeExportButton
+          resume={resume}
+          recordMeta={recordMeta}
+          season={season}
+          week={week}
+        />
+      </div>
+      <ResumeContent resume={resume} recordMeta={recordMeta} variant="page" />
     </div>
   );
 }

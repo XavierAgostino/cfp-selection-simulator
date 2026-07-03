@@ -1,6 +1,6 @@
 ---
 name: Vision Progress Assessment
-overview: Layers 1–3 complete. Scenario Lab shipped (d81e91a). Validation Dashboard shipped (98f1934) with data-slice hardening (fixture, docs, composite-only aggregation, export error logging). Remaining product gap is export/share; hosted adapters (H1–H7) stay future.
+overview: Layers 1–3 complete. Scenario Lab shipped (d81e91a). Validation Dashboard shipped (98f1934) + hardened (d1b3f38). Export primitives shipped (rankings CSV, bracket share image, resume card). Remaining product gap is shareable scenario URLs; hosted adapters (H1–H7) stay future.
 todos:
   - id: land-wip
     content: "Commit working tree: logo pipeline (PR A) and bracket FullBracket/RulesetBanner refactor (PR B) as separate commits"
@@ -39,7 +39,10 @@ todos:
     content: "Preflight: Run Analysis UX polish locally (not a new phase)"
     status: pending
   - id: export-share
-    content: "Export/share layer: bracket PNG/share card, rankings CSV download, resume card; then shareable scenario URLs"
+    content: "Export primitives: bracket share image, rankings CSV download, resume card (web/components/share/)"
+    status: completed
+  - id: scenario-share-urls
+    content: "Shareable scenario URLs: deep-link a scenario diff"
     status: pending
   - id: hosted-adapters-h1
     content: "Future: Hosted Architecture H1–H7 (adapters, worker, Postgres) — after export/share"
@@ -49,11 +52,11 @@ isProject: false
 
 # Selection Room Vision — Progress Assessment
 
-**Last updated:** 2026-07-03 (post validation data slice + plan cleanup)
+**Last updated:** 2026-07-03 (post export primitives slice)
 
 **Sources:** [`selection_room_vision_5f27cf0d.plan.md`](selection_room_vision_5f27cf0d.plan.md), [`vision_status_cleanup.plan.md`](vision_status_cleanup.plan.md), [`validation_dashboard_mvp.plan.md`](validation_dashboard_mvp.plan.md). Implementation history for shipped layers lives in [`archive/`](archive/) — do not re-read those for current work.
 
-**Mental model:** The local OSS product is nearly complete. The remaining product gap is **export/share**, not more infrastructure and not another analysis surface.
+**Mental model:** The local OSS product is nearly complete. Export primitives (rankings CSV, bracket share image, resume card) are shipped; the remaining product gap is **shareable scenario URLs**, not more infrastructure and not another analysis surface.
 
 ---
 
@@ -65,7 +68,7 @@ isProject: false
 | **Layer 2 — Platform foundation** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done locally** — JSON web contract; OSS workflow intact |
 | **Layer 2H — Hosted production** | Vercel + worker + object storage + Postgres adapters | **Designed, not implemented** — see [`docs/architecture/hosted-production.md`](../../docs/architecture/hosted-production.md) |
 | **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **Shipped** (`d81e91a`) — weights-only what-if with field/seed/bubble/rank diff, empty-state preview, honest copy |
-| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Validation shipped** (`98f1934` + hardening slice); **export/share not started** |
+| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Validation shipped** (`98f1934` + hardening); **export primitives shipped** (CSV, bracket image, resume card); scenario share URLs remain |
 
 ---
 
@@ -81,7 +84,7 @@ isProject: false
 | 4. Understand the bubble | **Done** — Cut-line chart + Selection Stability board + audit |
 | 5. Test what would change | **Shipped (MVP)** — Scenario Lab: reweight sliders → scenario run → diff. Weights-only; no game-outcome sim |
 | 6. Validate (trust layer) | **Shipped** — `/validation`: committee / field / predictive tracks, trust-hierarchy copy, seeded fixture, honest aggregation |
-| 7. Share / export | **Next** — bracket share button only today |
+| 7. Share / export | **Shipped** — rankings CSV, bracket share image, resume card (`web/components/share/`); scenario share URLs next |
 
 ---
 
@@ -133,8 +136,8 @@ refresh after launch without full reload; `?run=` deep-link on `/scenario-lab`.
 ## Locked next moves
 
 1. **Run Analysis preflight** — local UX polish only (not a new phase)
-2. **Export primitives** — bracket PNG / share card, rankings CSV download from web, team resume card export
-3. **Shareable scenario URLs** — after export primitives
+2. ~~**Export primitives**~~ — shipped: bracket share image, rankings CSV download, resume card export
+3. **Shareable scenario URLs** — the next product move
 4. **Hosted Architecture H1–H7** — after the local OSS product feels complete; before serious public launch
 
 **Doctrine (unchanged):** JSON under `data/output/api/` is the web contract. DuckDB is local analytics only — do **not** expand it into web page reads. Scenario runs never own `latest.json`. Do **not** build hosted adapters before export/share unless local architecture actively blocks. Do **not** re-polish Phase 1.
@@ -163,8 +166,9 @@ refresh after launch without full reload; `?run=` deep-link on `/scenario-lab`.
 
 Selection Room is a local run-capable CFP selection analysis workspace with
 field/ranking/bracket/bubble explainability, browser run generation, dynamic
-team cases, a weight-based Scenario Lab, and a shipped, hardened validation
-dashboard. Every north-star step through "Validate" is done. The one remaining
-gap before the local OSS product feels complete is **export/share**: bracket
-PNG / share card, rankings CSV, resume card, then shareable scenario URLs.
-Hosted adapters come after that.
+team cases, a weight-based Scenario Lab, a shipped, hardened validation
+dashboard, and export primitives (rankings CSV, bracket share image, resume
+card via `web/components/share/`). Every north-star step through "Validate"
+and "Export" is done. The one remaining gap before the local OSS product feels
+complete is **shareable scenario URLs** (deep-link a scenario diff). Hosted
+adapters come after that.

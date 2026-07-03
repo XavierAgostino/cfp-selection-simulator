@@ -187,10 +187,10 @@ See [`docs/hosting/render-feasibility-checklist.md`](../hosting/render-feasibili
 | 0b | Run Analysis UX polish (local) | Pending |
 | 1 | **Scenario Lab MVP** on local adapters | **Shipped** (`d81e91a`) |
 | 2 | Validation dashboard MVP | **Shipped** (`98f1934`) |
-| 3 | Share / export layer | Next — before hosted work |
+| 3 | Share / export layer (rankings CSV, bracket image, resume card) | **Shipped** — scenario share URLs remain |
 | 4 | Hosted Architecture H1–H7 (before public launch) | Not started |
 
-**Do not build hosted adapters before the share/export layer** — Scenario Lab and the validation dashboard proved the local workflow; export/share completes the local OSS product, then hosting hardens around it.
+**Remaining before hosted work:** shareable scenario URLs (deep-link a scenario diff). The export primitives (rankings CSV, bracket share image, resume card) shipped with the local OSS product; hosting hardens around it.
 
 ### Hosted phase steps (H1–H7, future)
 
