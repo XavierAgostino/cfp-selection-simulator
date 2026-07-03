@@ -2,15 +2,19 @@ import { UserX } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BubbleColumn } from "@/components/bubble/BubbleColumn";
 import { BubbleCutlineChart } from "@/components/charts/BubbleCutlineChart";
+import { SelectionStabilityBoard } from "@/components/charts/SelectionStabilityBoard";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
-import type { FieldPayload } from "@/lib/types";
+import { METRIC_EXPLANATIONS } from "@/lib/explain";
+import type { FieldPayload, SensitivityPayload } from "@/lib/types";
 
 interface BubbleBoardProps {
   field: FieldPayload;
+  /** Selection Stability results; omitted entirely when the run has no sensitivity.json. */
+  sensitivity?: SensitivityPayload | null;
 }
 
 /** Three-column bubble board: Last Four In, First Four Out, Next Four Out — plus the displaced-team callout. */
-export function BubbleBoard({ field }: BubbleBoardProps) {
+export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
   const { last_four_in, first_four_out, next_four_out, displaced_team } = field;
   const cutLineScore =
     last_four_in[last_four_in.length - 1]?.composite_score ?? 0;
@@ -43,6 +47,24 @@ export function BubbleBoard({ field }: BubbleBoardProps) {
               firstFourOut={first_four_out}
               nextFourOut={next_four_out}
             />
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {sensitivity && sensitivity.teams.length > 0 ? (
+        <Card className="gap-3 border-border bg-card shadow-none">
+          <CardHeader className="px-4">
+            <CardTitle>
+              {METRIC_EXPLANATIONS.selection_stability.label}
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              How often each bubble team makes the projected field when model
+              weights are reasonably perturbed. Hover a logo for the scenario
+              breakdown; click to open the team resume.
+            </p>
+          </CardHeader>
+          <CardContent className="px-4">
+            <SelectionStabilityBoard sensitivity={sensitivity} />
           </CardContent>
         </Card>
       ) : null}

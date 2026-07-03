@@ -15,7 +15,11 @@ export interface MetricExplanation {
   description: string;
 }
 
-export type ExplainMetricKey = ScoreMetricKey | "cut_line" | "record";
+export type ExplainMetricKey =
+  | ScoreMetricKey
+  | "cut_line"
+  | "record"
+  | "selection_stability";
 
 export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = {
   composite: {
@@ -51,6 +55,11 @@ export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = 
   record: {
     label: "Record",
     description: "Wins and losses across all games in this run's data window.",
+  },
+  selection_stability: {
+    label: "Selection Stability",
+    description:
+      "The share of Monte Carlo weight scenarios where a team remains in the projected field. It varies model weights, not future game results.",
   },
 };
 

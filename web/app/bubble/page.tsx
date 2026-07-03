@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { getRunFile, NotFoundError } from "@/lib/data";
-import type { AuditPayload, FieldPayload } from "@/lib/types";
+import type {
+  AuditPayload,
+  FieldPayload,
+  SensitivityPayload,
+} from "@/lib/types";
 
 interface BubblePageProps {
   searchParams: Promise<{ run?: string }>;
@@ -35,10 +39,25 @@ async function loadAudit(stem: string | null): Promise<AuditPayload | null> {
   }
 }
 
+async function loadSensitivity(
+  stem: string | null,
+): Promise<SensitivityPayload | null> {
+  try {
+    return await getRunFile(stem, "sensitivity");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}
+
 export default async function BubblePage({ searchParams }: BubblePageProps) {
   const { run } = await searchParams;
   const stem = run ?? null;
-  const [field, audit] = await Promise.all([loadField(stem), loadAudit(stem)]);
+  const [field, audit, sensitivity] = await Promise.all([
+    loadField(stem),
+    loadAudit(stem),
+    loadSensitivity(stem),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -51,7 +70,7 @@ export default async function BubblePage({ searchParams }: BubblePageProps) {
       </div>
       {field ? (
         <>
-          <BubbleBoard field={field} />
+          <BubbleBoard field={field} sensitivity={sensitivity} />
           {audit ? (
             <Card className="gap-0 border-border bg-card py-0">
               <Collapsible>

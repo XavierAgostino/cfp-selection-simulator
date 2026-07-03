@@ -6,6 +6,7 @@ import type {
   LatestPayload,
   RankingsPayload,
   RunsPayload,
+  SensitivityPayload,
   TeamAssetsPayload,
   TeamResumesPayload,
 } from "@/lib/types";
@@ -23,7 +24,8 @@ export type RunFileKind =
   | "field"
   | "bracket"
   | "audit"
-  | "team-resumes";
+  | "team-resumes"
+  | "sensitivity";
 
 interface RunFilePayloadMap {
   rankings: RankingsPayload;
@@ -31,6 +33,7 @@ interface RunFilePayloadMap {
   bracket: BracketPayload;
   audit: AuditPayload;
   "team-resumes": TeamResumesPayload;
+  sensitivity: SensitivityPayload;
 }
 
 const DATA_BASE_PATH = "/api/data";

@@ -54,6 +54,7 @@ export interface RunSummary {
   champion_source: string;
   generated_at: string;
   has_bracket: boolean;
+  has_sensitivity: boolean;
   simulator_version: string;
 }
 
@@ -273,6 +274,74 @@ export interface TeamResumesPayload {
   season: number;
   week: number;
   teams: Record<string, TeamResume>;
+}
+
+// ---------------------------------------------------------------------------
+// sensitivity.json — Selection Stability (Monte Carlo weight perturbation)
+// ---------------------------------------------------------------------------
+
+export type StabilityStatus =
+  | "lock"
+  | "likely_in"
+  | "bubble"
+  | "likely_out"
+  | "out";
+export type StabilityBaseStatus = "in_field" | "first_out" | "next_out" | "out";
+export type StabilityOutcome = "in_field" | "first_out" | "out";
+export type StabilityRisk =
+  | "none"
+  | "weight_sensitivity"
+  | "auto_bid_displacement"
+  | "composite_gap";
+
+export interface PerturbationSpec {
+  method: string;
+  relative_range: number;
+  base_weights: {
+    resume: number;
+    predictive: number;
+    sor: number;
+    sos: number;
+  };
+}
+
+export interface BaseFieldCutoff {
+  final_at_large_team: string | null;
+  final_at_large_score: number | null;
+  first_team_out: string | null;
+  first_team_out_score: number | null;
+}
+
+export interface SelectionStabilityTeam {
+  team: string;
+  abbreviation: string | null;
+  logo_url: string | null;
+  primary_color: string | null;
+  /** Share of scenarios where the team made the projected field, 0-1. */
+  selection_frequency: number;
+  in_field_count: number;
+  n_scenarios: number;
+  base_rank: number;
+  base_seed: number | null;
+  base_selected: boolean;
+  base_status: StabilityBaseStatus;
+  status: StabilityStatus;
+  median_rank: number;
+  most_common_outcome: StabilityOutcome;
+  primary_risk: StabilityRisk;
+}
+
+export interface SensitivityPayload {
+  schema_version: 1;
+  season: number;
+  week: number;
+  ruleset: Ruleset;
+  generated_at: string;
+  n_scenarios: number;
+  random_seed: number;
+  perturbation_spec: PerturbationSpec;
+  base_field_cutoff: BaseFieldCutoff;
+  teams: SelectionStabilityTeam[];
 }
 
 // ---------------------------------------------------------------------------
