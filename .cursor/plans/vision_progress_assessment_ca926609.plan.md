@@ -1,6 +1,6 @@
 ---
 name: Vision Progress Assessment
-overview: Selection Room has completed Phases 1A–1C and 2A, plus Selection Stability UI. Platform hardening is done; working tree is clean. The next product leap is Scenario Lab MVP, then Phase 3 validation/export.
+overview: Phases 1A–1C and 2A complete. Platform layer (Option B jobs, DuckDB store, Run Analysis workspace, dynamic resumes) done for local/persistent-server architecture. Decision-support (Scenario Lab) not started. Next preflight Run Analysis polish/hosting-readiness, then Scenario Lab MVP.
 todos:
   - id: land-wip
     content: "Commit working tree: logo pipeline (PR A) and bracket FullBracket/RulesetBanner refactor (PR B) as separate commits"
@@ -11,6 +11,21 @@ todos:
   - id: phase2a-scenario-id
     content: Add scenario_id / config_hash / weights to runs.json so weight variants do not collide
     status: completed
+  - id: option-b-jobs
+    content: "Option B: file-backed run jobs, capabilities probe, export lock, API routes"
+    status: completed
+  - id: dynamic-resumes
+    content: "Run-grounded selection_case / why_in / concerns from active run data"
+    status: completed
+  - id: run-analysis-ux
+    content: "Run Analysis modal (Create / Runs / Jobs), RunHeader, shared useRunCatalog"
+    status: completed
+  - id: duckdb-store
+    content: "Phase 2C DuckDB run store — dual-write, CLI, catalog API; JSON remains page contract"
+    status: completed
+  - id: run-analysis-preflight
+    content: "Preflight: Run Analysis polish + hosted deployment readiness check (not a new phase)"
+    status: pending
   - id: scenario-lab
     content: "Build Scenario Lab MVP: weight sliders, normalize to 100%, launch scenario run, moved in/out/stable + field/bracket/bubble diff"
     status: pending
@@ -18,24 +33,41 @@ todos:
     content: "Phase 3: validation dashboard MVP surfacing Python backtest/committee alignment data"
     status: pending
   - id: update-plans-docs
-    content: Fix stale SSI stub references in CHANGELOG.md and limitations-and-ethics.md
+    content: Fix stale SSI stub references in CHANGELOG.md and limitations-and-ethics.md; sync web-app.md Run Analysis copy
     status: pending
 isProject: false
 ---
 
 # Selection Room Vision — Progress Assessment
 
-**Last updated:** 2026-07-03 (post-hardening session)
+**Last updated:** 2026-07-03 (post platform layer: Option B, DuckDB, Run Analysis, dynamic resumes)
 
-**Sources:** [`.cursor/plans/selection_room_vision_5f27cf0d.plan.md`](.cursor/plans/selection_room_vision_5f27cf0d.plan.md), [`.cursor/plans/selection_stability_visual_6f4f62ca.plan.md`](.cursor/plans/selection_stability_visual_6f4f62ca.plan.md), git history on `main`.
+**Sources:** [`.cursor/plans/selection_room_vision_5f27cf0d.plan.md`](.cursor/plans/selection_room_vision_5f27cf0d.plan.md), [`.cursor/plans/selection_stability_visual_6f4f62ca.plan.md`](.cursor/plans/selection_stability_visual_6f4f62ca.plan.md), [`.cursor/plans/option_b_run_jobs_e25d06fb.plan.md`](.cursor/plans/option_b_run_jobs_e25d06fb.plan.md), [`.cursor/plans/duckdb_run_store_39aea488.plan.md`](.cursor/plans/duckdb_run_store_39aea488.plan.md).
 
-**Mental model:** You are no longer trying to finish Phase 1. You are at the **Scenario Lab threshold**.
+**Mental model:** Platform foundation is mostly done. Decision-support product is still not done. Do not confuse the two.
+
+---
+
+## Four-layer current state
+
+| Layer | Description | Status |
+|-------|-------------|--------|
+| **Layer 1 — Viewer** | Explainability, bracket, charts, stability UI | **Done** |
+| **Layer 2 — Platform** | Jobs, run workspace, dynamic resumes, local DuckDB | **Done for local/persistent-server architecture** — hosting hardening not yet validated |
+| **Layer 3 — Decision platform** | Scenario Lab (what-if, diffs) | **Not started** |
+| **Layer 4 — Institutional / share** | Validation dashboard, export, share URLs | **Not started** |
+
+**Critical distinction:** Option B and DuckDB do **not** count as Scenario Lab. They **make Scenario Lab possible**. Future agents should not re-polish Phase 1 or treat infrastructure as product completion.
 
 ---
 
 ## Current-state framing
 
-Selection Room is a **polished CFP selection viewer** with strong explainability, bracket UX, bubble analytics, and real Selection Stability data. The next step is turning it into an **interactive decision platform** through Scenario Lab, then proving credibility through a Validation dashboard and making outputs shareable/exportable.
+Selection Room is no longer just a **polished JSON viewer**. It is a **run-capable analysis workspace** on localhost or a persistent Node server: browser run generation, in-page run switching, run-grounded team narratives, and a local analytical store.
+
+It is **not yet** a true **what-if decision platform** because Scenario Lab has not shipped. That remains the next product leap.
+
+**Platform honesty:** Layer 2 is done in **architecture** (Option B jobs + DuckDB + Run Analysis). **Public hosted deployment is not yet proven.** Phrase as: *local/persistent-server platform, not proven public hosted platform.*
 
 ---
 
@@ -49,10 +81,22 @@ The six-step user flow:
 |------|--------|
 | 1. See the field | **Strong** — Dashboard projected field, rankings, bubble board |
 | 2. Understand the rule path | **Strong** — Methodology uses centralized `MetricTooltip` + [`METRIC_EXPLANATIONS`](web/lib/explain.ts) via [`MethodologyWeightBreakdown.tsx`](web/components/methodology/MethodologyWeightBreakdown.tsx) |
-| 3. Inspect any team | **Strong** — Drawer + hover cards sitewide; `?run=` scoping fixed |
+| 3. Inspect any team | **Strong** — Drawer + hover cards; `?run=` scoping; run-grounded `selection_case` |
 | 4. Understand the bubble | **Strong** — Cut-line chart + Selection Stability board + audit |
 | 5. Test what would change | **Not started** — No Scenario Lab UI |
-| 6. Share or export the result | **Minimal** — Bracket share button only; brand/PWA metadata shipped ahead of Phase 3 export layer |
+| 6. Share or export the result | **Minimal** — Bracket share button only; brand/PWA metadata ahead of Phase 3 export layer |
+
+### Platform enablers (not user-facing steps)
+
+| Enabler | Helps step | How |
+|---------|------------|-----|
+| Option B jobs | 5, 6 | Launch engine runs from browser without terminal |
+| `scenario_id` + `config_hash` (2A) | 5 | Scenario runs do not collide with base |
+| DuckDB store | 5 | Diff queries for field/bubble/bracket (CLI + future Scenario Lab). **Pages still read JSON.** |
+| Run Analysis modal | 1, 5, 6 | Create / switch / job status in-page — no admin `/runs` route |
+| `selection_case` | 3, 4 | Run-grounded why-in/concerns, not static blurbs |
+
+**DuckDB doctrine (repeat everywhere):** DuckDB powers run catalog, dev analytics, and future diffs; **JSON remains the page-rendering contract.** Do not convert the whole app to DB reads early.
 
 ---
 
@@ -60,21 +104,25 @@ The six-step user flow:
 
 ```mermaid
 flowchart LR
-  P1A[Phase 1A Explainability]
-  P1B[Phase 1B Bracket]
-  P1C[Phase 1C Charts]
-  P2A[Phase 2A Contracts + SSI]
-  P2B[Phase 2B SSI UI + Scenario Lab]
-  P3[Phase 3 Institutional]
+  P1[Layer1_Viewer]
+  P2A[Phase2A_Contracts]
+  P2B1[OptionB_Jobs]
+  P2B2[RunAnalysis_UX]
+  P2B3[DynamicResumes]
+  P2C[DuckDB_Store]
+  SL[ScenarioLab_MVP]
+  P3[Layer4_Institutional]
 
-  P1A --> P1B --> P1C --> P2A --> P2B --> P3
+  P1 --> P2A --> P2B1 --> P2B2 --> P2B3 --> P2C --> SL --> P3
 
-  P1A --- done1[Done]
-  P1B --- done2[Done]
-  P1C --- done3[Done]
-  P2A --- done4[Done]
-  P2B --- split["SSI UI done · Scenario Lab not started"]
-  P3 --- todo[Not started]
+  P1 --- d1[Done]
+  P2A --- d2[Done]
+  P2B1 --- d3[Done]
+  P2B2 --- d4[Done]
+  P2B3 --- d5[Done]
+  P2C --- d6["Done locally · JSON web contract"]
+  SL --- t1[Not started]
+  P3 --- t2[Not started]
 ```
 
 ---
@@ -83,21 +131,30 @@ flowchart LR
 
 | Area | Status |
 |------|--------|
-| Phase 1A Explainability | **Done** |
-| Phase 1B Bracket flagship | **Done** |
-| Phase 1C Signature visuals | **Done** |
+| Phase 1A–1C Explainability / Bracket / Charts | **Done** |
 | Phase 2A Contracts + SSI | **Done** |
-| Phase 2B SSI UI | **Mostly done** — Bubble board + drawer block shipped |
+| Phase 2B SSI UI | **Done** |
+| Option B run jobs | **Done** (local/persistent-server) |
+| Run Analysis workspace | **Done** |
+| Dynamic resume explanations | **Done** |
+| Phase 2C DuckDB store | **Done** (local analytics; JSON web contract) |
 | Scenario Lab | **Not started** |
 | Phase 3 validation/export/share | **Not started** |
 
-**Progress estimate:**
+**Progress (qualitative):**
 
-- ~85% through front-end visualization/explainability (Phases 1 + stability UI + brand)
-- ~45% through true decision-support platform (Scenario Lab + validation + export still missing)
-- ~70% through the locked six-phase roadmap by feature count
+- **Visualization/explainability:** mature
+- **Platform foundation:** strong locally; hosting/deployment not yet validated
+- **Decision-support:** incomplete until Scenario Lab ships
+- **Institutional layer:** not started
 
-The next major product gap is **not** bracket polish, logos, or more hover cards. It is **Scenario Lab MVP** — because that completes user flow step 5.
+**Progress (optional numeric):**
+
+- ~90% front-end visualization/explainability
+- ~55% platform foundation — because hosting/deployment is not proven
+- ~40% true decision-support platform
+
+The next major product gap is **not** bracket polish, logos, or more hover cards. It is **Scenario Lab MVP** — because that completes north-star step 5.
 
 ---
 
@@ -105,13 +162,11 @@ The next major product gap is **not** bracket polish, logos, or more hover cards
 
 ### Phase 1A — Explainability — **Done**
 
-**Commits:** `08b5915`, polish in `3e4e382`
-
 - [`InfoTooltip`](web/components/explain/InfoTooltip.tsx) (+ Metric/Badge variants)
 - Central copy in [`web/lib/explain.ts`](web/lib/explain.ts)
 - [`TeamHoverCard`](web/components/team/TeamHoverCard.tsx), [`MatchupHoverCard`](web/components/bracket/MatchupHoverCard.tsx)
 - Drawer `?run=` scoping via [`useActiveRun`](web/components/team/useActiveRun.ts) + [`useTeamResumes`](web/components/team/useTeamResumes.ts)
-- Methodology + dashboard wired to centralized tooltips (`3e4e382`)
+- Methodology + dashboard wired to centralized tooltips
 
 Optional remaining: native `title=` fallbacks on logos/conference badges (acceptable per plan).
 
@@ -119,10 +174,7 @@ Optional remaining: native `title=` fallbacks on logos/conference badges (accept
 
 ### Phase 1B — Bracket flagship — **Done**
 
-**Commits:** `6fb9ddb`, `20386ce`, `6eb53aa`, `9fc276b`, `d5e0e33`
-
 - Pod-first CFP layout ([`FullBracket.tsx`](web/components/bracket/FullBracket.tsx), [`RulesetBanner.tsx`](web/components/bracket/RulesetBanner.tsx))
-- Larger slots, CFP round labels, campus/QF summaries
 - Full / Round / Matchups modes + matchup edge cards
 - Share button on bracket viewer (copies current URL including `?run=`)
 
@@ -130,81 +182,122 @@ Optional remaining: native `title=` fallbacks on logos/conference badges (accept
 
 ### Phase 1C — Signature visuals — **Done**
 
-**Commit:** `af1fc31`
-
 - `ResumePredictiveScatter` on Rankings
 - `BubbleCutlineChart` on Bubble + dashboard mini
 - Collapsible bubble audit
-- `MetricContributionBars` correctly deferred
 
 ---
 
 ### Phase 2A — Scenario contracts + SSI — **Done**
-
-**Commits:** `cb3fa41`, `6068b30`, `b59aa20`
 
 | Deliverable | Status |
 |-------------|--------|
 | Real Monte Carlo + `sensitivity.json` | Done |
 | Scenario identity in `runs.json` | Done — `run_id`, `scenario_id`, `config_hash`, `weights`, `label` |
 | `scenario_stem()` helpers | Done — [`src/pipeline/paths.py`](src/pipeline/paths.py) |
-| Manifest + index rebuild from filename | Done — prevents scenario/base collision |
-| Tests | Done — [`tests/test_run_identity.py`](tests/test_run_identity.py), updated [`tests/test_api_contracts.py`](tests/test_api_contracts.py) |
+| Tests | Done — [`tests/test_run_identity.py`](tests/test_run_identity.py), [`tests/test_api_contracts.py`](tests/test_api_contracts.py) |
 
-**Platform unlock:** Scenario outputs can no longer overwrite base runs. Scenario Lab can be built cleanly on top of this.
+**Platform unlock:** Scenario outputs cannot overwrite base runs.
 
-Minor non-blocking gaps: no `sensitivity.json` export round-trip test; no N=1000 performance test; stale "SSI stub" in [`CHANGELOG.md`](CHANGELOG.md) and [`docs/research/limitations-and-ethics.md`](docs/research/limitations-and-ethics.md).
+Minor non-blocking gaps: stale "SSI stub" in [`CHANGELOG.md`](CHANGELOG.md) and [`docs/research/limitations-and-ethics.md`](docs/research/limitations-and-ethics.md).
 
 ---
 
-### Phase 2B — SSI UI shipped; Scenario Lab not started
+### Phase 2B — SSI UI — **Done**
 
-Phase 2B is split:
+- Bubble `SelectionStabilityBoard`, drawer stability block, explain copy + fixtures
 
-- **Selection Stability UI is complete** for Bubble and Team Resume surfaces (`c4ae14c`, `4a29d56`, `e44b27d`)
-- **The interactive Scenario Lab workflow has not started**
+**Scenario Lab (rest of 2B product):** **Not started** — weight sliders, diffs, scenario launcher UI.
 
-| Deliverable | Status |
-|-------------|--------|
-| Bubble `SelectionStabilityBoard` | Done |
-| Drawer stability block | Done |
-| Explain copy + TS types/fixtures | Done |
-| Scenario Lab page + weight sliders | **Not started** |
-| Ruleset toggle, field/bracket/bubble diff | **Not started** |
-| Parameterized run launcher | **Not started** |
-| SSI diff in Scenario Lab (2B-3) | **Not started** |
+---
+
+### Phase 2 platform (2B-infra + 2C) — **Done locally**
+
+Architecture complete for persistent-server dev. **Not proven on public hosted production.**
+
+#### Option B — file-backed run jobs
+
+- [`web/lib/runJob.ts`](web/lib/runJob.ts), [`web/app/api/run/`](web/app/api/run/)
+- File-backed `data/output/jobs/` (metadata, logs, `active.json`)
+- `POST /api/run` → 202 + `job_id`; capabilities probe; export lock
+- Stem resolution: `SELECTION_ROOM_EXPORT stem=…` + `runs.json` fallback
+- Gate: `SELECTION_ROOM_ENABLE_RUN_JOBS=1`
+
+#### Run Analysis workspace
+
+- [`RunAnalysisDialog.tsx`](web/components/layout/RunAnalysisDialog.tsx) — Create | Runs | Jobs tabs
+- [`RunHeader.tsx`](web/components/layout/RunHeader.tsx), [`RunHeaderActions.tsx`](web/components/layout/RunHeaderActions.tsx)
+- Shared catalog: [`useRunCatalog.ts`](web/lib/useRunCatalog.ts) + [`GET /api/runs/catalog`](web/app/api/runs/catalog/route.ts)
+- Switcher shows current run label; same catalog as modal (no duplicate fetch)
+
+#### Dynamic resume explanations
+
+- [`src/api_contracts/selection_case.py`](src/api_contracts/selection_case.py) — run-grounded bullets
+- [`tests/test_selection_case.py`](tests/test_selection_case.py)
+- UI: [`ResumeContent.tsx`](web/components/team/ResumeContent.tsx)
+
+#### Phase 2C — DuckDB run store
+
+- [`src/store/`](src/store/), `data/output/selection_room.duckdb`
+- Dual-write in [`export_run_api`](src/api_contracts/export.py); `SELECTION_ROOM_STORE_REQUIRED` policy
+- CLI: `sroom store status | runs | query | rebuild --from-api`
+- Tests: `tests/test_store_writer.py`, `tests/test_store_rebuild.py`, `tests/test_store_failure_policy.py`
+- **Web pages still read JSON.** Catalog API uses DuckDB when available, `runs.json` fallback.
+
+**Scenario Lab prerequisites now met:**
+
+- Parameterized run launcher (Option B)
+- Scenario-safe identity (2A)
+- Local diff-friendly store (2C)
+- In-app run switching (Run Analysis)
+
+**Still to build for Scenario Lab:**
+
+- Custom weights on `/api/run` or engine flag
+- Diff UI (DuckDB queries or client-side JSON compare)
+- Scenario Lab page + sliders
 
 ---
 
 ### Phase 3 — Institutional / share layer — **Not started**
 
-| Priority (locked order) | Status |
-|-------------------------|--------|
+| Priority | Status |
+|----------|--------|
 | Validation dashboard MVP | Not started — Python validation suite exists as CSV only |
 | Export tools (bracket PNG, rankings CSV, resume card) | Not started |
 | Shareable scenario URLs | Not started |
-| Optional FastAPI / run store | Not started |
+| Hosted Postgres / FastAPI | Not started — local DuckDB only; expand only if multi-user hosting needs it |
 
-Brand/PWA assets (`9fc276b`) are ahead of this layer but do not satisfy user flow step 6.
+Brand/PWA assets do not satisfy user flow step 6.
 
 ---
 
-## Working tree status
+## Key files index (for future agents)
 
-Clean on `main` after hardening session (commits `6eb53aa` → `b59aa20`).
-
-Untracked: `uv.lock` only (leave alone unless intentionally standardizing dependency resolution).
+| Concern | Where |
+|---------|-------|
+| Run generation (Option B) | [`web/lib/runJob.ts`](web/lib/runJob.ts), [`web/app/api/run/`](web/app/api/run/) |
+| Run catalog | [`web/lib/runCatalog.ts`](web/lib/runCatalog.ts), [`web/lib/useRunCatalog.ts`](web/lib/useRunCatalog.ts), [`web/app/api/runs/catalog/route.ts`](web/app/api/runs/catalog/route.ts) |
+| Run UI / header | [`web/components/layout/RunHeader.tsx`](web/components/layout/RunHeader.tsx), [`web/components/layout/RunHeaderActions.tsx`](web/components/layout/RunHeaderActions.tsx), [`web/components/layout/RunAnalysisDialog.tsx`](web/components/layout/RunAnalysisDialog.tsx), [`web/components/layout/RunSwitcher.tsx`](web/components/layout/RunSwitcher.tsx) |
+| JSON API contract | [`src/api_contracts/`](src/api_contracts/), [`docs/api-contracts.md`](docs/api-contracts.md) |
+| Dynamic resume explanations | [`src/api_contracts/selection_case.py`](src/api_contracts/selection_case.py), [`tests/test_selection_case.py`](tests/test_selection_case.py) |
+| Record metadata | [`src/api_contracts/records.py`](src/api_contracts/records.py), [`tests/test_team_records.py`](tests/test_team_records.py) |
+| Run identity / scenario stems | [`src/pipeline/paths.py`](src/pipeline/paths.py), [`tests/test_run_identity.py`](tests/test_run_identity.py) |
+| DuckDB store (local analytics) | [`src/store/`](src/store/), [`docs/development.md`](docs/development.md) (DuckDB section) |
 
 ---
 
 ## Locked next moves
 
-1. **Scenario Lab MVP** — the main product leap
+0. **Run Analysis polish + hosting-readiness preflight** — not a new phase; validate modal UX and persistent-server deploy before charging into Scenario Lab
+1. **Scenario Lab MVP** — the main product leap (north-star step 5)
 2. **Validation dashboard MVP** — credibility layer
-3. **Share/export layer** — share URL, bracket PNG, rankings CSV (in that order)
-4. **Remaining docs cleanup** — CHANGELOG + limitations SSI stub references (do not block Scenario Lab)
+3. **Share/export layer** — share URL, bracket PNG, rankings CSV
+4. **Docs cleanup** — CHANGELOG + limitations SSI stubs; web-app.md Run Analysis copy
 
-Do not start: user accounts, database/run store, live simulation queue, complex animations, full Scenario Stability recomputation UI, shareable scenario URLs. Those come after the workflow is proven.
+Do **not** expand DuckDB into web page reads or Postgres until Scenario Lab proves query patterns. Do **not** re-polish Phase 1. Optional hosted DB only if multi-user hosting requires it.
+
+**Current true next move:** Polish Run Analysis modal → Scenario Lab MVP.
 
 ---
 
@@ -213,43 +306,24 @@ Do not start: user accounts, database/run store, live simulation queue, complex 
 **In scope:**
 
 - Start from a selected run
-- Adjust model weights
-- Normalize weights to 100%
+- Adjust model weights; normalize to 100%
 - Launch scenario run
 - Show moved in / moved out / stable
-- Show updated field
-- Show updated bracket
-- Show bubble diff
+- Show updated field, bracket, bubble diff
 
 **Out of scope for MVP:**
 
 - User accounts
-- Database / run store
+- Hosted database
 - Live simulation queue
 - Complex animations
 - Full Selection Stability recomputation UI
 - Shareable scenario URLs
 
----
-
-## Key commits (hardening session)
-
-```
-b59aa20  docs: mark Phase 2A scenario contracts complete in vision plan
-6068b30  feat(api): add scenario-safe run identity to runs.json
-3e4e382  fix(web): finish Phase 1 explainability polish
-16efa78  test(api): cover team slot logo URL export fallback
-9fc276b  feat(web): add Selection Room brand assets and app metadata
-20386ce  refactor(web): extract full bracket layout and ruleset banner
-6eb53aa  fix(web): unify team logo surfaces across charts and tiles
-```
-
-Foundation (earlier): `08b5915`, `6fb9ddb`, `af1fc31`, `cb3fa41`, `c4ae14c`–`e44b27d`.
+**Note:** Local DuckDB store exists for analytics/diffs; it is **not** a substitute for Scenario Lab UI.
 
 ---
 
 ## Bottom line
 
-Phases 1 and 2A are complete. Selection Stability UI is mostly complete. **Stop polishing old phases.**
-
-**Next real product leap: Scenario Lab MVP.**
+Phases 1 and 2A remain complete, and the platform layer is now in place for local or persistent-server usage: browser run generation, Run Analysis workspace, dynamic run-grounded resumes, and a local DuckDB analytical store. Selection Room is no longer just a JSON viewer; it is a run-capable analysis workspace. It is not yet a true what-if decision platform because Scenario Lab has not shipped. Scenario Lab is the next product leap because it completes north-star step 5, "Test what would change." Option B and DuckDB exist to make scenario launches, run switching, and diff queries boring to implement.
