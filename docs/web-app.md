@@ -134,7 +134,11 @@ Share cards are captured with `html-to-image` from an off-screen render
 identical regardless of the viewer's theme, and every card carries the
 independence disclaimer. Team logos come from ESPN's CDN, which serves
 `access-control-allow-origin: *`, so captures stay untainted; a logo that
-fails to fetch falls back to the initials tile.
+fails to fetch falls back to the initials tile. Before capture,
+`exportNodeToPng` bakes each inline SVG's computed `fill`/`stroke`/`color`
+into inline styles — `html-to-image` drops class-based paint on SVG
+internals (the CFP Playoff mark would otherwise export with default black
+fills).
 
 ## Selection Stability
 
