@@ -1,0 +1,3 @@
+{
+  "buildCommand": "pnpm seed-fixtures:demo && pnpm build"
+}
