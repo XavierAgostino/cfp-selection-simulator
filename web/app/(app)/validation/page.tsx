@@ -2,6 +2,7 @@ import { Terminal } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ValidationDashboard } from "@/components/validation/ValidationDashboard";
 import { getValidationData } from "@/lib/data";
+import { pageDescription, pageTitle } from "@/lib/typography";
 import type { ValidationPayload } from "@/lib/types";
 
 export const metadata = {
@@ -20,10 +21,8 @@ export default async function ValidationPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-          Model Validation
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+        <h1 className={pageTitle}>Model Validation</h1>
+        <p className={pageDescription}>
           The honesty layer: how well the model reproduces the committee&apos;s
           rankings, picks the right field under each era&apos;s rules, and scores
           completed games. Measured against history, not asserted.

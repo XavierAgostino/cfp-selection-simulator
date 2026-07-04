@@ -36,6 +36,7 @@ import type {
   PredictiveValidationRow,
   ValidationPayload,
 } from "@/lib/types";
+import { metricLabel, metricValueXl } from "@/lib/typography";
 
 /** Thin horizontal proportion meter (0–1) in the monochrome palette. */
 function Meter({
@@ -109,16 +110,12 @@ function HeadlineStat({
   return (
     <Card className="gap-2 border-border bg-card py-4">
       <CardHeader className="px-4">
-        <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {label}
-        </div>
+        <div className={metricLabel}>{label}</div>
       </CardHeader>
       <CardContent className="px-4">
-        <div className="text-3xl font-semibold tabular-nums text-foreground">
-          {value}
-        </div>
+        <div className={metricValueXl}>{value}</div>
         {chip ? (
-          <p className="mt-1.5 text-xs font-medium text-foreground">{chip}</p>
+          <p className="mt-1.5 text-xs font-semibold text-foreground">{chip}</p>
         ) : null}
         <div className="mt-1 text-xs leading-relaxed text-muted-foreground">
           {sub}
@@ -130,7 +127,7 @@ function HeadlineStat({
 
 function OutlierChip() {
   return (
-    <Badge variant="chip-gold" className="text-[10px]">
+    <Badge variant="chip-gold">
       {formatCommitteeOutlierLabel()}
     </Badge>
   );
@@ -177,7 +174,7 @@ function ValidationScopeStrip({
       {years.length > 0 ? (
         <p className="mt-2 text-xs text-muted-foreground">
           Seasons in this artifact:{" "}
-          <span className="font-medium text-foreground">{seasonRange(years)}</span>
+          <span className="font-semibold tabular-nums text-foreground">{seasonRange(years)}</span>
           {years.length === 1 ? ", not all CFP history." : ""}
         </p>
       ) : null}
@@ -195,19 +192,19 @@ function ValidationArtifactFooter({ data }: { data: ValidationPayload }) {
         <dl className="mt-2 grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <dt className="text-muted-foreground">Generated</dt>
-            <dd className="font-medium tabular-nums text-foreground">
+            <dd className="font-semibold tabular-nums text-foreground">
               {formatValidationGeneratedAt(data.generated_at)}
             </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">Target</dt>
-            <dd className="font-medium text-foreground">
+            <dd className="font-semibold text-foreground">
               {formatValidationTargetLabel(data.target)}
             </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">Seasons</dt>
-            <dd className="font-medium tabular-nums text-foreground">
+            <dd className="font-semibold tabular-nums text-foreground">
               {seasonRange(data.years)}
             </dd>
           </div>
@@ -215,7 +212,7 @@ function ValidationArtifactFooter({ data }: { data: ValidationPayload }) {
             <dt className="text-muted-foreground">
               <ValidationTerm term="outlier_seasons" className="normal-case" />
             </dt>
-            <dd className="font-medium text-foreground">
+            <dd className="font-semibold tabular-nums text-foreground">
               {data.outlier_years.length > 0
                 ? data.outlier_years.join(", ")
                 : "None flagged"}
@@ -230,7 +227,13 @@ function ValidationArtifactFooter({ data }: { data: ValidationPayload }) {
   );
 }
 
-export function ValidationDashboard({ data }: { data: ValidationPayload }) {
+export function ValidationDashboard({
+  data,
+  embedded = false,
+}: {
+  data: ValidationPayload;
+  embedded?: boolean;
+}) {
   const range = seasonRange(data.years);
   const selectionYears = data.selection.map((r) => r.year);
   const c = data.summary.committee;
@@ -245,24 +248,28 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        How the model&apos;s output compares to the real CFP Selection Committee
-        across{" "}
-        <span className="font-medium text-foreground">{range}</span>
-        {data.years.length > 1 ? ` (${data.years.length} seasons)` : ""}. This is
-        a retrospective accuracy check on finished seasons. The model is
-        transparent and rules-based, and it will disagree with the committee.
-        Those disagreements are the point.
-      </p>
+    <div className={embedded ? "flex flex-col gap-4" : "flex flex-col gap-6"}>
+      {!embedded ? (
+        <>
+          <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            How the model&apos;s output compares to the real CFP Selection Committee
+            across{" "}
+            <span className="font-semibold tabular-nums text-foreground">{range}</span>
+            {data.years.length > 1 ? ` (${data.years.length} seasons)` : ""}. This is
+            a retrospective accuracy check on finished seasons. The model is
+            transparent and rules-based, and it will disagree with the committee.
+            Those disagreements are the point.
+          </p>
 
-      <ValidationScopeStrip years={data.years} outlierYears={data.outlier_years} />
+          <ValidationScopeStrip years={data.years} outlierYears={data.outlier_years} />
 
-      <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        Each season is judged against the playoff format that actually applied
-        that year, not today&apos;s rules. See{" "}
-        <ValidationTerm term="era_correct_rules" className="normal-case" />.
-      </p>
+          <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            Each season is judged against the playoff format that actually applied
+            that year, not today&apos;s rules. See{" "}
+            <ValidationTerm term="era_correct_rules" className="normal-case" />.
+          </p>
+        </>
+      ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {c ? (
@@ -302,7 +309,7 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
         ) : null}
       </div>
 
-      {data.committee.length > 0 ? (
+      {!embedded && data.committee.length > 0 ? (
         <Card className="border-border bg-card">
           <CardHeader className="px-4">
             <CardTitle>
@@ -339,7 +346,7 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
                   <div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <ValidationTerm term="top12_overlap" className="normal-case" />
-                      <span className="font-medium tabular-nums text-foreground">
+                      <span className="font-semibold tabular-nums text-foreground">
                         {row.top12_overlap_label} ({pct(row.top12_overlap_ratio)})
                       </span>
                     </div>
@@ -348,7 +355,7 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
                   <div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <ValidationTerm term="bubble_overlap" className="normal-case" />
-                      <span className="font-medium tabular-nums text-foreground">
+                      <span className="font-semibold tabular-nums text-foreground">
                         {row.bubble_overlap_label} ({pct(row.bubble_overlap_ratio)})
                       </span>
                     </div>
@@ -363,14 +370,16 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
 
       {data.selection.length > 0 ? (
         <Card className="border-border bg-card">
-          <CardHeader className="px-4">
-            <CardTitle>Era-correct field selection</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Each season is judged against the playoff format that actually
-              applied that year (4-team, then 12-team), not today&apos;s rules.
-            </p>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3 px-4">
+          {!embedded ? (
+            <CardHeader className="px-4">
+              <CardTitle>Era-correct field selection</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Each season is judged against the playoff format that actually
+                applied that year (4-team, then 12-team), not today&apos;s rules.
+              </p>
+            </CardHeader>
+          ) : null}
+          <CardContent className={cn("flex flex-col gap-3 px-4", embedded && "py-4")}>
             {data.selection.map((row) => (
               <div
                 key={row.year}
@@ -380,13 +389,13 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
                   <span className="text-sm font-semibold tabular-nums text-foreground">
                     {row.year}
                   </span>
-                  <Badge variant="chip-neutral" className="text-[10px]">
+                  <Badge variant="chip-neutral">
                     {row.rule_target}
                   </Badge>
                   {row.is_outlier ? <OutlierChip /> : null}
                   <Badge
                     variant={row.correct_field_size ? "chip-green" : "chip-red"}
-                    className="ml-auto text-[10px]"
+                    className="ml-auto"
                   >
                     {formatValidationFieldSizeLabel(row.correct_field_size)}
                   </Badge>
@@ -398,7 +407,7 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
                 <div className="mt-2">
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <ValidationTerm term="field_overlap" className="normal-case" />
-                    <span className="font-medium tabular-nums text-foreground">
+                    <span className="font-semibold tabular-nums text-foreground">
                       {row.field_overlap_label} ({pct(row.field_overlap_ratio)})
                     </span>
                   </div>
@@ -449,7 +458,7 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
                   {row.seeding_within_one !== null ? (
                     <div className="flex items-center gap-1.5">
                       <ValidationTerm term="seeds_within_one" className="normal-case" />
-                      <span className="font-medium tabular-nums text-foreground">
+                      <span className="font-semibold tabular-nums text-foreground">
                         {pct(row.seeding_within_one)}
                       </span>
                     </div>
@@ -461,7 +470,7 @@ export function ValidationDashboard({ data }: { data: ValidationPayload }) {
         </Card>
       ) : null}
 
-      {predictiveByYear.size > 0 ? (
+      {!embedded && predictiveByYear.size > 0 ? (
         <Card className="border-border bg-card">
           <CardHeader className="px-4">
             <CardTitle>

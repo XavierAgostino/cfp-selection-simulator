@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { MatchupHoverCard } from "@/components/bracket/MatchupHoverCard";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import type { FirstRoundGame, TeamSlot } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 function MatchupSide({ team }: { team: TeamSlot }) {
@@ -28,9 +29,7 @@ function MatchupSide({ team }: { team: TeamSlot }) {
         primaryColor={team.primary_color}
         size={22}
       />
-      <span className="truncate text-sm font-medium text-foreground">
-        {team.abbreviation ?? team.team}
-      </span>
+      <span className={teamName}>{team.abbreviation ?? team.team}</span>
     </button>
   );
 }

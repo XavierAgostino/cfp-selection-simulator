@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { BracketViewer } from "@/components/bracket/BracketViewer";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import type { BracketPayload } from "@/lib/types";
+import { pageDescription, pageTitle } from "@/lib/typography";
 
 interface BracketPageProps {
   searchParams: Promise<{ run?: string }>;
@@ -27,8 +28,8 @@ export default async function BracketPage({ searchParams }: BracketPageProps) {
     <div className="flex flex-col gap-6">
       <RunHeader stem={stem} />
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Bracket</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className={pageTitle}>Bracket</h1>
+        <p className={pageDescription}>
           The full 12-team playoff bracket, pod by pod.
         </p>
       </div>

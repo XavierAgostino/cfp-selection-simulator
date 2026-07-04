@@ -15,6 +15,7 @@ import {
 import { ChartLogoDot } from "@/components/charts/ChartLogoDot";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
+import { formatPct } from "@/lib/format";
 import type {
   SelectionStabilityTeam,
   SensitivityPayload,
@@ -68,10 +69,7 @@ export function ringColor(status: StabilityStatus): string {
   return "var(--border)";
 }
 
-export function formatPct(frequency: number): string {
-  const pct = Math.round(frequency * 1000) / 10;
-  return `${pct % 1 === 0 ? pct.toFixed(0) : pct.toFixed(1)}%`;
-}
+export { formatPct };
 
 /** Chip row with per-status team counts; zero-count statuses stay visible but dimmed. */
 export function StabilityStatusChips({

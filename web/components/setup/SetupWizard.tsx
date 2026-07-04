@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CommandBlock } from "@/components/setup/CommandBlock";
 import { DataPoller } from "@/components/setup/DataPoller";
+import { bodyMuted, pageTitle } from "@/lib/typography";
 
 const STEPS: {
   title: string;
@@ -39,10 +40,8 @@ export function SetupWizard() {
         <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-primary">
           Selection Room
         </span>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Let&apos;s put a field on the board.
-        </h1>
-        <p className="text-sm leading-relaxed text-muted-foreground">
+        <h1 className={pageTitle}>Let&apos;s put a field on the board.</h1>
+        <p className={bodyMuted}>
           This app renders whatever the selection engine last produced, and it
           has not produced anything yet. Two commands in your terminal fix
           that.

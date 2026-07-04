@@ -53,7 +53,7 @@ export function WeightSliders({ percents, onChange, disabled }: WeightSlidersPro
       onMouseLeave={() => setActiveKey(null)}
     >
       <div>
-        <p className="mb-2 text-[11px] text-muted-foreground">
+        <p className="mb-2 text-xs leading-5 text-muted-foreground">
           <ScenarioLabTerm term="normalize_weights" className="normal-case" />
         </p>
         <div className="flex h-3 w-full overflow-hidden rounded-full ring-1 ring-foreground/10">
@@ -88,7 +88,7 @@ export function WeightSliders({ percents, onChange, disabled }: WeightSlidersPro
                   }
                 />
                 <TooltipContent side="top" className="block max-w-[240px] px-3 py-2 leading-relaxed">
-                  <span className="block font-semibold text-foreground">
+                  <span className="block font-semibold tabular-nums text-foreground">
                     {label} · {value}%
                   </span>
                   <span className="mt-0.5 block text-popover-foreground/80">{description}</span>
@@ -127,7 +127,7 @@ export function WeightSliders({ percents, onChange, disabled }: WeightSlidersPro
                   />
                   <MetricTooltip
                     metric={metric.metric}
-                    className="text-sm font-medium text-foreground"
+                    className="text-sm font-semibold text-foreground"
                   />
                 </div>
                 <span className="font-mono text-sm font-semibold tabular-nums text-foreground">

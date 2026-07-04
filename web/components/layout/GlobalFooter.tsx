@@ -25,7 +25,7 @@ function FooterLink({
   icon,
 }: FooterNavLink) {
   const className =
-    "group inline-flex items-center gap-2 text-sm text-foreground/70 transition-colors hover:text-foreground";
+    "group inline-flex items-center gap-2 text-sm font-medium text-foreground/75 transition-colors hover:text-foreground";
 
   const content = (
     <>
@@ -71,10 +71,10 @@ export function GlobalFooter() {
               className="size-8 shrink-0 opacity-90 transition-opacity group-hover:opacity-100"
             />
             <div>
-              <p className="text-base font-semibold text-foreground">
+              <p className="text-base font-bold text-foreground">
                 {FOOTER_PRODUCT_NAME}
               </p>
-              <p className="text-sm text-foreground/65">{FOOTER_TAGLINE}</p>
+              <p className="text-sm leading-6 text-foreground/70">{FOOTER_TAGLINE}</p>
             </div>
           </Link>
         </div>
@@ -96,7 +96,7 @@ export function GlobalFooter() {
           ))}
         </div>
 
-        <p className="mt-12 max-w-3xl text-sm leading-relaxed text-foreground/55">
+        <p className="mt-12 max-w-3xl text-sm leading-6 text-foreground/60">
           {FOOTER_DISCLAIMER}
         </p>
       </div>

@@ -7,6 +7,7 @@ import { ConferenceBadge, ConferenceCaption } from "@/components/team/Conference
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 interface TeamRowProps {
@@ -44,9 +45,7 @@ export function TeamRow({ team, onClick, className }: TeamRowProps) {
       />
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="truncate text-sm font-medium text-foreground">
-            {team.team}
-          </span>
+          <span className={teamName}>{team.team}</span>
           {team.bid_type === "auto" ? (
             <ConferenceBadge
               conference={team.conference}

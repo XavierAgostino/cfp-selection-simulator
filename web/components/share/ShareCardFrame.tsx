@@ -40,7 +40,7 @@ export function ShareCardFrame({
             </span>
           </div>
           {contextLabel ? (
-            <span className="text-sm font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="text-sm font-semibold tabular-nums uppercase tracking-[0.14em] text-muted-foreground">
               {contextLabel}
             </span>
           ) : null}

@@ -3,6 +3,7 @@ import { ScenarioLabWorkspace } from "@/components/scenario/ScenarioLabWorkspace
 import { getRuns, NotFoundError } from "@/lib/data";
 import { isBaseRun } from "@/lib/runDisplay";
 import type { RunsPayload } from "@/lib/types";
+import { pageDescription, pageTitle } from "@/lib/typography";
 
 export const metadata = {
   title: "Scenario Lab | Selection Room",
@@ -26,10 +27,8 @@ export default async function ScenarioLabPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-          Scenario Lab
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+        <h1 className={pageTitle}>Scenario Lab</h1>
+        <p className={pageDescription}>
           Change how much each component drives the composite, then re-run
           selection to compare against the base weights. Every result is a
           projected reordering under different assumptions, not a win probability.

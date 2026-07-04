@@ -36,6 +36,7 @@ import {
   type WeightPercents,
 } from "@/lib/scenarioWeights";
 import type { RunSummary } from "@/lib/types";
+import { bodyMuted, sectionTitle } from "@/lib/typography";
 
 interface ScenarioLabWorkspaceProps {
   runs: RunSummary[];
@@ -287,13 +288,13 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">
+                <h2 className={sectionTitle}>
                   {baseRun?.label} · scenario{" "}
-                  <span className="font-mono text-base text-tag-gold-text">
+                  <span className="font-mono text-base tabular-nums text-tag-gold-text">
                     {diff.scenario_weights ? weightsScenarioId(diff.scenario_weights) : ""}
                   </span>
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className={bodyMuted}>
                   Projected reordering versus the base weights. Simulated, not a probability.
                 </p>
               </div>
@@ -313,10 +314,10 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
         {!diff && !run.running && run.phase !== "failed" && !diffError ? (
           <div className="flex min-h-64 flex-col rounded-xl border border-border/60 bg-card px-6 py-8">
             <div className="flex flex-col items-center text-center">
-              <h2 className="text-base font-medium text-foreground">
+              <h2 className={sectionTitle}>
                 Reweight the model
               </h2>
-              <p className="mt-2 max-w-md text-sm text-muted-foreground">
+              <p className={`${bodyMuted} mt-2 max-w-md`}>
                 Shift how much the four components drive the composite, then run a
                 scenario to compare against the base run.
               </p>

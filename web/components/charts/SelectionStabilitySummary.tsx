@@ -40,7 +40,7 @@ function ClosestCallRow({ team }: { team: SelectionStabilityTeam }) {
         />
         {STATUS_LABEL[team.status]}
       </span>
-      <span className="w-14 text-right text-sm font-medium tabular-nums text-foreground">
+      <span className="w-14 text-right text-sm font-semibold tabular-nums text-foreground">
         {formatPct(team.selection_frequency)}
       </span>
     </button>

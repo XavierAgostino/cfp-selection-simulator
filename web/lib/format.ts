@@ -12,6 +12,12 @@ export function formatRecord(record: Record_ | null | undefined): string {
   return `${record.wins}-${record.losses}`;
 }
 
+/** "87.5%" from a 0–1 Monte Carlo selection frequency. */
+export function formatPct(frequency: number): string {
+  const pctValue = Math.round(frequency * 1000) / 10;
+  return `${pctValue % 1 === 0 ? pctValue.toFixed(0) : pctValue.toFixed(1)}%`;
+}
+
 /**
  * Fallback initials for a team without a logo, e.g. "Notre Dame" -> "ND",
  * "Ole Miss" -> "OM". Prefers an explicit abbreviation when present.

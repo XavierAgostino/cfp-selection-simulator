@@ -18,6 +18,7 @@ import type {
   ScenarioDiff,
   SeedChange,
 } from "@/lib/scenarioDiff";
+import { teamName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 interface SectionProps {
@@ -57,8 +58,8 @@ function TeamChip({ team, trailing }: { team: DiffTeam; trailing?: React.ReactNo
         size={24}
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-foreground">{team.team}</p>
-        <p className="truncate text-[11px] text-muted-foreground">{team.conference}</p>
+        <p className={teamName}>{team.team}</p>
+        <p className="truncate text-xs text-muted-foreground">{team.conference}</p>
       </div>
       {trailing}
     </div>
@@ -95,9 +96,7 @@ function SeedRow({ change }: { change: SeedChange }) {
           primaryColor={change.primary_color}
           size={22}
         />
-        <span className="truncate text-sm font-medium text-foreground">
-          {change.team}
-        </span>
+        <span className={teamName}>{change.team}</span>
       </div>
       <div className="flex items-center gap-2 font-mono text-sm tabular-nums text-muted-foreground">
         <span>#{change.base_seed ?? "—"}</span>

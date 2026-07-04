@@ -3,6 +3,7 @@
 import { useActiveRun } from "@/components/team/useActiveRun";
 import { useSensitivity } from "@/components/team/useSensitivity";
 import { METRIC_EXPLANATIONS } from "@/lib/explain";
+import { formatPct } from "@/lib/format";
 import type { SelectionStabilityTeam, StabilityStatus } from "@/lib/types";
 
 const STATUS_LABEL: Record<StabilityStatus, string> = {
@@ -17,11 +18,6 @@ function statusColor(status: StabilityStatus): string {
   if (status === "lock" || status === "likely_in") return "var(--accent-blue)";
   if (status === "bubble") return "var(--accent-gold)";
   return "var(--muted-foreground)";
-}
-
-function formatPct(frequency: number): string {
-  const pct = Math.round(frequency * 1000) / 10;
-  return `${pct % 1 === 0 ? pct.toFixed(0) : pct.toFixed(1)}%`;
 }
 
 /**

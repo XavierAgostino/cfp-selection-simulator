@@ -17,6 +17,7 @@ import {
 } from "@/lib/runDisplay";
 import { formatRunCapabilityLabel, formatRunKindLabel } from "@/lib/displayLabels";
 import type { RunsPayload, RunSummary } from "@/lib/types";
+import { bodyMuted } from "@/lib/typography";
 
 async function loadRuns(): Promise<RunsPayload | null> {
   try {
@@ -91,10 +92,10 @@ export async function RunHeader({ stem }: RunHeaderProps) {
         {/* LEFT + MIDDLE: run identity and assumptions */}
         <div className="min-w-0 flex-1 space-y-3">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+            <p className="text-lg font-semibold tracking-tight text-foreground">
               {runPrimaryLabel(run)}
-            </h1>
-            <p className="mt-0.5 text-sm text-muted-foreground">
+            </p>
+            <p className={`${bodyMuted} mt-0.5`}>
               {isScenario
                 ? runProjectionSubtitle(run)
                 : `${dataSourceLabel(run)} · ${formatRulesetShort(run.ruleset)} model projection`}
@@ -127,7 +128,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
             {formatWeightsLabeled(run.weights)}
           </p>
 
-          <p className="text-[11px] text-muted-foreground/90">
+          <p className="text-xs leading-5 text-muted-foreground/90">
             {runDetailsLine(run)}
           </p>
 

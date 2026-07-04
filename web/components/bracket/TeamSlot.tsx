@@ -73,7 +73,7 @@ export function TeamSlot({
           <div className="flex min-w-0 items-center gap-1.5">
             <span
               className={cn(
-                "truncate font-medium text-foreground",
+                "truncate text-sm font-semibold text-foreground",
                 compact ? "text-xs" : lg ? "text-sm font-semibold" : "text-sm",
               )}
             >

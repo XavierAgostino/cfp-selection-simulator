@@ -52,7 +52,7 @@ function ResumeHeader({
               size="lg"
             />
           ) : null}
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs font-semibold tabular-nums text-muted-foreground">
             #{resume.rank}
           </span>
         </div>

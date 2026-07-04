@@ -16,6 +16,7 @@ import { formatScore, formatRecord } from "@/lib/format";
 import { recordColumnLabel, recordColumnTooltip } from "@/lib/recordMeta";
 import type { ScoreMetricKey } from "@/lib/scoreBars";
 import type { RankingRow, RecordMeta } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 
 const columnHelper = createColumnHelper<RankingRow>();
 
@@ -83,7 +84,7 @@ export function createRankingColumns(recordMeta?: RecordMeta | null) {
             />
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <div className="flex min-w-0 items-center gap-2">
-                <span className="truncate text-sm font-medium text-foreground">
+                <span className={teamName}>
                   {row.team}
                 </span>
                 {row.is_conference_champion ? (

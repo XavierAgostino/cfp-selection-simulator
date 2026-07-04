@@ -11,6 +11,7 @@ import {
 import type { ExplainBadgeKey, ExplainMetricKey } from "@/lib/explain";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { metricLabel, metricValueLg } from "@/lib/typography";
 
 interface MetricCardProps {
   label: string;
@@ -54,9 +55,7 @@ export function MetricCard({
       )}
     >
       <CardHeader className="flex flex-row items-center justify-between px-4">
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {label}
-        </span>
+        <span className={metricLabel}>{label}</span>
         {explainMetric ? (
           <MetricTooltip metric={explainMetric}>{infoTrigger}</MetricTooltip>
         ) : explainBadge ? (
@@ -64,9 +63,7 @@ export function MetricCard({
         ) : null}
       </CardHeader>
       <CardContent className="px-4">
-        <div className="text-2xl font-semibold tabular-nums text-foreground">
-          {value}
-        </div>
+        <div className={metricValueLg}>{value}</div>
         {sub ? (
           <div className="mt-1 text-xs text-muted-foreground">{sub}</div>
         ) : null}

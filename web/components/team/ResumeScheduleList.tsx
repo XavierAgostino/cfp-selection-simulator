@@ -5,6 +5,7 @@ import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { AppIcon } from "@/components/icons/AppIcon";
 import { SCHEDULE_LOCATION_ICONS } from "@/components/icons/schedule-icons";
 import type { ScheduleGame, Location } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 const locationCopy: Record<Location, { label: string }> = {
@@ -56,7 +57,7 @@ export function ResumeScheduleList({ schedule, className }: ResumeScheduleListPr
             <TeamLogoTile team={game.opponent} size={24} />
             <div className="min-w-0">
               <div className="flex min-w-0 items-center gap-1.5">
-                <span className="truncate text-sm font-medium text-foreground">
+                <span className={teamName}>
                   {game.opponent}
                 </span>
                 {game.opponent_rank !== null ? (

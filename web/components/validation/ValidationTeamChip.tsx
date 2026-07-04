@@ -54,7 +54,7 @@ function ValidationTeamHoverContent({
         <TeamLogoTile team={team} size={28} />
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-foreground">{team}</p>
-          <p className="text-[11px] text-muted-foreground">{copy.statusLine}</p>
+          <p className="text-xs text-muted-foreground">{copy.statusLine}</p>
         </div>
       </div>
       <p className="text-xs leading-relaxed text-popover-foreground/85">
@@ -64,24 +64,24 @@ function ValidationTeamHoverContent({
         <p className="text-xs leading-relaxed text-muted-foreground">{detail}</p>
       ) : null}
       {modelRank != null || committeeRank != null ? (
-        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
           {modelRank != null ? (
             <div>
               <dt className="text-muted-foreground">Model rank</dt>
-              <dd className="font-medium tabular-nums text-foreground">#{modelRank}</dd>
+              <dd className="font-semibold tabular-nums text-foreground">#{modelRank}</dd>
             </div>
           ) : null}
           {committeeRank != null ? (
             <div>
               <dt className="text-muted-foreground">Committee rank</dt>
-              <dd className="font-medium tabular-nums text-foreground">
+              <dd className="font-semibold tabular-nums text-foreground">
                 #{committeeRank}
               </dd>
             </div>
           ) : null}
         </dl>
       ) : null}
-      <p className="text-[10px] text-muted-foreground">
+      <p className="text-xs tabular-nums text-muted-foreground">
         {year}
         {ruleTarget ? ` · ${ruleTarget}` : ""}
       </p>
@@ -104,7 +104,7 @@ export function ValidationTeamChip(props: ValidationTeamChipProps) {
             aria-label={`${copy.roleLabel}: ${team}`}
             className={cn(
               badgeVariants({ variant: copy.chipVariant }),
-              "inline-flex h-auto cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+              "inline-flex h-auto cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-xs font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
             )}
           />
         }

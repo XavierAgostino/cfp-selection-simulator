@@ -11,6 +11,7 @@ import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 
 function BubbleMiniRow({
   team,
@@ -37,7 +38,7 @@ function BubbleMiniRow({
         primaryColor={team.primary_color}
         size={22}
       />
-      <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+      <span className={`min-w-0 flex-1 ${teamName}`}>
         {team.team}
       </span>
         <span className="shrink-0 text-xs tabular-nums text-muted-foreground">

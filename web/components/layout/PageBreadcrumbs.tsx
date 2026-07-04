@@ -13,7 +13,7 @@ type Crumb = {
 };
 
 function buildCrumbs(pathname: string): Crumb[] {
-  if (pathname === "/") {
+  if (pathname === "/dashboard") {
     return [{ label: "Dashboard" }];
   }
 
@@ -26,14 +26,14 @@ function buildCrumbs(pathname: string): Crumb[] {
   }
 
   const navItem = PRIMARY_NAV.find(
-    (item) => item.href !== "/" && pathname.startsWith(item.href),
+    (item) => item.href !== "/dashboard" && pathname.startsWith(item.href),
   );
 
   if (navItem) {
-    return [{ label: "Dashboard", href: "/" }, { label: navItem.label }];
+    return [{ label: "Dashboard", href: "/dashboard" }, { label: navItem.label }];
   }
 
-  return [{ label: "Dashboard", href: "/" }];
+  return [{ label: "Dashboard", href: "/dashboard" }];
 }
 
 export function PageBreadcrumbs() {
@@ -44,7 +44,7 @@ export function PageBreadcrumbs() {
 
   return (
     <nav aria-label="Breadcrumb" className="mb-6">
-      <ol className="flex flex-wrap items-center gap-1 text-[11px] leading-none">
+      <ol className="flex flex-wrap items-center gap-1 text-xs leading-none">
         {crumbs.map((crumb, index) => {
           const isLast = index === crumbs.length - 1;
 
@@ -68,7 +68,7 @@ export function PageBreadcrumbs() {
               ) : (
                 <span
                   className={cn(
-                    isLast ? "font-medium text-foreground/90" : "text-muted-foreground",
+                    isLast ? "font-semibold text-foreground/90" : "text-muted-foreground",
                   )}
                   aria-current={isLast ? "page" : undefined}
                 >

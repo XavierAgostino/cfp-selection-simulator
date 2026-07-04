@@ -61,7 +61,7 @@ export function ResumeShareCard({
               size={64}
             />
             <div className="flex min-w-0 flex-col gap-1.5">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground">
+              <h2 className="text-3xl font-semibold tracking-tight text-foreground">
                 {resume.team}
               </h2>
               {resume.is_conference_champion ? (
@@ -75,7 +75,7 @@ export function ResumeShareCard({
                 <ConferenceCaption conference={resume.conference} />
               )}
               <div className="mt-1 flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">
+                <span className="text-sm font-semibold tabular-nums text-foreground">
                   {formatRecord(resume.record)}
                 </span>
                 <BidBadge bidType={resume.bid_type} />

@@ -4,6 +4,7 @@ import { MethodologyWeightBreakdown } from "@/components/methodology/Methodology
 import { formatDataSourceLabel } from "@/lib/displayLabels";
 import { getLatest, NotFoundError } from "@/lib/data";
 import type { LatestPayload } from "@/lib/types";
+import { pageDescription, pageTitle } from "@/lib/typography";
 
 async function loadLatest(): Promise<LatestPayload | null> {
   try {
@@ -23,8 +24,8 @@ export default async function MethodologyPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Methodology</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className={pageTitle}>Methodology</h1>
+        <p className={pageDescription}>
           How the composite score, the 12-team field, and the bracket are built.
         </p>
       </div>

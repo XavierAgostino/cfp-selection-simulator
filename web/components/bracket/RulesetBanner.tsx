@@ -29,8 +29,8 @@ export function RulesetBanner({ ruleset }: RulesetBannerProps) {
       role="note"
       className="rounded-md border border-border bg-secondary/40 px-4 py-3"
     >
-      <p className="text-sm font-medium text-foreground">{copy.title}</p>
-      <p className="mt-0.5 text-xs text-muted-foreground">{copy.subtitle}</p>
+      <p className="text-sm font-semibold tabular-nums text-foreground">{copy.title}</p>
+      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{copy.subtitle}</p>
     </div>
   );
 }

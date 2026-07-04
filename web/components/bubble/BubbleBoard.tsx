@@ -115,7 +115,7 @@ export function BubbleBoard({ field, sensitivity }: BubbleBoardProps) {
               size={28}
             />
             <div className="flex flex-col">
-              <span className="text-sm font-medium text-foreground">
+              <span className="text-sm font-semibold text-foreground">
                 {displaced_team.team}, displaced by an auto-bid champion
               </span>
               <span className="text-xs text-muted-foreground">

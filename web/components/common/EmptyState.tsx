@@ -16,9 +16,9 @@ export function EmptyState({ title, description, icon, action }: EmptyStateProps
           {icon}
         </div>
       ) : null}
-      <h2 className="text-base font-medium text-foreground">{title}</h2>
+      <h2 className="text-base font-semibold text-foreground">{title}</h2>
       {description ? (
-        <p className="max-w-md text-sm text-muted-foreground">{description}</p>
+        <p className="max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
       ) : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>

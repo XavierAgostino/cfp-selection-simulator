@@ -5,6 +5,7 @@ import { RankingTable } from "@/components/rankings/RankingTable";
 import { ResumePredictiveScatter } from "@/components/charts/ResumePredictiveScatter";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import type { RankingsPayload } from "@/lib/types";
+import { pageDescription, pageTitle } from "@/lib/typography";
 
 interface RankingsPageProps {
   searchParams: Promise<{ run?: string }>;
@@ -32,8 +33,8 @@ export default async function RankingsPage({
     <div className="flex flex-col gap-6">
       <RunHeader stem={stem} />
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Rankings</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className={pageTitle}>Rankings</h1>
+        <p className={pageDescription}>
           The full composite rankings, with resume, predictive, SOR, and SOS components.
         </p>
       </div>

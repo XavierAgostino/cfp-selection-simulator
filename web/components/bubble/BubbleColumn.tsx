@@ -9,6 +9,7 @@ import { MetricTooltip } from "@/components/explain/InfoTooltip";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { formatScore } from "@/lib/format";
 import type { TeamSlot } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 export type BubbleAccent = "blue" | "red" | "muted";
@@ -94,7 +95,7 @@ export function BubbleColumn({
               />
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <div className="flex min-w-0 items-center gap-2">
-                  <span className="truncate text-sm font-medium text-foreground">
+                  <span className={teamName}>
                     {team.team}
                   </span>
                   {isInField && team.bid_type === "auto" ? (
