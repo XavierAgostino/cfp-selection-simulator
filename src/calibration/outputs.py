@@ -153,6 +153,18 @@ def _recommended_next(result: CalibrationResult) -> List[str]:
     return suggestions
 
 
+def season_coverage(requested_years: List[int], evaluated_years: List[int]) -> Dict[str, object]:
+    """Explicit season coverage so a partial run can never pass as a full one."""
+    evaluated = set(evaluated_years)
+    missing = [year for year in requested_years if year not in evaluated]
+    return {
+        "requested_years": list(requested_years),
+        "evaluated_years": list(evaluated_years),
+        "missing_years": missing,
+        "complete": not missing,
+    }
+
+
 def build_calibration_payload(result: CalibrationResult) -> Dict[str, object]:
     """Build the calibration.json contract from a calibration run."""
     return {
@@ -160,6 +172,7 @@ def build_calibration_payload(result: CalibrationResult) -> Dict[str, object]:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "years": result.evaluated_years,
         "requested_years": result.years,
+        "season_coverage": season_coverage(result.years, result.evaluated_years),
         "target": "all",
         "outlier_years": result.outlier_years,
         "holdout_years": result.holdout_years,
@@ -217,6 +230,20 @@ def _markdown_report(payload: Dict[str, object]) -> str:
     lines.append("")
     lines.append(f"- Generated: {payload['generated_at']}")
     lines.append(f"- Seasons evaluated: {', '.join(str(y) for y in payload['years'])}")
+    coverage = payload["season_coverage"]  # type: ignore[index]
+    lines.append(
+        f"- Coverage: {len(coverage['evaluated_years'])} of "
+        f"{len(coverage['requested_years'])} requested seasons evaluated"
+        f"{'' if coverage['complete'] else ' — INCOMPLETE'}"
+    )
+    if not coverage["complete"]:
+        missing_str = ", ".join(str(y) for y in coverage["missing_years"])
+        lines.append("")
+        lines.append(
+            f"> **WARNING — incomplete season coverage.** Missing seasons: {missing_str}. "
+            "These results cover only part of the requested range and must not be used "
+            "for research conclusions; treat this run as plumbing verification only."
+        )
     lines.append(
         f"- Outlier seasons (labeled, never hidden): "
         f"{', '.join(str(y) for y in payload['outlier_years'])}"

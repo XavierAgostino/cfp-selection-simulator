@@ -282,6 +282,17 @@ def calibrate(
     def _fmt_delta(value: object, digits: int = 3) -> str:
         return f"{value:+.{digits}f}" if isinstance(value, float) else "n/a"
 
+    coverage = payload["season_coverage"]
+    if not coverage["complete"]:
+        missing_str = ", ".join(str(y) for y in coverage["missing_years"])
+        typer.secho(
+            f"\nWARNING — incomplete season coverage: "
+            f"{len(coverage['evaluated_years'])} of {len(coverage['requested_years'])} "
+            f"requested seasons evaluated (missing: {missing_str}). "
+            "Results must not be used for research conclusions.",
+            fg=typer.colors.YELLOW,
+        )
+
     typer.echo("\nCalibration decisions (deltas vs baseline, outliers excluded):")
     for experiment in result.experiments:
         delta = experiment.baseline_delta

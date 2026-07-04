@@ -20,6 +20,7 @@ from src.calibration.decisions import Thresholds, decide
 from src.calibration.experiments import ExperimentConfig, default_experiments
 from src.calibration.ppa import apply_ppa_substitution, load_season_ppa_scores
 from src.data.fetcher import fetch_season_games, get_api_key
+from src.pipeline.cache_paths import games_cache_candidates, games_cache_write_path
 from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.live import enrich_live_rankings
 from src.pipeline.weights import RankingWeights
@@ -236,14 +237,40 @@ def _holdout_blocks(
     return blocks
 
 
+def _load_season_games(year: int, *, api_key: Optional[str]) -> pd.DataFrame:
+    """Selection-window games for a season, cache-first.
+
+    Uses the same on-disk cache convention as the production pipeline
+    (``data/cache/cfbd/{year}/games_w15*.parquet``), so repeated calibration
+    runs are offline and deterministic instead of re-spending CFBD API quota
+    on identical historical seasons. A miss fetches once and writes the cache.
+    """
+    # Calibration only evaluates completed historical seasons, so any cached
+    # w15 file is a full selection window by construction (shortened seasons
+    # like 2020 simply have fewer weeks) — trust it by name, don't refetch.
+    for candidate in games_cache_candidates(year, 15, 1):
+        if not candidate.exists():
+            continue
+        cached = pd.read_parquet(candidate)
+        if not cached.empty:
+            return cached[cached["week"] <= 15]
+
+    games_df = fetch_season_games(year, start_week=1, api_key=api_key)
+    games_df = games_df[games_df["week"] <= 15]
+    if not games_df.empty:
+        cache_path = games_cache_write_path(year, 15, 1)
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        games_df.to_parquet(cache_path, index=False)
+    return games_df
+
+
 def _load_season(year: int, *, api_key: Optional[str], verbose: bool) -> Optional[_SeasonInputs]:
     if not has_historical_rankings(year):
         if verbose:
             print(f"Skipped {year}: no historical CFP data")
         return None
 
-    games_df = fetch_season_games(year, start_week=1, api_key=api_key)
-    games_df = games_df[games_df["week"] <= 15]
+    games_df = _load_season_games(year, api_key=api_key)
     if games_df.empty:
         if verbose:
             print(f"Skipped {year}: no games data")

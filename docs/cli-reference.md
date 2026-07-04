@@ -150,6 +150,15 @@ evaluated and currently **blocked** by the 2024 modern-format holdout despite
 broad historical gains — research-only, not promoted. See
 [research/calibration.md](research/calibration.md#opt-in-ppa-predictive-substitution-v23-research-only).
 
+Season games load **cache-first**: the harness reads and writes the same
+per-year cache the production pipeline uses
+(`data/cache/cfbd/{year}/games_w15_s1.parquet`), so each historical season
+costs CFBD API quota at most once ever; cached seasons run fully offline.
+`calibration.json` and both markdown reports state season coverage
+(requested vs evaluated vs missing years) explicitly, and an incomplete run
+is flagged loudly — partial results are never presentable as a full
+evaluation.
+
 Outputs in `data/output/calibration/`:
 
 - `calibration.json` — machine-readable contract (experiments, metrics, deltas, holdouts, decisions)

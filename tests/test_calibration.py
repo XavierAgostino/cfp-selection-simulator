@@ -423,3 +423,119 @@ def test_write_calibration_outputs(tmp_path):
     csv_df = pd.read_csv(paths["csv"])
     assert len(csv_df) == len(result.experiments)
     assert "decision" in csv_df.columns and "delta_brier" in csv_df.columns
+
+
+# ---------------------------------------------------------------------------
+# Season games loading: cache-first, never re-spend API quota on cached seasons
+# ---------------------------------------------------------------------------
+
+
+def test_load_season_games_prefers_cache_and_never_fetches(tmp_path, monkeypatch):
+    from src.calibration import harness
+    from src.pipeline import cache_paths
+
+    monkeypatch.setattr(cache_paths, "DATA_CACHE", tmp_path)
+    cached = pd.DataFrame(
+        {
+            "week": [1, 15, 16],
+            "home_team": ["A", "B", "C"],
+            "away_team": ["B", "C", "A"],
+            "home_score": [21, 14, 7],
+            "away_score": [7, 10, 28],
+        }
+    )
+    path = cache_paths.games_cache_write_path(2019, 15, 1)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    cached.to_parquet(path, index=False)
+
+    def _no_network(*args, **kwargs):
+        raise AssertionError("cached season must not hit the network")
+
+    monkeypatch.setattr(harness, "fetch_season_games", _no_network)
+    games = harness._load_season_games(2019, api_key=None)
+    assert games["week"].max() <= 15  # selection window enforced
+    assert len(games) == 2
+
+
+def test_load_season_games_fetches_once_then_caches(tmp_path, monkeypatch):
+    from src.calibration import harness
+    from src.pipeline import cache_paths
+
+    monkeypatch.setattr(cache_paths, "DATA_CACHE", tmp_path)
+    fetched = pd.DataFrame(
+        {
+            "week": [1, 2],
+            "home_team": ["A", "B"],
+            "away_team": ["B", "A"],
+            "home_score": [21, 14],
+            "away_score": [7, 10],
+        }
+    )
+    calls = {"n": 0}
+
+    def _fetch(year, start_week=1, api_key=None):
+        calls["n"] += 1
+        return fetched
+
+    monkeypatch.setattr(harness, "fetch_season_games", _fetch)
+    first = harness._load_season_games(2018, api_key=None)
+    assert calls["n"] == 1 and len(first) == 2
+    assert cache_paths.games_cache_write_path(2018, 15, 1).exists()
+
+    monkeypatch.setattr(harness, "fetch_season_games", lambda *a, **k: pytest.fail("refetched"))
+    second = harness._load_season_games(2018, api_key=None)
+    assert second["home_team"].tolist() == first["home_team"].tolist()
+
+
+def test_season_coverage_complete_and_incomplete():
+    from src.calibration.outputs import season_coverage
+
+    complete = season_coverage([2021, 2022, 2024], [2021, 2022, 2024])
+    assert complete["complete"] is True
+    assert complete["missing_years"] == []
+
+    partial = season_coverage([2014, 2015, 2024], [2024])
+    assert partial == {
+        "requested_years": [2014, 2015, 2024],
+        "evaluated_years": [2024],
+        "missing_years": [2014, 2015],
+        "complete": False,
+    }
+
+
+def test_incomplete_coverage_is_loud_in_all_reports(tmp_path):
+    from src.calibration.emulation import (
+        build_committee_emulation_summary,
+        write_committee_emulation_outputs,
+    )
+
+    result = _synthetic_result()
+    result.years = [2014, 2015] + list(result.years)  # requested but never evaluated
+
+    paths = write_calibration_outputs(result, tmp_path / "calibration")
+    payload = json.loads(paths["json"].read_text())
+    coverage = payload["season_coverage"]
+    assert coverage["complete"] is False
+    assert coverage["missing_years"] == [2014, 2015]
+    assert coverage["evaluated_years"] == [2021, 2022, 2024]
+
+    report = paths["md"].read_text()
+    assert "WARNING — incomplete season coverage" in report
+    assert "must not be used" in report
+    assert "3 of 5 requested seasons evaluated — INCOMPLETE" in report
+
+    summary = build_committee_emulation_summary(payload)
+    assert summary["season_coverage"] == coverage
+    emulation_paths = write_committee_emulation_outputs(summary, tmp_path / "calibration")
+    emulation_report = emulation_paths["md"].read_text()
+    assert "WARNING — incomplete season coverage" in emulation_report
+
+
+def test_complete_coverage_has_no_warning(tmp_path):
+    result = _synthetic_result()
+    paths = write_calibration_outputs(result, tmp_path / "calibration")
+    payload = json.loads(paths["json"].read_text())
+    assert payload["season_coverage"]["complete"] is True
+    report = paths["md"].read_text()
+    assert "Coverage: 3 of 3 requested seasons evaluated" in report
+    assert "WARNING" not in report

@@ -198,6 +198,7 @@ def build_committee_emulation_summary(payload: Dict[str, object]) -> Dict[str, o
         "source": "calibration.json",
         "source_generated_at": payload["generated_at"],
         "years": payload["years"],
+        "season_coverage": payload.get("season_coverage"),
         "outlier_years": payload["outlier_years"],
         "holdout_years": payload["holdout_years"],
         "framing": FRAMING,
@@ -253,6 +254,15 @@ def _markdown_report(summary: Dict[str, object]) -> str:
         f"{summary['source_generated_at']}"
     )
     lines.append(f"- Seasons: {', '.join(str(y) for y in summary['years'])}")
+    coverage = summary.get("season_coverage")
+    if isinstance(coverage, dict) and not coverage["complete"]:
+        missing_str = ", ".join(str(y) for y in coverage["missing_years"])
+        lines.append("")
+        lines.append(
+            f"> **WARNING — incomplete season coverage.** Missing seasons: {missing_str}. "
+            "Candidate statuses below must not be used for research conclusions."
+        )
+        lines.append("")
     lines.append(
         f"- Holdouts: {', '.join(str(y) for y in summary['holdout_years'])} "
         "(2022 = outlier stress test, 2024 = modern 12-team format)"

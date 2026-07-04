@@ -176,6 +176,14 @@ With `--include-ppa`, the experiment list also contains the research-only
 "component_substitution"`, `"research_only": true`), and raw CFBD PPA
 responses are cached as `data/cache/cfbd/{year}/ppa_games_w15.json`.
 
+Calibration season games are cached per year as
+`data/cache/cfbd/{year}/games_w15_s1.parquet` (the same convention `sroom
+run` uses), written on first fetch and read on every later run, so calibration
+never re-spends CFBD API quota on a season it has already seen. Every
+`calibration.json` carries a `season_coverage` block (`requested_years`,
+`evaluated_years`, `missing_years`, `complete`), and incomplete coverage adds
+a prominent warning to the markdown reports.
+
 See [Calibration & Ablation Harness](research/calibration.md) and
 [Committee Emulation Lite](research/committee-emulation.md).
 
