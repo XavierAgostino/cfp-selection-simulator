@@ -84,7 +84,10 @@ layer it touches and must not leak conclusions across layers.
    against the validation harness with a research quality gate. See
    [calibration.md](calibration.md).
 2. **Committee Emulation lite** — measure the historical relationship between
-   transparent assumptions and committee selections. See guardrail below.
+   transparent assumptions and committee selections. **Implemented (v2.2):**
+   every `sroom calibrate` run derives a committee-emulation summary from the
+   calibration results. See guardrail below and
+   [committee-emulation.md](committee-emulation.md).
 3. **EPA/PPA predictive layer** — biggest football-quality upgrade. Use CFBD
    `/ppa/teams` and `/ppa/games` first; full play-by-play only after PPA proves
    marginal value.

@@ -17,6 +17,7 @@ Institutional documentation for how Selection Room models CFP selection. These d
 | Did the simulator pick the right field under era rules? | [Historical Validation](historical-validation.md) — era-correct selection track |
 | How stable is a bubble team under weight changes? | [Sensitivity Analysis](sensitivity-analysis.md) |
 | Did a weight assumption actually help, where, and at what cost? | [Calibration & Ablation Harness](calibration.md) |
+| Which transparent assumptions track committee behavior, and at what cost? | [Committee Emulation Lite](committee-emulation.md) |
 | What are the known limits and ethics? | [Limitations & Ethics](limitations-and-ethics.md) |
 | What model research is parked for v2? | [v2 Tracks Research](v2-tracks-research.md) |
 
@@ -55,6 +56,7 @@ Institutional documentation for how Selection Room models CFP selection. These d
 | [Historical Validation](historical-validation.md) | **Canonical** validation — committee replication, era-correct selection, predictive |
 | [Sensitivity Analysis](sensitivity-analysis.md) | **Canonical** Selection Stability |
 | [Calibration & Ablation Harness](calibration.md) | **Canonical** v2 research mode — weight experiments, quality gate, decisions |
+| [Committee Emulation Lite](committee-emulation.md) | Committee-aligned candidate profiles derived from calibration results — alignment measurement, never mimicry |
 
 ## D. Responsible interpretation
 

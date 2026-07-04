@@ -321,10 +321,19 @@ def _csv_rows(payload: Dict[str, object]) -> List[Dict[str, object]]:
     return rows
 
 
-def write_calibration_outputs(result: CalibrationResult, output_dir: Path) -> Dict[str, Path]:
-    """Write calibration.json/.md/.csv; returns the written paths."""
+def write_calibration_outputs(
+    result: CalibrationResult,
+    output_dir: Path,
+    *,
+    payload: Optional[Dict[str, object]] = None,
+) -> Dict[str, Path]:
+    """Write calibration.json/.md/.csv; returns the written paths.
+
+    ``payload`` lets callers that already built the contract (e.g. to feed the
+    committee-emulation summary) reuse it instead of rebuilding.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
-    payload = build_calibration_payload(result)
+    payload = payload or build_calibration_payload(result)
     paths: Dict[str, Path] = {}
 
     json_path = output_dir / "calibration.json"

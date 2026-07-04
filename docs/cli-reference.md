@@ -146,9 +146,16 @@ Outputs in `data/output/calibration/`:
 - `calibration.json` — machine-readable contract (experiments, metrics, deltas, holdouts, decisions)
 - `calibration.md` — human-readable report
 - `calibration.csv` — one summary row per experiment
+- `committee-emulation.{json,md,csv}` — Committee Emulation lite summary derived
+  deterministically from the calibration results (committee-aligned candidate
+  profiles, tradeoffs, holdout safety)
 
-See [research/calibration.md](research/calibration.md) for methodology,
-thresholds, and interpretation guardrails.
+"Recommended" and "committee-aligned candidate" mean *worth follow-up
+research* — no calibration run changes the production model.
+
+See [research/calibration.md](research/calibration.md) and
+[research/committee-emulation.md](research/committee-emulation.md) for
+methodology, thresholds, and interpretation guardrails.
 
 ---
 

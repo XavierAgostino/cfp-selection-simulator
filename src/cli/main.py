@@ -238,7 +238,13 @@ def calibrate(
     deltas vs the production baseline, holdout checks, and decision labels.
     Never changes the default production weights.
     """
-    from src.calibration import run_calibration, write_calibration_outputs
+    from src.calibration import (
+        build_calibration_payload,
+        build_committee_emulation_summary,
+        run_calibration,
+        write_calibration_outputs,
+        write_committee_emulation_outputs,
+    )
 
     if ":" in years:
         start, end = years.split(":")
@@ -247,7 +253,11 @@ def calibrate(
         year_list = [int(y) for y in years.split(",")]
 
     result = run_calibration(year_list)
-    paths = write_calibration_outputs(result, DATA_OUTPUT / "calibration")
+    out_dir = DATA_OUTPUT / "calibration"
+    payload = build_calibration_payload(result)
+    paths = write_calibration_outputs(result, out_dir, payload=payload)
+    emulation = build_committee_emulation_summary(payload)
+    emulation_paths = write_committee_emulation_outputs(emulation, out_dir)
 
     def _fmt_delta(value: object, digits: int = 3) -> str:
         return f"{value:+.{digits}f}" if isinstance(value, float) else "n/a"
@@ -261,9 +271,15 @@ def calibrate(
             f"Δfield {_fmt_delta(delta.get('field_overlap'))}  "
             f"Δbrier {_fmt_delta(delta.get('brier'), 4)}"
         )
+    typer.echo("\nCommittee-emulation candidates (follow-up research, not production changes):")
+    for entry in emulation["candidates"]:
+        typer.echo(f"  {entry['experiment_id']:<32} {entry['status']}")
+
     typer.echo("")
     for kind, path in paths.items():
         typer.echo(f"Wrote {kind}: {path}")
+    for kind, path in emulation_paths.items():
+        typer.echo(f"Wrote emulation {kind}: {path}")
 
 
 @app.command()

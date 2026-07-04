@@ -167,8 +167,12 @@ pipeline or the web app):
   metrics, deltas vs baseline, 2022/2024 holdout checks, decision labels
 - `calibration.md` — human-readable report
 - `calibration.csv` — one summary row per experiment
+- `committee-emulation.json` — committee-aligned candidate assessments derived
+  deterministically from `calibration.json`
+- `committee-emulation.md` / `committee-emulation.csv` — report and table views
 
-See [Calibration & Ablation Harness](research/calibration.md).
+See [Calibration & Ablation Harness](research/calibration.md) and
+[Committee Emulation Lite](research/committee-emulation.md).
 
 ---
 
