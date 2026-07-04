@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import { formatScore } from "@/lib/format";
 import type { BracketPayload, FieldPayload } from "@/lib/types";
+import { pageDescription, pageTitle } from "@/lib/typography";
 
 interface DashboardPageProps {
   searchParams: Promise<{ run?: string }>;
@@ -41,8 +42,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       <RunHeader stem={stem} />
 
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Who&apos;s in?</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className={pageTitle}>Who&apos;s in?</h1>
+        <p className={pageDescription}>
           The current 12-team field, at a glance.
         </p>
       </div>
@@ -91,7 +92,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </>
       ) : (
         <EmptyState
-          icon={<PageNavIcon href="/" />}
+          icon={<PageNavIcon href="/dashboard" />}
           title="No field data for this run"
           description="The selection engine hasn't produced field.json yet. Run the pipeline, then refresh."
         />

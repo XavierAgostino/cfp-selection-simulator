@@ -1,6 +1,6 @@
 /** Primary app routes — shared by header nav and breadcrumbs. */
 export const PRIMARY_NAV = [
-  { href: "/", label: "Dashboard" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/bracket", label: "Bracket" },
   { href: "/rankings", label: "Rankings" },
   { href: "/bubble", label: "Bubble" },
@@ -27,7 +27,7 @@ export const FOOTER_NAV: FooterNavSection[] = [
   {
     title: "Product",
     links: [
-      { href: "/", label: "Dashboard" },
+      { href: "/dashboard", label: "Dashboard" },
       { href: "/bracket", label: "Bracket" },
       { href: "/rankings", label: "Rankings" },
       { href: "/bubble", label: "Bubble" },
@@ -80,7 +80,7 @@ export const MOBILE_NAV_GROUPS: readonly MobileNavGroup[] = [
   {
     title: "Product",
     links: [
-      { href: "/", label: "Dashboard" },
+      { href: "/dashboard", label: "Dashboard" },
       { href: "/bracket", label: "Bracket" },
       { href: "/rankings", label: "Rankings" },
       { href: "/bubble", label: "Bubble" },

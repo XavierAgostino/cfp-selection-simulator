@@ -30,9 +30,10 @@ import {
   PRIMARY_NAV,
 } from "@/lib/nav";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
+  if (href === "/dashboard") return pathname === "/dashboard";
   if (href === "/docs") {
     return pathname === "/docs" || pathname.startsWith("/docs/");
   }
@@ -223,6 +224,17 @@ export function EspnGlobalHeader() {
         </div>
 
         <ul className="flex shrink-0 items-center gap-0.5 sm:gap-1">
+          {pathname === "/" ? (
+            <li>
+              <Link
+                href="/dashboard"
+                className={cn(buttonVariants({ size: "sm" }))}
+              >
+                <span className="hidden sm:inline">Open Selection Room</span>
+                <span className="sm:hidden">Open</span>
+              </Link>
+            </li>
+          ) : null}
           <li>
             <ThemeToggle variant="header" />
           </li>

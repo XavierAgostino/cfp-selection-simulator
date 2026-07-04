@@ -13,7 +13,7 @@ import {
 import { PRIMARY_NAV } from "@/lib/nav";
 
 export const NAV_HUGEICONS = {
-  "/": DashboardSquare01Icon,
+  "/dashboard": DashboardSquare01Icon,
   "/bracket": AmericanFootballIcon,
   "/rankings": LeftToRightListNumberIcon,
   "/bubble": FilterHorizontalIcon,
