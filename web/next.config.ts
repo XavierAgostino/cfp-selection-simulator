@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // seed-fixtures:demo writes bundled demo JSON here at build time; without this,
+  // Vercel's NFT tracer omits gitignored .demo-data from serverless functions.
+  outputFileTracingIncludes: {
+    "/*": ["./.demo-data/**/*"],
+  },
 };
 
 const withMDX = createMDX();
