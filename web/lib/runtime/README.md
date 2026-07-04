@@ -1,14 +1,14 @@
-# Runtime adapters (H1+)
+# Runtime adapters (H1–H3)
 
 Provider-neutral boundaries for local OSS and hosted infrastructure.
 
 ## Interfaces
 
-| Interface | Local | Hosted (H2+) |
-|-----------|-------|--------------|
-| `ArtifactStore` | `FilesystemArtifactStore` | Supabase Storage (H3) |
-| `RunCatalogStore` | `LocalRunCatalogStore` | `PostgresRunCatalogStore` |
-| `JobStore` | `FilesystemJobStore` | `PostgresJobStore` |
+| Interface | Local / demo | Hosted |
+|-----------|--------------|--------|
+| `ArtifactStore` | `FilesystemArtifactStore` | `SupabaseArtifactStore` (H3) |
+| `RunCatalogStore` | `LocalRunCatalogStore` | `PostgresRunCatalogStore` (H2) |
+| `JobStore` | `FilesystemJobStore` | `PostgresJobStore` (H2) |
 | `RunExecutor` | `LocalRunExecutor` | Trigger.dev worker (H5) |
 
 ## Factory
@@ -22,21 +22,23 @@ import {
 } from "@/lib/runtime";
 ```
 
-| Mode | Env | JobStore / Catalog | Artifacts / Executor |
-|------|-----|-------------------|----------------------|
-| Local (default) | unset or `SELECTION_ROOM_RUNTIME=local` | Filesystem / DuckDB | Filesystem + subprocess |
-| Hosted metadata | `SELECTION_ROOM_RUNTIME=hosted` + `SELECTION_ROOM_DATABASE_URL` | Postgres | Artifacts: filesystem until H3; executor throws until H5 |
+| Mode | Env | Artifacts | Metadata | Execution |
+|------|-----|-----------|----------|-----------|
+| Local (default) | unset | Filesystem | DuckDB / runs.json | Subprocess |
+| Public demo | demo env | Bundled `.demo-data` | Fixture runs.json | Disabled |
+| Hosted | `SELECTION_ROOM_RUNTIME=hosted` | Supabase Storage when `SELECTION_ROOM_ARTIFACT_STORE=supabase` | Postgres | H5 (throws today) |
 
-Hosted misconfiguration throws `HostedConfigurationError` with the missing phase (H3, H5, or DB URL).
+All web reads go through `/api/data` (proxy). Storage URLs and service role keys never reach the client.
 
 ## Env
 
 ```bash
 SELECTION_ROOM_RUNTIME=local|hosted
-SELECTION_ROOM_ARTIFACT_STORE=filesystem|supabase   # supabase blocked until H3
-SELECTION_ROOM_DATABASE_URL=                        # required for hosted JobStore/Catalog
-SELECTION_ROOM_HOSTED_DAILY_JOB_CAP=10
-SELECTION_ROOM_HOSTED_MAX_CONCURRENT=1
+SELECTION_ROOM_ARTIFACT_STORE=filesystem|supabase
+SELECTION_ROOM_DATABASE_URL=
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_STORAGE_BUCKET=artifacts
 ```
 
 See [docs/hosting/supabase-setup.md](../../../docs/hosting/supabase-setup.md) and [docs/architecture/hosted-production.md](../../../docs/architecture/hosted-production.md).

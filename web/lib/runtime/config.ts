@@ -46,3 +46,21 @@ export function liveRunThrottleMinutes(): number {
   if (Number.isNaN(parsed) || parsed < 0) return 5;
   return parsed;
 }
+
+export function getSupabaseUrl(): string | null {
+  const url = process.env.SUPABASE_URL?.trim();
+  return url || null;
+}
+
+export function getSupabaseServiceRoleKey(): string | null {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  return key || null;
+}
+
+export function getSupabaseStorageBucket(): string {
+  return process.env.SUPABASE_STORAGE_BUCKET?.trim() || "artifacts";
+}
+
+export function isHostedStorageConfigured(): boolean {
+  return getSupabaseUrl() !== null && getSupabaseServiceRoleKey() !== null;
+}

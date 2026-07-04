@@ -1,9 +1,15 @@
 import { API_DATA_DIR } from "@/lib/paths";
 import { FilesystemArtifactStore } from "@/lib/runtime/artifact-store/filesystem";
+import { createSupabaseStorageBackend } from "@/lib/runtime/artifact-store/supabase-client";
+import { SupabaseArtifactStore } from "@/lib/runtime/artifact-store/supabase";
 import type { ArtifactStore } from "@/lib/runtime/artifact-store/types";
 import {
   getDatabaseUrl,
+  getSupabaseServiceRoleKey,
+  getSupabaseStorageBucket,
+  getSupabaseUrl,
   isHostedRuntimeConfigured,
+  isHostedStorageConfigured,
   resolveArtifactStoreKind,
   resolveRuntimeMode,
 } from "@/lib/runtime/config";
@@ -18,6 +24,7 @@ import { LocalRunExecutor } from "@/lib/runtime/run-executor/local";
 import type { RunExecutor } from "@/lib/runtime/run-executor/types";
 
 let localArtifactStore: ArtifactStore | null = null;
+let hostedArtifactStore: ArtifactStore | null = null;
 let localRunCatalogStore: RunCatalogStore | null = null;
 let localJobStore: JobStore | null = null;
 let localRunExecutor: RunExecutor | null = null;
@@ -30,19 +37,46 @@ function requireHostedDatabase(feature: string): string {
   if (!url) {
     throw new HostedConfigurationError(
       `Hosted ${feature} requires SELECTION_ROOM_DATABASE_URL. ` +
-        "Apply supabase/migrations/20250704180000_hosted_runs_v1.sql, then set the Supabase pooler URL. " +
-        "Supabase Storage (H3) and the Trigger.dev worker (H5) are not wired yet.",
+        "Apply supabase/migrations/20250704180000_hosted_runs_v1.sql, then set the Supabase pooler URL.",
     );
   }
   return url;
 }
 
+function requireHostedStorage(feature: string): {
+  supabaseUrl: string;
+  serviceRoleKey: string;
+  bucket: string;
+} {
+  const supabaseUrl = getSupabaseUrl();
+  const serviceRoleKey = getSupabaseServiceRoleKey();
+  const bucket = getSupabaseStorageBucket();
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new HostedConfigurationError(
+      `Hosted ${feature} requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY. ` +
+        "Create a private Storage bucket, set SUPABASE_STORAGE_BUCKET (default: artifacts), " +
+        "and serve reads through /api/data only. See docs/hosting/supabase-setup.md.",
+    );
+  }
+
+  return { supabaseUrl, serviceRoleKey, bucket };
+}
+
 export function getArtifactStore(): ArtifactStore {
   if (resolveArtifactStoreKind() === "supabase") {
-    throw new HostedConfigurationError(
-      "Supabase Storage artifact reads are not implemented yet (H3). " +
-        "Keep SELECTION_ROOM_ARTIFACT_STORE=filesystem until H3 ships, or use local runtime mode.",
-    );
+    if (!isHostedRuntimeConfigured()) {
+      throw new HostedConfigurationError(
+        "SELECTION_ROOM_ARTIFACT_STORE=supabase requires SELECTION_ROOM_RUNTIME=hosted.",
+      );
+    }
+
+    if (!hostedArtifactStore) {
+      const storage = requireHostedStorage("ArtifactStore");
+      const backend = createSupabaseStorageBackend(storage);
+      hostedArtifactStore = new SupabaseArtifactStore(backend);
+    }
+    return hostedArtifactStore;
   }
 
   if (!localArtifactStore) {
@@ -96,6 +130,7 @@ export function getRunExecutor(): RunExecutor {
 /** Reset cached adapter instances (tests only). */
 export function resetRuntimeAdaptersForTests(): void {
   localArtifactStore = null;
+  hostedArtifactStore = null;
   localRunCatalogStore = null;
   localJobStore = null;
   localRunExecutor = null;
@@ -107,10 +142,12 @@ export function getRuntimeSummary(): {
   runtime: ReturnType<typeof resolveRuntimeMode>;
   artifact_store: ReturnType<typeof resolveArtifactStoreKind>;
   database_configured: boolean;
+  storage_configured: boolean;
 } {
   return {
     runtime: resolveRuntimeMode(),
     artifact_store: resolveArtifactStoreKind(),
     database_configured: getDatabaseUrl() !== null,
+    storage_configured: isHostedStorageConfigured(),
   };
 }

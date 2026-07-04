@@ -35,7 +35,6 @@ describe("hosted runtime factory", () => {
 
     expect(() => getJobStore()).toThrow(HostedConfigurationError);
     expect(() => getJobStore()).toThrow(/SELECTION_ROOM_DATABASE_URL/);
-    expect(() => getJobStore()).toThrow(/H3/);
   });
 
   it("throws a clear error for hosted run execution before H5", () => {
