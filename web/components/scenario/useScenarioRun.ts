@@ -4,6 +4,7 @@ import * as React from "react";
 import type { RunJobRecord } from "@/lib/runJob";
 import type { ScenarioWeights } from "@/lib/scenarioWeights";
 import { invalidateRunPayloadCache } from "@/lib/runPayloadCache";
+import { isDemoMode, PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE } from "@/lib/demoMode";
 
 export type ScenarioRunPhase =
   | "idle"
@@ -35,7 +36,9 @@ function launchErrorMessage(status: number, code?: string): string {
   if (status === 409) return "Another run is already in progress. Try again once it finishes.";
   if (status === 429) return "Live runs are throttled. Wait a few minutes and retry.";
   if (status === 501)
-    return "Run generation is unavailable in this deployment. Enable SELECTION_ROOM_ENABLE_RUN_JOBS.";
+    return isDemoMode
+      ? PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE
+      : "Run generation is unavailable in this deployment. Enable SELECTION_ROOM_ENABLE_RUN_JOBS.";
   if (code === "cfbd_unavailable") return "Live CFBD is not configured on this server.";
   if (code === "invalid_arguments") return "The weights were rejected by the server.";
   return "Could not start the scenario run.";

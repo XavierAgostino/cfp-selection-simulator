@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { RunAnalysisDialog } from "@/components/layout/RunAnalysisDialog";
 import { RunSwitcher } from "@/components/layout/RunSwitcher";
+import { isDemoMode } from "@/lib/demoMode";
 import type { RunJobRecord } from "@/lib/runJob";
 import { useRunCatalog } from "@/lib/useRunCatalog";
 import type { RunSummary, RunsPayload } from "@/lib/types";
@@ -65,17 +66,19 @@ export function RunHeaderActions({
           latestStem={latestStem}
         />
       ) : null}
-      <RunAnalysisDialog
-        defaultYear={currentRun.season}
-        currentRun={currentRun}
-        currentStem={currentStem}
-        latestStem={latestStem}
-        catalog={catalog}
-        jobs={jobs}
-        onRefreshCatalog={refreshCatalog}
-        onRefreshJobs={refreshJobs}
-        onRunCompleted={onRunCompleted}
-      />
+      {!isDemoMode ? (
+        <RunAnalysisDialog
+          defaultYear={currentRun.season}
+          currentRun={currentRun}
+          currentStem={currentStem}
+          latestStem={latestStem}
+          catalog={catalog}
+          jobs={jobs}
+          onRefreshCatalog={refreshCatalog}
+          onRefreshJobs={refreshJobs}
+          onRunCompleted={onRunCompleted}
+        />
+      ) : null}
     </div>
   );
 }

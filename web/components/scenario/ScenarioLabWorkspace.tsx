@@ -37,6 +37,7 @@ import {
 } from "@/lib/scenarioWeights";
 import type { RunSummary } from "@/lib/types";
 import { bodyMuted, sectionTitle } from "@/lib/typography";
+import { isDemoMode, PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE } from "@/lib/demoMode";
 
 interface ScenarioLabWorkspaceProps {
   runs: RunSummary[];
@@ -221,9 +222,10 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
               </p>
             ) : null}
             {!generationEnabled && capabilities !== null && !existingMatch ? (
-              <p className="text-xs text-muted-foreground">
-                This deployment can open existing scenarios, but cannot create new
-                ones.
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {isDemoMode
+                  ? PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE
+                  : "This deployment can open existing scenarios, but cannot create new ones."}
               </p>
             ) : null}
           </div>
