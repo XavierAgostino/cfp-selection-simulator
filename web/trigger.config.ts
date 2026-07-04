@@ -1,7 +1,9 @@
 import { defineConfig } from "@trigger.dev/sdk";
 
+import { readTriggerProjectRef } from "./lib/trigger-project-ref";
+
 export default defineConfig({
-  project: process.env.TRIGGER_PROJECT_REF ?? "proj_selection_room",
+  project: readTriggerProjectRef(),
   dirs: ["./trigger"],
   maxDuration: 3600,
   retries: {

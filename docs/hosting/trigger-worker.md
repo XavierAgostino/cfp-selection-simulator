@@ -43,13 +43,16 @@ Set these on **Vercel** (API enqueue) and on the **Trigger worker** (Python exec
 
 ## 3. Deploy the Trigger task
 
-From `web/`:
+From `web/` (loads `web/.env.hosted.local` automatically):
 
 ```bash
 cd web
-pnpm install
-pnpm dlx trigger.dev@latest deploy
+pnpm deploy:trigger
 ```
+
+The deploy script writes `web/.trigger-project-ref` from `TRIGGER_PROJECT_REF` before upload. That file is **not secret** (Trigger requires it in the remote build context). Set `TRIGGER_PROJECT_REF=proj_...` in `web/.env.hosted.local` first.
+
+Do **not** rely on the old placeholder `proj_selection_room` in config; that was a dev fallback only.
 
 Task definition: [`web/trigger/run-hosted-job.ts`](../../web/trigger/run-hosted-job.ts)
 
