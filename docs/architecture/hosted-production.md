@@ -188,7 +188,7 @@ See [`docs/hosting/render-feasibility-checklist.md`](../hosting/render-feasibili
 | 1 | **Scenario Lab MVP** on local adapters | **Shipped** (`d81e91a`) |
 | 2 | Validation dashboard MVP | **Shipped** (`98f1934`) |
 | 3 | Share / export layer (rankings CSV, bracket image, resume card) | **Shipped** — scenario share URLs remain |
-| 4 | Hosted Architecture H1–H7 (before public launch) | Not started |
+| 4 | Hosted Architecture H1–H7 (before public launch) | H1 done |
 
 **Remaining before hosted work:** shareable scenario URLs (deep-link a scenario diff). The export primitives (rankings CSV, bracket share image, resume card) shipped with the local OSS product; hosting hardens around it.
 
@@ -196,7 +196,7 @@ See [`docs/hosting/render-feasibility-checklist.md`](../hosting/render-feasibili
 
 | Step | Work |
 |------|------|
-| H1 | Python `ArtifactStore` protocol; refactor `export_run_api` |
+| H1 | Runtime adapter interfaces + local filesystem implementations | **Done** |
 | H2 | TS read path in `/api/data` for blob mode |
 | H3 | Postgres schema: `runs`, `jobs` |
 | H4 | Trigger.dev task: engine + artifacts + metadata |

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import { API_DATA_DIR, RUNS_JSON_PATH } from "@/lib/paths";
+
+import { getArtifactStore } from "@/lib/runtime";
 import { getScenarioDiff, runIdFromStem } from "@/lib/scenarioDiff";
 import type { ScenarioWeights } from "@/lib/scenarioWeights";
 import type {
@@ -22,12 +21,7 @@ function badRequest(error: string) {
 }
 
 async function readRunFile<T>(stem: string, kind: string): Promise<T | null> {
-  const filePath = path.join(API_DATA_DIR, "runs", stem, `${kind}.json`);
-  try {
-    return JSON.parse(await fs.readFile(filePath, "utf-8")) as T;
-  } catch {
-    return null;
-  }
+  return getArtifactStore().getJson<T>(`runs/${stem}/${kind}.json`);
 }
 
 export async function GET(request: NextRequest) {
@@ -44,8 +38,6 @@ export async function GET(request: NextRequest) {
   if (baseStem === scenarioStem) {
     return badRequest("identical_stems");
   }
-  // A diff only makes sense within one season/week — the weights are the only
-  // thing allowed to differ between the two runs being compared.
   if (runIdFromStem(baseStem) !== runIdFromStem(scenarioStem)) {
     return badRequest("run_mismatch");
   }
@@ -71,18 +63,13 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Weights live in the runs index, not the per-run payloads.
   let baseWeights: ScenarioWeights | null = null;
   let scenarioWeights: ScenarioWeights | null = null;
-  try {
-    const runs = JSON.parse(
-      await fs.readFile(RUNS_JSON_PATH, "utf-8"),
-    ) as RunsPayload;
+  const runs = await getArtifactStore().getJson<RunsPayload>("runs.json");
+  if (runs) {
     const byStem = new Map(runs.runs.map((entry) => [entry.stem, entry]));
     baseWeights = byStem.get(baseStem)?.weights ?? null;
     scenarioWeights = byStem.get(scenarioStem)?.weights ?? null;
-  } catch {
-    // Weights are decorative on the diff; proceed without them if runs.json is missing.
   }
 
   const diff = getScenarioDiff({
