@@ -90,11 +90,14 @@ layer it touches and must not leak conclusions across layers.
    [committee-emulation.md](committee-emulation.md).
 3. **EPA/PPA predictive layer** — biggest football-quality upgrade. Use CFBD
    `/ppa/teams` and `/ppa/games` first; full play-by-play only after PPA proves
-   marginal value.
+   marginal value. **Next (v2.3), research-only:** a CFBD PPA experiment
+   candidate evaluated through the calibration gate — never a wholesale
+   predictive rewrite, and no production default changes.
 4. **SOR / resume refinement** — home-field adjustment, opponent-strength
-   treatment, era-aware handling. Selection Room–native work.
+   treatment, era-aware handling. Selection Room–native work. **Deferred.**
 5. **Injuries / VORP / full PBP** — last; data quality, subjective assumptions,
    and maintenance burden are all high. Gated behind an explicit go/no-go.
+   **Deferred.**
 
 ### Committee Emulation guardrail (product identity)
 
