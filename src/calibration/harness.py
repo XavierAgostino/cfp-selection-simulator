@@ -19,6 +19,7 @@ import pandas as pd
 from src.calibration.decisions import Thresholds, decide
 from src.calibration.experiments import ExperimentConfig, default_experiments
 from src.calibration.ppa import apply_ppa_substitution, load_season_ppa_scores
+from src.calibration.sor_variants import apply_sor_variant, compute_sor_variant_scores
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.cache_paths import games_cache_candidates, games_cache_write_path
 from src.pipeline.composite import calculate_composite_rankings
@@ -299,6 +300,46 @@ def _is_ppa_substitution(config: ExperimentConfig) -> bool:
     )
 
 
+def _is_sor_variant(config: ExperimentConfig) -> bool:
+    return config.variant is not None and config.variant.get("component") == "sor"
+
+
+def _sor_variant_seasons(
+    seasons: List[_SeasonInputs],
+    config: ExperimentConfig,
+    *,
+    verbose: bool,
+) -> Dict[int, "tuple[Optional[pd.DataFrame], str]"]:
+    """Per season: base rankings with the SOR column recomputed by one variant.
+
+    Variant SOR is deterministic and offline (same games data, different
+    calculation), so failures should not happen — but if one does, the season
+    degrades explicitly to ``(None, note)`` like a substitution experiment,
+    never a silent fill.
+    """
+    variant_id = str(config.variant["variant_id"]) if config.variant else ""
+    if variant_id == "opponent_rating_predictive_leaning":
+        variant_id = "opponent_rating_predictive"
+    prepared: Dict[int, "tuple[Optional[pd.DataFrame], str]"] = {}
+    for season in seasons:
+        try:
+            scores = compute_sor_variant_scores(
+                season.games_df, season.base_rankings_df, variant_id
+            )
+        except Exception as exc:  # noqa: BLE001 - degrade explicitly, never fill
+            prepared[season.year] = (None, f"SOR variant unavailable: {exc}")
+            if verbose:
+                print(f"  SOR variant '{variant_id}' unavailable for {season.year}: {exc}")
+            continue
+        prepared[season.year] = apply_sor_variant(season.base_rankings_df, scores)
+        if verbose and prepared[season.year][0] is None:
+            print(
+                f"  SOR variant '{variant_id}' unavailable for {season.year}: "
+                f"{prepared[season.year][1]}"
+            )
+    return prepared
+
+
 def _substituted_seasons(
     seasons: List[_SeasonInputs],
     *,
@@ -333,14 +374,14 @@ def _substituted_seasons(
 
 
 def review_substitution_availability(result: ExperimentResult) -> None:
-    """Mark a substitution experiment incomplete/unavailable on missing data.
+    """Mark a substitution/variant experiment incomplete/unavailable on missing data.
 
     An unavailable season carries no metrics at all (``brier`` is always set
     when a season was evaluated). All seasons unavailable → the experiment is
     ``needs_more_data``; a partial gap keeps the decision but flags it and
     names the missing seasons so aggregates are never read as full-coverage.
     """
-    if result.config.substitution is None:
+    if result.config.substitution is None and result.config.variant is None:
         return
     missing_years = [r.year for r in result.per_year if r.brier is None]
     if not missing_years:
@@ -404,14 +445,26 @@ def run_calibration(
             seasons, ppa_scores=ppa_scores, api_key=key, verbose=verbose
         )
 
+    variant_seasons: Dict[str, Dict[int, "tuple[Optional[pd.DataFrame], str]"]] = {}
+    for config in configs:
+        if _is_sor_variant(config):
+            variant_seasons[config.experiment_id] = _sor_variant_seasons(
+                seasons, config, verbose=verbose
+            )
+
     results: List[ExperimentResult] = []
     for config in configs:
         per_year: List[YearMetrics] = []
         for season in seasons:
             base_df = season.base_rankings_df
-            if _is_ppa_substitution(config):
-                base_df, unavailable_note = substituted.get(
-                    season.year, (None, "PPA substitution unavailable.")
+            if _is_ppa_substitution(config) or _is_sor_variant(config):
+                prepared = (
+                    substituted
+                    if _is_ppa_substitution(config)
+                    else variant_seasons[config.experiment_id]
+                )
+                base_df, unavailable_note = prepared.get(
+                    season.year, (None, "Candidate component unavailable.")
                 )
                 if base_df is None:
                     per_year.append(

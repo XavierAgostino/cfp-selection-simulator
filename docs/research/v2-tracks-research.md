@@ -2,8 +2,9 @@
 
 **Status: active research board.** Tracks 1–3 are implemented (calibration
 harness, Committee Emulation lite, PPA predictive substitution — the last
-evaluated and **not promoted**); track 4 (SOR/résumé refinement) is next,
-pending a locked spec; track 5 stays deferred behind an explicit go/no-go.
+evaluated and **not promoted**); track 4 (SOR refinement) is implemented and
+in progress — full evaluation pending CFBD API quota; track 5 stays deferred
+behind an explicit go/no-go.
 This document is **not** a roadmap commitment — every implemented track is
 research-only, and nothing here changes production defaults.
 
@@ -102,12 +103,22 @@ layer it touches and must not leak conclusions across layers.
    set) but **blocked by the 2024 modern-format holdout** — see
    [calibration.md](calibration.md).
 4. **SOR / resume refinement** — home-field adjustment, opponent-strength
-   treatment, era-aware handling. Selection Room–native work. **Next (v2.4),
-   awaiting a locked spec** — the research board points here: resume/SOR-heavy
-   profiles are the committee-aligned candidates, so refining the
-   selection-native signal is the highest-value next experiment. Same rules as
-   v2.3: research-only, through the calibration and committee-emulation gates,
-   2022/2024 holdout protection, no production or Scenario Lab default changes.
+   treatment, era-aware handling. Selection Room–native work. **Implemented,
+   evaluation pending (v2.4).** Cache-first historical games loading added;
+   full 2014–2024 SOR variant results pending CFBD quota/cache population.
+   `sroom calibrate --include-sor-variants` runs four research-only component-variant
+   experiments (exact Poisson-binomial aggregation, venue-adjusted win
+   probabilities, balanced / predictive-leaning opponent-rating sources),
+   each changing exactly one assumption in the SOR calculation while the
+   production `calculate_sor` stays untouched. Same rules as v2.3:
+   research-only, through the calibration and committee-emulation gates,
+   2022/2024 holdout protection, no production or Scenario Lab default
+   changes. The full 2014–2024 evaluation is pending CFBD API quota (the
+   harness is now cache-first, so it needs quota exactly once) — see
+   [sor-refinement.md](sor-refinement.md). Résumé quality-win threshold
+   variants are deferred to a separate résumé-pillar slice. Audit note:
+   conference championship games are inside the week-15 selection window and
+   are not treated as leakage.
 5. **Injuries / VORP / full PBP** — last; data quality, subjective assumptions,
    and maintenance burden are all high. Gated behind an explicit go/no-go:
    only if the research board shows remaining model misses are plausibly

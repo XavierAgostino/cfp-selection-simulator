@@ -136,7 +136,7 @@ reason. It measures how transparent assumptions changed historical alignment
 and predictive signal — it never changes the default production weights.
 
 ```bash
-./bin/sroom calibrate [--years 2014:2024] [--include-ppa]
+./bin/sroom calibrate [--years 2014:2024] [--include-ppa] [--include-sor-variants]
 ```
 
 Year range format: `2014:2024` or comma-separated `2014,2015,2016`.
@@ -150,14 +150,21 @@ evaluated and currently **blocked** by the 2024 modern-format holdout despite
 broad historical gains — research-only, not promoted. See
 [research/calibration.md](research/calibration.md#opt-in-ppa-predictive-substitution-v23-research-only).
 
+`--include-sor-variants` adds the four research-only **SOR component-variant**
+experiments (v2.4): same baseline weights, SOR component recalculated with one
+changed assumption per variant — exact Poisson-binomial aggregation,
+venue-adjusted win probabilities, or a balanced / predictive-leaning
+opponent-rating source. Offline and deterministic (no new data source, no
+network beyond the games the harness already loads); the default run never
+includes them, and the production SOR calculation is never modified. See
+[research/sor-refinement.md](research/sor-refinement.md). Both flags compose:
+`--include-ppa --include-sor-variants` runs the default set plus all five
+opt-in experiments.
+
 Season games load **cache-first**: the harness reads and writes the same
 per-year cache the production pipeline uses
 (`data/cache/cfbd/{year}/games_w15_s1.parquet`), so each historical season
 costs CFBD API quota at most once ever; cached seasons run fully offline.
-`calibration.json` and both markdown reports state season coverage
-(requested vs evaluated vs missing years) explicitly, and an incomplete run
-is flagged loudly — partial results are never presentable as a full
-evaluation.
 
 Outputs in `data/output/calibration/`:
 

@@ -176,15 +176,22 @@ With `--include-ppa`, the experiment list also contains the research-only
 "component_substitution"`, `"research_only": true`), and raw CFBD PPA
 responses are cached as `data/cache/cfbd/{year}/ppa_games_w15.json`.
 
+With `--include-sor-variants`, the experiment list also contains the four
+research-only SOR component-variant entries (`sor_exact_poisson_binomial`,
+`sor_home_field_adjustment`, `sor_opponent_rating_balanced`,
+`sor_opponent_rating_predictive`), each marked `"experiment_type":
+"component_variant"`, `"research_only": true` with a `"variant"` metadata
+block naming the component, variant id, and baseline/candidate methods. The
+variants recompute SOR from the games data the harness already loads — no new
+cache files of their own.
+
 Calibration season games are cached per year as
 `data/cache/cfbd/{year}/games_w15_s1.parquet` (the same convention `sroom
 run` uses), written on first fetch and read on every later run, so calibration
-never re-spends CFBD API quota on a season it has already seen. Every
-`calibration.json` carries a `season_coverage` block (`requested_years`,
-`evaluated_years`, `missing_years`, `complete`), and incomplete coverage adds
-a prominent warning to the markdown reports.
+never re-spends CFBD API quota on a season it has already seen.
 
-See [Calibration & Ablation Harness](research/calibration.md) and
+See [Calibration & Ablation Harness](research/calibration.md),
+[SOR Refinement](research/sor-refinement.md), and
 [Committee Emulation Lite](research/committee-emulation.md).
 
 ---

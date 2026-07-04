@@ -144,6 +144,7 @@ def _assess_experiment(exp: Dict[str, object], thresholds: Dict[str, object]) ->
         "group": exp["group"],
         "experiment_type": exp.get("experiment_type", "reweighting"),
         "substitution": exp.get("substitution"),
+        "variant": exp.get("variant"),
         "weights": exp["weights"],
         "changed_assumption": exp["changed_assumption"],
         "alignment_delta": {
@@ -311,6 +312,13 @@ def _markdown_report(summary: Dict[str, object]) -> str:
                 f"- Component substitution (research-only): {sub['component']} — "
                 f"{sub['baseline_source']} → {sub['candidate_source']}; "
                 "weights identical to baseline"
+            )
+        if entry.get("variant"):
+            var = entry["variant"]
+            lines.append(
+                f"- Component variant (research-only): {var['component']} — "
+                f"{var['baseline_method']} → {var['candidate_method']} "
+                f"(variant `{var['variant_id']}`); weights identical to baseline"
             )
         lines.append(f"- Status: **{entry['status']}** — {entry['status_reason']}")
         lines.append(

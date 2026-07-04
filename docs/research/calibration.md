@@ -93,6 +93,24 @@ worse, so the candidate is not safe for the modern selection format and is
 not promoted. This is the gate doing its job: show the gain, show the cost,
 protect the current selection format.
 
+### Opt-in: SOR component variants (v2.4, research-only)
+
+`sroom calibrate --include-sor-variants` adds four **component-variant**
+experiments: identical 0.40/0.30/0.20/0.10 weights, same games data, but the
+SOR component is recalculated with exactly one changed assumption per variant —
+exact Poisson-binomial aggregation (`sor_exact_poisson_binomial`),
+venue-adjusted win probabilities (`sor_home_field_adjustment`), or an
+alternate opponent-rating source (`sor_opponent_rating_balanced`,
+`sor_opponent_rating_predictive`). Unlike the PPA substitution, these need no
+new data: they are offline, deterministic recalculations of an existing
+pillar, so the experiment isolates the *method*, not the data source. Each
+entry carries `"experiment_type": "component_variant"` and a `"variant"`
+metadata block naming the component, variant id, and baseline/candidate
+methods. The production `calculate_sor` is never modified — promotion of any
+variant would be a separate, deliberate decision after the research board
+proves it safe. Methodology, the home-field constant caveat, and full results:
+[sor-refinement.md](sor-refinement.md).
+
 ## The research quality gate
 
 The core question is never "did a number go up" but **"did this assumption
@@ -170,8 +188,9 @@ Lab defaults, add a calibration web UI, or introduce new data sources
 (see [v2-tracks-research.md](v2-tracks-research.md)) and each must pass
 through this harness before graduating from research mode. (v2.3 added exactly
 one such track — the opt-in PPA predictive substitution above — as a
-research-only experiment behind `--include-ppa`; recency decay, injuries, and
-full play-by-play remain out of scope.)
+research-only experiment behind `--include-ppa`; v2.4 added the opt-in SOR
+component variants behind `--include-sor-variants`; recency decay, injuries,
+and full play-by-play remain out of scope.)
 
 **Bottom line:** no model change graduates from research mode unless the
 calibration harness can show the improvement, the tradeoff, the holdout

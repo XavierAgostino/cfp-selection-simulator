@@ -240,6 +240,17 @@ def calibrate(
             "The default run never touches PPA."
         ),
     ),
+    include_sor_variants: bool = typer.Option(
+        False,
+        "--include-sor-variants",
+        help=(
+            "Also run the research-only SOR component-variant experiments "
+            "(same weights as baseline, SOR calculation method changed: exact "
+            "Poisson-binomial, home-field adjustment, opponent-rating source). "
+            "Offline and deterministic — no new data. The default run never "
+            "includes them, and the production SOR is never modified."
+        ),
+    ),
 ) -> None:
     """Run the calibration/ablation research harness (v2 research mode).
 
@@ -263,14 +274,26 @@ def calibrate(
         year_list = [int(y) for y in years.split(",")]
 
     experiments = None
-    if include_ppa:
-        from src.calibration.experiments import default_experiments, ppa_substitution_experiment
-
-        experiments = default_experiments() + [ppa_substitution_experiment()]
-        typer.echo(
-            "Including PPA predictive substitution (research-only; seasons with "
-            "missing PPA data are reported as unavailable, never filled)."
+    if include_ppa or include_sor_variants:
+        from src.calibration.experiments import (
+            default_experiments,
+            ppa_substitution_experiment,
+            sor_variant_experiments,
         )
+
+        experiments = default_experiments()
+        if include_ppa:
+            experiments = experiments + [ppa_substitution_experiment()]
+            typer.echo(
+                "Including PPA predictive substitution (research-only; seasons with "
+                "missing PPA data are reported as unavailable, never filled)."
+            )
+        if include_sor_variants:
+            experiments = experiments + sor_variant_experiments()
+            typer.echo(
+                "Including SOR component variants (research-only; same baseline "
+                "weights, alternate SOR calculations — production SOR unchanged)."
+            )
 
     result = run_calibration(year_list, experiments=experiments)
     out_dir = DATA_OUTPUT / "calibration"

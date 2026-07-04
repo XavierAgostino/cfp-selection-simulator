@@ -2,9 +2,11 @@
 
 Most experiments are transparent reweightings of the four composite pillars.
 The baseline is always the production default (``RankingWeights()``); ablations
-zero one component and renormalize the rest so weights still sum to 1.0. The
-one exception is the v2.3 component-substitution experiment, which keeps the
-baseline weights and swaps the predictive component's data source instead.
+zero one component and renormalize the rest so weights still sum to 1.0. Two
+exceptions keep the baseline weights and change the component itself: the v2.3
+component-substitution experiment swaps the predictive component's data
+source, and the v2.4 component-variant experiments change how the SOR
+component is calculated.
 """
 
 from __future__ import annotations
@@ -14,7 +16,7 @@ from typing import Dict, List, Optional
 
 from src.pipeline.weights import COMPONENT_KEYS, RankingWeights
 
-ExperimentGroup = str  # baseline | ablation | sweep | optional | substitution
+ExperimentGroup = str  # baseline | ablation | sweep | optional | substitution | variant
 
 
 @dataclass(frozen=True)
@@ -28,9 +30,13 @@ class ExperimentConfig:
     # v2.3: component-substitution experiments keep the baseline weights but
     # swap one component's data source. ``substitution`` names the component
     # and both sources; it stays None for pure reweighting experiments.
+    # v2.4: component-variant experiments also keep the baseline weights but
+    # change how one component is calculated (same data, different method).
+    # ``variant`` names the component, variant_id, and both methods.
     experiment_type: str = "reweighting"
     research_only: bool = True
     substitution: Optional[Dict[str, str]] = None
+    variant: Optional[Dict[str, object]] = None
 
     def weights_dict(self) -> Dict[str, float]:
         return {key: round(float(getattr(self.weights, key)), 6) for key in COMPONENT_KEYS}
@@ -202,3 +208,115 @@ def ppa_substitution_experiment(base: Optional[RankingWeights] = None) -> Experi
             "candidate_source": "cfbd_ppa",
         },
     )
+
+
+def sor_variant_experiments(base: Optional[RankingWeights] = None) -> List[ExperimentConfig]:
+    """The v2.4 research-only SOR component variants: same weights, new SOR method.
+
+    Deliberately not part of ``default_experiments()`` — they only run when
+    explicitly requested (``sroom calibrate --include-sor-variants``). Each
+    variant changes exactly one assumption in the SOR calculation; the
+    production ``calculate_sor`` is never modified.
+    """
+    weights = base or RankingWeights()
+    return [
+        ExperimentConfig(
+            experiment_id="sor_exact_poisson_binomial",
+            label="SOR exact Poisson-binomial",
+            description=(
+                "Computes SOR with an exact dynamic-programming Poisson binomial "
+                "instead of the averaged-win-probability binomial approximation, "
+                "keeping baseline weights unchanged."
+            ),
+            changed_assumption=(
+                "SOR aggregation replaced by exact Poisson-binomial DP — restores "
+                "the distribution of opponent difficulty the averaged "
+                "approximation smooths away; weights unchanged"
+            ),
+            weights=weights,
+            group="variant",
+            experiment_type="component_variant",
+            variant={
+                "component": "sor",
+                "variant_id": "exact_poisson_binomial",
+                "baseline_method": "binomial_with_averaged_win_probability",
+                "candidate_method": "exact_poisson_binomial_dp",
+            },
+        ),
+        ExperimentConfig(
+            experiment_id="sor_home_field_adjustment",
+            label="SOR home-field adjustment",
+            description=(
+                "Adjusts the hypothetical top-25 team's per-game win probability "
+                "by venue (home up, away down, neutral unchanged), keeping "
+                "baseline weights unchanged."
+            ),
+            changed_assumption=(
+                "SOR win probabilities venue-adjusted with one documented "
+                "rating-offset constant (research assumption, not a definitive "
+                "home-field value); weights unchanged"
+            ),
+            weights=weights,
+            group="variant",
+            experiment_type="component_variant",
+            variant={
+                "component": "sor",
+                "variant_id": "home_field_adjustment",
+                "baseline_method": "venue_blind_win_probabilities",
+                "candidate_method": "venue_adjusted_win_probabilities",
+                "home_field_adjustment": {
+                    "enabled": True,
+                    "method": "rating_offset",
+                    "rating_offset": 0.033,
+                    "neutral_sites_adjusted": False,
+                    "constant_source": "documented research assumption",
+                },
+            },
+        ),
+        ExperimentConfig(
+            experiment_id="sor_opponent_rating_balanced",
+            label="SOR balanced opponent ratings",
+            description=(
+                "Rates SOR opponents with a balanced 0.50 resume / 0.50 "
+                "predictive blend instead of the resume-tilted provisional "
+                "composite, keeping baseline weights unchanged."
+            ),
+            changed_assumption=(
+                "SOR opponent ratings from a balanced resume/predictive blend — "
+                "audits the resume double-count in the provisional composite; "
+                "weights unchanged"
+            ),
+            weights=weights,
+            group="variant",
+            experiment_type="component_variant",
+            variant={
+                "component": "sor",
+                "variant_id": "opponent_rating_balanced",
+                "baseline_method": "provisional_composite_0.50_resume_0.30_predictive",
+                "candidate_method": "balanced_0.50_resume_0.50_predictive",
+            },
+        ),
+        ExperimentConfig(
+            experiment_id="sor_opponent_rating_predictive",
+            label="SOR predictive-leaning opponent ratings",
+            description=(
+                "Rates SOR opponents with a predictive-leaning 0.30 resume / "
+                "0.70 predictive blend instead of the resume-tilted provisional "
+                "composite, keeping baseline weights unchanged."
+            ),
+            changed_assumption=(
+                "SOR opponent ratings from a predictive-leaning blend — audits "
+                "the resume double-count in the provisional composite; weights "
+                "unchanged"
+            ),
+            weights=weights,
+            group="variant",
+            experiment_type="component_variant",
+            variant={
+                "component": "sor",
+                "variant_id": "opponent_rating_predictive_leaning",
+                "baseline_method": "provisional_composite_0.50_resume_0.30_predictive",
+                "candidate_method": "predictive_leaning_0.30_resume_0.70_predictive",
+            },
+        ),
+    ]

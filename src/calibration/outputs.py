@@ -38,8 +38,11 @@ CAVEATS = [
         "fixed; component scores are computed once per season and reweighted. "
         "Component-substitution experiments (only when explicitly requested, "
         "e.g. --include-ppa) keep the baseline weights and swap one component's "
-        "data source; seasons with missing candidate data are reported as "
-        "unavailable, never silently filled."
+        "data source; component-variant experiments (--include-sor-variants) "
+        "keep the baseline weights and change how one component is calculated "
+        "from the same data. Seasons with missing candidate data are reported "
+        "as unavailable, never silently filled, and the production component "
+        "calculations are never modified."
     ),
     (
         "Min-max normalization is per-season, so composite scores are relative to "
@@ -117,6 +120,7 @@ def _experiment_entry(result: ExperimentResult) -> Dict[str, object]:
         "experiment_type": config.experiment_type,
         "research_only": config.research_only,
         "substitution": dict(config.substitution) if config.substitution else None,
+        "variant": dict(config.variant) if config.variant else None,
         "metrics": {
             "all_seasons": _round_map(result.metrics_all_seasons),
             "excluding_outliers": _round_map(result.metrics_excluding_outliers),
@@ -296,12 +300,19 @@ def _markdown_report(payload: Dict[str, object]) -> str:
                 f"{sub['baseline_source']} → {sub['candidate_source']}; "
                 "weights identical to baseline"
             )
+        if exp.get("variant"):
+            var = exp["variant"]
+            lines.append(
+                f"- Component variant (research-only): {var['component']} — "
+                f"{var['baseline_method']} → {var['candidate_method']} "
+                f"(variant `{var['variant_id']}`); weights identical to baseline"
+            )
         lines.append(f"- Decision: **{exp['decision']}** — {exp['reason']}")
         if exp["flags"]:
             lines.append(f"- Flags: {', '.join(exp['flags'])}")
         for year, block in exp["holdout"].items():
             lines.append(f"- Holdout {year}: {block['note']}")
-        if exp.get("substitution"):
+        if exp.get("substitution") or exp.get("variant"):
             for row in exp["per_year_metrics"]:
                 if row.get("brier") is None:
                     lines.append(f"- Unavailable {row['year']}: {row['notes']}")

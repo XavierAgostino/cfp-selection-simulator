@@ -16,6 +16,7 @@ from src.calibration.experiments import (
     ExperimentConfig,
     default_experiments,
     ppa_substitution_experiment,
+    sor_variant_experiments,
 )
 from src.calibration.harness import run_calibration
 from src.calibration.outputs import build_calibration_payload, write_calibration_outputs
@@ -29,6 +30,7 @@ __all__ = [
     "default_experiments",
     "ppa_substitution_experiment",
     "run_calibration",
+    "sor_variant_experiments",
     "write_calibration_outputs",
     "write_committee_emulation_outputs",
 ]
