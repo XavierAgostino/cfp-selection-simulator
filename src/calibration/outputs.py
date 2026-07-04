@@ -218,6 +218,10 @@ def _markdown_report(payload: Dict[str, object]) -> str:
         f"- Holdout checks: {', '.join(str(y) for y in payload['holdout_years'])} "
         "(2022 = outlier stress test, 2024 = modern 12-team format)"
     )
+    lines.append(
+        "- Companion artifact: `committee-emulation.{json,md,csv}` (same "
+        "directory) — the committee-alignment lens over these experiments"
+    )
     lines.append("")
 
     lines.append("## Decisions")

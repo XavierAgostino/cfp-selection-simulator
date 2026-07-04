@@ -46,6 +46,15 @@ Each non-baseline calibration experiment is classified:
 | `blocked` | Improves alignment but fails a protected metric (field overlap, Brier, or the 2024 modern-format holdout) — not safe, regardless of the alignment gain |
 | `not_committee_aligned` | Does not meaningfully improve alignment vs baseline |
 
+These statuses are a second lens over the same experiments, not a replacement
+for the calibration decision labels: `recommended | promising | neutral |
+rejected | needs_more_data` answer "did this assumption help overall?", while
+the statuses here answer "did it track committee behavior, and was the gain
+safe?". The two can disagree in informative ways — a calibration-`recommended`
+experiment whose gains are field/predictive-only would still be
+`not_committee_aligned` here, and a gate-blocked `neutral` (like
+`no_predictive`) shows up as `blocked` with its protected failure named.
+
 Every assessment carries the full quality gate: deltas vs baseline, the 2022
 outlier stress test, the 2024 modern-format holdout, the predictive-signal
 tradeoff, the field-overlap tradeoff, and the calibration decision + reason.

@@ -106,6 +106,16 @@ improved — those are the trust metrics users rely on.
 - 2020 is a shortened COVID season; treat its predictive metrics with caution.
   Seeding metrics exist only for 2024, the lone completed 12-team season.
 
+## Downstream: Committee Emulation lite
+
+Every `sroom calibrate` run also derives a
+[Committee Emulation lite](committee-emulation.md) summary
+(`committee-emulation.{json,md,csv}`, same directory) from these results — a
+second lens that classifies each experiment as a committee-aligned follow-up
+candidate, blocked, or not aligned. The calibration decision labels answer
+"did this assumption help overall?"; the emulation statuses answer "did it
+track committee behavior, and was the gain safe?".
+
 ## Scope guardrails (v2.1)
 
 This slice deliberately does **not**: change production weights, feed Scenario

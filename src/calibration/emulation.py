@@ -120,8 +120,8 @@ def _assess_experiment(exp: Dict[str, object], thresholds: Dict[str, object]) ->
         status = STATUS_NOT_ALIGNED
         status_reason = (
             "Does not meaningfully improve committee alignment vs baseline "
-            f"(Δspearman {d_spearman if d_spearman is not None else 'n/a'}, "
-            f"Δtop-12 overlap {d_top12 if d_top12 is not None else 'n/a'})."
+            f"(Δspearman {_fmt_delta(d_spearman)}, "
+            f"Δtop-12 overlap {_fmt_delta(d_top12)})."
         )
     elif protected_failures:
         status = STATUS_BLOCKED
@@ -229,6 +229,12 @@ def _fmt_delta(value: object, digits: int = 3) -> str:
     return f"{value:+.{digits}f}"
 
 
+def _fmt_value(value: object, digits: int = 3) -> str:
+    if not isinstance(value, float):
+        return "—"
+    return f"{value:.{digits}f}"
+
+
 def _markdown_report(summary: Dict[str, object]) -> str:
     lines: List[str] = []
     lines.append("# Committee Emulation Lite (research mode)")
@@ -240,7 +246,10 @@ def _markdown_report(summary: Dict[str, object]) -> str:
         "do not change the production model.**"
     )
     lines.append("")
-    lines.append(f"- Source calibration run: {summary['source_generated_at']}")
+    lines.append(
+        f"- Derived from `calibration.json` (same directory), generated "
+        f"{summary['source_generated_at']}"
+    )
     lines.append(f"- Seasons: {', '.join(str(y) for y in summary['years'])}")
     lines.append(
         f"- Holdouts: {', '.join(str(y) for y in summary['holdout_years'])} "
@@ -250,7 +259,8 @@ def _markdown_report(summary: Dict[str, object]) -> str:
     excl = baseline["alignment"]["excluding_outliers"]  # type: ignore[index]
     lines.append(
         f"- Baseline alignment (excl. outliers): spearman "
-        f"{excl.get('spearman_top12')}, top-12 overlap {excl.get('top12_overlap')}"
+        f"{_fmt_value(excl.get('spearman_top12'))}, "
+        f"top-12 overlap {_fmt_value(excl.get('top12_overlap'))}"
     )
     lines.append("")
 
