@@ -58,6 +58,18 @@ Black is pinned to 23.x for CI consistency (`black>=23.12.1,<25`).
 cd web && pnpm lint && pnpm exec tsc --noEmit && pnpm build
 ```
 
+### Public demo production build (mirrors Vercel)
+
+```bash
+cd web
+cp .env.example .env.local
+pnpm seed-fixtures:demo
+pnpm build
+pnpm start
+```
+
+See [Public demo readiness](release/public-demo-readiness.md).
+
 CI runs engine and web jobs separately (see `.github/workflows/ci.yml`).
 
 ---

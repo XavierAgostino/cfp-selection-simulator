@@ -5,7 +5,22 @@ the engine's exported JSON as a broadcast-style selection show — dashboard,
 bracket, rankings, bubble watch, team resumes, and methodology.
 
 > [!TIP]
-> Read-only browsing works with zero config after `make demo`. Run generation from the browser needs extra setup (see below).
+> Read-only browsing works with zero config after `make demo`. Run generation from the browser needs extra setup (see below). For the **public read-only demo** on Vercel, see [Public demo readiness](release/public-demo-readiness.md).
+
+---
+
+## Public demo (Vercel)
+
+The public demo is **read-only**. It bundles committed fixtures at build time
+(`pnpm seed-fixtures:demo` → `web/.demo-data/`) and sets
+`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1`.
+
+- No CFBD key required
+- Run Analysis is hidden
+- Scenario Lab sliders work; launching new scenarios requires the local engine
+- Validation uses bundled `validation.json`
+
+Copy [`web/.env.example`](../web/.env.example) for local production builds that mirror the demo deploy.
 
 ---
 

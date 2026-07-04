@@ -8,6 +8,11 @@ behind an explicit go/no-go.
 This document is **not** a roadmap commitment — every implemented track is
 research-only, and nothing here changes production defaults.
 
+> **v1 beta release hardening:** V2.4 implementation is complete; full 2014–2024
+> evaluation is pending CFBD quota/cache population. V2.5 is deferred. Research
+> implementation is frozen for v1 beta — do not start V2.5 or promote experiments
+> before the public demo launch.
+
 ---
 
 ## 0. Product intent

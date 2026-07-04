@@ -35,6 +35,13 @@ explicit go/no-go. No research track changes production defaults.
 
 Present model output alongside committee rankings and uncertainty. Avoid unsupported claims about bias or institutional favoritism without cited evidence. Use projected/simulated language, not "official projection" or "true accuracy."
 
+## Public demo
+
+The hosted **public demo** (Vercel) serves **bundled generated artifacts** only.
+It does not run live CFBD fetches, does not offer hosted run generation, and does
+not present static sample data as live predictions. Local OSS users can run the
+full engine themselves. See [Public demo readiness](../release/public-demo-readiness.md).
+
 ## Non-Affiliation
 
 Selection Room is an independent analytics project and is not affiliated with, endorsed by, or sponsored by the College Football Playoff.

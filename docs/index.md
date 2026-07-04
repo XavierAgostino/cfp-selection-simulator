@@ -67,6 +67,7 @@ The [Research index](research/index.md) is the **methodology homepage** — comm
 | [Project Structure](project-structure.md) | Codebase layout |
 | [Hosted production architecture](architecture/hosted-production.md) | Local vs hosted modes, adapter boundaries, migration order |
 | [Development Guide](development.md) | Setup, test, release |
+| [Public demo readiness](release/public-demo-readiness.md) | Vercel read-only v1 beta deploy |
 | [Contributing](../CONTRIBUTING.md) | PR expectations |
 
 ---

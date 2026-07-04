@@ -15,11 +15,16 @@ A transparent, reproducible decision-support simulator for College Football Play
 The simulator runs from sample data in under a minute, generates a 12-team playoff field, explains why teams made or missed the bracket, and compares model outputs against CFP-style selection rules.
 
 > [!NOTE]
-> **Status: v1 — feature-complete as a local / open-source product.** Field, ranking,
-> bracket, and bubble explainability; in-browser run generation; team resume drawers;
-> the Scenario Lab (weight what-ifs); the Validation Dashboard; and export/share
-> primitives (rankings CSV, bracket image, resume card) are all shipped. Hosted
-> production is documented but not implemented — see [Roadmap](#roadmap).
+> **Status: Selection Room v1 beta** — independent CFP selection analysis workspace.
+> The product is feature-complete for local/open-source use. A **public read-only
+> demo** deploys on Vercel using bundled generated artifacts; hosted custom runs
+> are future architecture ([hosted production](docs/architecture/hosted-production.md)).
+> See [Public demo readiness](docs/release/public-demo-readiness.md).
+
+> [!IMPORTANT]
+> **Research frozen for v1 beta:** V2.4 implementation is complete; full 2014–2024
+> evaluation is pending CFBD quota/cache population. V2.5 is deferred. V2 research
+> does not change production defaults.
 
 > [!TIP]
 > **Primary UI:** Run `make web` for the Selection Room site. The CLI and CSV/JSON exports are the engine; the web app is how most people explore results.
@@ -77,6 +82,15 @@ be launched from the run bar (**Run Analysis**) — season, week, sample or
 live CFBD data.
 
 One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web-app.md)
+
+### Public demo vs local OSS
+
+| | **Public demo (Vercel)** | **Local OSS** |
+|---|--------------------------|---------------|
+| Data | Bundled sample fixtures at build | `make demo` or your own runs |
+| Run Analysis | Hidden (demo mode) | Optional with `SELECTION_ROOM_ENABLE_RUN_JOBS=1` |
+| CFBD key | Not required | Required for live runs only |
+| Setup | See [public demo readiness](docs/release/public-demo-readiness.md) | `make setup && make demo && make web` |
 
 ---
 
@@ -187,6 +201,7 @@ One composite pipeline with explainable components.
 - [Contributing](CONTRIBUTING.md)
 - [Development Guide](docs/development.md)
 - [Project Structure](docs/project-structure.md)
+- [Public demo readiness](docs/release/public-demo-readiness.md)
 
 ---
 
@@ -201,8 +216,8 @@ make verify
 
 ## Roadmap
 
-**v1 (now) — local / open-source, feature-complete.** Everything under
-[What it does](#what-it-does) ships and runs locally from a fresh clone.
+**v1 beta (now) — public demo + local OSS.** Product surface ships. Public demo is
+read-only on bundled artifacts; local OSS supports full engine + optional Run Analysis.
 
 **Future (v1.1+), documented but not implemented:**
 
