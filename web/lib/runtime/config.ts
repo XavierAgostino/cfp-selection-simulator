@@ -64,3 +64,12 @@ export function getSupabaseStorageBucket(): string {
 export function isHostedStorageConfigured(): boolean {
   return getSupabaseUrl() !== null && getSupabaseServiceRoleKey() !== null;
 }
+
+/** True when a hosted worker executor is wired (Trigger.dev in H5). */
+export function isRunExecutorConfigured(): boolean {
+  if (!isHostedRuntimeConfigured()) {
+    return true;
+  }
+  // H5 will enable when Trigger.dev RunExecutor ships.
+  return Boolean(process.env.TRIGGER_SECRET_KEY?.trim()) && process.env.SELECTION_ROOM_HOSTED_EXECUTOR === "trigger";
+}

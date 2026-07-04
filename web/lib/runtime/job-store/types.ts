@@ -22,6 +22,7 @@ export interface JobStore {
   recordLiveRunStarted(): Promise<void>;
   resolveStemFromRunsJson(job: RunJobRecord): Promise<string | null>;
   resolveStemFromJobLog(jobId: string): Promise<string | null>;
+  getDailyJobsRemaining(): Promise<number | null>;
 }
 
 export type { DataSource, JobStatus, RunJobRecord, RunJobRequest };

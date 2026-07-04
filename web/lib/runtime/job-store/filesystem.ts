@@ -284,4 +284,8 @@ export class FilesystemJobStore implements JobStore {
 
     return null;
   }
+
+  async getDailyJobsRemaining(): Promise<number | null> {
+    return null;
+  }
 }

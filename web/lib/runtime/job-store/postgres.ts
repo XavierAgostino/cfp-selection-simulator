@@ -224,4 +224,14 @@ export class PostgresJobStore implements JobStore {
 
     return null;
   }
+
+  async getDailyJobsRemaining(): Promise<number | null> {
+    const dailyCap = hostedDailyJobCap();
+    const dailyCountRows = await this.sql<{ count: string }[]>`
+      SELECT COUNT(*)::text AS count FROM run_jobs
+      WHERE created_at >= date_trunc('day', now() AT TIME ZONE 'UTC')
+    `;
+    const dailyCount = Number.parseInt(dailyCountRows[0]?.count ?? "0", 10);
+    return Math.max(0, dailyCap - dailyCount);
+  }
 }
