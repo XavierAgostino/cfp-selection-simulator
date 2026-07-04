@@ -23,10 +23,21 @@ Tables: `run_jobs`, `runs`, `scenarios`. RLS is enabled with no public policies;
 
 ## 3. Create a private Storage bucket (H3)
 
-1. Storage → **New bucket**
-2. Name: `artifacts` (or set `SUPABASE_STORAGE_BUCKET`)
-3. **Private bucket** (recommended). Do not enable public access.
-4. Reads go through the Next.js server proxy: `/api/data/*` using the service role key. Clients never receive storage URLs or the service role key.
+The repo migration [`20250704181500_hosted_artifacts_bucket.sql`](../../supabase/migrations/20250704181500_hosted_artifacts_bucket.sql) creates the private `artifacts` bucket when you run `supabase db push`. Manual Dashboard creation is optional if the migration is applied.
+
+1. Storage → verify bucket **`artifacts`** exists (`SUPABASE_STORAGE_BUCKET`)
+2. **Private bucket** (`public = false`). Do not enable public access.
+3. Reads go through the Next.js server proxy: `/api/data/*` using the service role key. Clients never receive storage URLs or the service role key.
+
+Upload test fixtures (linked project):
+
+```bash
+pnpm --dir web seed-fixtures:demo
+supabase storage cp web/.demo-data/runs.json ss:///artifacts/runs.json --linked --experimental
+supabase storage cp web/.demo-data/latest.json ss:///artifacts/latest.json --linked --experimental
+```
+
+Dedicated project details: [supabase-project.md](supabase-project.md).
 
 ### Object layout
 

@@ -156,6 +156,7 @@ Poll endpoints:
 | Doc | Purpose |
 |-----|---------|
 | [Supabase setup](supabase-setup.md) | Postgres migration, Storage bucket, RLS |
+| [Supabase project (provisioned)](supabase-project.md) | Linked project ref and verification status |
 | [Trigger worker](trigger-worker.md) | Trigger.dev project, deploy, local worker test |
 | [Hosted production architecture](../architecture/hosted-production.md) | Adapter design and migration history |
 | [Public demo readiness](../release/public-demo-readiness.md) | Read-only Vercel demo (separate from hosted beta) |
@@ -163,6 +164,12 @@ Poll endpoints:
 ---
 
 ## Manual smoke checklist
+
+Local script (reads Supabase CLI credentials, does not print secrets):
+
+```bash
+./scripts/hosted-smoke.sh
+```
 
 Use this after deploying hosted Vercel + Supabase + Trigger:
 
