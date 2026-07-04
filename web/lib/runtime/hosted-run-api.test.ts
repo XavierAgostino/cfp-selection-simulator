@@ -86,6 +86,12 @@ describe("hosted run API (H4)", () => {
     process.env.SELECTION_ROOM_ARTIFACT_STORE = "supabase";
   }
 
+  function configureHostedInfraWithExecutor(): void {
+    configureHostedInfra();
+    process.env.TRIGGER_SECRET_KEY = "tr_test_secret";
+    process.env.SELECTION_ROOM_HOSTED_EXECUTOR = "trigger";
+  }
+
   it("returns local capabilities unchanged when not in hosted mode", async () => {
     delete process.env.SELECTION_ROOM_RUNTIME;
     process.env.SELECTION_ROOM_ENABLE_RUN_JOBS = "1";
@@ -132,7 +138,7 @@ describe("hosted run API (H4)", () => {
   });
 
   it("maps active job conflict to 409", async () => {
-    configureHostedInfra();
+    configureHostedInfraWithExecutor();
     vi.spyOn(runtime, "getJobStore").mockReturnValue(
       createMockJobStore({
         assertCanStartJob: vi.fn().mockRejectedValue(new Error("run_in_progress")),
@@ -150,7 +156,7 @@ describe("hosted run API (H4)", () => {
   });
 
   it("maps daily cap to 429", async () => {
-    configureHostedInfra();
+    configureHostedInfraWithExecutor();
     vi.spyOn(runtime, "getJobStore").mockReturnValue(
       createMockJobStore({
         assertCanStartJob: vi
@@ -169,7 +175,7 @@ describe("hosted run API (H4)", () => {
     expect(mapped.status).toBe(429);
   });
 
-  it("maps missing executor to 503 after gates pass", async () => {
+  it("maps missing executor to 503 before Postgres job gates", async () => {
     configureHostedInfra();
     vi.spyOn(runtime, "getJobStore").mockReturnValue(createMockJobStore());
 

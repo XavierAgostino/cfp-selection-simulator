@@ -305,6 +305,14 @@ export async function validateHostedRun(
     throw new HostedRunError("CFBD live data is unavailable.", "cfbd_unavailable");
   }
 
+  if (!caps.executor_configured) {
+    throw new HostedRunError(
+      caps.disabled_reason ?? "Trigger.dev worker is not configured yet (H5).",
+      "executor_not_configured",
+      caps.disabled_reason,
+    );
+  }
+
   const jobStore = getJobStore();
 
   if (request.data_source === "cfbd") {
@@ -332,13 +340,7 @@ export async function validateHostedRun(
     throw err;
   }
 
-  if (!caps.executor_configured) {
-    throw new HostedRunError(
-      caps.disabled_reason ?? "Trigger.dev worker is not configured yet (H5).",
-      "executor_not_configured",
-      caps.disabled_reason,
-    );
-  }
+  return;
 }
 
 export async function createAndStartHostedRun(

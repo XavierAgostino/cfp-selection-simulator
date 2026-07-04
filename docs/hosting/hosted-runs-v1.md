@@ -157,6 +157,7 @@ Poll endpoints:
 |-----|---------|
 | [Supabase setup](supabase-setup.md) | Postgres migration, Storage bucket, RLS |
 | [Supabase project (provisioned)](supabase-project.md) | Linked project ref and verification status |
+| [Deployment checklist](deployment-checklist.md) | Trigger, Vercel, end-to-end smoke steps |
 | [Trigger worker](trigger-worker.md) | Trigger.dev project, deploy, local worker test |
 | [Hosted production architecture](../architecture/hosted-production.md) | Adapter design and migration history |
 | [Public demo readiness](../release/public-demo-readiness.md) | Read-only Vercel demo (separate from hosted beta) |

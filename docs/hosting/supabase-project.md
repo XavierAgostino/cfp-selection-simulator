@@ -55,25 +55,25 @@ Public object URL returns non-200 (bucket is not public). Reads go through `/api
 
 ## Local env (manual)
 
-Copy secrets from Supabase Dashboard → Settings → API (service role) and Database → connection string (transaction pooler, port 6543).
-
-Use [`web/.env.example`](../web/.env.example) hosted section. Example non-secret values:
+The Supabase CLI `pooler-url` file does **not** include the database password. Bootstrap requires one of:
 
 ```bash
-SUPABASE_URL=https://tucqckdwtbrgmqlnwfhj.supabase.co
-SUPABASE_STORAGE_BUCKET=artifacts
-SELECTION_ROOM_BETA_RUN_CODES=<your-private-codes>
+# Option A: password from Dashboard → Connect → Database
+SUPABASE_DB_PASSWORD='...' ./scripts/bootstrap-hosted-env.sh
+
+# Option B: full transaction pooler URL (port 6543)
+SELECTION_ROOM_DATABASE_URL='postgresql://postgres.tucqckdwtbrgmqlnwfhj:...@aws-0-us-east-1.pooler.supabase.com:6543/postgres' \
+  ./scripts/bootstrap-hosted-env.sh
 ```
 
-## Smoke test
+Then:
 
 ```bash
-chmod +x scripts/hosted-smoke.sh
+chmod +x scripts/hosted-smoke.sh scripts/hosted-worker-smoke.sh
 ./scripts/hosted-smoke.sh
+./scripts/hosted-worker-smoke.sh   # after bootstrap with password
 ```
 
-Expect: hosted capabilities, proxied `/api/data/runs.json` 200, POST without/wrong beta → 401, valid beta without Trigger → 503.
-
-After Trigger + worker env: POST → 202, job in `run_jobs`, worker → succeeded, `/dashboard?run=<stem>`.
+Copy secrets from Supabase Dashboard → Settings → API (service role) and Database → connection string. Use [`web/.env.example`](../web/.env.example) hosted section for the full variable list.
 
 See [Hosted Runs v1](hosted-runs-v1.md) and [Trigger worker](trigger-worker.md).

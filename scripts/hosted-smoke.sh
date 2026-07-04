@@ -8,32 +8,37 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WEB="$ROOT/web"
+ENV_FILE="$WEB/.env.hosted.local"
 PORT="${HOSTED_SMOKE_PORT:-3099}"
 REF_FILE="$ROOT/supabase/.temp/project-ref"
 POOLER_FILE="$ROOT/supabase/.temp/pooler-url"
 
-if [[ ! -f "$REF_FILE" || ! -f "$POOLER_FILE" ]]; then
-  echo "Run from repo root after: supabase link --project-ref <PROJECT_REF>" >&2
+if [[ -f "$ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+  set +a
+elif [[ -f "$REF_FILE" && -f "$POOLER_FILE" ]]; then
+  PROJECT_REF="$(tr -d '[:space:]' < "$REF_FILE")"
+  DATABASE_URL="$(tr -d '[:space:]' < "$POOLER_FILE")"
+  SERVICE_ROLE="$(
+    supabase projects api-keys --project-ref "$PROJECT_REF" -o json \
+      | node -e "const k=JSON.parse(require('fs').readFileSync(0,'utf8')); const row=k.find(x=>x.name==='service_role'); if(!row) process.exit(1); process.stdout.write(row.api_key)"
+  )"
+  export SELECTION_ROOM_RUNTIME=hosted
+  export SELECTION_ROOM_ARTIFACT_STORE=supabase
+  export SELECTION_ROOM_DATABASE_URL="$DATABASE_URL"
+  export SUPABASE_URL="https://${PROJECT_REF}.supabase.co"
+  export SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE"
+  export SUPABASE_STORAGE_BUCKET=artifacts
+  export SELECTION_ROOM_HOSTED_EXECUTOR=trigger
+  export SELECTION_ROOM_HOSTED_DAILY_JOB_CAP=10
+  export SELECTION_ROOM_HOSTED_MAX_CONCURRENT=1
+  export SELECTION_ROOM_BETA_RUN_CODES="${SELECTION_ROOM_BETA_RUN_CODES:-hosted-smoke-test}"
+else
+  echo "Run ./scripts/bootstrap-hosted-env.sh or supabase link first" >&2
   exit 1
 fi
-
-PROJECT_REF="$(tr -d '[:space:]' < "$REF_FILE")"
-DATABASE_URL="$(tr -d '[:space:]' < "$POOLER_FILE")"
-SERVICE_ROLE="$(
-  supabase projects api-keys --project-ref "$PROJECT_REF" -o json \
-    | node -e "const k=JSON.parse(require('fs').readFileSync(0,'utf8')); const row=k.find(x=>x.name==='service_role'); if(!row) process.exit(1); process.stdout.write(row.api_key)"
-)"
-
-export SELECTION_ROOM_RUNTIME=hosted
-export SELECTION_ROOM_ARTIFACT_STORE=supabase
-export SELECTION_ROOM_DATABASE_URL="$DATABASE_URL"
-export SUPABASE_URL="https://${PROJECT_REF}.supabase.co"
-export SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE"
-export SUPABASE_STORAGE_BUCKET=artifacts
-export SELECTION_ROOM_HOSTED_EXECUTOR=trigger
-export SELECTION_ROOM_HOSTED_DAILY_JOB_CAP=10
-export SELECTION_ROOM_HOSTED_MAX_CONCURRENT=1
-export SELECTION_ROOM_BETA_RUN_CODES="${SELECTION_ROOM_BETA_RUN_CODES:-hosted-smoke-test}"
 
 DEV_PID=""
 cleanup() {
@@ -69,6 +74,8 @@ curl -s -o /dev/null -w "status=%{http_code}\n" "${base}/api/data/runs.json"
 
 echo
 echo "== public storage URL (must not be world-readable) =="
+PROJECT_REF="${SUPABASE_URL#https://}"
+PROJECT_REF="${PROJECT_REF%.supabase.co}"
 curl -s -o /dev/null -w "status=%{http_code}\n" \
   "https://${PROJECT_REF}.supabase.co/storage/v1/object/public/artifacts/runs.json"
 
@@ -101,7 +108,7 @@ node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/sroom-smoke-val
 echo
 echo "== recent jobs =="
 curl -s "${base}/api/run/jobs" \
-  | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log('jobs='+d.jobs.length);"
+  | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{try{const d=JSON.parse(s);console.log('jobs='+(d.jobs?.length??0));}catch{console.log('jobs=unavailable');}});"
 
 echo
 echo "Done. Dev log: /tmp/sroom-hosted-smoke-dev.log"

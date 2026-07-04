@@ -68,6 +68,7 @@ The [Research index](research/index.md) is the **methodology homepage** — comm
 | [Hosted Runs v1](hosting/hosted-runs-v1.md) | Deploy and operate hosted live beta |
 | [Supabase setup](hosting/supabase-setup.md) | Postgres + Storage for hosted mode |
 | [Supabase project (provisioned)](hosting/supabase-project.md) | Linked project ref, migrations, verification |
+| [Deployment checklist](hosting/deployment-checklist.md) | Trigger, Vercel, E2E smoke |
 | [Trigger worker setup](hosting/trigger-worker.md) | Trigger.dev worker deploy |
 | [Hosted production architecture](architecture/hosted-production.md) | Adapter design and migration history |
 | [Development Guide](development.md) | Setup, test, release |
