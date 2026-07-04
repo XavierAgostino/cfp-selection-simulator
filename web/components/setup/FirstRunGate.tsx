@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
+import { HostedEmptyState } from "@/components/setup/HostedEmptyState";
 import { SetupWizard } from "@/components/setup/SetupWizard";
 import { getRuns, NotFoundError } from "@/lib/data";
+import { isHostedRuntimeConfigured } from "@/lib/runtime/config";
 
 /**
  * Server-side gate: when the exporter hasn't written runs.json yet (a fresh
@@ -13,6 +15,9 @@ export async function FirstRunGate({ children }: { children: ReactNode }) {
     await getRuns();
   } catch (err) {
     if (err instanceof NotFoundError) {
+      if (isHostedRuntimeConfigured()) {
+        return <HostedEmptyState />;
+      }
       return <SetupWizard />;
     }
     throw err;

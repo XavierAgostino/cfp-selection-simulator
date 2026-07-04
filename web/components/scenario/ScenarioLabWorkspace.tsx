@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -38,6 +39,15 @@ import {
 import type { RunSummary } from "@/lib/types";
 import { bodyMuted, sectionTitle } from "@/lib/typography";
 import { isDemoMode, PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE } from "@/lib/demoMode";
+import {
+  canLaunchHostedRun,
+  canLaunchLocalRun,
+  getBetaAccessCode,
+  hostedGenerationDisabledMessage,
+  hostedRunDashboardUrl,
+  isHostedCapabilities,
+  setBetaAccessCode,
+} from "@/lib/runApiClient";
 
 interface ScenarioLabWorkspaceProps {
   runs: RunSummary[];
@@ -71,6 +81,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
   const [diffError, setDiffError] = React.useState<string | null>(null);
   const [diffLoading, setDiffLoading] = React.useState(false);
   const [capabilities, setCapabilities] = React.useState<RunCapabilities | null>(null);
+  const [betaCode, setBetaCodeState] = React.useState(() => getBetaAccessCode());
 
   const baseRun = baseRuns.find((r) => r.stem === baseStem);
   const scenarioWeights = percentsToWeights(percents);
@@ -101,7 +112,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
     [baseRun],
   );
 
-  const run = useScenarioRun(loadDiff);
+  const run = useScenarioRun(loadDiff, capabilities);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -117,7 +128,21 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
   }, []);
 
   const generationEnabled = capabilities?.run_generation_enabled ?? false;
+  const hosted = isHostedCapabilities(capabilities);
+  const requiresBeta = hosted && capabilities.requires_beta_code;
+  const activeJobId = capabilities?.active_job_id ?? null;
+  const serverBusy = hosted && Boolean(activeJobId) && !run.running;
+  const canLaunchNew = capabilities
+    ? hosted
+      ? canLaunchHostedRun(capabilities, betaCode, run.running)
+      : canLaunchLocalRun(capabilities, run.running)
+    : false;
   const busy = run.running || diffLoading;
+
+  function handleBetaCodeChange(value: string) {
+    setBetaCodeState(value);
+    setBetaAccessCode(value);
+  }
 
   function launchScenario() {
     if (!baseRun || matchesBase) return;
@@ -185,6 +210,43 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
           </div>
 
           <div className="mt-4 flex flex-col gap-2">
+            {hosted && capabilities !== null ? (
+              <div className="space-y-2 rounded-lg bg-secondary/40 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+                <p>
+                  Hosted scenario runs use the same beta access code as Run Analysis.
+                </p>
+                {capabilities.daily_jobs_remaining !== null ? (
+                  <p>
+                    {capabilities.daily_jobs_remaining} hosted run
+                    {capabilities.daily_jobs_remaining === 1 ? "" : "s"} remaining today.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
+            {hosted && requiresBeta ? (
+              <label className="flex flex-col gap-1.5 text-sm">
+                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Beta access code
+                </span>
+                <Input
+                  type="password"
+                  autoComplete="off"
+                  value={betaCode}
+                  onChange={(e) => handleBetaCodeChange(e.target.value)}
+                  placeholder="Enter beta access code"
+                  disabled={run.running}
+                />
+              </label>
+            ) : null}
+
+            {serverBusy ? (
+              <p className="text-xs text-muted-foreground">
+                A hosted run is already in progress. Wait for it to finish before launching
+                another scenario.
+              </p>
+            ) : null}
+
             {existingMatch ? (
               <Button
                 type="button"
@@ -204,7 +266,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
                 type="button"
                 className="w-full gap-2"
                 onClick={launchScenario}
-                disabled={busy || matchesBase || !generationEnabled}
+                disabled={busy || matchesBase || !canLaunchNew}
               >
                 {run.running ? (
                   <LoaderCircle className="size-4 animate-spin" />
@@ -221,11 +283,19 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
                 the current run, so there is nothing to compare yet.
               </p>
             ) : null}
-            {!generationEnabled && capabilities !== null && !existingMatch ? (
+            {!canLaunchNew && capabilities !== null && !existingMatch && !matchesBase ? (
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {isDemoMode
                   ? PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE
-                  : "This deployment can open existing scenarios, but cannot create new ones."}
+                  : hosted
+                    ? !generationEnabled
+                      ? hostedGenerationDisabledMessage(capabilities)
+                      : requiresBeta && !betaCode.trim()
+                        ? "Enter a beta access code to launch a hosted scenario."
+                        : serverBusy
+                          ? "Another hosted run is already in progress."
+                          : "Hosted scenario launch is unavailable right now."
+                    : "This deployment can open existing scenarios, but cannot create new ones."}
               </p>
             ) : null}
           </div>
@@ -302,7 +372,14 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
               </div>
               {resultStem ? (
                 <Button variant="outline" size="sm" nativeButton={false} render={
-                  <Link href={`/?run=${encodeURIComponent(resultStem)}`} className="gap-1.5">
+                  <Link
+                    href={
+                      hosted
+                        ? hostedRunDashboardUrl(resultStem)
+                        : `/?run=${encodeURIComponent(resultStem)}`
+                    }
+                    className="gap-1.5"
+                  >
                     <ExternalLink className="size-4" />
                     Open full run
                   </Link>

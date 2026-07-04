@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Input } from "@/components/ui/input";
 import { navigateToRun } from "@/components/layout/RunSwitcher";
 import {
   formatDataSourceLabel,
@@ -55,6 +56,17 @@ import {
 } from "@/lib/defaultWeek";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
 import type { RunCapabilities, RunJobRecord } from "@/lib/runJob";
+import {
+  buildRunPostInit,
+  canLaunchHostedRun,
+  canLaunchLocalRun,
+  formatRunLaunchError,
+  getBetaAccessCode,
+  hostedGenerationDisabledMessage,
+  hostedRunDashboardUrl,
+  isHostedCapabilities,
+  setBetaAccessCode,
+} from "@/lib/runApiClient";
 import { weightsScenarioId } from "@/lib/scenarioWeights";
 import { invalidateRunPayloadCache } from "@/lib/runPayloadCache";
 import { truncateConfigHash } from "@/lib/recordMeta";
@@ -238,6 +250,7 @@ interface JobsPanelProps {
   jobs: RunJobRecord[];
   currentStem: string;
   latestStem: string;
+  isHosted: boolean;
   onOpenRun: () => void;
   onRefresh: () => void;
 }
@@ -246,6 +259,7 @@ function JobsPanel({
   jobs,
   currentStem,
   latestStem,
+  isHosted,
   onOpenRun,
   onRefresh,
 }: JobsPanelProps) {
@@ -270,7 +284,11 @@ function JobsPanel({
   }
 
   function openRun(stem: string) {
-    navigateToRun(stem, currentStem, latestStem, pathname, searchParams, router);
+    if (isHosted) {
+      router.push(hostedRunDashboardUrl(stem));
+    } else {
+      navigateToRun(stem, currentStem, latestStem, pathname, searchParams, router);
+    }
     onOpenRun();
   }
 
@@ -377,6 +395,7 @@ export function RunAnalysisDialog({
   );
   const [jobs, setJobs] = React.useState<RunJobRecord[]>(jobsProp);
   const [prevJobsProp, setPrevJobsProp] = React.useState(jobsProp);
+  const [betaCode, setBetaCodeState] = React.useState(() => getBetaAccessCode());
   if (jobsProp !== prevJobsProp) {
     setPrevJobsProp(jobsProp);
     setJobs(jobsProp);
@@ -389,6 +408,7 @@ export function RunAnalysisDialog({
     if (formResetKey !== null) {
       setYear(String(defaultYear));
       setSource("sample");
+      setBetaCodeState(getBetaAccessCode());
     }
   }
 
@@ -398,8 +418,17 @@ export function RunAnalysisDialog({
   const logRef = React.useRef<HTMLPreElement>(null);
 
   const running = job !== null && isInProgress(job.status);
+  const hosted = isHostedCapabilities(capabilities);
+  const requiresBeta = hosted && capabilities.requires_beta_code;
   const generationEnabled = capabilities?.run_generation_enabled ?? false;
   const liveEnabled = capabilities?.live_cfbd_enabled ?? false;
+  const activeJobId = capabilities?.active_job_id ?? null;
+  const serverBusy = hosted && Boolean(activeJobId) && !running;
+  const canSubmit = capabilities
+    ? hosted
+      ? canLaunchHostedRun(capabilities, betaCode, running)
+      : canLaunchLocalRun(capabilities, running)
+    : false;
   const catalogRuns = catalog.runs;
   const catalogLatestStem = catalog.latest_stem ?? latestStem;
 
@@ -487,11 +516,15 @@ export function RunAnalysisDialog({
             catalogRuns.find((run) => run.stem === next.stem)?.label ??
             `${next.request.season} Week ${next.request.week} · Base`;
           toast.success(`Analysis complete: ${completedLabel}`);
-          const params = new URLSearchParams();
-          if (next.stem !== latestStem) {
-            params.set("run", next.stem);
+          if (hosted) {
+            router.push(hostedRunDashboardUrl(next.stem));
+          } else {
+            const params = new URLSearchParams();
+            if (next.stem !== latestStem) {
+              params.set("run", next.stem);
+            }
+            router.push(params.size ? `/?${params.toString()}` : "/");
           }
-          router.push(params.size ? `/?${params.toString()}` : "/");
           router.refresh();
           setOpen(false);
           setJobId(null);
@@ -506,15 +539,29 @@ export function RunAnalysisDialog({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [jobId, running, router, latestStem, onRunCompleted, catalogRuns]);
+  }, [jobId, running, router, latestStem, onRunCompleted, catalogRuns, hosted]);
 
   React.useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
   }, [logLines.length]);
 
+  function handleBetaCodeChange(value: string) {
+    setBetaCodeState(value);
+    setBetaAccessCode(value);
+  }
+
   async function launch() {
-    if (!generationEnabled) {
-      toast.error("Run generation is unavailable in this deployment.");
+    if (!canSubmit) {
+      if (hosted && capabilities && !capabilities.run_generation_enabled) {
+        toast.error(hostedGenerationDisabledMessage(capabilities));
+      } else if (requiresBeta && !betaCode.trim()) {
+        toast.error("Enter a beta access code to start a hosted run.");
+      } else if (serverBusy) {
+        toast.error("Another hosted run is already in progress.");
+        setTab("jobs");
+      } else if (!generationEnabled) {
+        toast.error("Run generation is unavailable in this deployment.");
+      }
       return;
     }
 
@@ -531,45 +578,27 @@ export function RunAnalysisDialog({
 
     const data_source = source === "sample" ? "sample" : "cfbd";
 
-    const res = await fetch("/api/run", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ season, week: weekNum, data_source }),
-    });
+    const res = await fetch(
+      "/api/run",
+      buildRunPostInit({ season, week: weekNum, data_source }),
+    );
 
-    if (res.status === 409) {
-      toast.error("Another run is already in progress.");
-      setTab("jobs");
-      void onRefreshJobs();
-      return;
-    }
-    if (res.status === 429) {
-      toast.error("Live runs are throttled. Wait a few minutes and retry.");
-      return;
-    }
-    if (res.status === 400) {
-      const payload = (await res.json()) as { error?: string };
-      if (payload.error === "cfbd_unavailable") {
-        toast.error("Live CFBD is not configured on this server.");
-      } else {
-        toast.error("Invalid run parameters.");
-      }
-      return;
-    }
-    if (res.status === 501) {
-      toast.error(
-        "Run generation unavailable. Enable SELECTION_ROOM_ENABLE_RUN_JOBS and run make setup.",
-        {
+    if (!res.ok) {
+      const message = await formatRunLaunchError(res, capabilities);
+      if (res.status === 501 && !hosted) {
+        toast.error(message, {
           action: {
             label: "Setup",
             onClick: () => window.open("/setup", "_blank"),
           },
-        },
-      );
-      return;
-    }
-    if (!res.ok) {
-      toast.error("Could not start the run.");
+        });
+      } else {
+        toast.error(message);
+      }
+      if (res.status === 409) {
+        setTab("jobs");
+        void onRefreshJobs();
+      }
       return;
     }
 
@@ -633,12 +662,56 @@ export function RunAnalysisDialog({
               </TabsList>
 
               <TabsContent value="create" className="mt-4 space-y-4">
-                {!generationEnabled && capabilities !== null ? (
+                {hosted && capabilities !== null ? (
+                  <div className="space-y-2 rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
+                    <p>
+                      Hosted runs are in beta. Enter an access code to start a run.
+                    </p>
+                    <p>
+                      Run Analysis creates a hosted job and may take a few minutes.
+                    </p>
+                    {capabilities.daily_jobs_remaining !== null ? (
+                      <p>
+                        {capabilities.daily_jobs_remaining} hosted run
+                        {capabilities.daily_jobs_remaining === 1 ? "" : "s"} remaining
+                        today.
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {hosted && requiresBeta ? (
+                  <label className="flex flex-col gap-1.5 text-sm">
+                    <span className="text-muted-foreground">Beta access code</span>
+                    <Input
+                      type="password"
+                      autoComplete="off"
+                      value={betaCode}
+                      onChange={(e) => handleBetaCodeChange(e.target.value)}
+                      placeholder="Enter beta access code"
+                      disabled={running}
+                    />
+                  </label>
+                ) : null}
+
+                {serverBusy ? (
+                  <p className="rounded-lg border border-border/60 bg-secondary/40 px-3 py-2 text-sm text-muted-foreground">
+                    A hosted run is already in progress. Check the Jobs tab for status.
+                  </p>
+                ) : null}
+
+                {!generationEnabled && capabilities !== null && !hosted ? (
                   <p className="rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
                     Run generation is unavailable. Requires persistent Node,
                     Python, writable storage, and{" "}
                     <code className="text-xs">SELECTION_ROOM_ENABLE_RUN_JOBS=1</code>
                     .
+                  </p>
+                ) : null}
+
+                {hosted && capabilities !== null && !generationEnabled ? (
+                  <p className="rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
+                    {hostedGenerationDisabledMessage(capabilities)}
                   </p>
                 ) : null}
 
@@ -691,7 +764,7 @@ export function RunAnalysisDialog({
                       const next = value[0] as "sample" | "live" | undefined;
                       if (next) setSource(next);
                     }}
-                    disabled={running || !generationEnabled}
+                    disabled={running}
                     className="justify-start"
                   >
                     <ToggleGroupItem value="live" disabled={!liveEnabled}>
@@ -756,6 +829,7 @@ export function RunAnalysisDialog({
                   jobs={jobs}
                   currentStem={currentStem}
                   latestStem={latestStem}
+                  isHosted={hosted}
                   onOpenRun={() => setOpen(false)}
                   onRefresh={() => void onRefreshJobs()}
                 />
@@ -775,7 +849,7 @@ export function RunAnalysisDialog({
             </Button>
             <Button
               onClick={launch}
-              disabled={running || !generationEnabled}
+              disabled={running || !canSubmit}
               className="gap-1.5"
             >
               {running ? (
