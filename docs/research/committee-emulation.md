@@ -79,4 +79,8 @@ This slice deliberately does **not**: implement recency decay, PPA/EPA,
 injuries, or any new data source; change production defaults; or make
 Scenario Lab defaults follow recommended experiments. Later tracks
 (PPA/EPA, SOR refinement) must pass through the calibration harness and this
-lens before graduating from research mode.
+lens before graduating from research mode — and v2.3 proved the path works:
+the opt-in PPA predictive substitution passed through both gates, improved
+broad historical metrics, and was **blocked** on the 2024 modern-format
+holdout rather than promoted (see
+[calibration.md](calibration.md#opt-in-ppa-predictive-substitution-v23-research-only)).

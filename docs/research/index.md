@@ -19,7 +19,7 @@ Institutional documentation for how Selection Room models CFP selection. These d
 | Did a weight assumption actually help, where, and at what cost? | [Calibration & Ablation Harness](calibration.md) |
 | Which transparent assumptions track committee behavior, and at what cost? | [Committee Emulation Lite](committee-emulation.md) |
 | What are the known limits and ethics? | [Limitations & Ethics](limitations-and-ethics.md) |
-| What model research is parked for v2? | [v2 Tracks Research](v2-tracks-research.md) |
+| What is the v2 research board's status and what has it found? | [v2 Tracks Research](v2-tracks-research.md) |
 
 ---
 
@@ -63,7 +63,7 @@ Institutional documentation for how Selection Room models CFP selection. These d
 | Document | Focus |
 |----------|-------|
 | [Limitations & Ethics](limitations-and-ethics.md) | Scope, non-affiliation, responsible use |
-| [v2 Tracks Research](v2-tracks-research.md) | Researched-but-deferred v2 tracks: calibration, Committee Emulation, EPA/PPA |
+| [v2 Tracks Research](v2-tracks-research.md) | v2 research board — calibration, Committee Emulation, and PPA substitution implemented (PPA evaluated, not promoted); SOR/résumé refinement next |
 
 ---
 

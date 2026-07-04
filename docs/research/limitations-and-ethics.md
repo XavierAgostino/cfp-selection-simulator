@@ -21,13 +21,15 @@ A transparent **decision-support** tool for exploring CFP selection under publis
 6. **Selection Stability** varies model weights only; it does not simulate future game outcomes, injuries, or alternate championship results. See [sensitivity-analysis.md](sensitivity-analysis.md).
 7. **Historical validation is informative**, not proof of committee replication. Pre-2024 field validation uses actual 4-team participants; committee top-12 overlap is a separate metric. See [historical-validation.md](historical-validation.md).
 
-## Researched, Deferred
+## Research Board (v2)
 
-Several known limitations have researched-but-deferred improvement paths —
-calibration/ablations, Committee Emulation lite, an EPA/PPA predictive layer, SOR
-refinement, and injury modeling. They are parked, with priorities, guardrails, and
-go/no-go criteria, in [v2-tracks-research.md](v2-tracks-research.md). None are under
-construction.
+Several known limitations have research tracks with priorities, guardrails, and
+go/no-go criteria in [v2-tracks-research.md](v2-tracks-research.md).
+Calibration/ablations, Committee Emulation lite, and a PPA predictive
+substitution are implemented as research-only tools — the PPA candidate was
+evaluated and **not promoted** (blocked by the 2024 modern-format holdout).
+SOR/résumé refinement is next; injury modeling stays deferred behind an
+explicit go/no-go. No research track changes production defaults.
 
 ## Responsible Use
 

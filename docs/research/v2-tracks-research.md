@@ -1,9 +1,11 @@
-# v2 Tracks — Research Parking Note
+# v2 Tracks — Research Board
 
-**Status: researched, deferred.** This document parks post-v1 research intent. It is
-**not** a roadmap commitment, and nothing here is under construction. Implementation
-does not begin until the go/no-go criteria below are met and v1.5
-export/reproducibility work is complete.
+**Status: active research board.** Tracks 1–3 are implemented (calibration
+harness, Committee Emulation lite, PPA predictive substitution — the last
+evaluated and **not promoted**); track 4 (SOR/résumé refinement) is next,
+pending a locked spec; track 5 stays deferred behind an explicit go/no-go.
+This document is **not** a roadmap commitment — every implemented track is
+research-only, and nothing here changes production defaults.
 
 ---
 
@@ -100,10 +102,36 @@ layer it touches and must not leak conclusions across layers.
    set) but **blocked by the 2024 modern-format holdout** — see
    [calibration.md](calibration.md).
 4. **SOR / resume refinement** — home-field adjustment, opponent-strength
-   treatment, era-aware handling. Selection Room–native work. **Deferred.**
+   treatment, era-aware handling. Selection Room–native work. **Next (v2.4),
+   awaiting a locked spec** — the research board points here: resume/SOR-heavy
+   profiles are the committee-aligned candidates, so refining the
+   selection-native signal is the highest-value next experiment. Same rules as
+   v2.3: research-only, through the calibration and committee-emulation gates,
+   2022/2024 holdout protection, no production or Scenario Lab default changes.
 5. **Injuries / VORP / full PBP** — last; data quality, subjective assumptions,
-   and maintenance burden are all high. Gated behind an explicit go/no-go.
+   and maintenance burden are all high. Gated behind an explicit go/no-go:
+   only if the research board shows remaining model misses are plausibly
+   explained by player-availability context or play-level efficiency.
    **Deferred.**
+
+### Current research board (after v2.1–v2.3, full 2014–2024 runs)
+
+What the gate has actually said so far — candidates are follow-up research,
+never production changes:
+
+- **Resume/SOR-heavy assumptions look more committee-aligned.** The
+  committee-aligned candidates are `no_sos`, `resume_heavy`, `sor_heavy`, and
+  `committee_alignment_candidate` — all tilt toward selection-native signals.
+- **SOS may carry less standalone value than expected.** Removing it
+  (`no_sos`) improves alignment, field overlap, and Brier simultaneously.
+- **Removing the predictive component looks tempting historically but is
+  unsafe.** `no_predictive` posts the best tuning-view Spearman yet is
+  `blocked` — it collapses on the 2024 modern-format holdout.
+- **PPA substitution improves broad historical metrics but is blocked by the
+  modern format.** The v2.3 experiment improved every tuning-view metric
+  (best field overlap in the set) and still failed the 2024 holdout — the
+  clearest demonstration that the platform refuses to promote assumptions
+  that help the four-team era at the expense of the current format.
 
 ### Committee Emulation guardrail (product identity)
 
