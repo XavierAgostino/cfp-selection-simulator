@@ -52,6 +52,11 @@ isProject: false
 
 # Selection Room Vision — Progress Assessment
 
+> **Stale (archived context):** This assessment predates V2.1–V2.4
+> (`src/calibration/`, `sroom calibrate`). For current research status and
+> promotion decisions, see
+> [`docs/research/v2-tracks-research.md`](../../docs/research/v2-tracks-research.md).
+
 **Last updated:** 2026-07-03 (v1 release hardening pass)
 
 **Sources:** [`selection_room_vision_5f27cf0d.plan.md`](selection_room_vision_5f27cf0d.plan.md) (vision/doctrine), [`archive/vision_status_cleanup.plan.md`](archive/vision_status_cleanup.plan.md), [`archive/validation_dashboard_mvp.plan.md`](archive/validation_dashboard_mvp.plan.md). Implementation history for shipped layers lives in [`archive/`](archive/) — do not re-read those for current work.

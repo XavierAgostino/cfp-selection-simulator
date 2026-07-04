@@ -2,6 +2,11 @@
 
 Institutional documentation for how Selection Room models CFP selection. These docs explain the transparent ranking engine, validation harness, and responsible interpretation — not committee deliberations.
 
+**Before any v2 research work:** read the active research board at
+[v2-tracks-research.md](v2-tracks-research.md) first. It is the single source
+of truth for track status, findings, and promotion decisions. Per-track docs
+below describe how experiments work; the board records what is safe to ship.
+
 ---
 
 ## Which doc answers which question?

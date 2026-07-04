@@ -51,6 +51,9 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
+# Package managers (local store at repo root)
+.pnpm-store/
+
 # Logs (repo-root only; do not match web/app/api/.../logs/)
 /logs/
 *.log
