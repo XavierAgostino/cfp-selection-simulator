@@ -21,13 +21,13 @@ Validation does **not** prove that Selection Room replicates committee deliberat
 
 ## How to refresh validation artifacts
 
-Validation data ships with run exports under each run stem. To refresh:
+Validation data is a single repo-level artifact — `data/output/api/validation.json` — not a per-run export. To refresh:
 
-1. Regenerate runs with the Python engine (`make run` or the Run Analysis flow in the app).
-2. Confirm validation JSON is present in `data/output/api/runs/{stem}/` for the target season.
-3. Reload the Validation page with that run active in the catalog.
+1. Run the validation harness: `make validate` (or `./bin/sroom validate --years 2014:2024`).
+2. Confirm `data/output/api/validation.json` regenerated for the target seasons.
+3. Reload the Validation page. Offline development falls back to the seeded fixture (`pnpm seed-fixtures` copies it to `web/lib/fixtures/validation.json`).
 
-If artifacts are missing for a season, the dashboard shows an empty or partial state rather than inferred numbers.
+If the artifact is missing, the dashboard shows an empty or partial state rather than inferred numbers.
 
 <Callout type="warn" title="Important">
 Historical validation is informative, not proof of committee replication. Treat overlap scores as backtest summaries, not forecasts.

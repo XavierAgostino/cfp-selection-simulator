@@ -31,7 +31,7 @@ export function meterWidth(ratio: number | null | undefined): number {
 /** A plain-language descriptor for how closely the model tracks the committee. */
 export function agreementLabel(spearman: number | null | undefined): string {
   if (spearman === null || spearman === undefined) return "unknown";
-  if (spearman >= 0.9) return "very close";
+  if (spearman >= 0.9) return "strong";
   if (spearman >= 0.8) return "close";
   if (spearman >= 0.65) return "moderate";
   return "loose";
