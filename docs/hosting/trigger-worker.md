@@ -10,7 +10,9 @@ See also: [Hosted Runs v1 overview](hosted-runs-v1.md), [Supabase setup](supabas
 
 1. Sign up at [trigger.dev](https://trigger.dev).
 2. Create a project and note the **project ref** (`proj_...`).
-3. Generate a **secret key** (`tr_dev_...` for dev, production key for deploy).
+3. Generate environment secret keys from **API Keys** in the dashboard:
+   - **Development** (`tr_dev_...`) — local `pnpm dev:trigger` only
+   - **Production** (`tr_prod_...`) — required for `pnpm deploy:trigger` and hosted enqueue (`TRIGGER_SECRET_KEY`)
 
 ---
 

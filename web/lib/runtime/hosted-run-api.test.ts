@@ -88,7 +88,7 @@ describe("hosted run API (H4)", () => {
 
   function configureHostedInfraWithExecutor(): void {
     configureHostedInfra();
-    process.env.TRIGGER_SECRET_KEY = "tr_test_secret";
+    process.env.TRIGGER_SECRET_KEY = "tr_prod_test_secret";
     process.env.SELECTION_ROOM_HOSTED_EXECUTOR = "trigger";
   }
 
@@ -100,6 +100,21 @@ describe("hosted run API (H4)", () => {
     expect(caps.runtime).toBe("persistent_node");
     expect(caps).not.toHaveProperty("requires_beta_code");
     expect(caps).not.toHaveProperty("hosted_run_generation_available");
+  });
+
+  it("reports dev Trigger key as not configured for hosted enqueue", async () => {
+    configureHostedInfra();
+    process.env.TRIGGER_SECRET_KEY = "tr_dev_localonly";
+    process.env.SELECTION_ROOM_HOSTED_EXECUTOR = "trigger";
+    vi.spyOn(runtime, "getJobStore").mockReturnValue(createMockJobStore());
+
+    const caps = await getCapabilities();
+    if (caps.runtime !== "hosted") {
+      throw new Error("expected hosted capabilities");
+    }
+
+    expect(caps.executor_configured).toBe(false);
+    expect(caps.disabled_reason).toMatch(/tr_prod_/);
   });
 
   it("returns hosted capabilities with beta required and executor pending", async () => {

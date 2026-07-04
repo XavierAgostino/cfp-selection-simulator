@@ -66,10 +66,23 @@ export function isHostedStorageConfigured(): boolean {
 }
 
 /** True when a hosted worker executor is wired (Trigger.dev in H5). */
+export function getTriggerEnqueueKeyIssue(): string | null {
+  if (!isHostedRuntimeConfigured()) return null;
+  const key = process.env.TRIGGER_SECRET_KEY?.trim();
+  if (!key) return null;
+  if (key.startsWith("tr_dev_")) {
+    return (
+      "TRIGGER_SECRET_KEY is a dev key (tr_dev_). Hosted tasks deploy to production; " +
+      "use the Production secret (tr_prod_) from Trigger dashboard → API Keys."
+    );
+  }
+  return null;
+}
+
 export function isRunExecutorConfigured(): boolean {
   if (!isHostedRuntimeConfigured()) {
     return true;
   }
-  // H5 will enable when Trigger.dev RunExecutor ships.
+  if (getTriggerEnqueueKeyIssue()) return false;
   return Boolean(process.env.TRIGGER_SECRET_KEY?.trim()) && process.env.SELECTION_ROOM_HOSTED_EXECUTOR === "trigger";
 }

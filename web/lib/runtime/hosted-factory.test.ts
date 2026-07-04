@@ -40,7 +40,7 @@ describe("hosted runtime factory", () => {
   it("returns TriggerRunExecutor when hosted trigger env is configured", () => {
     process.env.SELECTION_ROOM_RUNTIME = "hosted";
     process.env.SELECTION_ROOM_DATABASE_URL = "postgres://example";
-    process.env.TRIGGER_SECRET_KEY = "tr_dev_test";
+    process.env.TRIGGER_SECRET_KEY = "tr_prod_test";
     process.env.SELECTION_ROOM_HOSTED_EXECUTOR = "trigger";
 
     const executor = getRunExecutor();

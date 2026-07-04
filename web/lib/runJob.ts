@@ -12,6 +12,7 @@ import {
 import {
   isHostedRuntimeConfigured,
   isRunExecutorConfigured,
+  getTriggerEnqueueKeyIssue,
   liveRunThrottleMinutes as readLiveRunThrottleMinutes,
 } from "@/lib/runtime/config";
 import { HostedRunError } from "@/lib/runtime/errors";
@@ -163,6 +164,8 @@ function hostedDisabledReason(
     return "Beta access codes are not configured.";
   }
   if (!executorConfigured) {
+    const keyIssue = getTriggerEnqueueKeyIssue();
+    if (keyIssue) return keyIssue;
     return "Trigger.dev worker is not configured (TRIGGER_SECRET_KEY and SELECTION_ROOM_HOSTED_EXECUTOR=trigger).";
   }
   return null;
