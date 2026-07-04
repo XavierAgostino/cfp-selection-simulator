@@ -10,6 +10,7 @@ import {
   getSupabaseUrl,
   isHostedRuntimeConfigured,
   isHostedStorageConfigured,
+  isRunExecutorConfigured,
   resolveArtifactStoreKind,
   resolveRuntimeMode,
 } from "@/lib/runtime/config";
@@ -21,6 +22,7 @@ import { LocalRunCatalogStore } from "@/lib/runtime/run-catalog-store/local";
 import { PostgresRunCatalogStore } from "@/lib/runtime/run-catalog-store/postgres";
 import type { RunCatalogStore } from "@/lib/runtime/run-catalog-store/types";
 import { LocalRunExecutor } from "@/lib/runtime/run-executor/local";
+import { TriggerRunExecutor } from "@/lib/runtime/run-executor/trigger";
 import type { RunExecutor } from "@/lib/runtime/run-executor/types";
 
 let localArtifactStore: ArtifactStore | null = null;
@@ -31,6 +33,7 @@ let localRunExecutor: RunExecutor | null = null;
 
 let hostedRunCatalogStore: RunCatalogStore | null = null;
 let hostedJobStore: JobStore | null = null;
+let hostedRunExecutor: RunExecutor | null = null;
 
 function requireHostedDatabase(feature: string): string {
   const url = getDatabaseUrl();
@@ -115,10 +118,16 @@ export function getJobStore(): JobStore {
 
 export function getRunExecutor(): RunExecutor {
   if (isHostedRuntimeConfigured()) {
-    throw new HostedConfigurationError(
-      "Hosted run execution requires the Trigger.dev worker (H5). " +
-        "Unset SELECTION_ROOM_RUNTIME=hosted for local Option B subprocess jobs.",
-    );
+    if (!isRunExecutorConfigured()) {
+      throw new HostedConfigurationError(
+        "Hosted run execution requires Trigger.dev (TRIGGER_SECRET_KEY and " +
+          "SELECTION_ROOM_HOSTED_EXECUTOR=trigger). Deploy web/trigger/run-hosted-job.ts.",
+      );
+    }
+    if (!hostedRunExecutor) {
+      hostedRunExecutor = new TriggerRunExecutor(getJobStore());
+    }
+    return hostedRunExecutor;
   }
 
   if (!localRunExecutor) {
@@ -136,6 +145,7 @@ export function resetRuntimeAdaptersForTests(): void {
   localRunExecutor = null;
   hostedRunCatalogStore = null;
   hostedJobStore = null;
+  hostedRunExecutor = null;
 }
 
 export function getRuntimeSummary(): {

@@ -1,4 +1,3 @@
-import { HostedConfigurationError } from "@/lib/runtime/errors";
 import type { ArtifactStore } from "@/lib/runtime/artifact-store/types";
 import type { SupabaseStorageBackend } from "@/lib/runtime/artifact-store/supabase-types";
 import { validateArtifactKey } from "@/lib/runtime/artifact-store/validate-key";
@@ -24,12 +23,11 @@ export class SupabaseArtifactStore implements ArtifactStore {
   }
 
   async putJson(key: string, data: unknown): Promise<void> {
-    void key;
-    void data;
-    throw new HostedConfigurationError(
-      "Supabase Storage artifact writes require the hosted worker (H5). " +
-        "Upload objects manually for H3 read-path testing.",
-    );
+    if (!validateArtifactKey(key)) {
+      throw new Error(`invalid_artifact_key:${key}`);
+    }
+    const body = new TextEncoder().encode(JSON.stringify(data, null, 2));
+    await this.backend.uploadObject(key, body, "application/json");
   }
 
   async exists(key: string): Promise<boolean> {

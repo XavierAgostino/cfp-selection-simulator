@@ -37,11 +37,23 @@ describe("hosted runtime factory", () => {
     expect(() => getJobStore()).toThrow(/SELECTION_ROOM_DATABASE_URL/);
   });
 
-  it("throws a clear error for hosted run execution before H5", () => {
+  it("returns TriggerRunExecutor when hosted trigger env is configured", () => {
     process.env.SELECTION_ROOM_RUNTIME = "hosted";
     process.env.SELECTION_ROOM_DATABASE_URL = "postgres://example";
+    process.env.TRIGGER_SECRET_KEY = "tr_dev_test";
+    process.env.SELECTION_ROOM_HOSTED_EXECUTOR = "trigger";
+
+    const executor = getRunExecutor();
+    expect(executor.constructor.name).toBe("TriggerRunExecutor");
+  });
+
+  it("throws when hosted executor env is missing", () => {
+    process.env.SELECTION_ROOM_RUNTIME = "hosted";
+    process.env.SELECTION_ROOM_DATABASE_URL = "postgres://example";
+    delete process.env.TRIGGER_SECRET_KEY;
+    delete process.env.SELECTION_ROOM_HOSTED_EXECUTOR;
 
     expect(() => getRunExecutor()).toThrow(HostedConfigurationError);
-    expect(() => getRunExecutor()).toThrow(/H5/);
+    expect(() => getRunExecutor()).toThrow(/TRIGGER_SECRET_KEY/);
   });
 });

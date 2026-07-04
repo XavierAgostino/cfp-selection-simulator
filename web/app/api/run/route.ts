@@ -3,6 +3,7 @@ import { extractBetaCode } from "@/lib/runtime/beta-access";
 import { isHostedRuntimeConfigured } from "@/lib/runtime/config";
 import { HostedRunError } from "@/lib/runtime/errors";
 import {
+  createAndStartHostedRun,
   createAndStartRun,
   getActiveJob,
   getCapabilities,
@@ -49,8 +50,7 @@ export async function POST(request: NextRequest) {
     );
     try {
       await validateHostedRun(runRequest, betaCode);
-      // H5: create job and enqueue; unreachable until executor is configured.
-      const job = await createAndStartRun(runRequest);
+      const job = await createAndStartHostedRun(runRequest);
       return NextResponse.json(
         { job_id: job.job_id },
         { status: 202, headers: noStore },

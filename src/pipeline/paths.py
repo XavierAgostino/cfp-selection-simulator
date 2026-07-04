@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
@@ -9,6 +10,32 @@ from typing import Optional
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_OUTPUT = REPO_ROOT / "data" / "output"
 API_ROOT = DATA_OUTPUT / "api"
+
+
+def configure_output_paths(data_output: Path) -> None:
+    """Point pipeline/export output at an isolated directory (hosted worker)."""
+    global DATA_OUTPUT, API_ROOT
+    DATA_OUTPUT = data_output
+    API_ROOT = data_output / "api"
+    (API_ROOT / "runs").mkdir(parents=True, exist_ok=True)
+    _sync_dependent_output_paths()
+
+
+def apply_worker_output_env() -> None:
+    """Honor SELECTION_ROOM_WORKER_DATA_OUTPUT when set before pipeline runs."""
+    env = os.environ.get("SELECTION_ROOM_WORKER_DATA_OUTPUT")
+    if not env:
+        return
+    configure_output_paths(Path(env))
+
+
+def _sync_dependent_output_paths() -> None:
+    import src.api_contracts.export as export_mod
+    import src.pipeline.locks as locks_mod
+
+    export_mod.API_ROOT = API_ROOT
+    export_mod.DATA_OUTPUT = DATA_OUTPUT
+    locks_mod._LOCK_PATH = DATA_OUTPUT / ".export.lock"
 
 
 def run_stem(year: int, week: int) -> str:

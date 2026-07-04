@@ -35,6 +35,7 @@ function createMockJobStore(overrides: Partial<JobStore> = {}): JobStore {
     resolveStemFromRunsJson: vi.fn(),
     resolveStemFromJobLog: vi.fn(),
     getDailyJobsRemaining: vi.fn().mockResolvedValue(4),
+    setTriggerRunId: vi.fn().mockResolvedValue(undefined),
     ...overrides,
   };
 }
@@ -111,7 +112,7 @@ describe("hosted run API (H4)", () => {
     expect(caps.run_generation_enabled).toBe(false);
     expect(caps.job_store).toBe("postgres");
     expect(caps.artifact_store).toBe("supabase");
-    expect(caps.disabled_reason).toMatch(/H5/);
+    expect(caps.disabled_reason).toMatch(/TRIGGER_SECRET_KEY/);
     expect(JSON.stringify(caps)).not.toContain("beta-secret");
   });
 

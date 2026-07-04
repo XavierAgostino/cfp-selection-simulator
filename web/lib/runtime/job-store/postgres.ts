@@ -234,4 +234,10 @@ export class PostgresJobStore implements JobStore {
     const dailyCount = Number.parseInt(dailyCountRows[0]?.count ?? "0", 10);
     return Math.max(0, dailyCap - dailyCount);
   }
+
+  async setTriggerRunId(jobId: string, triggerRunId: string): Promise<void> {
+    await this.sql`
+      UPDATE run_jobs SET trigger_run_id = ${triggerRunId} WHERE id = ${jobId}
+    `;
+  }
 }

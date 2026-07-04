@@ -163,7 +163,7 @@ function hostedDisabledReason(
     return "Beta access codes are not configured.";
   }
   if (!executorConfigured) {
-    return "Trigger.dev worker is not configured yet (H5).";
+    return "Trigger.dev worker is not configured (TRIGGER_SECRET_KEY and SELECTION_ROOM_HOSTED_EXECUTOR=trigger).";
   }
   return null;
 }
@@ -339,8 +339,46 @@ export async function validateHostedRun(
       caps.disabled_reason,
     );
   }
+}
 
-  // H5: create run_jobs row and enqueue via RunExecutor.
+export async function createAndStartHostedRun(
+  request: RunJobRequest,
+): Promise<RunJobRecord> {
+  const jobStore = getJobStore();
+
+  const job: RunJobRecord = {
+    job_id: newJobId(),
+    status: "queued",
+    created_at: new Date().toISOString(),
+    started_at: null,
+    finished_at: null,
+    request,
+    stem: null,
+    error: null,
+    pid: null,
+    exit_code: null,
+  };
+
+  await jobStore.createJob(job);
+
+  if (request.data_source === "cfbd") {
+    await jobStore.recordLiveRunStarted();
+  }
+
+  try {
+    await getRunExecutor().enqueueJob(job.job_id);
+  } catch (err) {
+    const current = await jobStore.getJob(job.job_id);
+    if (current && current.status === "queued") {
+      current.status = "failed";
+      current.error = "Failed to enqueue hosted worker";
+      current.finished_at = new Date().toISOString();
+      await jobStore.updateJob(current);
+    }
+    throw err;
+  }
+
+  return job;
 }
 
 export async function createAndStartRun(

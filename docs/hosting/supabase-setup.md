@@ -117,14 +117,71 @@ VALUES ('2025_week15', 2025, 15, 'sample', 'supabase://artifacts/runs/2025_week1
 - Keep the Storage bucket **private**; proxy reads through `/api/data`.
 - RLS is enabled on Postgres tables; anon/authenticated roles have no grants.
 
-## 8. Phase scope
+## 8. Manual verification (H5 worker execution)
+
+The hosted worker runs outside Vercel. Test the Python CLI locally before deploying Trigger.dev:
+
+```bash
+# Apply migration + create Supabase bucket (sections 2–3 above)
+
+# Hosted env (server/worker only)
+export SELECTION_ROOM_RUNTIME=hosted
+export SELECTION_ROOM_ARTIFACT_STORE=supabase
+export SELECTION_ROOM_DATABASE_URL=postgresql://...
+export SUPABASE_URL=https://[ref].supabase.co
+export SUPABASE_SERVICE_ROLE_KEY=...
+export SUPABASE_STORAGE_BUCKET=artifacts
+export SELECTION_ROOM_BETA_ACCESS_CODE=your-beta-code
+export TRIGGER_SECRET_KEY=tr_dev_...
+export SELECTION_ROOM_HOSTED_EXECUTOR=trigger
+export TRIGGER_PROJECT_REF=proj_...
+
+# Optional: CFBD live runs
+export CFBD_API_KEY=...
+
+# 1. Start web in hosted mode and create a job (POST /api/run with beta code)
+cd web && pnpm dev
+
+# 2. Run the worker CLI against the queued job id
+cd ..
+python -m src.cli.main worker run-job run_YYYYMMDD_HHMMSS_xxxxxx
+
+# 3. Verify Postgres
+# run_jobs.status = succeeded, run_stem set, artifact_base_url set
+# runs row exists for the stem
+
+# 4. Verify Storage objects (Dashboard or API): runs.json, latest.json, runs/{stem}/*.json
+
+# 5. Verify reads through the app proxy
+curl -s http://localhost:3000/api/data/runs.json | head
+curl -s "http://localhost:3000/api/data/runs/{stem}/rankings.json" | head
+```
+
+Deploy Trigger.dev worker from `web/`:
+
+```bash
+cd web
+pnpm dlx trigger.dev@latest deploy
+```
+
+The Trigger task `run-hosted-job` shells out to `python -m src.cli.main worker run-job <jobId>`. The worker image must include Python, repo checkout, and the env vars above. The Trigger payload contains only `{ jobId }`; secrets are injected via Trigger worker env, not logged by the task.
+
+### Global artifact files (`runs.json`, `latest.json`)
+
+Hosted v1 enforces **one active job globally**, so global `runs.json` and `latest.json` writes from the worker are serialized per job completion. Postgres `runs` is the catalog source of truth in hosted mode; these root artifacts exist for `/api/data` proxy compatibility with the local JSON layout.
+
+Longer term, catalog should be derived from Postgres and per-run artifacts should avoid relying on global file mutation across concurrent jobs.
+
+Completed runs open at `/dashboard?run=<stem>` (H6 UI wiring).
+
+## 9. Phase scope
 
 | Phase | Shipped |
 |-------|---------|
 | H2 Postgres metadata | Yes |
 | H3 Storage artifact **reads** | Yes |
-| H4 hosted job API | Not yet |
-| H5 worker uploads | Not yet |
+| H4 hosted job API gating | Yes |
+| H5 worker uploads + Trigger.dev | Yes |
 | H6 UI | Not yet |
 
 Local development continues to work with default env (filesystem artifacts, no Supabase).

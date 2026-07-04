@@ -15,6 +15,7 @@ from src.assets.logos import refresh_team_assets_cache
 from src.cli.console import print_doctor_report, print_latest_outputs, print_run_summary
 from src.cli.doctor import run_doctor_checks
 from src.cli.store_commands import store_app
+from src.cli.worker_commands import worker_app
 from src.config.simulator import SimulatorConfig
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.cache_paths import games_cache_write_path
@@ -39,6 +40,7 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 app.add_typer(store_app, name="store")
+app.add_typer(worker_app, name="worker")
 
 
 def _resolve_config(

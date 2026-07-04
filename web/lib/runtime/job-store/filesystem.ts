@@ -288,4 +288,9 @@ export class FilesystemJobStore implements JobStore {
   async getDailyJobsRemaining(): Promise<number | null> {
     return null;
   }
+
+  async setTriggerRunId(jobId: string, triggerRunId: string): Promise<void> {
+    void jobId;
+    void triggerRunId;
+  }
 }

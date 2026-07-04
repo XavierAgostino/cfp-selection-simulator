@@ -58,5 +58,15 @@ export function createSupabaseStorageBackend(
         .filter((name): name is string => typeof name === "string" && name.length > 0);
       return { names };
     },
+
+    async uploadObject(path: string, body: Uint8Array, contentType: string) {
+      const { error } = await client.storage.from(bucket).upload(path, body, {
+        contentType,
+        upsert: true,
+      });
+      if (error) {
+        throw new Error(`supabase_storage_upload_failed:${path}:${error.message}`);
+      }
+    },
   };
 }

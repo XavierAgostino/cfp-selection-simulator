@@ -2,13 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 
 import { SupabaseArtifactStore } from "@/lib/runtime/artifact-store/supabase";
 import type { SupabaseStorageBackend } from "@/lib/runtime/artifact-store/supabase-types";
-import { HostedConfigurationError } from "@/lib/runtime/errors";
 
 function mockBackend(
   overrides: Partial<SupabaseStorageBackend> = {},
 ): SupabaseStorageBackend {
   return {
     downloadObject: vi.fn(async () => ({ body: null, notFound: true })),
+    uploadObject: vi.fn(async () => undefined),
     listObjects: vi.fn(async () => ({ names: [] })),
     ...overrides,
   };
@@ -59,9 +59,17 @@ describe("SupabaseArtifactStore", () => {
     ]);
   });
 
-  it("blocks putJson until the worker ships", async () => {
-    const store = new SupabaseArtifactStore(mockBackend());
-    await expect(store.putJson("runs.json", {})).rejects.toThrow(HostedConfigurationError);
-    await expect(store.putJson("runs.json", {})).rejects.toThrow(/H5/);
+  it("uploads JSON via putJson", async () => {
+    const backend = mockBackend({
+      uploadObject: vi.fn(async (path: string, body: Uint8Array, contentType: string) => {
+        expect(path).toBe("runs.json");
+        expect(contentType).toBe("application/json");
+        expect(new TextDecoder().decode(body)).toContain('"schema_version"');
+      }),
+    });
+
+    const store = new SupabaseArtifactStore(backend);
+    await store.putJson("runs.json", { schema_version: 1 });
+    expect(backend.uploadObject).toHaveBeenCalledOnce();
   });
 });
