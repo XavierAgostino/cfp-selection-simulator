@@ -16,10 +16,10 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 
 > [!NOTE]
 > **Status: Selection Room v1 beta** — independent CFP selection analysis workspace.
-> The product is feature-complete for local/open-source use. A **public read-only
-> demo** deploys on Vercel using bundled generated artifacts; hosted custom runs
-> are future architecture ([hosted production](docs/architecture/hosted-production.md)).
-> See [Public demo readiness](docs/release/public-demo-readiness.md).
+> The product ships in three modes: **public read-only demo**, **local OSS** with
+> optional Run Analysis, and **hosted live beta** (beta-code gated runs on Vercel +
+> Supabase + Trigger.dev). See [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) and
+> [Public demo readiness](docs/release/public-demo-readiness.md).
 
 > [!IMPORTANT]
 > **Research frozen for v1 beta:** V2.4 implementation is complete; full 2014–2024
@@ -83,14 +83,17 @@ live CFBD data.
 
 One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web-app.md)
 
-### Public demo vs local OSS
+### Operating modes
 
-| | **Public demo (Vercel)** | **Local OSS** |
-|---|--------------------------|---------------|
-| Data | Bundled sample fixtures at build | `make demo` or your own runs |
-| Run Analysis | Hidden (demo mode) | Optional with `SELECTION_ROOM_ENABLE_RUN_JOBS=1` |
-| CFBD key | Not required | Required for live runs only |
-| Setup | See [public demo readiness](docs/release/public-demo-readiness.md) | `make setup && make demo && make web` |
+| | **Public demo (Vercel)** | **Local OSS** | **Hosted live beta** |
+|---|--------------------------|---------------|----------------------|
+| Data | Bundled fixtures at build | `make demo` or your runs | Supabase Storage + Postgres |
+| Run Analysis | Hidden (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1`) | Subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | Beta access code + Trigger worker |
+| Accounts | None | None | None (beta code only) |
+| CFBD key | Not required | Required for live runs | Server/worker only |
+| Setup | [Public demo readiness](docs/release/public-demo-readiness.md) | `make setup && make demo && make web` | [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) |
+
+Hosted runs are **beta-code gated**. No sign-in or billing required for v1.
 
 ---
 
@@ -201,6 +204,9 @@ One composite pipeline with explainable components.
 - [Contributing](CONTRIBUTING.md)
 - [Development Guide](docs/development.md)
 - [Project Structure](docs/project-structure.md)
+- [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) — deploy hosted live beta
+- [Supabase setup](docs/hosting/supabase-setup.md)
+- [Trigger worker setup](docs/hosting/trigger-worker.md)
 - [Public demo readiness](docs/release/public-demo-readiness.md)
 
 ---
@@ -216,16 +222,18 @@ make verify
 
 ## Roadmap
 
-**v1 beta (now) — public demo + local OSS.** Product surface ships. Public demo is
-read-only on bundled artifacts; local OSS supports full engine + optional Run Analysis.
+**v1 beta (now) — public demo, local OSS, hosted live beta docs.**
+
+- Public demo: read-only on bundled artifacts.
+- Local OSS: full engine + optional Run Analysis subprocess jobs.
+- Hosted live beta: Vercel + Supabase + Trigger.dev; beta-code gated UI ([Hosted Runs v1](docs/hosting/hosted-runs-v1.md)).
 
 **Future (v1.1+), documented but not implemented:**
 
 - **Shareable scenario URLs** — deep-link a Scenario Lab diff.
-- **Hosted production** — Vercel + worker + object storage + Postgres adapters, so
-  runs can be generated and shared on the web. Architecture is written up in
-  [docs/architecture/hosted-production.md](docs/architecture/hosted-production.md);
-  none of it is required for local use.
+- **Accounts / billing** — not in v1 hosted beta.
+
+Adapter design history: [docs/architecture/hosted-production.md](docs/architecture/hosted-production.md).
 
 ---
 

@@ -65,7 +65,10 @@ The [Research index](research/index.md) is the **methodology homepage** — comm
 | Doc | Purpose |
 |-----|---------|
 | [Project Structure](project-structure.md) | Codebase layout |
-| [Hosted production architecture](architecture/hosted-production.md) | Local vs hosted modes, adapter boundaries, migration order |
+| [Hosted Runs v1](hosting/hosted-runs-v1.md) | Deploy and operate hosted live beta |
+| [Supabase setup](hosting/supabase-setup.md) | Postgres + Storage for hosted mode |
+| [Trigger worker setup](hosting/trigger-worker.md) | Trigger.dev worker deploy |
+| [Hosted production architecture](architecture/hosted-production.md) | Adapter design and migration history |
 | [Development Guide](development.md) | Setup, test, release |
 | [Public demo readiness](release/public-demo-readiness.md) | Vercel read-only v1 beta deploy |
 | [Contributing](../CONTRIBUTING.md) | PR expectations |

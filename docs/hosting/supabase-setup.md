@@ -182,6 +182,25 @@ Completed runs open at `/dashboard?run=<stem>` (H6 UI wiring).
 | H3 Storage artifact **reads** | Yes |
 | H4 hosted job API gating | Yes |
 | H5 worker uploads + Trigger.dev | Yes |
-| H6 UI | Not yet |
+| H6 hosted UI (beta code + job polling) | Yes |
+| H7 docs / deploy runbook | Yes |
 
-Local development continues to work with default env (filesystem artifacts, no Supabase).
+## 10. Metadata tables
+
+| Table | Purpose |
+|-------|---------|
+| `run_jobs` | Job queue state, logs, error, `run_stem`, Trigger run id |
+| `runs` | Run catalog metadata (stem, season, week, source, artifact URL) |
+| `scenarios` | Scenario weight runs linked to base run stem |
+
+Payload JSON lives in Storage only. The web app reads artifacts through `/api/data/*`; catalog and jobs come from Postgres when `SELECTION_ROOM_RUNTIME=hosted`.
+
+## 11. Ops notes
+
+- **Rotate beta code:** change `SELECTION_ROOM_BETA_ACCESS_CODE` on Vercel; no client-side config.
+- **Tune daily cap:** `SELECTION_ROOM_HOSTED_DAILY_JOB_CAP`.
+- **Stuck `running` jobs:** manually mark failed in `run_jobs` if worker died (see [trigger-worker.md](trigger-worker.md)).
+- **Storage cleanup:** delete orphan object prefixes only after confirming no matching `runs.stem`.
+- **CFBD quota:** live runs use server/worker `CFBD_API_KEY`.
+
+See [Hosted Runs v1](hosted-runs-v1.md) for the full smoke checklist and security summary.
