@@ -124,6 +124,34 @@ Also refreshes the web artifact `data/output/api/validation.json`, the contract
 behind the [`/validation` dashboard](web-app.md). A failure in that export is
 logged as a warning and never blocks the CSV/Markdown outputs above.
 
+## `sroom calibrate`
+
+Calibration/ablation research harness (v2 research mode). Reweights the four
+composite pillars across a fixed experiment set (baseline, single-component
+ablations, weight sweeps, optional probes), re-runs the validation tracks per
+experiment, and applies a research quality gate: deltas vs the production
+baseline, per-year metrics, 2022/2024 holdout checks, and a decision label
+(`recommended | promising | neutral | rejected | needs_more_data`) with a
+reason. It measures how transparent assumptions changed historical alignment
+and predictive signal — it never changes the default production weights.
+
+```bash
+./bin/sroom calibrate [--years 2014:2024]
+```
+
+Year range format: `2014:2024` or comma-separated `2014,2015,2016`.
+
+Outputs in `data/output/calibration/`:
+
+- `calibration.json` — machine-readable contract (experiments, metrics, deltas, holdouts, decisions)
+- `calibration.md` — human-readable report
+- `calibration.csv` — one summary row per experiment
+
+See [research/calibration.md](research/calibration.md) for methodology,
+thresholds, and interpretation guardrails.
+
+---
+
 ## `sroom reproduce`
 
 Re-run a season with current code and write manifest.
@@ -186,6 +214,7 @@ sroom clean [--outputs/--all]
 | `make validate-committee` | `./bin/sroom validate --target committee` |
 | `make validate-predictive` | `./bin/sroom validate --target predictive` |
 | `make validate YEARS=2021:2023 TARGET=selection` | Custom year range and track |
+| `make calibrate` | `./bin/sroom calibrate --years 2014:2024` |
 | `make verify` | tests + lint + sample smoke run |
 
 ---

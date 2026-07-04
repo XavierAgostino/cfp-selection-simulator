@@ -228,6 +228,45 @@ def validate(
 
 
 @app.command()
+def calibrate(
+    years: str = typer.Option("2014:2024", help="Year range e.g. 2014:2024"),
+) -> None:
+    """Run the calibration/ablation research harness (v2 research mode).
+
+    Reweights the composite pillars across a fixed experiment set, re-runs the
+    validation tracks per experiment, and writes calibration.json/.md/.csv with
+    deltas vs the production baseline, holdout checks, and decision labels.
+    Never changes the default production weights.
+    """
+    from src.calibration import run_calibration, write_calibration_outputs
+
+    if ":" in years:
+        start, end = years.split(":")
+        year_list = list(range(int(start), int(end) + 1))
+    else:
+        year_list = [int(y) for y in years.split(",")]
+
+    result = run_calibration(year_list)
+    paths = write_calibration_outputs(result, DATA_OUTPUT / "calibration")
+
+    def _fmt_delta(value: object, digits: int = 3) -> str:
+        return f"{value:+.{digits}f}" if isinstance(value, float) else "n/a"
+
+    typer.echo("\nCalibration decisions (deltas vs baseline, outliers excluded):")
+    for experiment in result.experiments:
+        delta = experiment.baseline_delta
+        typer.echo(
+            f"  {experiment.config.experiment_id:<32} {experiment.decision:<16} "
+            f"Δspearman {_fmt_delta(delta.get('spearman_top12'))}  "
+            f"Δfield {_fmt_delta(delta.get('field_overlap'))}  "
+            f"Δbrier {_fmt_delta(delta.get('brier'), 4)}"
+        )
+    typer.echo("")
+    for kind, path in paths.items():
+        typer.echo(f"Wrote {kind}: {path}")
+
+
+@app.command()
 def reproduce(
     season: int = typer.Option(..., help="Season to reproduce"),
     week: int = typer.Option(15, help="Final week"),

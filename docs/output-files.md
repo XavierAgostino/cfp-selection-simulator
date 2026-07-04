@@ -156,6 +156,22 @@ predictive summary covers composite rows only.
 
 ---
 
+## Calibration artifacts
+
+Path: `data/output/calibration/`
+
+Produced by `sroom calibrate` (v2 research mode — never feeds the production
+pipeline or the web app):
+
+- `calibration.json` — machine-readable contract: experiments, per-year
+  metrics, deltas vs baseline, 2022/2024 holdout checks, decision labels
+- `calibration.md` — human-readable report
+- `calibration.csv` — one summary row per experiment
+
+See [Calibration & Ablation Harness](research/calibration.md).
+
+---
+
 ## Inspecting latest outputs
 
 ```bash

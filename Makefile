@@ -18,7 +18,7 @@ BIN := $(VENV_BIN)
 SROOM := $(VENV_BIN)/sroom
 endif
 
-.PHONY: help setup demo run rank select bracket web validate validate-committee validate-selection validate-predictive reproduce test lint format verify clean
+.PHONY: help setup demo run rank select bracket web validate validate-committee validate-selection validate-predictive calibrate reproduce test lint format verify clean
 
 YEAR ?= 2025
 WEEK ?= 15
@@ -46,6 +46,7 @@ help:
 	@echo "  make validate-committee        Committee replication only"
 	@echo "  make validate-predictive         Game prediction metrics only"
 	@echo "  make validate YEARS=2021:2023 TARGET=selection"
+	@echo "  make calibrate                 Calibration/ablation research harness"
 	@echo "  make reproduce SEASON=2024     Reproduce a season run"
 	@echo ""
 	@echo "Development"
@@ -92,6 +93,9 @@ validate-selection:
 
 validate-predictive:
 	$(SROOM) validate --years $(or $(YEARS),2014:2024) --target predictive
+
+calibrate:
+	$(SROOM) calibrate --years $(or $(YEARS),2014:2024)
 
 reproduce:
 	$(SROOM) reproduce --season $(SEASON) --week $(WEEK)

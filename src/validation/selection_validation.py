@@ -54,13 +54,18 @@ def _simulate_twelve_team_field(
     year: int,
     fmt: PlayoffFormat,
     api_key: Optional[str],
+    *,
+    assume_enriched: bool = False,
 ) -> tuple[List[str], object]:
-    enriched, _source = enrich_live_rankings(
-        rankings_df.copy(),
-        games_df,
-        year=year,
-        api_key=api_key,
-    )
+    if assume_enriched and {"conference", "conf_champ"} <= set(rankings_df.columns):
+        enriched = rankings_df.copy()
+    else:
+        enriched, _source = enrich_live_rankings(
+            rankings_df.copy(),
+            games_df,
+            year=year,
+            api_key=api_key,
+        )
     selection = select_playoff_field(enriched, format_rules=fmt)
     field_teams = [t["team"] for t in selection.playoff_teams]
     return field_teams, selection
@@ -72,8 +77,15 @@ def validate_selection(
     games_df: pd.DataFrame,
     *,
     api_key: Optional[str] = None,
+    assume_enriched: bool = False,
 ) -> Optional[SelectionValidationResult]:
-    """Validate simulated field against era-correct historical field."""
+    """Validate simulated field against era-correct historical field.
+
+    ``assume_enriched`` skips conference/champion enrichment when the rankings
+    already carry ``conference``/``conf_champ`` columns (those labels are
+    rank-independent, so callers running many reweightings of the same season
+    can enrich once and reuse).
+    """
     ref_field = historical_playoff_field(year)
     if ref_field is None:
         return None
@@ -87,7 +99,7 @@ def validate_selection(
     else:
         fmt = get_format_for_year(year)
         sim_field, selection = _simulate_twelve_team_field(
-            rankings_df, games_df, year, fmt, api_key
+            rankings_df, games_df, year, fmt, api_key, assume_enriched=assume_enriched
         )
 
     overlap = field_overlap(sim_field, ref_field)
