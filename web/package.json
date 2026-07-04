@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:demo": "pnpm seed-fixtures:demo && SELECTION_ROOM_DATA_DIR=./.demo-data NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

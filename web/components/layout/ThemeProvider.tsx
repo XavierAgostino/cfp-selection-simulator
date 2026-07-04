@@ -7,7 +7,7 @@ export { useTheme, type Theme } from "@/lib/color-scheme";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
-    <ThemeProviderBase defaultTheme="light" disableTransitionOnChange>
+    <ThemeProviderBase defaultTheme="dark" disableTransitionOnChange>
       {children}
     </ThemeProviderBase>
   );

@@ -8,9 +8,11 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { useServerInsertedHTML } from "next/navigation";
 
-const STORAGE_KEY = "theme";
+import {
+  LEGACY_THEME_STORAGE_KEY,
+  THEME_STORAGE_KEY,
+} from "@/lib/theme-bootstrap";
 
 export type Theme = "light" | "dark";
 
@@ -36,12 +38,13 @@ function notifyThemeChange() {
 }
 
 function readStoredTheme(): Theme {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "dark";
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === "dark" ? "dark" : "light";
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "light") return "light";
+    return "dark";
   } catch {
-    return "light";
+    return "dark";
   }
 }
 
@@ -65,24 +68,15 @@ function applyThemeClass(theme: Theme, disableTransition: boolean) {
   removeTransitionGuard?.();
 }
 
-const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var t=localStorage.getItem("${STORAGE_KEY}")||"light";var d=document.documentElement;if(t==="dark")d.classList.add("dark");else d.classList.remove("dark")}catch(e){}})();`;
-
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
   disableTransitionOnChange = false,
 }: {
   children: ReactNode;
   defaultTheme?: Theme;
   disableTransitionOnChange?: boolean;
 }) {
-  useServerInsertedHTML(() => (
-    <script
-      suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
-    />
-  ));
-
   const theme = useSyncExternalStore(
     subscribeToTheme,
     readStoredTheme,
@@ -92,7 +86,8 @@ export function ThemeProvider({
   const setTheme = useCallback(
     (next: Theme) => {
       try {
-        localStorage.setItem(STORAGE_KEY, next);
+        localStorage.setItem(THEME_STORAGE_KEY, next);
+        localStorage.removeItem(LEGACY_THEME_STORAGE_KEY);
       } catch {
         // Storage may be unavailable in private mode.
       }
@@ -118,8 +113,8 @@ export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
     return {
-      theme: "light",
-      resolvedTheme: "light",
+      theme: "dark",
+      resolvedTheme: "dark",
       setTheme: () => {},
     };
   }

@@ -6,7 +6,7 @@ import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { resolvedTheme } = useTheme()
-  const theme = resolvedTheme ?? "light"
+  const theme = resolvedTheme ?? "dark"
 
   return (
     <Sonner
