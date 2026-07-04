@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Deploy Trigger.dev tasks with env from web/.env.hosted.local (gitignored).
- * Writes web/.trigger-project-ref for remote build indexing. Does not print secrets.
+ * Syncs trigger-project.ts from TRIGGER_PROJECT_REF before upload. Does not print secrets.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -9,11 +9,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const webRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const refFile = path.join(webRoot, "trigger.project.ref");
-
-function writeTriggerProjectRef(projectRef) {
-  fs.writeFileSync(refFile, `${projectRef.trim()}\n`, "utf8");
-}
+const projectTs = path.join(webRoot, "trigger-project.ts");
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) return false;
@@ -29,6 +25,14 @@ function loadEnvFile(filePath) {
   return true;
 }
 
+function writeTriggerProjectTs(projectRef) {
+  fs.writeFileSync(
+    projectTs,
+    `// Project ref from Trigger dashboard (not secret). Updated by pnpm deploy:trigger.\nexport const TRIGGER_PROJECT_REF = ${JSON.stringify(projectRef.trim())};\n`,
+    "utf8",
+  );
+}
+
 const loadedHosted = loadEnvFile(path.join(webRoot, ".env.hosted.local"));
 loadEnvFile(path.join(webRoot, ".env.local"));
 
@@ -42,7 +46,7 @@ if (!projectRef) {
   process.exit(1);
 }
 
-writeTriggerProjectRef(projectRef);
+writeTriggerProjectTs(projectRef);
 
 const subcommand = process.argv[2] === "dev" ? "dev" : "deploy";
 const args = [
