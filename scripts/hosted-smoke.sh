@@ -50,6 +50,15 @@ cleanup() {
 trap cleanup EXIT
 
 cd "$WEB"
+
+# Avoid Next.js "another dev server already running" when port 3000 is in use.
+export NEXT_DISABLE_DEV_OVERLAY=1
+existing_pid="$(lsof -ti tcp:"$PORT" -sTCP:LISTEN 2>/dev/null || true)"
+if [[ -n "$existing_pid" ]]; then
+  kill "$existing_pid" 2>/dev/null || true
+  sleep 1
+fi
+
 pnpm dev --port "$PORT" > /tmp/sroom-hosted-smoke-dev.log 2>&1 &
 DEV_PID=$!
 
@@ -97,11 +106,12 @@ curl -s -o /tmp/sroom-smoke-wrong-beta.json -w "status=%{http_code}\n" \
 node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/sroom-smoke-wrong-beta.json','utf8')))"
 
 echo
-echo "== POST /api/run valid beta (503 expected until Trigger is configured) =="
+echo "== POST /api/run valid beta (202 when Trigger configured) =="
+BETA_CODE="${SELECTION_ROOM_BETA_RUN_CODES%%,*}"
 curl -s -o /tmp/sroom-smoke-valid-beta.json -w "status=%{http_code}\n" \
   -X POST "${base}/api/run" \
   -H "Content-Type: application/json" \
-  -H "X-Selection-Room-Beta-Code: hosted-smoke-test" \
+  -H "X-Selection-Room-Beta-Code: ${BETA_CODE}" \
   -d '{"season":2025,"week":15,"data_source":"sample"}'
 node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/sroom-smoke-valid-beta.json','utf8')))"
 

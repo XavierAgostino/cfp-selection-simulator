@@ -15,6 +15,7 @@ from src.config.simulator import SimulatorConfig
 from src.pipeline.paths import (
     BASE_SCENARIO_ID,
     API_ROOT,
+    RunOutputPaths,
     apply_worker_output_env,
     build_run_label,
     run_id,
@@ -112,7 +113,11 @@ def execute_run_job(job_id: str) -> int:
                 export_api=True,
                 scenario_id=scenario_id,
             )
-            paths = result["paths"]
+            paths = RunOutputPaths(
+                year=job.season,
+                week=job.week,
+                scenario_id=scenario_id,
+            )
             stem = paths.stem
             base_url = artifact_base_url(bucket, stem)
 

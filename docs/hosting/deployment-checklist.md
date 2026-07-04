@@ -58,9 +58,23 @@ Trigger worker env (server only):
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_STORAGE_BUCKET=artifacts`
 - `CFBD_API_KEY` (live runs only)
-- `SELECTION_ROOM_REPO_DIR` / `SELECTION_ROOM_PYTHON` if runtime paths differ
+- Do **not** set local `SELECTION_ROOM_REPO_DIR` / `SELECTION_ROOM_PYTHON` on Trigger (use `pnpm deploy:trigger`, which stages monorepo sources and sets cloud Python paths)
 
 Re-run `./scripts/hosted-smoke.sh` with `TRIGGER_SECRET_KEY` set → valid beta should return **202**.
+
+Verify Trigger cloud execution (bypasses API daily cap):
+
+```bash
+JOB=$(node scripts/create-hosted-test-job.mjs)
+cd web && set -a && source .env.hosted.local && set +a
+node --input-type=module -e "
+import { configure, tasks } from '@trigger.dev/sdk/v3';
+configure({ secretKey: process.env.TRIGGER_SECRET_KEY });
+const handle = await tasks.trigger('run-hosted-job', { jobId: process.argv[1] });
+console.log(handle.id);
+" "$JOB"
+# Poll run_jobs until status=succeeded
+```
 
 ## Phase 4 — Vercel hosted project
 
@@ -75,11 +89,15 @@ Re-run `./scripts/hosted-smoke.sh` with `TRIGGER_SECRET_KEY` set → valid beta 
 
 ```bash
 cd web
-npx vercel link    # choose new project
-npx vercel env add SELECTION_ROOM_RUNTIME
-# ... repeat for each secret via dashboard or vercel env add
-npx vercel deploy
+npx vercel link    # choose selection-room-hosted (not public demo)
+./scripts/sync-vercel-hosted-env.sh production
+NEXT_PUBLIC_SITE_URL=https://selection-room-hosted.vercel.app ./scripts/sync-vercel-hosted-env.sh production
+npx vercel deploy --prod
 ```
+
+Keep public demo linked separately (`selection-room`). After linking hosted, restore demo with the saved `.vercel/demo-project.json` if you deploy the public site from the same `web/` directory.
+
+**Deployment protection:** if `/api/run/capabilities` returns an HTML login page, disable Vercel Authentication / Deployment Protection for `selection-room-hosted`, or use a protection bypass token for smoke tests.
 
 ## Phase 5 — End-to-end hosted preview
 

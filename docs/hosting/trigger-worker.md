@@ -35,8 +35,8 @@ Set these on **Vercel** (API enqueue) and on the **Trigger worker** (Python exec
 | `SELECTION_ROOM_HOSTED_DAILY_JOB_CAP` | Recommended | Default `10` |
 | `SELECTION_ROOM_HOSTED_MAX_CONCURRENT` | Recommended | Default `1` |
 | `CFBD_API_KEY` | For live runs | Server/worker only |
-| `SELECTION_ROOM_PYTHON` | Optional | Python binary (default `python3`) |
-| `SELECTION_ROOM_REPO_DIR` | Optional | Repo root on worker (default parent of `web/`) |
+| `SELECTION_ROOM_PYTHON` | Optional | Python binary (default `python3`). **Trigger cloud:** `/opt/venv/bin/python` |
+| `SELECTION_ROOM_REPO_DIR` | Optional | Repo root on worker. Local dev: monorepo root. **Trigger cloud:** omit (defaults to parent of `/app`, where `additionalFiles` places `src/`) |
 | `SELECTION_ROOM_WORKER_DATA_OUTPUT` | Optional | Temp export dir on worker |
 
 **Not forwarded to worker subprocess:** `SELECTION_ROOM_BETA_*`, `TRIGGER_SECRET_KEY` (see `web/lib/runtime/run-executor/worker-env.ts`).

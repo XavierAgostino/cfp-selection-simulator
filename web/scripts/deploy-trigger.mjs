@@ -48,13 +48,71 @@ if (!projectRef) {
 
 writeTriggerProjectTs(projectRef);
 
+/** Local-only keys replaced on Trigger deploy (never use local machine paths). */
+const TRIGGER_ENV_CLOUD_OVERRIDES = {
+  SELECTION_ROOM_PYTHON: "/opt/venv/bin/python",
+};
+
+function writeTriggerDeployEnvFile(sourcePath) {
+  const lines = fs.readFileSync(sourcePath, "utf8").split("\n");
+  const out = [];
+  const seen = new Set();
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) {
+      out.push(line);
+      continue;
+    }
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) {
+      out.push(line);
+      continue;
+    }
+    const key = trimmed.slice(0, eq).trim();
+    if (key in TRIGGER_ENV_CLOUD_OVERRIDES) {
+      out.push(`${key}=${TRIGGER_ENV_CLOUD_OVERRIDES[key]}`);
+      seen.add(key);
+      continue;
+    }
+    if (key === "SELECTION_ROOM_REPO_DIR" || key === "NEXT_PUBLIC_SITE_URL") {
+      out.push(`# ${line} (local-only; omitted from Trigger deploy)`);
+      continue;
+    }
+    out.push(line);
+    seen.add(key);
+  }
+  for (const [key, value] of Object.entries(TRIGGER_ENV_CLOUD_OVERRIDES)) {
+    if (!seen.has(key)) {
+      out.push(`${key}=${value}`);
+    }
+  }
+  const dest = path.join(webRoot, ".env.trigger-deploy");
+  fs.writeFileSync(dest, `${out.join("\n").trimEnd()}\n`, "utf8");
+  return dest;
+}
+
+const hostedEnvPath = path.join(webRoot, ".env.hosted.local");
+const triggerEnvPath = writeTriggerDeployEnvFile(hostedEnvPath);
+
+function stageMonorepoForTrigger() {
+  const stageRoot = path.join(webRoot, "_trigger-worker");
+  fs.rmSync(stageRoot, { recursive: true, force: true });
+  fs.mkdirSync(stageRoot, { recursive: true });
+  fs.cpSync(path.join(webRoot, "../src"), path.join(stageRoot, "src"), { recursive: true });
+  fs.cpSync(path.join(webRoot, "../data"), path.join(stageRoot, "data"), { recursive: true });
+}
+
+if (process.argv[2] !== "dev") {
+  stageMonorepoForTrigger();
+}
+
 const subcommand = process.argv[2] === "dev" ? "dev" : "deploy";
 const args = [
   "dlx",
   "trigger.dev@latest",
   subcommand,
   "--env-file",
-  path.join(webRoot, ".env.hosted.local"),
+  triggerEnvPath,
   "--project-ref",
   projectRef,
 ];

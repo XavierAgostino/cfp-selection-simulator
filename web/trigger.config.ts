@@ -1,3 +1,5 @@
+import { additionalFiles } from "@trigger.dev/build/extensions/core";
+import { pythonExtension } from "@trigger.dev/python/extension";
 import { defineConfig } from "@trigger.dev/sdk";
 
 import { TRIGGER_PROJECT_REF } from "./trigger-project";
@@ -15,5 +17,15 @@ export default defineConfig({
       factor: 2,
       randomize: true,
     },
+  },
+  build: {
+    extensions: [
+      additionalFiles({
+        files: ["./_trigger-worker/src/**", "./_trigger-worker/data/**"],
+      }),
+      pythonExtension({
+        requirementsFile: "../requirements-worker.txt",
+      }),
+    ],
   },
 });
