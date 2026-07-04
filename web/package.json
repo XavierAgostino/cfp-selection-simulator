@@ -9,6 +9,7 @@
     "lint": "eslint",
     "postinstall": "fumadocs-mdx",
     "seed-fixtures": "node scripts/seed-fixtures.mjs",
+    "seed-fixtures:demo": "SELECTION_ROOM_DATA_DIR=./.demo-data node scripts/seed-fixtures.mjs",
     "sync-data": "node scripts/sync-data.mjs"
   },
   "dependencies": {

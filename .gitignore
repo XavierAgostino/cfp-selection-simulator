@@ -54,6 +54,9 @@ Desktop.ini
 # Package managers (local store at repo root)
 .pnpm-store/
 
+# Web demo bundle (generated at Vercel build; do not commit)
+web/.demo-data/
+
 # Logs (repo-root only; do not match web/app/api/.../logs/)
 /logs/
 *.log

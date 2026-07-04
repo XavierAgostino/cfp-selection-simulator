@@ -28,28 +28,6 @@
         "sos": 0.1
       },
       "label": "2025 Week 15 · Base"
-    },
-    {
-      "stem": "2025_week14",
-      "run_id": "2025_week14",
-      "scenario_id": "base",
-      "season": 2025,
-      "week": 14,
-      "ruleset": "2025_plus",
-      "data_source": "sample",
-      "champion_source": "cfbd",
-      "generated_at": "2025-11-30T18:00:00Z",
-      "has_bracket": false,
-      "has_sensitivity": false,
-      "simulator_version": "3.0.0",
-      "config_hash": "sample_fixture_hash",
-      "weights": {
-        "resume": 0.4,
-        "predictive": 0.3,
-        "sor": 0.2,
-        "sos": 0.1
-      },
-      "label": "2025 Week 14 · Base"
     }
   ]
 }
