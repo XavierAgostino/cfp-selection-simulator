@@ -9,7 +9,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const webRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const refFile = path.join(webRoot, ".trigger-project-ref");
+const refFile = path.join(webRoot, "trigger.project.ref");
 
 function writeTriggerProjectRef(projectRef) {
   fs.writeFileSync(refFile, `${projectRef.trim()}\n`, "utf8");
