@@ -16,6 +16,7 @@ describe("validateArtifactKey", () => {
     expect(validateArtifactKey("../runs.json")).toBe(false);
     expect(validateArtifactKey("runs/../latest.json")).toBe(false);
     expect(validateArtifactKey("runs.txt")).toBe(false);
+    expect(validateArtifactKey("/runs.json")).toBe(false);
   });
 });
 

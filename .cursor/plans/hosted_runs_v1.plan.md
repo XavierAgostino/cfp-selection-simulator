@@ -1,6 +1,6 @@
 # Hosted Runs v1 Implementation Plan
 
-**Status:** Approved. Execute one phase per PR. **Current phase: H1 only.**
+**Status:** Approved. **H1 done. H2 done.** Next: H3 only.
 
 ## Goal
 
@@ -103,7 +103,7 @@ CFBD_API_KEY=                                # worker/server only
 | Phase | Scope | Status |
 |-------|-------|--------|
 | **H1** | Adapter interfaces + local implementations + factory | **Done** |
-| H2 | Supabase migration + Postgres stores | Not started |
+| **H2** | Supabase migration + Postgres stores | **Done** |
 | H3 | Supabase Storage artifact read path | Not started |
 | H4 | Provider-aware job API, beta gate, rate limits | Not started |
 | H5 | Worker CLI + Trigger.dev + artifact upload | Not started |

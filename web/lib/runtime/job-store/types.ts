@@ -16,6 +16,7 @@ export interface JobStore {
   readLogTail(jobId: string, maxLines?: number): Promise<string[]>;
   appendLog(jobId: string, line: string): Promise<void>;
   isStorageWritable(): Promise<boolean>;
+  assertCanStartJob(): Promise<void>;
   assertNoActiveJob(): Promise<void>;
   assertLiveThrottleAllowed(): Promise<void>;
   recordLiveRunStarted(): Promise<void>;

@@ -3,6 +3,7 @@ import { existsSync } from "fs";
 import path from "path";
 
 import { FilesystemArtifactStore } from "@/lib/runtime/artifact-store/filesystem";
+import type { CreateRunRecord } from "@/lib/runtime/run-catalog-store/mappers";
 import type { RunCatalogStore } from "@/lib/runtime/run-catalog-store/types";
 import { REPO_DIR } from "@/lib/paths";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
@@ -158,5 +159,15 @@ export class LocalRunCatalogStore implements RunCatalogStore {
     }
 
     return { source: "runs_json", runs: [], latest_stem: null };
+  }
+
+  async createRun(record: CreateRunRecord): Promise<void> {
+    void record;
+    throw new Error("createRun is only supported in hosted Postgres mode (H2+ worker path)");
+  }
+
+  async getRun(stem: string): Promise<RunSummary | null> {
+    const catalog = await this.loadCatalog();
+    return catalog.runs.find((run) => run.stem === stem) ?? null;
   }
 }

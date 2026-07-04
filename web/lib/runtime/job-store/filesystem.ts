@@ -47,19 +47,8 @@ interface LiveThrottleState {
 
 const LOG_TAIL_LINES = 200;
 
-const REDACTION_PATTERNS: RegExp[] = [
-  /CFBD_API_KEY=\S+/gi,
-  /Authorization:\s*Bearer\s+\S+/gi,
-  /Bearer\s+[A-Za-z0-9._-]+/gi,
-];
-
-function redactLogLine(line: string): string {
-  let out = line;
-  for (const pattern of REDACTION_PATTERNS) {
-    out = out.replace(pattern, "[REDACTED]");
-  }
-  return out;
-}
+import { liveRunThrottleMinutes } from "@/lib/runtime/config";
+import { redactLogLine } from "@/lib/runtime/log-redaction";
 
 function isProcessAlive(pid: number): boolean {
   try {
@@ -207,6 +196,10 @@ export class FilesystemJobStore implements JobStore {
   }
 
   async assertNoActiveJob(): Promise<void> {
+    await this.assertCanStartJob();
+  }
+
+  async assertCanStartJob(): Promise<void> {
     const active = await this.getActiveJob();
     if (active?.status === "running" || active?.status === "queued") {
       throw new Error("run_in_progress");
@@ -214,16 +207,14 @@ export class FilesystemJobStore implements JobStore {
   }
 
   async assertLiveThrottleAllowed(): Promise<void> {
-    const raw = process.env.SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES ?? "5";
-    const minutes = Number.parseInt(raw, 10);
-    const throttleMinutes = Number.isNaN(minutes) || minutes < 0 ? 5 : minutes;
-    if (throttleMinutes === 0) return;
+    const minutes = liveRunThrottleMinutes();
+    if (minutes === 0) return;
 
     const state = await readJsonFile<LiveThrottleState>(LIVE_THROTTLE_PATH);
     if (!state?.last_run_at) return;
 
     const elapsedMs = Date.now() - Date.parse(state.last_run_at);
-    const requiredMs = throttleMinutes * 60 * 1000;
+    const requiredMs = minutes * 60 * 1000;
     if (elapsedMs < requiredMs) {
       throw new Error("live_run_throttled");
     }

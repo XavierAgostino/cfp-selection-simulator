@@ -1,6 +1,8 @@
 import type { RunSummary } from "@/lib/types";
 
-export type RunCatalogSource = "duckdb" | "runs_json";
+import type { CreateRunRecord } from "@/lib/runtime/run-catalog-store/mappers";
+
+export type RunCatalogSource = "duckdb" | "runs_json" | "postgres";
 
 export interface RunCatalogResponse {
   source: RunCatalogSource;
@@ -10,4 +12,8 @@ export interface RunCatalogResponse {
 
 export interface RunCatalogStore {
   loadCatalog(limit?: number): Promise<RunCatalogResponse>;
+  createRun(record: CreateRunRecord): Promise<void>;
+  getRun(stem: string): Promise<RunSummary | null>;
 }
+
+export type { CreateRunRecord };

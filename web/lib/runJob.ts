@@ -4,6 +4,7 @@ import {
   getJobStore,
   getRunExecutor,
 } from "@/lib/runtime";
+import { liveRunThrottleMinutes as readLiveRunThrottleMinutes } from "@/lib/runtime/config";
 import { engineAvailable } from "@/lib/runtime/run-executor/local";
 import { loadRepoEnv } from "@/lib/repoEnv";
 import {
@@ -65,10 +66,7 @@ export function liveCfbdEnabled(): boolean {
 }
 
 export function liveRunThrottleMinutes(): number {
-  const raw = process.env.SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES ?? "5";
-  const parsed = Number.parseInt(raw, 10);
-  if (Number.isNaN(parsed) || parsed < 0) return 5;
-  return parsed;
+  return readLiveRunThrottleMinutes();
 }
 
 export { engineAvailable };
@@ -148,7 +146,7 @@ export async function createAndStartRun(
     await jobStore.assertLiveThrottleAllowed();
   }
 
-  await jobStore.assertNoActiveJob();
+  await jobStore.assertCanStartJob();
 
   const job: RunJobRecord = {
     job_id: newJobId(),

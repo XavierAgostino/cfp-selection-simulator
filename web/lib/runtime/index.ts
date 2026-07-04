@@ -2,82 +2,115 @@ import { API_DATA_DIR } from "@/lib/paths";
 import { FilesystemArtifactStore } from "@/lib/runtime/artifact-store/filesystem";
 import type { ArtifactStore } from "@/lib/runtime/artifact-store/types";
 import {
+  getDatabaseUrl,
   isHostedRuntimeConfigured,
   resolveArtifactStoreKind,
   resolveRuntimeMode,
 } from "@/lib/runtime/config";
+import { HostedConfigurationError } from "@/lib/runtime/errors";
 import { FilesystemJobStore } from "@/lib/runtime/job-store/filesystem";
 import type { JobStore } from "@/lib/runtime/job-store/types";
+import { PostgresJobStore } from "@/lib/runtime/job-store/postgres";
 import { LocalRunCatalogStore } from "@/lib/runtime/run-catalog-store/local";
+import { PostgresRunCatalogStore } from "@/lib/runtime/run-catalog-store/postgres";
 import type { RunCatalogStore } from "@/lib/runtime/run-catalog-store/types";
 import { LocalRunExecutor } from "@/lib/runtime/run-executor/local";
 import type { RunExecutor } from "@/lib/runtime/run-executor/types";
 
-let artifactStore: ArtifactStore | null = null;
-let runCatalogStore: RunCatalogStore | null = null;
-let jobStore: JobStore | null = null;
-let runExecutor: RunExecutor | null = null;
+let localArtifactStore: ArtifactStore | null = null;
+let localRunCatalogStore: RunCatalogStore | null = null;
+let localJobStore: JobStore | null = null;
+let localRunExecutor: RunExecutor | null = null;
 
-function assertLocalRuntimeOnly(feature: string): void {
-  if (isHostedRuntimeConfigured()) {
-    throw new Error(
-      `${feature} is not implemented for hosted runtime yet (H2+). ` +
-        "Unset SELECTION_ROOM_RUNTIME=hosted for local development.",
+let hostedRunCatalogStore: RunCatalogStore | null = null;
+let hostedJobStore: JobStore | null = null;
+
+function requireHostedDatabase(feature: string): string {
+  const url = getDatabaseUrl();
+  if (!url) {
+    throw new HostedConfigurationError(
+      `Hosted ${feature} requires SELECTION_ROOM_DATABASE_URL. ` +
+        "Apply supabase/migrations/20250704180000_hosted_runs_v1.sql, then set the Supabase pooler URL. " +
+        "Supabase Storage (H3) and the Trigger.dev worker (H5) are not wired yet.",
     );
   }
-  if (resolveArtifactStoreKind() === "supabase") {
-    throw new Error(
-      `${feature} is not implemented for supabase artifact store yet (H3+).`,
-    );
-  }
+  return url;
 }
 
 export function getArtifactStore(): ArtifactStore {
-  assertLocalRuntimeOnly("ArtifactStore");
-  if (!artifactStore) {
-    artifactStore = new FilesystemArtifactStore(API_DATA_DIR);
+  if (resolveArtifactStoreKind() === "supabase") {
+    throw new HostedConfigurationError(
+      "Supabase Storage artifact reads are not implemented yet (H3). " +
+        "Keep SELECTION_ROOM_ARTIFACT_STORE=filesystem until H3 ships, or use local runtime mode.",
+    );
   }
-  return artifactStore;
+
+  if (!localArtifactStore) {
+    localArtifactStore = new FilesystemArtifactStore(API_DATA_DIR);
+  }
+  return localArtifactStore;
 }
 
 export function getRunCatalogStore(): RunCatalogStore {
-  assertLocalRuntimeOnly("RunCatalogStore");
-  if (!runCatalogStore) {
-    runCatalogStore = new LocalRunCatalogStore(API_DATA_DIR);
+  if (isHostedRuntimeConfigured()) {
+    if (!hostedRunCatalogStore) {
+      hostedRunCatalogStore = new PostgresRunCatalogStore(requireHostedDatabase("RunCatalogStore"));
+    }
+    return hostedRunCatalogStore;
   }
-  return runCatalogStore;
+
+  if (!localRunCatalogStore) {
+    localRunCatalogStore = new LocalRunCatalogStore(API_DATA_DIR);
+  }
+  return localRunCatalogStore;
 }
 
 export function getJobStore(): JobStore {
-  assertLocalRuntimeOnly("JobStore");
-  if (!jobStore) {
-    jobStore = new FilesystemJobStore(API_DATA_DIR);
+  if (isHostedRuntimeConfigured()) {
+    if (!hostedJobStore) {
+      hostedJobStore = new PostgresJobStore(requireHostedDatabase("JobStore"));
+    }
+    return hostedJobStore;
   }
-  return jobStore;
+
+  if (!localJobStore) {
+    localJobStore = new FilesystemJobStore(API_DATA_DIR);
+  }
+  return localJobStore;
 }
 
 export function getRunExecutor(): RunExecutor {
-  assertLocalRuntimeOnly("RunExecutor");
-  if (!runExecutor) {
-    runExecutor = new LocalRunExecutor(getJobStore());
+  if (isHostedRuntimeConfigured()) {
+    throw new HostedConfigurationError(
+      "Hosted run execution requires the Trigger.dev worker (H5). " +
+        "Unset SELECTION_ROOM_RUNTIME=hosted for local Option B subprocess jobs.",
+    );
   }
-  return runExecutor;
+
+  if (!localRunExecutor) {
+    localRunExecutor = new LocalRunExecutor(getJobStore());
+  }
+  return localRunExecutor;
 }
 
 /** Reset cached adapter instances (tests only). */
 export function resetRuntimeAdaptersForTests(): void {
-  artifactStore = null;
-  runCatalogStore = null;
-  jobStore = null;
-  runExecutor = null;
+  localArtifactStore = null;
+  localRunCatalogStore = null;
+  localJobStore = null;
+  localRunExecutor = null;
+  hostedRunCatalogStore = null;
+  hostedJobStore = null;
 }
 
 export function getRuntimeSummary(): {
   runtime: ReturnType<typeof resolveRuntimeMode>;
   artifact_store: ReturnType<typeof resolveArtifactStoreKind>;
+  database_configured: boolean;
 } {
   return {
     runtime: resolveRuntimeMode(),
     artifact_store: resolveArtifactStoreKind(),
+    database_configured: getDatabaseUrl() !== null,
   };
 }
