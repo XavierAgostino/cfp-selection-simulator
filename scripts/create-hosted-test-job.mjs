@@ -6,9 +6,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import postgres from "postgres";
+import { createRequire } from "node:module";
 
+const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const postgres = require(path.join(root, "web/node_modules/postgres"));
 const envPath = path.join(root, "web", ".env.hosted.local");
 
 function loadEnv(filePath) {
