@@ -136,10 +136,19 @@ reason. It measures how transparent assumptions changed historical alignment
 and predictive signal — it never changes the default production weights.
 
 ```bash
-./bin/sroom calibrate [--years 2014:2024]
+./bin/sroom calibrate [--years 2014:2024] [--include-ppa]
 ```
 
 Year range format: `2014:2024` or comma-separated `2014,2015,2016`.
+
+`--include-ppa` adds the research-only **PPA predictive substitution**
+experiment: same baseline weights, predictive component swapped for a CFBD
+PPA score (per-game PPA through week 15, cached under
+`data/cache/cfbd/{year}/`). The default run never touches PPA data; seasons
+with missing PPA are reported as unavailable, never silently filled. Status:
+evaluated and currently **blocked** by the 2024 modern-format holdout despite
+broad historical gains — research-only, not promoted. See
+[research/calibration.md](research/calibration.md#opt-in-ppa-predictive-substitution-v23-research-only).
 
 Outputs in `data/output/calibration/`:
 

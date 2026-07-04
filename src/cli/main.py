@@ -230,6 +230,16 @@ def validate(
 @app.command()
 def calibrate(
     years: str = typer.Option("2014:2024", help="Year range e.g. 2014:2024"),
+    include_ppa: bool = typer.Option(
+        False,
+        "--include-ppa",
+        help=(
+            "Also run the research-only PPA predictive-substitution experiment "
+            "(same weights as baseline, predictive component swapped for CFBD "
+            "PPA). Needs CFBD PPA data — cached, or fetched with credentials. "
+            "The default run never touches PPA."
+        ),
+    ),
 ) -> None:
     """Run the calibration/ablation research harness (v2 research mode).
 
@@ -252,7 +262,17 @@ def calibrate(
     else:
         year_list = [int(y) for y in years.split(",")]
 
-    result = run_calibration(year_list)
+    experiments = None
+    if include_ppa:
+        from src.calibration.experiments import default_experiments, ppa_substitution_experiment
+
+        experiments = default_experiments() + [ppa_substitution_experiment()]
+        typer.echo(
+            "Including PPA predictive substitution (research-only; seasons with "
+            "missing PPA data are reported as unavailable, never filled)."
+        )
+
+    result = run_calibration(year_list, experiments=experiments)
     out_dir = DATA_OUTPUT / "calibration"
     payload = build_calibration_payload(result)
     paths = write_calibration_outputs(result, out_dir, payload=payload)

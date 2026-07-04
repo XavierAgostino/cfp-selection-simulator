@@ -18,6 +18,7 @@ import pandas as pd
 
 from src.calibration.decisions import Thresholds, decide
 from src.calibration.experiments import ExperimentConfig, default_experiments
+from src.calibration.ppa import apply_ppa_substitution, load_season_ppa_scores
 from src.data.fetcher import fetch_season_games, get_api_key
 from src.pipeline.composite import calculate_composite_rankings
 from src.pipeline.live import enrich_live_rankings
@@ -263,6 +264,76 @@ def _load_season(year: int, *, api_key: Optional[str], verbose: bool) -> Optiona
     return _SeasonInputs(year=year, games_df=games_df, base_rankings_df=base_rankings)
 
 
+def _is_ppa_substitution(config: ExperimentConfig) -> bool:
+    return (
+        config.substitution is not None
+        and config.substitution.get("component") == "predictive"
+        and config.substitution.get("candidate_source") == "cfbd_ppa"
+    )
+
+
+def _substituted_seasons(
+    seasons: List[_SeasonInputs],
+    *,
+    ppa_scores: Optional[Dict[int, Dict[str, float]]],
+    api_key: Optional[str],
+    verbose: bool,
+) -> Dict[int, "tuple[Optional[pd.DataFrame], str]"]:
+    """Per season: base rankings with the predictive column swapped for PPA.
+
+    Missing PPA data degrades explicitly — the season maps to ``(None, note)``
+    and is reported as unavailable for the experiment, never silently filled.
+    """
+    substituted: Dict[int, "tuple[Optional[pd.DataFrame], str]"] = {}
+    for season in seasons:
+        if ppa_scores is not None:
+            scores = ppa_scores.get(season.year)
+        else:
+            try:
+                scores = load_season_ppa_scores(season.year, api_key=api_key)
+            except Exception as exc:  # noqa: BLE001 - degrade explicitly, never fill
+                substituted[season.year] = (
+                    None,
+                    f"PPA substitution unavailable: {exc}",
+                )
+                if verbose:
+                    print(f"  PPA unavailable for {season.year}: {exc}")
+                continue
+        substituted[season.year] = apply_ppa_substitution(season.base_rankings_df, scores)
+        if verbose and substituted[season.year][0] is None:
+            print(f"  PPA unavailable for {season.year}: {substituted[season.year][1]}")
+    return substituted
+
+
+def review_substitution_availability(result: ExperimentResult) -> None:
+    """Mark a substitution experiment incomplete/unavailable on missing data.
+
+    An unavailable season carries no metrics at all (``brier`` is always set
+    when a season was evaluated). All seasons unavailable → the experiment is
+    ``needs_more_data``; a partial gap keeps the decision but flags it and
+    names the missing seasons so aggregates are never read as full-coverage.
+    """
+    if result.config.substitution is None:
+        return
+    missing_years = [r.year for r in result.per_year if r.brier is None]
+    if not missing_years:
+        return
+    if len(missing_years) == len(result.per_year):
+        result.decision = "needs_more_data"
+        result.reason = (
+            "Candidate component data unavailable for every requested season — "
+            "experiment not evaluated. See per-year notes for details."
+        )
+        result.flags = ["data_unavailable"]
+        return
+    result.flags.append("incomplete_seasons")
+    result.reason += (
+        f" Candidate component data unavailable for "
+        f"{', '.join(str(y) for y in missing_years)}; aggregates and deltas cover "
+        "the remaining seasons only."
+    )
+
+
 def run_calibration(
     years: List[int],
     *,
@@ -270,8 +341,16 @@ def run_calibration(
     thresholds: Optional[Thresholds] = None,
     api_key: Optional[str] = None,
     verbose: bool = True,
+    ppa_scores: Optional[Dict[int, Dict[str, float]]] = None,
 ) -> CalibrationResult:
-    """Run the calibration experiment set over historical seasons."""
+    """Run the calibration experiment set over historical seasons.
+
+    ``ppa_scores`` (year → team → score) injects candidate predictive scores
+    for substitution experiments; when None they are loaded from the CFBD PPA
+    cache (fetching over the network only if the cache is cold). PPA data is
+    touched only when the experiment set actually contains a substitution
+    experiment, so the default run stays PPA-free.
+    """
     thresholds = thresholds or Thresholds()
     configs = experiments or default_experiments()
     baseline_configs = [c for c in configs if c.experiment_id == "baseline"]
@@ -292,13 +371,31 @@ def run_calibration(
     if not seasons:
         raise ValueError("No seasons could be prepared for calibration")
 
+    substituted: Dict[int, "tuple[Optional[pd.DataFrame], str]"] = {}
+    if any(_is_ppa_substitution(c) for c in configs):
+        substituted = _substituted_seasons(
+            seasons, ppa_scores=ppa_scores, api_key=key, verbose=verbose
+        )
+
     results: List[ExperimentResult] = []
     for config in configs:
         per_year: List[YearMetrics] = []
         for season in seasons:
-            rankings = rankings_for_weights(
-                season.base_rankings_df, season.games_df, config.weights
-            )
+            base_df = season.base_rankings_df
+            if _is_ppa_substitution(config):
+                base_df, unavailable_note = substituted.get(
+                    season.year, (None, "PPA substitution unavailable.")
+                )
+                if base_df is None:
+                    per_year.append(
+                        YearMetrics(
+                            year=season.year,
+                            is_outlier=season.year in OUTLIER_YEARS,
+                            notes=unavailable_note,
+                        )
+                    )
+                    continue
+            rankings = rankings_for_weights(base_df, season.games_df, config.weights)
             per_year.append(_year_metrics(season.year, rankings, season.games_df, api_key=key))
         result = ExperimentResult(
             config=config,
@@ -333,6 +430,7 @@ def run_calibration(
             thresholds=thresholds,
             is_baseline=result.config.experiment_id == "baseline",
         )
+        review_substitution_availability(result)
 
     return CalibrationResult(
         years=list(years),

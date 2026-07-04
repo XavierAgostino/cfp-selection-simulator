@@ -1,8 +1,10 @@
 """Calibration experiment configurations.
 
-Every experiment is a transparent reweighting of the four composite pillars.
+Most experiments are transparent reweightings of the four composite pillars.
 The baseline is always the production default (``RankingWeights()``); ablations
-zero one component and renormalize the rest so weights still sum to 1.0.
+zero one component and renormalize the rest so weights still sum to 1.0. The
+one exception is the v2.3 component-substitution experiment, which keeps the
+baseline weights and swaps the predictive component's data source instead.
 """
 
 from __future__ import annotations
@@ -12,7 +14,7 @@ from typing import Dict, List, Optional
 
 from src.pipeline.weights import COMPONENT_KEYS, RankingWeights
 
-ExperimentGroup = str  # baseline | ablation | sweep | optional
+ExperimentGroup = str  # baseline | ablation | sweep | optional | substitution
 
 
 @dataclass(frozen=True)
@@ -23,6 +25,12 @@ class ExperimentConfig:
     changed_assumption: str
     weights: RankingWeights
     group: ExperimentGroup
+    # v2.3: component-substitution experiments keep the baseline weights but
+    # swap one component's data source. ``substitution`` names the component
+    # and both sources; it stays None for pure reweighting experiments.
+    experiment_type: str = "reweighting"
+    research_only: bool = True
+    substitution: Optional[Dict[str, str]] = None
 
     def weights_dict(self) -> Dict[str, float]:
         return {key: round(float(getattr(self.weights, key)), 6) for key in COMPONENT_KEYS}
@@ -167,3 +175,30 @@ def default_experiments(base: Optional[RankingWeights] = None) -> List[Experimen
         )
 
     return experiments
+
+
+def ppa_substitution_experiment(base: Optional[RankingWeights] = None) -> ExperimentConfig:
+    """The v2.3 research-only component substitution: same weights, PPA predictive.
+
+    Deliberately not part of ``default_experiments()`` — it needs CFBD PPA data,
+    so it only runs when explicitly requested (``sroom calibrate --include-ppa``).
+    """
+    return ExperimentConfig(
+        experiment_id="ppa_predictive_substitution",
+        label="PPA predictive substitution",
+        description=(
+            "Uses CFBD PPA as the predictive component while keeping baseline weights unchanged."
+        ),
+        changed_assumption=(
+            "predictive component replaced by CFBD per-game PPA "
+            "(regular season through week 15); weights unchanged"
+        ),
+        weights=base or RankingWeights(),
+        group="substitution",
+        experiment_type="component_substitution",
+        substitution={
+            "component": "predictive",
+            "baseline_source": "current_predictive",
+            "candidate_source": "cfbd_ppa",
+        },
+    )

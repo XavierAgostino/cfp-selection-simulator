@@ -45,7 +45,53 @@ committee tiebreakers, and re-runs all three validation tracks:
 
 Ablations answer "what does this pillar contribute?"; sweeps answer "what does
 leaning on a pillar cost?". `colley_share` and all component definitions are
-held fixed — this harness sweeps composite weights only.
+held fixed — these experiments sweep composite weights only.
+
+### Opt-in: PPA predictive substitution (v2.3, research-only)
+
+`sroom calibrate --include-ppa` adds one **component-substitution** experiment,
+`ppa_predictive_substitution`: identical 0.40/0.30/0.20/0.10 weights, but the
+predictive component's data source is swapped for a CFBD PPA score (per-team
+mean offensive PPA minus mean defensive PPA per game). Same weights, same gate,
+only the predictive component differs — the question it answers is *"does a
+CFBD PPA-based predictive component improve predictive signal or
+committee-safe alignment compared with the existing predictive component?"*,
+not "can we rebuild the model with advanced analytics?".
+
+- **Leakage guard.** Scores aggregate per-game PPA from CFBD `/ppa/games` over
+  regular-season weeks 1–15 — the same selection-time window as the rest of
+  the pipeline. The season-aggregate `/ppa/teams` endpoint is deliberately not
+  used: it ignores week bounds and folds bowl/playoff results into its
+  averages, which would leak future information into selection-time rankings.
+- **Explicit degradation.** If any ranked team in a season lacks PPA data,
+  that season is reported as *unavailable* for the experiment (per-year note,
+  `incomplete_seasons`/`data_unavailable` flags) — missing data is never
+  silently filled.
+- **Offline by default.** The default `sroom calibrate` run never touches PPA.
+  With `--include-ppa`, responses are cached under `data/cache/cfbd/{year}/`
+  (`ppa_games_w15.json`); the network is used only when the cache is cold, and
+  a failed fetch degrades the affected seasons instead of killing the run.
+- **Auditable metadata.** The experiment's `calibration.json` entry carries
+  `"research_only": true`, `"experiment_type": "component_substitution"`, and a
+  `"substitution"` block naming the component and both sources
+  (`current_predictive` → `cfbd_ppa`).
+
+It runs through the same calibration quality gate and the committee-emulation
+lens as every other experiment, and like every other experiment it never
+changes production weights, Scenario Lab defaults, or the default predictive
+component.
+
+**Status: implemented, evaluated, not promoted.** On the full 2014–2024
+evaluation the substitution improved every tuning-view metric — top-12
+Spearman +0.029, top-12 overlap +0.050, field overlap +0.092 (the best field
+overlap in the experiment set), Brier −0.0064 — but degraded the 2024
+modern-format holdout (alignment −0.084, field overlap −0.083), a protected
+failure. Calibration decision: `neutral` (gains blocked by
+`field_overlap_2024`); committee-emulation status: `blocked`. The gains
+concentrate in the four-team era while the one completed 12-team season gets
+worse, so the candidate is not safe for the modern selection format and is
+not promoted. This is the gate doing its job: show the gain, show the cost,
+protect the current selection format.
 
 ## The research quality gate
 
@@ -122,7 +168,10 @@ This slice deliberately does **not**: change production weights, feed Scenario
 Lab defaults, add a calibration web UI, or introduce new data sources
 (PPA/EPA, recency decay, injuries, play-by-play). Those are later v2 tracks
 (see [v2-tracks-research.md](v2-tracks-research.md)) and each must pass
-through this harness before graduating from research mode.
+through this harness before graduating from research mode. (v2.3 added exactly
+one such track — the opt-in PPA predictive substitution above — as a
+research-only experiment behind `--include-ppa`; recency decay, injuries, and
+full play-by-play remain out of scope.)
 
 **Bottom line:** no model change graduates from research mode unless the
 calibration harness can show the improvement, the tradeoff, the holdout

@@ -142,6 +142,8 @@ def _assess_experiment(exp: Dict[str, object], thresholds: Dict[str, object]) ->
         "experiment_id": exp["experiment_id"],
         "label": exp["label"],
         "group": exp["group"],
+        "experiment_type": exp.get("experiment_type", "reweighting"),
+        "substitution": exp.get("substitution"),
         "weights": exp["weights"],
         "changed_assumption": exp["changed_assumption"],
         "alignment_delta": {
@@ -293,6 +295,13 @@ def _markdown_report(summary: Dict[str, object]) -> str:
         lines.append(f"## {entry['label']} (`{entry['experiment_id']}`)")
         lines.append("")
         lines.append(f"- Changed assumption: {entry['changed_assumption']}")
+        if entry.get("substitution"):
+            sub = entry["substitution"]
+            lines.append(
+                f"- Component substitution (research-only): {sub['component']} — "
+                f"{sub['baseline_source']} → {sub['candidate_source']}; "
+                "weights identical to baseline"
+            )
         lines.append(f"- Status: **{entry['status']}** — {entry['status_reason']}")
         lines.append(
             f"- Calibration decision: {entry['calibration_decision']} — "
@@ -319,6 +328,7 @@ def _csv_rows(summary: Dict[str, object]) -> List[Dict[str, object]]:
             "experiment_id": entry["experiment_id"],
             "label": entry["label"],
             "group": entry["group"],
+            "experiment_type": entry.get("experiment_type", "reweighting"),
         }
         for key in COMPONENT_KEYS:
             row[f"weight_{key}"] = entry["weights"][key]  # type: ignore[index]

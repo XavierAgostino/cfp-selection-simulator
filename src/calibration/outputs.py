@@ -34,8 +34,12 @@ CAVEATS = [
         "change production defaults."
     ),
     (
-        "Weight experiments only: colley_share and all component definitions are "
-        "held fixed; component scores are computed once per season and reweighted."
+        "Weight experiments hold colley_share and all component definitions "
+        "fixed; component scores are computed once per season and reweighted. "
+        "Component-substitution experiments (only when explicitly requested, "
+        "e.g. --include-ppa) keep the baseline weights and swap one component's "
+        "data source; seasons with missing candidate data are reported as "
+        "unavailable, never silently filled."
     ),
     (
         "Min-max normalization is per-season, so composite scores are relative to "
@@ -110,6 +114,9 @@ def _experiment_entry(result: ExperimentResult) -> Dict[str, object]:
         "group": config.group,
         "weights": config.weights_dict(),
         "changed_assumption": config.changed_assumption,
+        "experiment_type": config.experiment_type,
+        "research_only": config.research_only,
+        "substitution": dict(config.substitution) if config.substitution else None,
         "metrics": {
             "all_seasons": _round_map(result.metrics_all_seasons),
             "excluding_outliers": _round_map(result.metrics_excluding_outliers),
@@ -255,11 +262,22 @@ def _markdown_report(payload: Dict[str, object]) -> str:
         lines.append(f"{exp['description']}")
         lines.append("")
         lines.append(f"- Changed assumption: {exp['changed_assumption']}")
+        if exp.get("substitution"):
+            sub = exp["substitution"]
+            lines.append(
+                f"- Component substitution (research-only): {sub['component']} — "
+                f"{sub['baseline_source']} → {sub['candidate_source']}; "
+                "weights identical to baseline"
+            )
         lines.append(f"- Decision: **{exp['decision']}** — {exp['reason']}")
         if exp["flags"]:
             lines.append(f"- Flags: {', '.join(exp['flags'])}")
         for year, block in exp["holdout"].items():
             lines.append(f"- Holdout {year}: {block['note']}")
+        if exp.get("substitution"):
+            for row in exp["per_year_metrics"]:
+                if row.get("brier") is None:
+                    lines.append(f"- Unavailable {row['year']}: {row['notes']}")
         lines.append("")
         lines.append("| View | Spearman | Top-12 ovl | Field ovl | Field size | Brier | Win acc |")
         lines.append("|---|---|---|---|---|---|---|")
@@ -311,6 +329,8 @@ def _csv_rows(payload: Dict[str, object]) -> List[Dict[str, object]]:
             "experiment_id": exp["experiment_id"],
             "label": exp["label"],
             "group": exp["group"],
+            "experiment_type": exp.get("experiment_type", "reweighting"),
+            "research_only": exp.get("research_only", True),
         }
         for key in COMPONENT_KEYS:
             row[f"weight_{key}"] = exp["weights"][key]

@@ -171,6 +171,11 @@ pipeline or the web app):
   deterministically from `calibration.json`
 - `committee-emulation.md` / `committee-emulation.csv` — report and table views
 
+With `--include-ppa`, the experiment list also contains the research-only
+`ppa_predictive_substitution` entry (marked `"experiment_type":
+"component_substitution"`, `"research_only": true`), and raw CFBD PPA
+responses are cached as `data/cache/cfbd/{year}/ppa_games_w15.json`.
+
 See [Calibration & Ablation Harness](research/calibration.md) and
 [Committee Emulation Lite](research/committee-emulation.md).
 

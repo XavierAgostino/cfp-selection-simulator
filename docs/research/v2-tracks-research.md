@@ -90,9 +90,15 @@ layer it touches and must not leak conclusions across layers.
    [committee-emulation.md](committee-emulation.md).
 3. **EPA/PPA predictive layer** — biggest football-quality upgrade. Use CFBD
    `/ppa/teams` and `/ppa/games` first; full play-by-play only after PPA proves
-   marginal value. **Next (v2.3), research-only:** a CFBD PPA experiment
-   candidate evaluated through the calibration gate — never a wholesale
-   predictive rewrite, and no production default changes.
+   marginal value. **Implemented (v2.3), evaluated, not promoted —
+   research-only:** `sroom calibrate --include-ppa` runs a single
+   component-substitution candidate (baseline weights, predictive component
+   swapped for CFBD per-game PPA) through the calibration and
+   committee-emulation gates — never a wholesale predictive rewrite, and no
+   production default changes. First full evaluation: improved broad
+   historical metrics (including the best field overlap in the experiment
+   set) but **blocked by the 2024 modern-format holdout** — see
+   [calibration.md](calibration.md).
 4. **SOR / resume refinement** — home-field adjustment, opponent-strength
    treatment, era-aware handling. Selection Room–native work. **Deferred.**
 5. **Injuries / VORP / full PBP** — last; data quality, subjective assumptions,
