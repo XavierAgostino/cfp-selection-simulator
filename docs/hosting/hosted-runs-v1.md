@@ -1,8 +1,13 @@
 # Hosted Runs v1
 
-Hosted Runs v1 lets a **hosted Vercel deployment** create live analysis runs without local Python setup. Users enter a **beta access code** in the browser; the server validates it, enqueues a background job, and the Python worker writes artifacts to Supabase Storage with metadata in Postgres.
+Hosted Runs v1 lets a **hosted Vercel deployment** create live analysis runs without local Python setup. The server gates launch, enqueues a background job, and the Python worker writes artifacts to Supabase Storage with metadata in Postgres.
 
-No user accounts, Clerk, or billing are required for v1.
+> **Gate update (single-product):** the launch gate is now **Supabase Auth (GitHub
+> sign-in)** with a per-user daily quota, not a shared beta code. Browsing is fully
+> open; only launching a run requires signing in. The legacy beta code still works as
+> an optional header-only bypass. See
+> [deployment-checklist.md → Sign-in gate](deployment-checklist.md) for setup. The
+> sections below that describe the beta-code UX are retained for history.
 
 ---
 
@@ -12,7 +17,7 @@ No user accounts, Clerk, or billing are required for v1.
 |------|------------|----------------|-----|
 | **Public demo** | `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1` | Disabled | Read-only; Run Analysis hidden |
 | **Local OSS** | Default (no `SELECTION_ROOM_RUNTIME=hosted`) | Optional subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | Setup wizard on first run; Option B job polling |
-| **Hosted live beta** | `SELECTION_ROOM_RUNTIME=hosted` | Beta-code gated Trigger worker | Beta code in sessionStorage; job polling; no local setup copy |
+| **Hosted live** | `SELECTION_ROOM_RUNTIME=hosted` | GitHub sign-in gated Trigger worker | Sign in with GitHub to launch; job polling; no local setup copy |
 
 These modes must stay isolated: demo users never see local setup instructions; hosted users never see `SELECTION_ROOM_ENABLE_RUN_JOBS` copy; local users keep the existing subprocess flow.
 
@@ -43,9 +48,9 @@ flowchart LR
 **Request path (create run):**
 
 1. `POST /api/run` with season/week/source (and optional `weights` for Scenario Lab).
-2. Beta code from `X-Selection-Room-Beta-Code` header or `beta_code` body field.
-3. Gates: valid beta → no active job → daily cap → executor configured → CFBD available if live.
-4. Insert `run_jobs` row (`queued`), enqueue Trigger task `run-hosted-job`.
+2. User resolved from the Supabase Auth session cookie (or legacy `X-Selection-Room-Beta-Code` bypass).
+3. Gates: signed in (or valid bypass) → per-user daily cap → executor configured → no active job → global daily cap → CFBD available if live.
+4. Insert `run_jobs` row (`queued`, tagged with `user_id`), enqueue Trigger task `run-hosted-job`.
 5. Return `202 { job_id }`.
 
 **Worker path:**
@@ -64,19 +69,28 @@ Completed runs open at `/dashboard?run=<stem>`.
 
 ---
 
-## Beta access model
+## Access model (GitHub sign-in)
 
-- **Server-side only:** `SELECTION_ROOM_BETA_ACCESS_CODE` or comma-separated `SELECTION_ROOM_BETA_RUN_CODES`.
-- **Client:** user enters code in Run Analysis or Scenario Lab; stored in **`sessionStorage`** key `selection-room-beta-code` (not `localStorage`).
-- **Transport:** `X-Selection-Room-Beta-Code` on `POST /api/run`.
-- **Never exposed:** configured codes are not returned in capabilities JSON or logs. Beta codes are not forwarded to the worker subprocess env.
+- **Gate:** Supabase Auth with the GitHub provider. Public client config lives in
+  `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (not secret; ships in the bundle).
+- **Client:** `Sign in with GitHub` in Run Analysis / Scenario Lab (`SignInPanel`); the
+  Supabase session lives in cookies, refreshed by `middleware.ts` on page navigations.
+- **Transport:** the session cookie rides same-origin `POST /api/run`; the server resolves
+  the user with `getRequestUser()`. No secret is sent from the browser.
+- **Per-user quota:** `SELECTION_ROOM_HOSTED_USER_DAILY_JOB_CAP` (default 5), counted from
+  `run_jobs.user_id` since the start of the UTC day, on top of the global caps.
+- **Legacy bypass:** a valid `SELECTION_ROOM_BETA_RUN_CODES` value via the
+  `X-Selection-Room-Beta-Code` header still authorizes a launch (for curl smoke); codes are
+  never returned in capabilities or logs.
 
 Capabilities (`GET /api/run/capabilities`) when `runtime === "hosted"` include:
 
-- `requires_beta_code: true`
+- `requires_auth: true`
+- `authenticated` (true when the request carries a valid session)
+- `user_daily_jobs_remaining` (null when signed out)
 - `hosted_run_generation_available`
 - `executor_configured`
-- `daily_jobs_remaining`
+- `daily_jobs_remaining` (global)
 - `active_job_id`
 - `disabled_reason` when generation is unavailable
 
@@ -98,6 +112,21 @@ Capabilities (`GET /api/run/capabilities`) when `runtime === "hosted"` include:
 | View | Browser | `/dashboard?run=<stem>` |
 
 Scenario Lab uses the same POST path with a `weights` object; success loads diff via `/api/scenario/diff` and links to the scenario stem on the dashboard.
+
+---
+
+## Scheduled official runs
+
+A Trigger.dev schedule (`weekly-official-run`, `web/trigger/weekly-official-run.ts`)
+keeps the catalog's default field current without anyone launching by hand. It
+fires **Tuesday 10pm ET**, right after the CFP committee's weekly release, resolves
+the **latest committee week** from CFBD, and launches an official run (`user_id`
+null — no per-user quota) through the same `run-hosted-job` path as user runs. So
+the freshest run becomes the default view automatically.
+
+Dormant unless `SELECTION_ROOM_OFFICIAL_RUN_ENABLED=1`; ships now, launches nothing
+(zero CFBD quota) until the season is live. Env knobs and activation steps:
+[deployment checklist → Weekly official run](deployment-checklist.md#weekly-official-run-scheduled).
 
 ---
 
@@ -174,11 +203,13 @@ Local script (reads Supabase CLI credentials, does not print secrets):
 
 Use this after deploying hosted Vercel + Supabase + Trigger:
 
-- [ ] `GET /api/run/capabilities` returns `runtime: "hosted"`, `requires_beta_code: true`
-- [ ] Missing beta code → cannot submit; API returns 401 if forced
-- [ ] Invalid beta code → 401, UI shows clear message
+- [ ] `GET /api/run/capabilities` returns `runtime: "hosted"`, `requires_auth: true`, `authenticated: false`
+- [ ] Signed out, no bypass → 401 `auth_required`; UI shows the GitHub sign-in gate
+- [ ] Invalid beta bypass header → 401 `auth_required`
+- [ ] Valid beta bypass (or signed-in session) → passes the auth gate
 - [ ] Active job in progress → 409, UI shows busy state
-- [ ] Daily cap exceeded → 429
+- [ ] Per-user daily cap exceeded → 429 `user_daily_cap_exceeded`
+- [ ] Global daily cap exceeded → 429
 - [ ] Executor not configured (no Trigger env) → 503, UI shows deployment unavailable message
 - [ ] Successful job → `/dashboard?run=<stem>` loads rankings/field
 - [ ] Scenario Lab hosted launch with weights → diff loads

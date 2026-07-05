@@ -16,6 +16,7 @@ export interface RunJobRow {
   pid: number | null;
   exit_code: number | null;
   trigger_run_id: string | null;
+  user_id: string | null;
   created_at: Date | string;
   started_at: Date | string | null;
   finished_at: Date | string | null;
@@ -37,6 +38,7 @@ export function runJobRecordToRow(job: RunJobRecord): RunJobRow {
     pid: job.pid,
     exit_code: job.exit_code,
     trigger_run_id: null,
+    user_id: job.user_id ?? null,
     created_at: job.created_at,
     started_at: job.started_at,
     finished_at: job.finished_at,
@@ -64,6 +66,7 @@ export function runJobRowToRecord(row: RunJobRow): RunJobRecord {
     error: row.error_message,
     pid: row.pid,
     exit_code: row.exit_code,
+    user_id: row.user_id ?? null,
   };
 }
 

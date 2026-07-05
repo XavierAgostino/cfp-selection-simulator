@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Input } from "@/components/ui/input";
 import { navigateToRun } from "@/components/layout/RunSwitcher";
 import {
   formatDataSourceLabel,
@@ -61,12 +60,11 @@ import {
   canLaunchHostedRun,
   canLaunchLocalRun,
   formatRunLaunchError,
-  getBetaAccessCode,
   hostedGenerationDisabledMessage,
   hostedRunDashboardUrl,
   isHostedCapabilities,
-  setBetaAccessCode,
 } from "@/lib/runApiClient";
+import { SignInPanel } from "@/components/auth/SignInPanel";
 import { weightsScenarioId } from "@/lib/scenarioWeights";
 import { invalidateRunPayloadCache } from "@/lib/runPayloadCache";
 import { truncateConfigHash } from "@/lib/recordMeta";
@@ -395,7 +393,6 @@ export function RunAnalysisDialog({
   );
   const [jobs, setJobs] = React.useState<RunJobRecord[]>(jobsProp);
   const [prevJobsProp, setPrevJobsProp] = React.useState(jobsProp);
-  const [betaCode, setBetaCodeState] = React.useState(() => getBetaAccessCode());
   if (jobsProp !== prevJobsProp) {
     setPrevJobsProp(jobsProp);
     setJobs(jobsProp);
@@ -408,7 +405,6 @@ export function RunAnalysisDialog({
     if (formResetKey !== null) {
       setYear(String(defaultYear));
       setSource("sample");
-      setBetaCodeState(getBetaAccessCode());
     }
   }
 
@@ -419,14 +415,14 @@ export function RunAnalysisDialog({
 
   const running = job !== null && isInProgress(job.status);
   const hosted = isHostedCapabilities(capabilities);
-  const requiresBeta = hosted && capabilities.requires_beta_code;
+  const requiresAuth = hosted && capabilities.requires_auth && !capabilities.authenticated;
   const generationEnabled = capabilities?.run_generation_enabled ?? false;
   const liveEnabled = capabilities?.live_cfbd_enabled ?? false;
   const activeJobId = capabilities?.active_job_id ?? null;
   const serverBusy = hosted && Boolean(activeJobId) && !running;
   const canSubmit = capabilities
     ? hosted
-      ? canLaunchHostedRun(capabilities, betaCode, running)
+      ? canLaunchHostedRun(capabilities, running)
       : canLaunchLocalRun(capabilities, running)
     : false;
   const catalogRuns = catalog.runs;
@@ -545,17 +541,12 @@ export function RunAnalysisDialog({
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
   }, [logLines.length]);
 
-  function handleBetaCodeChange(value: string) {
-    setBetaCodeState(value);
-    setBetaAccessCode(value);
-  }
-
   async function launch() {
     if (!canSubmit) {
       if (hosted && capabilities && !capabilities.run_generation_enabled) {
         toast.error(hostedGenerationDisabledMessage(capabilities));
-      } else if (requiresBeta && !betaCode.trim()) {
-        toast.error("Enter a beta access code to start a hosted run.");
+      } else if (requiresAuth) {
+        toast.error("Sign in with GitHub to start a hosted run.");
       } else if (serverBusy) {
         toast.error("Another hosted run is already in progress.");
         setTab("jobs");
@@ -663,35 +654,14 @@ export function RunAnalysisDialog({
 
               <TabsContent value="create" className="mt-4 space-y-4">
                 {hosted && capabilities !== null ? (
-                  <div className="space-y-2 rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
-                    <p>
-                      Hosted runs are in beta. Enter an access code to start a run.
-                    </p>
-                    <p>
-                      Run Analysis creates a hosted job and may take a few minutes.
-                    </p>
-                    {capabilities.daily_jobs_remaining !== null ? (
-                      <p>
-                        {capabilities.daily_jobs_remaining} hosted run
-                        {capabilities.daily_jobs_remaining === 1 ? "" : "s"} remaining
-                        today.
-                      </p>
-                    ) : null}
-                  </div>
+                  <p className="rounded-lg bg-secondary/60 px-3 py-2 text-sm text-muted-foreground">
+                    Run Analysis creates a live job and may take a few minutes to
+                    finish.
+                  </p>
                 ) : null}
 
-                {hosted && requiresBeta ? (
-                  <label className="flex flex-col gap-1.5 text-sm">
-                    <span className="text-muted-foreground">Beta access code</span>
-                    <Input
-                      type="password"
-                      autoComplete="off"
-                      value={betaCode}
-                      onChange={(e) => handleBetaCodeChange(e.target.value)}
-                      placeholder="Enter beta access code"
-                      disabled={running}
-                    />
-                  </label>
+                {hosted && capabilities !== null ? (
+                  <SignInPanel capabilities={capabilities} next="/dashboard" />
                 ) : null}
 
                 {serverBusy ? (

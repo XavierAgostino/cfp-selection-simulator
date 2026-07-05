@@ -23,6 +23,8 @@ export interface JobStore {
   resolveStemFromRunsJson(job: RunJobRecord): Promise<string | null>;
   resolveStemFromJobLog(jobId: string): Promise<string | null>;
   getDailyJobsRemaining(): Promise<number | null>;
+  /** Jobs this Supabase user launched since the start of the UTC day (per-user quota). */
+  countUserJobsToday(userId: string): Promise<number>;
   setTriggerRunId(jobId: string, triggerRunId: string): Promise<void>;
 }
 

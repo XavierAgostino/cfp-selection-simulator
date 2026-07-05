@@ -25,6 +25,10 @@ SERVICE_ROLE="$(
   supabase projects api-keys --project-ref "$PROJECT_REF" -o json \
     | node -e "const k=JSON.parse(require('fs').readFileSync(0,'utf8')); const row=k.find(x=>x.name==='service_role'); if(!row) process.exit(1); process.stdout.write(row.api_key)"
 )"
+ANON_KEY="$(
+  supabase projects api-keys --project-ref "$PROJECT_REF" -o json \
+    | node -e "const k=JSON.parse(require('fs').readFileSync(0,'utf8')); const row=k.find(x=>x.name==='anon'); if(!row) process.exit(1); process.stdout.write(row.api_key)"
+)"
 
 if [[ -n "${SELECTION_ROOM_DATABASE_URL:-}" ]]; then
   DATABASE_URL="$SELECTION_ROOM_DATABASE_URL"
@@ -97,9 +101,13 @@ SELECTION_ROOM_DATABASE_URL=${DATABASE_URL}
 SUPABASE_URL=https://${PROJECT_REF}.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE}
 SUPABASE_STORAGE_BUCKET=artifacts
+# Public client config for the sign-in gate (not secret; ships in the bundle):
+NEXT_PUBLIC_SUPABASE_URL=https://${PROJECT_REF}.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}
 SELECTION_ROOM_HOSTED_EXECUTOR=trigger
 SELECTION_ROOM_HOSTED_DAILY_JOB_CAP=10
 SELECTION_ROOM_HOSTED_MAX_CONCURRENT=1
+SELECTION_ROOM_HOSTED_USER_DAILY_JOB_CAP=5
 SELECTION_ROOM_BETA_RUN_CODES=${BETA_CODES}
 NEXT_PUBLIC_SITE_URL=${SITE_URL}
 # Local worker paths (do not sync to Trigger — cloud uses /app and /opt/venv/bin/python):

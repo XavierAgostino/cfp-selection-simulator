@@ -1,21 +1,25 @@
-/** Landing marketing typography — Inter only, editorial scale. */
+/** Landing marketing typography — Geist, editorial scale.
+ *
+ * Marketing surfaces run one full size step larger than product UI:
+ * the landing page should read like a poster, not a dashboard.
+ */
 
 export const landingHeroTitle =
-  "text-4xl font-extrabold tracking-tight text-foreground md:text-5xl";
+  "text-balance text-5xl font-semibold tracking-tighter text-foreground md:text-6xl lg:text-7xl";
 
 export const landingHeroBody =
-  "max-w-2xl text-sm leading-7 text-muted-foreground md:text-base";
+  "max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg";
 
 export const landingSectionEyebrow =
   "text-xs font-semibold uppercase tracking-[0.18em] text-accent-gold";
 
 export const landingSectionTitle =
-  "text-2xl font-bold tracking-tight text-foreground md:text-3xl";
+  "text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl";
 
 export const landingSectionBody =
-  "max-w-lg text-sm leading-7 text-muted-foreground md:text-base";
+  "max-w-lg text-pretty text-base leading-relaxed text-muted-foreground md:text-lg";
 
 export const landingCtaTitle =
-  "text-2xl font-bold tracking-tight text-foreground md:text-3xl";
+  "text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl";
 
 export const landingPanelTitle = "text-base font-semibold text-foreground";

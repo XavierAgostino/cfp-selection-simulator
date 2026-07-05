@@ -5,11 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRight, Menu } from "lucide-react";
 import { AppIcon } from "@/components/icons/AppIcon";
-import { LucideAppIcon } from "@/components/icons/LucideAppIcon";
-import {
-  DOCS_NAV_ICON,
-  NAV_HUGEICONS,
-} from "@/components/icons/nav-icons";
+import { HeaderAccountMenu } from "@/components/auth/HeaderAccountMenu";
+import { DOCS_NAV_ICON, NAV_ICONS } from "@/components/icons/nav-icons";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -56,8 +53,8 @@ function DesktopNavLink({
         "inline-flex items-center rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         active
-          ? "bg-white/5 text-foreground"
-          : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground",
+          ? "bg-foreground/[0.06] text-foreground"
+          : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
       )}
       aria-current={active ? "page" : undefined}
     >
@@ -68,8 +65,8 @@ function DesktopNavLink({
 
 function NavItemIcon({ href }: { href: string }) {
   const icon =
-    href in NAV_HUGEICONS
-      ? NAV_HUGEICONS[href as keyof typeof NAV_HUGEICONS]
+    href in NAV_ICONS
+      ? NAV_ICONS[href as keyof typeof NAV_ICONS]
       : DOCS_NAV_ICON;
 
   return <AppIcon icon={icon} size={18} strokeWidth={1.75} className="opacity-80" />;
@@ -95,14 +92,14 @@ function MobileNavRow({
               "flex items-center gap-3 rounded-md py-2.5 pr-2 pl-3 text-sm font-medium transition-colors duration-150",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
               active
-                ? "bg-white/5 text-foreground"
+                ? "bg-foreground/[0.06] text-foreground"
                 : "text-muted-foreground hover:bg-muted/40 hover:text-foreground",
             )}
             aria-current={active ? "page" : undefined}
           >
             <NavItemIcon href={href} />
             <span className="min-w-0 flex-1 truncate">{label}</span>
-            <LucideAppIcon
+            <AppIcon
               icon={ChevronRight}
               size={16}
               strokeWidth={2}
@@ -124,12 +121,12 @@ function MobileNav({ pathname }: { pathname: string }) {
             type="button"
             variant="ghost"
             size="icon"
-            className="h-9 w-9 text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
+            className="h-9 w-9 text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
             aria-label="Open menu"
           />
         }
       >
-        <LucideAppIcon icon={Menu} size={18} strokeWidth={2} />
+        <AppIcon icon={Menu} size={18} strokeWidth={2} />
       </SheetTrigger>
       <SheetContent
         side="left"
@@ -188,7 +185,7 @@ export function EspnGlobalHeader() {
 
   return (
     <header className="app-global-header sticky top-0 z-50 border-b border-border bg-background/95 text-muted-foreground shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] backdrop-blur-sm supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-11 max-w-none items-center gap-3 px-3 sm:px-5">
+      <div className="mx-auto flex h-12 max-w-none items-center gap-3 px-3 sm:px-5">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <Link
             href="/"
@@ -237,6 +234,9 @@ export function EspnGlobalHeader() {
           ) : null}
           <li>
             <ThemeToggle variant="header" />
+          </li>
+          <li>
+            <HeaderAccountMenu />
           </li>
           <li className="lg:hidden">
             <MobileNav pathname={pathname} />

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { extractBetaCode } from "@/lib/runtime/beta-access";
+import { getRequestUser } from "@/lib/auth/server";
 import { isHostedRuntimeConfigured } from "@/lib/runtime/config";
 import { HostedRunError } from "@/lib/runtime/errors";
 import {
@@ -44,13 +45,14 @@ export async function POST(request: NextRequest) {
   }
 
   if (isHostedRuntimeConfigured()) {
+    const user = await getRequestUser();
     const betaCode = extractBetaCode(
       request.headers,
       body as Record<string, unknown>,
     );
     try {
-      await validateHostedRun(runRequest, betaCode);
-      const job = await createAndStartHostedRun(runRequest);
+      await validateHostedRun(runRequest, { user, betaCode });
+      const job = await createAndStartHostedRun(runRequest, user?.id ?? null);
       return NextResponse.json(
         { job_id: job.job_id },
         { status: 202, headers: noStore },

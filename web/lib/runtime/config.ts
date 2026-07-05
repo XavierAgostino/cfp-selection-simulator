@@ -40,6 +40,14 @@ export function hostedMaxConcurrentJobs(): number {
   return parsed;
 }
 
+/** Per-user daily run cap — fairness under the global cap so one account can't hog it. */
+export function hostedUserDailyJobCap(): number {
+  const raw = process.env.SELECTION_ROOM_HOSTED_USER_DAILY_JOB_CAP ?? "5";
+  const parsed = Number.parseInt(raw, 10);
+  if (Number.isNaN(parsed) || parsed < 1) return 5;
+  return parsed;
+}
+
 export function liveRunThrottleMinutes(): number {
   const raw = process.env.SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES ?? "5";
   const parsed = Number.parseInt(raw, 10);
@@ -59,6 +67,27 @@ export function getSupabaseServiceRoleKey(): string | null {
 
 export function getSupabaseStorageBucket(): string {
   return process.env.SUPABASE_STORAGE_BUCKET?.trim() || "artifacts";
+}
+
+/**
+ * Public Supabase URL + anon key drive browser-side Auth (sign-in) and cookie
+ * session reads on the server. Both are safe to ship to the client — the anon
+ * key is not a secret. Distinct from the server-only service-role key above.
+ */
+export function getSupabasePublicUrl(): string | null {
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || process.env.SUPABASE_URL?.trim();
+  return url || null;
+}
+
+export function getSupabaseAnonKey(): string | null {
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  return key || null;
+}
+
+/** True when Supabase Auth is wired (public URL + anon key present). */
+export function isAuthConfigured(): boolean {
+  return getSupabasePublicUrl() !== null && getSupabaseAnonKey() !== null;
 }
 
 export function isHostedStorageConfigured(): boolean {

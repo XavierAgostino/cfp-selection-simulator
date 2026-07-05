@@ -289,6 +289,12 @@ export class FilesystemJobStore implements JobStore {
     return null;
   }
 
+  async countUserJobsToday(userId: string): Promise<number> {
+    // Local runtime has no auth/users; per-user quota is a hosted concern.
+    void userId;
+    return 0;
+  }
+
   async setTriggerRunId(jobId: string, triggerRunId: string): Promise<void> {
     void jobId;
     void triggerRunId;

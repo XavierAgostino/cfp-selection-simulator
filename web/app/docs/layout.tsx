@@ -17,7 +17,7 @@ export default function DocsRouteLayout({
         containerProps={{
           className: "docs-layout",
           style: {
-            ["--fd-docs-height" as string]: "calc(100dvh - 2.75rem)",
+            ["--fd-docs-height" as string]: "calc(100dvh - 3rem)",
             ["--fd-layout-width" as string]: "90rem",
             ["--fd-sidebar-width" as string]: "280px",
           },

@@ -40,6 +40,24 @@ else
   exit 1
 fi
 
+# Auth gate (Supabase Auth + GitHub) now guards run launch. These two PUBLIC vars
+# must be set for hosted run generation to be considered available. Derive the URL
+# from SUPABASE_URL, and fetch the anon key from the linked project if not provided.
+if [[ -z "${NEXT_PUBLIC_SUPABASE_URL:-}" && -n "${SUPABASE_URL:-}" ]]; then
+  export NEXT_PUBLIC_SUPABASE_URL="$SUPABASE_URL"
+fi
+if [[ -z "${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}" && -n "${SUPABASE_URL:-}" ]]; then
+  ANON_REF="${SUPABASE_URL#https://}"
+  ANON_REF="${ANON_REF%.supabase.co}"
+  ANON_KEY="$(
+    supabase projects api-keys --project-ref "$ANON_REF" -o json 2>/dev/null \
+      | node -e "const k=JSON.parse(require('fs').readFileSync(0,'utf8')); const row=k.find(x=>x.name==='anon'); process.stdout.write(row?row.api_key:'')" 2>/dev/null || true
+  )"
+  if [[ -n "$ANON_KEY" ]]; then
+    export NEXT_PUBLIC_SUPABASE_ANON_KEY="$ANON_KEY"
+  fi
+fi
+
 DEV_PID=""
 cleanup() {
   if [[ -n "$DEV_PID" ]]; then
@@ -75,7 +93,7 @@ base="http://127.0.0.1:${PORT}"
 echo
 echo "== capabilities =="
 curl -s "${base}/api/run/capabilities" \
-  | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(JSON.stringify({runtime:d.runtime,requires_beta_code:d.requires_beta_code,run_generation_enabled:d.run_generation_enabled,executor_configured:d.executor_configured,hosted_run_generation_available:d.hosted_run_generation_available,disabled_reason:d.disabled_reason},null,2));"
+  | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); console.log(JSON.stringify({runtime:d.runtime,requires_auth:d.requires_auth,authenticated:d.authenticated,run_generation_enabled:d.run_generation_enabled,executor_configured:d.executor_configured,hosted_run_generation_available:d.hosted_run_generation_available,disabled_reason:d.disabled_reason},null,2));"
 
 echo
 echo "== /api/data/runs.json (server proxy) =="
@@ -89,7 +107,7 @@ curl -s -o /dev/null -w "status=%{http_code}\n" \
   "https://${PROJECT_REF}.supabase.co/storage/v1/object/public/artifacts/runs.json"
 
 echo
-echo "== POST /api/run without beta =="
+echo "== POST /api/run signed out, no bypass (expect 401 auth_required) =="
 curl -s -o /tmp/sroom-smoke-no-beta.json -w "status=%{http_code}\n" \
   -X POST "${base}/api/run" \
   -H "Content-Type: application/json" \
@@ -97,7 +115,7 @@ curl -s -o /tmp/sroom-smoke-no-beta.json -w "status=%{http_code}\n" \
 node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/sroom-smoke-no-beta.json','utf8')))"
 
 echo
-echo "== POST /api/run wrong beta =="
+echo "== POST /api/run wrong beta (expect 401 auth_required) =="
 curl -s -o /tmp/sroom-smoke-wrong-beta.json -w "status=%{http_code}\n" \
   -X POST "${base}/api/run" \
   -H "Content-Type: application/json" \
@@ -106,7 +124,7 @@ curl -s -o /tmp/sroom-smoke-wrong-beta.json -w "status=%{http_code}\n" \
 node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/sroom-smoke-wrong-beta.json','utf8')))"
 
 echo
-echo "== POST /api/run valid beta (202 when Trigger configured) =="
+echo "== POST /api/run valid beta bypass (503 pre-Trigger, 202 when configured) =="
 BETA_CODE="${SELECTION_ROOM_BETA_RUN_CODES%%,*}"
 curl -s -o /tmp/sroom-smoke-valid-beta.json -w "status=%{http_code}\n" \
   -X POST "${base}/api/run" \
@@ -122,4 +140,5 @@ curl -s "${base}/api/run/jobs" \
 
 echo
 echo "Done. Dev log: /tmp/sroom-hosted-smoke-dev.log"
-echo "After Trigger deploy, re-run and expect POST valid beta -> 202 with job_id."
+echo "After Trigger deploy, re-run and expect POST valid beta bypass -> 202 with job_id."
+echo "Signed-in GitHub users get the same 202 via the /auth session cookie (not covered by this curl smoke)."

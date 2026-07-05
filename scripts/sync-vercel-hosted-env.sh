@@ -12,15 +12,21 @@ if [[ ! -f "$ENV_FILE" ]]; then
   exit 1
 fi
 
-if [[ ! -f "$WEB/.vercel/project.json" ]]; then
-  echo "Link a Vercel project first: cd web && npx vercel link" >&2
+if [[ ! -f "$WEB/.vercel/hosted-project.json" ]]; then
+  echo "Missing $WEB/.vercel/hosted-project.json" >&2
   exit 1
 fi
+
+mkdir -p "$ROOT/.vercel"
+cp "$WEB/.vercel/hosted-project.json" "$ROOT/.vercel/project.json"
+cp "$WEB/.vercel/hosted-project.json" "$WEB/.vercel/project.json"
 
 TARGET_ENV="${1:-production}"
 SITE_URL="${NEXT_PUBLIC_SITE_URL:-}"
 
-# Keys synced to Vercel (server-side hosted beta). Never NEXT_PUBLIC_ secrets.
+# Keys synced to Vercel. Mostly server-side secrets; the two NEXT_PUBLIC_SUPABASE_*
+# values are public client config (they ship in the browser bundle) — never put a
+# secret behind a NEXT_PUBLIC_ name.
 HOSTED_KEYS=(
   SELECTION_ROOM_RUNTIME
   SELECTION_ROOM_ARTIFACT_STORE
@@ -28,12 +34,15 @@ HOSTED_KEYS=(
   SUPABASE_URL
   SUPABASE_SERVICE_ROLE_KEY
   SUPABASE_STORAGE_BUCKET
+  NEXT_PUBLIC_SUPABASE_URL
+  NEXT_PUBLIC_SUPABASE_ANON_KEY
   SELECTION_ROOM_HOSTED_EXECUTOR
   TRIGGER_SECRET_KEY
   TRIGGER_PROJECT_REF
   SELECTION_ROOM_BETA_RUN_CODES
   SELECTION_ROOM_HOSTED_DAILY_JOB_CAP
   SELECTION_ROOM_HOSTED_MAX_CONCURRENT
+  SELECTION_ROOM_HOSTED_USER_DAILY_JOB_CAP
   CFBD_API_KEY
 )
 

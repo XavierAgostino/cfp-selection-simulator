@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { LucideAppIcon } from "@/components/icons/LucideAppIcon";
+import { AppIcon } from "@/components/icons/AppIcon";
 import { PRIMARY_NAV } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
@@ -51,7 +51,7 @@ export function PageBreadcrumbs() {
           return (
             <li key={`${crumb.label}-${index}`} className="flex items-center gap-1">
               {index > 0 ? (
-                <LucideAppIcon
+                <AppIcon
                   icon={ChevronRight}
                   size={12}
                   strokeWidth={2}

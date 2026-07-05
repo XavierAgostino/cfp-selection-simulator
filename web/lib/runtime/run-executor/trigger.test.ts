@@ -32,6 +32,7 @@ function createMockJobStore(): JobStore {
     resolveStemFromRunsJson: vi.fn(),
     resolveStemFromJobLog: vi.fn(),
     getDailyJobsRemaining: vi.fn(),
+    countUserJobsToday: vi.fn(),
     setTriggerRunId: vi.fn(),
   };
 }

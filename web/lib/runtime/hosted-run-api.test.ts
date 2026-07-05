@@ -16,6 +16,8 @@ const sampleRequest: RunJobRequest = {
   data_source: "sample",
 };
 
+const sampleUser = { id: "user-1", email: "runner@example.com" };
+
 function createMockJobStore(overrides: Partial<JobStore> = {}): JobStore {
   return {
     createJob: vi.fn(),
@@ -35,6 +37,7 @@ function createMockJobStore(overrides: Partial<JobStore> = {}): JobStore {
     resolveStemFromRunsJson: vi.fn(),
     resolveStemFromJobLog: vi.fn(),
     getDailyJobsRemaining: vi.fn().mockResolvedValue(4),
+    countUserJobsToday: vi.fn().mockResolvedValue(0),
     setTriggerRunId: vi.fn().mockResolvedValue(undefined),
     ...overrides,
   };
@@ -48,6 +51,8 @@ describe("hosted run API (H4)", () => {
     "SELECTION_ROOM_BETA_RUN_CODES",
     "SUPABASE_URL",
     "SUPABASE_SERVICE_ROLE_KEY",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
     "SELECTION_ROOM_ARTIFACT_STORE",
     "TRIGGER_SECRET_KEY",
     "SELECTION_ROOM_HOSTED_EXECUTOR",
@@ -83,6 +88,8 @@ describe("hosted run API (H4)", () => {
     process.env.SELECTION_ROOM_BETA_ACCESS_CODE = "beta-secret";
     process.env.SUPABASE_URL = "https://example.supabase.co";
     process.env.SUPABASE_SERVICE_ROLE_KEY = "service-role-key";
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "anon-public-key";
     process.env.SELECTION_ROOM_ARTIFACT_STORE = "supabase";
   }
 
@@ -98,7 +105,7 @@ describe("hosted run API (H4)", () => {
 
     const caps = await getCapabilities();
     expect(caps.runtime).toBe("persistent_node");
-    expect(caps).not.toHaveProperty("requires_beta_code");
+    expect(caps).not.toHaveProperty("requires_auth");
     expect(caps).not.toHaveProperty("hosted_run_generation_available");
   });
 
@@ -117,7 +124,7 @@ describe("hosted run API (H4)", () => {
     expect(caps.disabled_reason).toMatch(/tr_prod_/);
   });
 
-  it("returns hosted capabilities with beta required and executor pending", async () => {
+  it("returns hosted capabilities with auth required and executor pending", async () => {
     configureHostedInfra();
     vi.spyOn(runtime, "getJobStore").mockReturnValue(createMockJobStore());
 
@@ -127,7 +134,9 @@ describe("hosted run API (H4)", () => {
     }
 
     expect(caps.runtime).toBe("hosted");
-    expect(caps.requires_beta_code).toBe(true);
+    expect(caps.requires_auth).toBe(true);
+    expect(caps.authenticated).toBe(false);
+    expect(caps.user_daily_jobs_remaining).toBeNull();
     expect(caps.hosted_run_generation_available).toBe(true);
     expect(caps.executor_configured).toBe(false);
     expect(caps.run_generation_enabled).toBe(false);
@@ -137,19 +146,70 @@ describe("hosted run API (H4)", () => {
     expect(JSON.stringify(caps)).not.toContain("beta-secret");
   });
 
-  it("maps invalid beta code to 401", async () => {
-    configureHostedInfra();
+  it("reports the signed-in user's remaining daily runs", async () => {
+    configureHostedInfraWithExecutor();
+    vi.spyOn(runtime, "getJobStore").mockReturnValue(
+      createMockJobStore({
+        countUserJobsToday: vi.fn().mockResolvedValue(2),
+      }),
+    );
+
+    const caps = await getCapabilities(sampleUser);
+    if (caps.runtime !== "hosted") {
+      throw new Error("expected hosted capabilities");
+    }
+
+    expect(caps.authenticated).toBe(true);
+    // Default per-user cap is 5; 2 used leaves 3.
+    expect(caps.user_daily_jobs_remaining).toBe(3);
+  });
+
+  it("requires sign-in when no user and no beta bypass", async () => {
+    configureHostedInfraWithExecutor();
     vi.spyOn(runtime, "getJobStore").mockReturnValue(createMockJobStore());
 
-    await expect(validateHostedRun(sampleRequest, null)).rejects.toMatchObject({
-      code: "invalid_beta_code",
-    });
+    await expect(
+      validateHostedRun(sampleRequest, { user: null }),
+    ).rejects.toMatchObject({ code: "auth_required" });
 
+    const mapped = mapHostedRunError(new HostedRunError("nope", "auth_required"));
+    expect(mapped.status).toBe(401);
+    expect(mapped.body.error).toBe("auth_required");
+  });
+
+  it("allows a valid beta code as a header-only bypass", async () => {
+    configureHostedInfraWithExecutor();
+    vi.spyOn(runtime, "getJobStore").mockReturnValue(createMockJobStore());
+
+    await expect(
+      validateHostedRun(sampleRequest, { user: null, betaCode: "beta-secret" }),
+    ).resolves.toBeUndefined();
+  });
+
+  it("keeps mapping the legacy invalid beta code to 401", async () => {
     const mapped = mapHostedRunError(
       new HostedRunError("missing", "invalid_beta_code"),
     );
     expect(mapped.status).toBe(401);
     expect(mapped.body.error).toBe("invalid_beta_code");
+  });
+
+  it("maps the per-user daily cap to 429", async () => {
+    configureHostedInfraWithExecutor();
+    vi.spyOn(runtime, "getJobStore").mockReturnValue(
+      createMockJobStore({
+        countUserJobsToday: vi.fn().mockResolvedValue(5),
+      }),
+    );
+
+    await expect(
+      validateHostedRun(sampleRequest, { user: sampleUser }),
+    ).rejects.toMatchObject({ code: "user_daily_cap_exceeded" });
+
+    const mapped = mapHostedRunError(
+      new HostedRunError("cap", "user_daily_cap_exceeded"),
+    );
+    expect(mapped.status).toBe(429);
   });
 
   it("maps active job conflict to 409", async () => {
@@ -161,7 +221,7 @@ describe("hosted run API (H4)", () => {
     );
 
     await expect(
-      validateHostedRun(sampleRequest, "beta-secret"),
+      validateHostedRun(sampleRequest, { user: sampleUser }),
     ).rejects.toMatchObject({ code: "run_in_progress" });
 
     const mapped = mapHostedRunError(
@@ -170,7 +230,7 @@ describe("hosted run API (H4)", () => {
     expect(mapped.status).toBe(409);
   });
 
-  it("maps daily cap to 429", async () => {
+  it("maps global daily cap to 429", async () => {
     configureHostedInfraWithExecutor();
     vi.spyOn(runtime, "getJobStore").mockReturnValue(
       createMockJobStore({
@@ -181,7 +241,7 @@ describe("hosted run API (H4)", () => {
     );
 
     await expect(
-      validateHostedRun(sampleRequest, "beta-secret"),
+      validateHostedRun(sampleRequest, { user: sampleUser }),
     ).rejects.toMatchObject({ code: "daily_job_cap_exceeded" });
 
     const mapped = mapHostedRunError(
@@ -195,7 +255,7 @@ describe("hosted run API (H4)", () => {
     vi.spyOn(runtime, "getJobStore").mockReturnValue(createMockJobStore());
 
     await expect(
-      validateHostedRun(sampleRequest, "beta-secret"),
+      validateHostedRun(sampleRequest, { user: sampleUser }),
     ).rejects.toMatchObject({ code: "executor_not_configured" });
 
     const mapped = mapHostedRunError(

@@ -26,8 +26,10 @@ const hostedCaps: HostedRunCapabilities = {
   runtime: "hosted",
   supports_background_jobs: false,
   hosted_run_generation_available: true,
-  requires_beta_code: true,
+  requires_auth: true,
+  authenticated: false,
   daily_jobs_remaining: 3,
+  user_daily_jobs_remaining: null,
   artifact_store: "supabase",
   job_store: "postgres",
   executor_configured: false,
@@ -48,12 +50,20 @@ describe("runApiClient", () => {
     expect(isHostedCapabilities(null)).toBe(false);
   });
 
-  it("maps invalid beta code to a clear message", async () => {
+  it("maps auth required to a sign-in message", async () => {
     const message = await formatRunLaunchError(
-      jsonResponse(401, { error: "invalid_beta_code" }),
+      jsonResponse(401, { error: "auth_required" }),
       hostedCaps,
     );
-    expect(message).toBe("Invalid beta access code.");
+    expect(message).toContain("Sign in with GitHub");
+  });
+
+  it("maps the per-user daily cap to a clear message", async () => {
+    const message = await formatRunLaunchError(
+      jsonResponse(429, { error: "user_daily_cap_exceeded" }),
+      hostedCaps,
+    );
+    expect(message).toContain("daily run limit");
   });
 
   it("maps executor unavailable for hosted mode", async () => {

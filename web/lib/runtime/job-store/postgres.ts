@@ -32,14 +32,14 @@ export class PostgresJobStore implements JobStore {
       INSERT INTO run_jobs (
         id, status, requested_season, requested_week, requested_source,
         requested_ruleset, scenario_weights_json, run_stem, artifact_base_url,
-        error_message, logs_text, pid, exit_code, trigger_run_id,
+        error_message, logs_text, pid, exit_code, trigger_run_id, user_id,
         created_at, started_at, finished_at
       ) VALUES (
         ${row.id}, ${row.status}, ${row.requested_season}, ${row.requested_week},
         ${row.requested_source}, ${row.requested_ruleset},
         ${row.scenario_weights_json ? this.sql.json({ ...row.scenario_weights_json }) : null},
         ${row.run_stem}, ${row.artifact_base_url}, ${row.error_message},
-        ${row.logs_text}, ${row.pid}, ${row.exit_code}, ${row.trigger_run_id},
+        ${row.logs_text}, ${row.pid}, ${row.exit_code}, ${row.trigger_run_id}, ${row.user_id},
         ${row.created_at}, ${row.started_at}, ${row.finished_at}
       )
     `;
@@ -233,6 +233,15 @@ export class PostgresJobStore implements JobStore {
     `;
     const dailyCount = Number.parseInt(dailyCountRows[0]?.count ?? "0", 10);
     return Math.max(0, dailyCap - dailyCount);
+  }
+
+  async countUserJobsToday(userId: string): Promise<number> {
+    const rows = await this.sql<{ count: string }[]>`
+      SELECT COUNT(*)::text AS count FROM run_jobs
+      WHERE user_id = ${userId}
+        AND created_at >= date_trunc('day', now() AT TIME ZONE 'UTC')
+    `;
+    return Number.parseInt(rows[0]?.count ?? "0", 10);
   }
 
   async setTriggerRunId(jobId: string, triggerRunId: string): Promise<void> {

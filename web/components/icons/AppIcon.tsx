@@ -1,28 +1,24 @@
-"use client";
-
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type AppIconProps = {
-  icon: IconSvgElement;
+  icon: LucideIcon;
+  className?: string;
   size?: number;
   strokeWidth?: number;
-  className?: string;
 };
 
-/** Hugeicons at app scale — crisp strokes on dark backgrounds. */
+/** Lucide icons at app scale — the single icon primitive for chrome and nav. */
 export function AppIcon({
-  icon,
-  size = 18,
-  strokeWidth = 1.75,
+  icon: Icon,
   className,
+  size = 18,
+  strokeWidth = 2,
 }: AppIconProps) {
   return (
-    <HugeiconsIcon
-      icon={icon}
+    <Icon
       size={size}
       strokeWidth={strokeWidth}
-      color="currentColor"
       className={cn("shrink-0", className)}
       aria-hidden
     />

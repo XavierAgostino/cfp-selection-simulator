@@ -6,6 +6,8 @@ export class HostedConfigurationError extends Error {
 }
 
 export type HostedRunErrorCode =
+  | "auth_required"
+  | "user_daily_cap_exceeded"
   | "invalid_beta_code"
   | "run_generation_disabled"
   | "run_in_progress"

@@ -69,7 +69,8 @@ export const runHostedJob = task({
   run: async (payload: { jobId: string }) => {
     const cwd = repoDir();
     const python = pythonBin();
-    const workerEnv = {
+    const workerEnv: NodeJS.ProcessEnv = {
+      ...process.env,
       ...buildWorkerSubprocessEnv(),
       PYTHONPATH: [cwd, process.env.PYTHONPATH].filter(Boolean).join(path.delimiter),
     };
@@ -79,7 +80,7 @@ export const runHostedJob = task({
         ["-m", "src.cli.main", "worker", "run-job", payload.jobId],
         {
           cwd,
-          env: workerEnv as NodeJS.ProcessEnv,
+          env: workerEnv,
           maxBuffer: 20 * 1024 * 1024,
         },
       );

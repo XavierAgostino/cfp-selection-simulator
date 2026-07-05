@@ -9,7 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LucideAppIcon } from "@/components/icons/LucideAppIcon";
+import { AppIcon } from "@/components/icons/AppIcon";
 import { cn } from "@/lib/utils";
 
 interface ThemeToggleProps {
@@ -37,16 +37,16 @@ export function ThemeToggle({ variant = "header" }: ThemeToggleProps) {
       size="icon"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className={cn(
-        "h-9 w-9 text-[#9a9a9a] transition-all duration-200 hover:bg-white/[0.06] hover:text-white focus-visible:ring-white/25",
+        "h-9 w-9 text-muted-foreground transition-all duration-200 hover:bg-foreground/[0.06] hover:text-foreground focus-visible:ring-ring/50",
         variant === "header" && "rounded",
       )}
       aria-label={label}
       disabled={!mounted}
     >
       {isDark ? (
-        <LucideAppIcon icon={Sun} size={16} strokeWidth={2} />
+        <AppIcon icon={Sun} size={16} strokeWidth={2} />
       ) : (
-        <LucideAppIcon icon={Moon} size={16} strokeWidth={2} />
+        <AppIcon icon={Moon} size={16} strokeWidth={2} />
       )}
     </Button>
   );

@@ -5,14 +5,14 @@ import {
   getRunExecutor,
   getRuntimeSummary,
 } from "@/lib/runtime";
+import { validateBetaAccessCode } from "@/lib/runtime/beta-access";
+import type { RequestUser } from "@/lib/auth/server";
 import {
-  isBetaAccessConfigured,
-  validateBetaAccessCode,
-} from "@/lib/runtime/beta-access";
-import {
+  isAuthConfigured,
   isHostedRuntimeConfigured,
   isRunExecutorConfigured,
   getTriggerEnqueueKeyIssue,
+  hostedUserDailyJobCap,
   liveRunThrottleMinutes as readLiveRunThrottleMinutes,
 } from "@/lib/runtime/config";
 import { HostedRunError } from "@/lib/runtime/errors";
@@ -55,6 +55,8 @@ export interface RunJobRecord {
   error: string | null;
   pid: number | null;
   exit_code: number | null;
+  /** Supabase Auth user who launched a hosted run. Null for local/script jobs. */
+  user_id?: string | null;
 }
 
 export interface LocalRunCapabilities {
@@ -76,8 +78,13 @@ export interface HostedRunCapabilities {
   runtime: "hosted";
   supports_background_jobs: boolean;
   hosted_run_generation_available: boolean;
-  requires_beta_code: boolean;
+  /** Signing in is required to launch a run (viewing is always open). */
+  requires_auth: boolean;
+  /** Whether the requesting user is signed in. */
+  authenticated: boolean;
   daily_jobs_remaining: number | null;
+  /** Remaining runs for the signed-in user today; null when signed out. */
+  user_daily_jobs_remaining: number | null;
   artifact_store: "filesystem" | "supabase";
   job_store: "postgres";
   executor_configured: boolean;
@@ -143,7 +150,7 @@ function hostedInfrastructureReady(
   summary: ReturnType<typeof getRuntimeSummary>,
 ): boolean {
   if (!summary.database_configured) return false;
-  if (!isBetaAccessConfigured()) return false;
+  if (!isAuthConfigured()) return false;
   if (summary.artifact_store === "supabase" && !summary.storage_configured) {
     return false;
   }
@@ -160,8 +167,8 @@ function hostedDisabledReason(
   if (summary.artifact_store === "supabase" && !summary.storage_configured) {
     return "Supabase Storage artifact store is not configured.";
   }
-  if (!isBetaAccessConfigured()) {
-    return "Beta access codes are not configured.";
+  if (!isAuthConfigured()) {
+    return "Supabase Auth is not configured (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY).";
   }
   if (!executorConfigured) {
     const keyIssue = getTriggerEnqueueKeyIssue();
@@ -191,7 +198,9 @@ async function getLocalCapabilities(): Promise<LocalRunCapabilities> {
   };
 }
 
-async function getHostedCapabilities(): Promise<HostedRunCapabilities> {
+async function getHostedCapabilities(
+  user?: RequestUser | null,
+): Promise<HostedRunCapabilities> {
   const summary = getRuntimeSummary();
   const executorConfigured = isRunExecutorConfigured();
   const hostedAvailable = hostedInfrastructureReady(summary);
@@ -199,6 +208,7 @@ async function getHostedCapabilities(): Promise<HostedRunCapabilities> {
   let storageWritableFlag = false;
   let activeJobId: string | null = null;
   let dailyRemaining: number | null = null;
+  let userDailyRemaining: number | null = null;
 
   if (summary.database_configured) {
     try {
@@ -210,6 +220,10 @@ async function getHostedCapabilities(): Promise<HostedRunCapabilities> {
           ? active.job_id
           : null;
       dailyRemaining = await jobStore.getDailyJobsRemaining();
+      if (user) {
+        const used = await jobStore.countUserJobsToday(user.id);
+        userDailyRemaining = Math.max(0, hostedUserDailyJobCap() - used);
+      }
     } catch {
       storageWritableFlag = false;
     }
@@ -227,8 +241,10 @@ async function getHostedCapabilities(): Promise<HostedRunCapabilities> {
     runtime: "hosted",
     supports_background_jobs: executorConfigured,
     hosted_run_generation_available: hostedAvailable,
-    requires_beta_code: true,
+    requires_auth: true,
+    authenticated: Boolean(user),
     daily_jobs_remaining: dailyRemaining,
+    user_daily_jobs_remaining: userDailyRemaining,
     artifact_store: summary.artifact_store,
     job_store: "postgres",
     executor_configured: executorConfigured,
@@ -236,9 +252,11 @@ async function getHostedCapabilities(): Promise<HostedRunCapabilities> {
   };
 }
 
-export async function getCapabilities(): Promise<RunCapabilities> {
+export async function getCapabilities(
+  user?: RequestUser | null,
+): Promise<RunCapabilities> {
   if (isHostedRuntimeConfigured()) {
-    return getHostedCapabilities();
+    return getHostedCapabilities(user);
   }
   return getLocalCapabilities();
 }
@@ -248,10 +266,13 @@ export function mapHostedRunError(err: HostedRunError): {
   body: { error: string; disabled_reason?: string };
 } {
   switch (err.code) {
+    case "auth_required":
+      return { status: 401, body: { error: "auth_required" } };
     case "invalid_beta_code":
       return { status: 401, body: { error: "invalid_beta_code" } };
     case "run_in_progress":
       return { status: 409, body: { error: "run_in_progress" } };
+    case "user_daily_cap_exceeded":
     case "daily_job_cap_exceeded":
     case "live_run_throttled":
       return { status: 429, body: { error: err.code } };
@@ -280,22 +301,35 @@ export function mapHostedRunError(err: HostedRunError): {
   }
 }
 
+/** Who is asking to launch a hosted run, and any legacy beta bypass they sent. */
+export interface HostedRunPrincipal {
+  user: RequestUser | null;
+  /** Optional legacy header-only bypass; used only when no user is signed in. */
+  betaCode?: string | null;
+}
+
 /**
- * Validates hosted run gates (beta, caps, CFBD). Does not create jobs until H5.
+ * Validates hosted run gates (auth, per-user quota, global caps, CFBD).
  * Throws HostedRunError with API-mappable codes.
+ *
+ * Authorization: a signed-in Supabase user is the primary gate. A valid legacy
+ * beta code still works as a header-only bypass (removed in Phase 4).
  */
 export async function validateHostedRun(
   request: RunJobRequest,
-  betaCode: string | null,
+  principal: HostedRunPrincipal,
 ): Promise<void> {
-  if (!validateBetaAccessCode(betaCode)) {
+  const { user } = principal;
+  const betaBypass = !user && validateBetaAccessCode(principal.betaCode ?? null);
+
+  if (!user && !betaBypass) {
     throw new HostedRunError(
-      "Beta access code is invalid or missing.",
-      "invalid_beta_code",
+      "Sign in to launch a run.",
+      "auth_required",
     );
   }
 
-  const caps = await getHostedCapabilities();
+  const caps = await getHostedCapabilities(user);
   if (!caps.hosted_run_generation_available) {
     throw new HostedRunError(
       caps.disabled_reason ?? "Hosted run generation is unavailable.",
@@ -317,6 +351,16 @@ export async function validateHostedRun(
   }
 
   const jobStore = getJobStore();
+
+  if (user) {
+    const used = await jobStore.countUserJobsToday(user.id);
+    if (used >= hostedUserDailyJobCap()) {
+      throw new HostedRunError(
+        "You've reached your daily run limit. Try again tomorrow.",
+        "user_daily_cap_exceeded",
+      );
+    }
+  }
 
   if (request.data_source === "cfbd") {
     try {
@@ -348,6 +392,7 @@ export async function validateHostedRun(
 
 export async function createAndStartHostedRun(
   request: RunJobRequest,
+  userId: string | null = null,
 ): Promise<RunJobRecord> {
   const jobStore = getJobStore();
 
@@ -362,6 +407,7 @@ export async function createAndStartHostedRun(
     error: null,
     pid: null,
     exit_code: null,
+    user_id: userId,
   };
 
   await jobStore.createJob(job);

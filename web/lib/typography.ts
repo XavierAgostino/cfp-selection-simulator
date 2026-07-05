@@ -1,7 +1,7 @@
-/** Shared Inter typography scale for product UI. */
+/** Shared Geist typography scale for product UI. */
 
 export const pageTitle =
-  "text-2xl font-bold tracking-tight text-foreground md:text-3xl";
+  "text-2xl font-semibold tracking-tight text-foreground md:text-3xl";
 
 export const pageDescription =
   "mt-1 max-w-2xl text-sm leading-6 text-muted-foreground md:text-base";

@@ -19,7 +19,7 @@ import {
 import { teamName } from "@/lib/typography";
 
 const landingSectionLinkClass =
-  "inline-flex items-center gap-1.5 text-sm font-semibold text-tag-red-text underline-offset-4 transition-colors hover:text-foreground hover:underline";
+  "inline-flex items-center gap-1.5 text-[0.9375rem] font-semibold text-tag-red-text underline-offset-4 transition-colors hover:text-foreground hover:underline";
 
 function SectionShell({
   eyebrow,
@@ -39,9 +39,9 @@ function SectionShell({
   reverse?: boolean;
 }) {
   return (
-    <section className="border-b border-border px-4 py-12 sm:px-6 sm:py-16">
+    <section className="border-b border-border px-4 py-16 sm:px-6 sm:py-24">
       <div
-        className={`mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-12 ${
+        className={`mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-16 ${
           reverse ? "lg:[&>*:first-child]:order-2" : ""
         }`}
       >
@@ -49,9 +49,9 @@ function SectionShell({
           <p className={landingSectionEyebrow}>{eyebrow}</p>
           <h2 className={landingSectionTitle}>{title}</h2>
           <p className={landingSectionBody}>{body}</p>
-          <Link href={href} className={`${landingSectionLinkClass} w-fit`}>
+          <Link href={href} className={`${landingSectionLinkClass} mt-1 w-fit`}>
             {linkLabel}
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="size-4.5" />
           </Link>
         </div>
         <div className="min-w-0">{children}</div>
@@ -67,19 +67,19 @@ export function LandingFeatureSections({ data }: { data: LandingPreviewData }) {
 
   return (
     <>
-      <section className="border-b border-border bg-surface-raised/25 px-4 py-12 sm:px-6 sm:py-16">
+      <section className="border-b border-border bg-surface-raised/25 px-4 py-16 sm:px-6 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto max-w-2xl text-center">
             <p className={landingSectionEyebrow}>Not just a bracket builder</p>
-            <h2 className={`${landingSectionTitle} mt-3`}>
+            <h2 className={`${landingSectionTitle} mt-4`}>
               Selection Room explains the selection itself
             </h2>
-            <p className={`${landingSectionBody} mx-auto mt-3 max-w-2xl text-center`}>
+            <p className={`${landingSectionBody} mx-auto mt-4 max-w-2xl text-center`}>
               Seeds, bids, bracket path, and bubble context come from the same rule engine — not a
               separate toy bracket generator.
             </p>
           </div>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {data.bracket.pods.slice(0, 4).map((pod) => (
               <BracketGame key={pod.pod_id} pod={pod} />
             ))}
@@ -190,7 +190,7 @@ export function LandingFeatureSections({ data }: { data: LandingPreviewData }) {
                 </div>
                 <Link href="/bubble" className={landingSectionLinkClass}>
                   Full bubble board
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="size-4.5" />
                 </Link>
               </div>
               <BubbleCutlineChart

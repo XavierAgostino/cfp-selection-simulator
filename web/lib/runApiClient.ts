@@ -61,8 +61,17 @@ export async function formatRunLaunchError(
   const code = body.error;
   const hosted = isHostedCapabilities(caps);
 
-  if (res.status === 401 || code === "invalid_beta_code") {
-    return "Invalid beta access code.";
+  if (code === "auth_required") {
+    return "Sign in with GitHub to launch a run.";
+  }
+  if (code === "user_daily_cap_exceeded") {
+    return "You've reached your daily run limit. Try again tomorrow.";
+  }
+  if (code === "invalid_beta_code") {
+    return "Invalid access code.";
+  }
+  if (res.status === 401) {
+    return "Sign in with GitHub to launch a run.";
   }
   if (res.status === 409 || code === "run_in_progress") {
     return hosted
@@ -111,14 +120,13 @@ export function hostedGenerationDisabledMessage(
 
 export function canLaunchHostedRun(
   caps: HostedRunCapabilities,
-  betaCode: string,
   running: boolean,
 ): boolean {
   if (running) return false;
   if (!caps.hosted_run_generation_available || !caps.run_generation_enabled) {
     return false;
   }
-  if (caps.requires_beta_code && !betaCode.trim()) return false;
+  if (caps.requires_auth && !caps.authenticated) return false;
   if (caps.active_job_id) return false;
   return true;
 }

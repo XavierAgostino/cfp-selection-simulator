@@ -21,6 +21,7 @@ const sampleJob: RunJobRecord = {
   error: null,
   pid: null,
   exit_code: null,
+  user_id: null,
 };
 
 describe("runJob mappers", () => {
