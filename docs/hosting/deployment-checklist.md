@@ -1,6 +1,9 @@
 # Hosted deployment checklist
 
-Separate **hosted beta** from the **public read-only demo**. Do not share env vars between Vercel projects.
+One official Vercel project (`selection-room-hosted`): anonymous visitors browse the
+seeded catalog, GitHub sign-in gates run launch. The standalone read-only demo was
+retired (see [Phase 4](#phase-4--single-official-vercel-project)); server secrets stay
+off any client bundle.
 
 ## Phase 1 — Local hosted smoke (Supabase + API)
 
@@ -150,13 +153,20 @@ a benign skipped run).
 `SOURCE=sample` and an explicit `WEEK`, trigger `weekly-official-run` once from
 the dashboard, and confirm a `run_jobs` row + catalog `runs` row appear.
 
-## Phase 4 — Vercel hosted project
+## Phase 4 — Single official Vercel project
+
+The hosted project (`selection-room-hosted`) is now **the** product: anonymous
+visitors browse the seeded official catalog, GitHub sign-in gates run launch.
+The standalone read-only demo (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE`) has been
+retired in code — no demo flag, banner, or gating remains.
 
 **Dashboard/manual (you):**
 
-1. New Vercel project (not the public demo)
+1. The official Vercel project (`selection-room-hosted`)
 2. Root Directory: `web`
-3. Build: `pnpm seed-fixtures:demo && pnpm build` (fixtures harmless; hosted reads Supabase)
+3. Build: `pnpm seed-fixtures:demo && pnpm build` (the `seed-fixtures:demo` npm
+   script only bundles fallback fixtures at build time — unrelated to the retired
+   demo *mode*; hosted reads Supabase at runtime)
 4. Set env vars from [Hosted Runs v1](hosted-runs-v1.md) — all server-side except `NEXT_PUBLIC_SITE_URL`
 
 **CLI** (logged in as `xavieragostino`):
@@ -168,9 +178,7 @@ NEXT_PUBLIC_SITE_URL=https://selection-room-hosted.vercel.app ./scripts/sync-ver
 npx vercel deploy --prod --yes
 ```
 
-Keep public demo linked separately (`selection-room`). Use `./scripts/vercel-link-demo.sh` before demo deploys.
-
-**Project settings** (must match `selection-room` demo except env vars):
+**Project settings:**
 
 | Setting | Value |
 |---------|-------|
@@ -178,6 +186,21 @@ Keep public demo linked separately (`selection-room`). Use `./scripts/vercel-lin
 | Framework | Next.js |
 | Build Command | `pnpm seed-fixtures:demo && pnpm build` |
 | Git repo | `XavierAgostino/cfp-selection-simulator` |
+
+### Retire the old demo project (manual — irreversible)
+
+Once the official project is verified live (browse open + GitHub sign-in gates
+launch), retire the separate public demo (`selection-room`):
+
+1. **Point the canonical domain at `selection-room-hosted`** (Vercel → Domains).
+2. **Redirect the old demo origin** to the canonical domain so existing links
+   don't break — either add the old domain to the official project, or set a
+   redirect on the demo project.
+3. **Delete the demo Vercel project** (`selection-room`) only after the redirect
+   is confirmed. This is not reversible — do it last.
+
+`scripts/vercel-link-demo.sh` and `NEXT_PUBLIC_SITE_URL`-mirroring for the demo
+project are obsolete after this step.
 
 Deploy from **repo root**, not `web/`. CLI deploys from `web/` fail with `web/web` path errors when rootDirectory is set.
 

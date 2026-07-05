@@ -4,7 +4,6 @@ import * as React from "react";
 import type { RunCapabilities, RunJobRecord } from "@/lib/runJob";
 import type { ScenarioWeights } from "@/lib/scenarioWeights";
 import { invalidateRunPayloadCache } from "@/lib/runPayloadCache";
-import { isDemoMode, PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE } from "@/lib/demoMode";
 import { buildRunPostInit, formatRunLaunchError } from "@/lib/runApiClient";
 
 export type ScenarioRunPhase =
@@ -122,10 +121,7 @@ export function useScenarioRun(
     }
 
     if (!res.ok) {
-      let message = await formatRunLaunchError(res, capabilitiesRef.current ?? null);
-      if (isDemoMode && res.status === 501) {
-        message = PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE;
-      }
+      const message = await formatRunLaunchError(res, capabilitiesRef.current ?? null);
       setState((prev) => ({
         ...prev,
         phase: "failed",

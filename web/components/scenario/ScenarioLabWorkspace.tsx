@@ -37,7 +37,6 @@ import {
 } from "@/lib/scenarioWeights";
 import type { RunSummary } from "@/lib/types";
 import { bodyMuted, sectionTitle } from "@/lib/typography";
-import { isDemoMode, PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE } from "@/lib/demoMode";
 import {
   canLaunchHostedRun,
   canLaunchLocalRun,
@@ -203,7 +202,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
           </div>
 
           <div className="mt-4 flex flex-col gap-2">
-            {hosted && capabilities !== null && !isDemoMode ? (
+            {hosted && capabilities !== null ? (
               <SignInPanel capabilities={capabilities} next="/scenario" />
             ) : null}
 
@@ -252,17 +251,15 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
             ) : null}
             {!canLaunchNew && capabilities !== null && !existingMatch && !matchesBase ? (
               <p className="text-xs leading-relaxed text-muted-foreground">
-                {isDemoMode
-                  ? PUBLIC_DEMO_SCENARIO_LAUNCH_NOTE
-                  : hosted
-                    ? !generationEnabled
-                      ? hostedGenerationDisabledMessage(capabilities)
-                      : requiresAuth
-                        ? "Sign in with GitHub to launch a hosted scenario."
-                        : serverBusy
-                          ? "Another hosted run is already in progress."
-                          : "Hosted scenario launch is unavailable right now."
-                    : "This deployment can open existing scenarios, but cannot create new ones."}
+                {hosted
+                  ? !generationEnabled
+                    ? hostedGenerationDisabledMessage(capabilities)
+                    : requiresAuth
+                      ? "Sign in with GitHub to launch a hosted scenario."
+                      : serverBusy
+                        ? "Another hosted run is already in progress."
+                        : "Hosted scenario launch is unavailable right now."
+                  : "This deployment can open existing scenarios, but cannot create new ones."}
               </p>
             ) : null}
           </div>

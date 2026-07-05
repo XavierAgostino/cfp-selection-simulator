@@ -5,22 +5,20 @@ the engine's exported JSON as a broadcast-style selection show — dashboard,
 bracket, rankings, bubble watch, team resumes, and methodology.
 
 > [!TIP]
-> Read-only browsing works with zero config after `make demo`. Run generation from the browser needs extra setup (see below). For the **public read-only demo** on Vercel, see [Public demo readiness](release/public-demo-readiness.md).
+> Read-only browsing works with zero config after `make demo`. Run generation from the browser needs extra setup (see below). For the canonical **hosted deployment**, see [Hosted Runs v1](hosting/hosted-runs-v1.md).
 
 ---
 
-## Public demo (Vercel)
+## Hosted deployment (Vercel)
 
-The public demo is **read-only**. It bundles committed fixtures at build time
-(`pnpm seed-fixtures:demo` → `web/.demo-data/`) and sets
-`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1`.
+The hosted deployment is the canonical product: it serves a seeded official
+catalog that anyone can browse with zero setup, and signed-in GitHub users can
+launch live runs (per-user daily quota). See [Hosted Runs v1](hosting/hosted-runs-v1.md)
+and the [deployment checklist](hosting/deployment-checklist.md).
 
-- No CFBD key required
-- Run Analysis is hidden
-- Scenario Lab sliders work; launching new scenarios requires the local engine
-- Validation uses bundled `validation.json`
-
-Copy [`web/.env.example`](../web/.env.example) for local production builds that mirror the demo deploy.
+> The former standalone `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE` read-only demo was
+> retired in the single-product cutover — the hosted deployment now covers both
+> open browsing and gated run launch.
 
 ---
 

@@ -15,11 +15,10 @@ Hosted Runs v1 lets a **hosted Vercel deployment** create live analysis runs wit
 
 | Mode | Env signal | Run generation | UI |
 |------|------------|----------------|-----|
-| **Public demo** | `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1` | Disabled | Read-only; Run Analysis hidden |
 | **Local OSS** | Default (no `SELECTION_ROOM_RUNTIME=hosted`) | Optional subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | Setup wizard on first run; Option B job polling |
 | **Hosted live** | `SELECTION_ROOM_RUNTIME=hosted` | GitHub sign-in gated Trigger worker | Sign in with GitHub to launch; job polling; no local setup copy |
 
-These modes must stay isolated: demo users never see local setup instructions; hosted users never see `SELECTION_ROOM_ENABLE_RUN_JOBS` copy; local users keep the existing subprocess flow.
+The two modes stay isolated: hosted users never see `SELECTION_ROOM_ENABLE_RUN_JOBS` copy; local users keep the existing subprocess flow. (The former standalone read-only **Public demo** mode — `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE` — was retired in the single-product cutover: the hosted deployment is now canonical and browsing its seeded catalog is open to everyone.)
 
 ---
 

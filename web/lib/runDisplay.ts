@@ -75,7 +75,7 @@ export const LIVE_CFBD_HELPER =
   "Uses server-side CollegeFootballData access. Requires a configured CFBD API key on the server.";
 
 export const SAMPLE_DEMO_HELPER =
-  "Demo fixture. Records and schedules may be partial, not a full-season live feed.";
+  "Sample data — records and schedules may be partial, not a full-season live feed.";
 
 export const SEASON_OPTIONS = [2024, 2025, 2026] as const;
 export const WEEK_OPTIONS = Array.from({ length: 16 }, (_, i) => i + 1);

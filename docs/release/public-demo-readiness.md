@@ -1,5 +1,13 @@
 # Public Demo / v1 Beta Readiness
 
+> **Retired (single-product cutover):** the standalone read-only public demo
+> (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE`) has been folded into the canonical
+> hosted deployment — anonymous visitors browse the seeded official catalog, and
+> GitHub sign-in gates run launch. This document is kept for history; the demo
+> flag, banner, and separate Vercel project no longer exist. See
+> [Hosted Runs v1](../hosting/hosted-runs-v1.md) and the
+> [deployment checklist](../hosting/deployment-checklist.md).
+
 Selection Room **v1 beta** is an **independent CFP selection analysis workspace**.
 The first public release is a **read-only demo** using **generated artifacts** and
 the **transparent baseline model** (40/30/20/10 composite weights). It is not a
