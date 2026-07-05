@@ -1,5 +1,5 @@
 import { formatDataSourceLabel as formatDataSourceChipLabel } from "@/lib/displayLabels";
-import { formatDateTime } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { formatWeightPercents, truncateConfigHash } from "@/lib/recordMeta";
 import type { RunSummary } from "@/lib/types";
 
@@ -69,6 +69,63 @@ export function runRowSecondary(run: RunSummary): string {
 /** Tertiary metadata: updated time and config hash. */
 export function runDetailsLine(run: RunSummary): string {
   return `Updated ${formatDateTime(run.generated_at)} · Config ${truncateConfigHash(run.config_hash)}`;
+}
+
+/** Config-hash fragment on its own, for the run header's freshness row. */
+export function runConfigLabel(run: RunSummary): string {
+  return `Config ${truncateConfigHash(run.config_hash)}`;
+}
+
+/**
+ * How current a run is, tone-classified against the weekly official-run cadence.
+ * Live runs track the real season, so their age is meaningful ("3 days ago").
+ * Sample runs are static fixtures — showing them as N-years "stale" would be
+ * misleading, so they get a neutral "generated on" framing with no relative age.
+ */
+export type FreshnessTone = "fresh" | "aging" | "stale" | "static";
+
+export interface RunFreshnessInfo {
+  tone: FreshnessTone;
+  /** Lead label, e.g. "Updated 3 days ago" or "Generated Dec 7, 2025". */
+  label: string;
+  /** Absolute timestamp for the hover tooltip. */
+  detail: string;
+  /** True only for live CFBD runs — the ones a relative age applies to. */
+  live: boolean;
+}
+
+const DAY_MS = 86_400_000;
+
+function relativeDayPhrase(days: number): string {
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 14) return `${days} days ago`;
+  const weeks = Math.round(days / 7);
+  return `${weeks} weeks ago`;
+}
+
+export function runFreshness(
+  run: RunSummary,
+  now: Date = new Date(),
+): RunFreshnessInfo {
+  const detail = formatDateTime(run.generated_at);
+  const live = isLiveRun(run);
+  const generated = new Date(run.generated_at).getTime();
+
+  // Sample fixtures aren't "stale"; frame them by generation date, neutral tone.
+  if (!live || Number.isNaN(generated)) {
+    return {
+      tone: "static",
+      label: `Generated ${formatDate(run.generated_at)}`,
+      detail,
+      live,
+    };
+  }
+
+  const days = Math.max(0, Math.floor((now.getTime() - generated) / DAY_MS));
+  // Weekly official run lands ~every 7 days: ≤8d current, ≤16d a cycle behind.
+  const tone: FreshnessTone = days <= 8 ? "fresh" : days <= 16 ? "aging" : "stale";
+  return { tone, label: `Updated ${relativeDayPhrase(days)}`, detail, live };
 }
 
 export const LIVE_CFBD_HELPER =

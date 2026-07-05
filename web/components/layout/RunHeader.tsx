@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { BadgeTooltip } from "@/components/explain/InfoTooltip";
 import { RulesetBadge } from "@/components/team/RulesetBadge";
 import { RunHeaderActions } from "@/components/layout/RunHeaderActions";
+import { RunFreshness } from "@/components/layout/RunFreshness";
 import { RunSwitcher } from "@/components/layout/RunSwitcher";
 import { getRuns, NotFoundError } from "@/lib/data";
 import {
@@ -10,7 +11,8 @@ import {
   formatWeightsLabeled,
   isBaseRun,
   isLiveRun,
-  runDetailsLine,
+  runConfigLabel,
+  runFreshness,
   runPrimaryLabel,
   runProjectionSubtitle,
   SAMPLE_DEMO_HELPER,
@@ -128,9 +130,13 @@ export async function RunHeader({ stem }: RunHeaderProps) {
             {formatWeightsLabeled(run.weights)}
           </p>
 
-          <p className="text-xs leading-5 text-muted-foreground/90">
-            {runDetailsLine(run)}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground/90">
+            <RunFreshness freshness={runFreshness(run)} />
+            <span aria-hidden className="text-muted-foreground/40">
+              ·
+            </span>
+            <span className="tabular-nums">{runConfigLabel(run)}</span>
+          </div>
 
           {isSample ? (
             <p className="text-xs text-muted-foreground">{SAMPLE_DEMO_HELPER}</p>
