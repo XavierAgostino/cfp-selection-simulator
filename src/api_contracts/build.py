@@ -673,9 +673,7 @@ def build_committee_comparison_payload(
     field_comparable = len(model_field) == len(committee_field)
 
     roster = set(committee_top25) | {
-        t.team
-        for t in rankings_payload.teams
-        if t.in_field or t.rank <= COMMITTEE_COMPARISON_TOP_N
+        t.team for t in rankings_payload.teams if t.in_field or t.rank <= COMMITTEE_COMPARISON_TOP_N
     }
 
     rows: List[CommitteeComparisonTeam] = []
@@ -762,9 +760,7 @@ def build_committee_comparison_payload(
     seed_exact_matches: Optional[int] = None
     if field_comparable:
         seed_exact_matches = sum(
-            1
-            for t in model_field
-            if t.seed is not None and committee_seed.get(t.team) == t.seed
+            1 for t in model_field if t.seed is not None and committee_seed.get(t.team) == t.seed
         )
 
     summary = CommitteeComparisonSummary(

@@ -245,9 +245,7 @@ def export_run_api(
     )
 
     # Absent (None) for seasons without checked-in committee reference data.
-    committee_payload = build_committee_comparison_payload(
-        config, rankings_payload, use_sample
-    )
+    committee_payload = build_committee_comparison_payload(config, rankings_payload, use_sample)
 
     run_dir = API_ROOT / "runs" / paths.stem
     written: Dict[str, Path] = {}
