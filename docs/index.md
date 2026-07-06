@@ -72,7 +72,6 @@ The [Research index](research/index.md) is the **methodology homepage** — comm
 | [Trigger worker setup](hosting/trigger-worker.md) | Trigger.dev worker deploy |
 | [Hosted production architecture](architecture/hosted-production.md) | Adapter design and migration history |
 | [Development Guide](development.md) | Setup, test, release |
-| [Public demo readiness](release/public-demo-readiness.md) | Vercel read-only v1 beta deploy |
 | [Contributing](../CONTRIBUTING.md) | PR expectations |
 
 ---

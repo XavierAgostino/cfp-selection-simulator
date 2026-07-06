@@ -104,7 +104,6 @@ Status board: [docs/research/v2-tracks-research.md](research/v2-tracks-research.
 | Doc | Purpose |
 |-----|---------|
 | [Hosted production](architecture/hosted-production.md) | Dual-mode design: local OSS vs Vercel + worker + object storage + Postgres; adapter boundaries |
-| [Render bootstrap checklist](hosting/render-feasibility-checklist.md) | Secondary single-service deploy path (not primary architecture) |
 
 **Doctrine:** JSON under `data/output/api/` stays the web contract. DuckDB is local/dev/worker-side analytics, not central hosted page state.
 

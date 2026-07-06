@@ -2,7 +2,7 @@ import type { RecordMeta, RecordLabel } from "@/lib/types";
 
 const RECORD_LABELS: Record<RecordLabel, string> = {
   fbs_record: "FBS record",
-  demo_record: "Demo record",
+  demo_record: "Sample record",
   model_window_record: "Model-window record",
 };
 
@@ -19,7 +19,7 @@ export function recordColumnTooltip(meta: RecordMeta | null | undefined): string
   const parts: string[] = [];
   if (meta.record_label === "demo_record" || meta.is_demo_fixture) {
     parts.push(
-      "Partial demo fixture, not a full-season record. Games in this sample start mid-season.",
+      "Partial sample fixture, not a full-season record. Games in this sample start mid-season.",
     );
   } else if (meta.record_label === "model_window_record") {
     parts.push(

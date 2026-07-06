@@ -9,7 +9,7 @@ import { BASE_SCENARIO_ID } from "@/lib/scenarioWeights";
 
 /** Data source chip / badge label. */
 export function formatDataSourceLabel(source: "cfbd" | "sample"): string {
-  return source === "cfbd" ? "Live CFBD" : "Sample demo";
+  return source === "cfbd" ? "Live CFBD" : "Sample";
 }
 
 /** Base vs weight-variant run kind. */

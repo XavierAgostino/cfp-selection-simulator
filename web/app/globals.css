@@ -286,12 +286,17 @@
   min-height: var(--fd-docs-height);
 }
 
-/* Drop Fumadocs' left gutter column — sidebar was aligned end inside a 2-col span */
-.docs-layout#nd-docs-layout {
-  grid-template:
-    "sidebar toc-popover toc"
-    "sidebar main toc"
-    1fr / var(--fd-sidebar-col) minmax(0, 1fr) var(--fd-toc-width) !important;
+/* Drop Fumadocs' left gutter column (sidebar was aligned end inside a 2-col span).
+   Scoped to >= 48rem, matching where Fumadocs promotes the sidebar to a real grid
+   column; below that its native mobile drawer layout applies unmodified, so the
+   content is no longer crushed into a narrow column behind an empty sidebar gutter. */
+@media (min-width: 48rem) {
+  .docs-layout#nd-docs-layout {
+    grid-template:
+      "sidebar toc-popover toc"
+      "sidebar main toc"
+      1fr / var(--fd-sidebar-col) minmax(0, 1fr) var(--fd-toc-width) !important;
+  }
 }
 
 .docs-layout [data-sidebar-placeholder] aside#nd-sidebar {

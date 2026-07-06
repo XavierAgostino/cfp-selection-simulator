@@ -1,6 +1,6 @@
 # Hosted deployment checklist
 
-One official Vercel project (`selection-room-hosted`): anonymous visitors browse the
+One official Vercel project (`selection-room`): anonymous visitors browse the
 seeded catalog, GitHub sign-in gates run launch. The standalone read-only demo was
 retired (see [Phase 4](#phase-4--single-official-vercel-project)); server secrets stay
 off any client bundle.
@@ -155,14 +155,15 @@ the dashboard, and confirm a `run_jobs` row + catalog `runs` row appear.
 
 ## Phase 4 — Single official Vercel project
 
-The hosted project (`selection-room-hosted`) is now **the** product: anonymous
-visitors browse the seeded official catalog, GitHub sign-in gates run launch.
+The official project (`selection-room`, renamed from `selection-room-hosted`) is
+now **the** product: anonymous visitors browse the seeded official catalog,
+GitHub sign-in gates run launch. It serves at `https://selection-room.vercel.app`.
 The standalone read-only demo (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE`) has been
 retired in code — no demo flag, banner, or gating remains.
 
 **Dashboard/manual (you):**
 
-1. The official Vercel project (`selection-room-hosted`)
+1. The official Vercel project (`selection-room`)
 2. Root Directory: `web`
 3. Build: `pnpm seed-fixtures:demo && pnpm build` (the `seed-fixtures:demo` npm
    script only bundles fallback fixtures at build time — unrelated to the retired
@@ -173,7 +174,7 @@ retired in code — no demo flag, banner, or gating remains.
 
 ```bash
 ./scripts/vercel-link-hosted.sh
-NEXT_PUBLIC_SITE_URL=https://selection-room-hosted.vercel.app ./scripts/sync-vercel-hosted-env.sh production
+NEXT_PUBLIC_SITE_URL=https://selection-room.vercel.app ./scripts/sync-vercel-hosted-env.sh production
 # Deploy from repo root (project rootDirectory=web)
 npx vercel deploy --prod --yes
 ```
@@ -187,24 +188,20 @@ npx vercel deploy --prod --yes
 | Build Command | `pnpm seed-fixtures:demo && pnpm build` |
 | Git repo | `XavierAgostino/cfp-selection-simulator` |
 
-### Retire the old demo project (manual — irreversible)
+### Old demo project retirement (done)
 
-Once the official project is verified live (browse open + GitHub sign-in gates
-launch), retire the separate public demo (`selection-room`):
+The standalone read-only demo has been retired. The separate demo project
+(originally named `selection-room`) was deleted, the former hosted project was
+renamed `selection-room-hosted` -> `selection-room` (same projectId, so the Git
+link and future deploys are unaffected), and the canonical
+`selection-room.vercel.app` domain now points at that single official project.
 
-1. **Point the canonical domain at `selection-room-hosted`** (Vercel → Domains).
-2. **Redirect the old demo origin** to the canonical domain so existing links
-   don't break — either add the old domain to the official project, or set a
-   redirect on the demo project.
-3. **Delete the demo Vercel project** (`selection-room`) only after the redirect
-   is confirmed. This is not reversible — do it last.
-
-`scripts/vercel-link-demo.sh` and `NEXT_PUBLIC_SITE_URL`-mirroring for the demo
-project are obsolete after this step.
+The `scripts/vercel-link-demo.sh` helper and `NEXT_PUBLIC_SITE_URL`-mirroring for
+the demo project have been removed.
 
 Deploy from **repo root**, not `web/`. CLI deploys from `web/` fail with `web/web` path errors when rootDirectory is set.
 
-**Deployment protection:** if `/api/run/capabilities` returns an HTML login page, disable Vercel Authentication / Deployment Protection for `selection-room-hosted`, or use a protection bypass token for smoke tests.
+**Deployment protection:** if `/api/run/capabilities` returns an HTML login page, disable Vercel Authentication / Deployment Protection for `selection-room`, or use a protection bypass token for smoke tests.
 
 ## Phase 5 — End-to-end hosted preview
 

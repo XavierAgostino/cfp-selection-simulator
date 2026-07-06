@@ -175,7 +175,7 @@ Introduce during Scenario Lab MVP; keeps local and hosted diff contracts aligned
 
 A **Render-style monolith** (Next + Python + persistent disk in one container) is a **valid bootstrap / single-service path** for early deployment. It is **less aligned** with the long-term separation of web, worker, artifact storage, and metadata.
 
-See [`docs/hosting/render-feasibility-checklist.md`](../hosting/render-feasibility-checklist.md) for feasibility checks. **Do not treat it as the primary architecture** for a multi-user, shareable, scalable product.
+**Do not treat it as the primary architecture** for a multi-user, shareable, scalable product.
 
 ---
 
@@ -270,7 +270,5 @@ runs/2025_week15__scenario_abc/rankings.json
 
 ## Related docs
 
-- [Vision progress assessment](../../.cursor/plans/vision_progress_assessment_ca926609.plan.md)
-- [Render bootstrap checklist](../hosting/render-feasibility-checklist.md)
 - [Development guide](../development.md) — local env vars, DuckDB, jobs
 - [API contracts](../api-contracts.md)

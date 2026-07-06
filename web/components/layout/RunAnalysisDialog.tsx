@@ -740,13 +740,13 @@ export function RunAnalysisDialog({
                     <ToggleGroupItem value="live" disabled={!liveEnabled}>
                       Live CFBD
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="sample">Sample demo</ToggleGroupItem>
+                    <ToggleGroupItem value="sample">Sample</ToggleGroupItem>
                   </ToggleGroup>
                   <p className="text-xs leading-relaxed text-muted-foreground">
                     {source === "live"
                       ? liveEnabled
                         ? LIVE_CFBD_HELPER
-                        : "Live CFBD is not configured on this server. Use Sample demo, or set CFBD_API_KEY on the server."
+                        : "Live CFBD is not configured on this server. Use Sample data, or set CFBD_API_KEY on the server."
                       : SAMPLE_DEMO_HELPER}
                   </p>
                 </div>

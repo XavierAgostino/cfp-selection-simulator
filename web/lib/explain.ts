@@ -132,7 +132,7 @@ export const BADGE_EXPLANATIONS: Record<ExplainBadgeKey, BadgeExplanation> = {
     description: "Outside the projected field under this run's rankings.",
   },
   sample_data: {
-    label: "Sample demo",
+    label: "Sample",
     description:
       "This run uses the bundled sample dataset, not live results. Launch a run with live CFBD data to see the real season.",
   },

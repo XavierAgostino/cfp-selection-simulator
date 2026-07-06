@@ -18,8 +18,7 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 > **Status: Selection Room v1 beta** — independent CFP selection analysis workspace.
 > The product ships in three modes: **public read-only demo**, **local OSS** with
 > optional Run Analysis, and **hosted live beta** (beta-code gated runs on Vercel +
-> Supabase + Trigger.dev). See [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) and
-> [Public demo readiness](docs/release/public-demo-readiness.md).
+> Supabase + Trigger.dev). See [Hosted Runs v1](docs/hosting/hosted-runs-v1.md).
 
 > [!IMPORTANT]
 > **Research frozen for v1 beta:** V2.4 implementation is complete; full 2014–2024
@@ -91,7 +90,7 @@ One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web
 | Run Analysis | Hidden (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1`) | Subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | Beta access code + Trigger worker |
 | Accounts | None | None | None (beta code only) |
 | CFBD key | Not required | Required for live runs | Server/worker only |
-| Setup | [Public demo readiness](docs/release/public-demo-readiness.md) | `make setup && make demo && make web` | [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) |
+| Setup | Deployed on Vercel | `make setup && make demo && make web` | [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) |
 
 Hosted runs are **beta-code gated**. No sign-in or billing required for v1.
 
@@ -207,7 +206,6 @@ One composite pipeline with explainable components.
 - [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) — deploy hosted live beta
 - [Supabase setup](docs/hosting/supabase-setup.md)
 - [Trigger worker setup](docs/hosting/trigger-worker.md)
-- [Public demo readiness](docs/release/public-demo-readiness.md)
 
 ---
 

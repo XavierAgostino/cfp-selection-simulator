@@ -68,8 +68,6 @@ pnpm build
 pnpm start
 ```
 
-See [Public demo readiness](release/public-demo-readiness.md).
-
 CI runs engine and web jobs separately (see `.github/workflows/ci.yml`).
 
 ---

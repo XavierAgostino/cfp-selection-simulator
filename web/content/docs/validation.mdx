@@ -17,11 +17,11 @@ These metrics describe historical fit under documented assumptions, not real-tim
 
 ## What validation does not prove
 
-Validation does **not** prove that Selection Room replicates committee deliberation, insider criteria, or future outcomes. Pre-2024 field checks use actual participants; committee top-12 overlap is a separate metric with its own limits. Sample demo and Live CFBD runs are not directly comparable.
+Validation does **not** prove that Selection Room replicates committee deliberation, insider criteria, or future outcomes. Pre-2024 field checks use actual participants; committee top-12 overlap is a separate metric with its own limits. Sample and Live CFBD runs are not directly comparable.
 
 ## How to refresh validation artifacts
 
-Validation data is a single repo-level artifact — `data/output/api/validation.json` — not a per-run export. To refresh:
+Validation data is a single repo-level artifact (`data/output/api/validation.json`), not a per-run export. To refresh:
 
 1. Run the validation harness: `make validate` (or `./bin/sroom validate --years 2014:2024`).
 2. Confirm `data/output/api/validation.json` regenerated for the target seasons.

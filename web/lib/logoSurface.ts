@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
  */
 export function logoSurfaceFrameClass(className?: string): string {
   return cn(
-    "flex shrink-0 items-center justify-center rounded-full border border-border/60 bg-logo-surface p-0.5",
+    "flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-logo-surface p-0.5",
     className,
   );
 }

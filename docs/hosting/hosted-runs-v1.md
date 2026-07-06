@@ -188,7 +188,6 @@ Poll endpoints:
 | [Deployment checklist](deployment-checklist.md) | Trigger, Vercel, end-to-end smoke steps |
 | [Trigger worker](trigger-worker.md) | Trigger.dev project, deploy, local worker test |
 | [Hosted production architecture](../architecture/hosted-production.md) | Adapter design and migration history |
-| [Public demo readiness](../release/public-demo-readiness.md) | Read-only Vercel demo (separate from hosted beta) |
 
 ---
 

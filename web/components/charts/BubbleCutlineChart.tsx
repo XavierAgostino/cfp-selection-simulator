@@ -42,9 +42,11 @@ const GROUP_LABEL: Record<CutGroup, string> = {
   "next-out": "Next four out",
 };
 
-/** Alternate two heights within a lane so near-identical scores don't stack. */
+/** Alternate two heights within a lane so near-identical scores don't stack.
+ *  The wide gap matters most on narrow screens, where the composite-score axis
+ *  compresses and adjacent logos would otherwise overlap into one clump. */
 function laneY(direction: 1 | -1, index: number): number {
-  return direction * (index % 2 === 0 ? 0.75 : 1.35);
+  return direction * (index % 2 === 0 ? 0.65 : 1.45);
 }
 
 function CutlineTooltip({
@@ -159,7 +161,7 @@ export function BubbleCutlineChart({
         data.length - lastFourIn.length
       } bubble teams below it, positioned by composite score. The same teams appear in the bubble lists.`}
     >
-      <ResponsiveContainer width="100%" height={mini ? 104 : 180}>
+      <ResponsiveContainer width="100%" height={mini ? 112 : 208}>
         <ScatterChart
           margin={{ top: 14, right: 14, bottom: mini ? 0 : 4, left: 14 }}
         >
