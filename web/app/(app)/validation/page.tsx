@@ -1,6 +1,7 @@
 import { Terminal } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { CommitteeComparisonPanel } from "@/components/committee/CommitteeComparisonPanel";
+import { CommitteeTakeawayCard } from "@/components/committee/CommitteeTakeawayCard";
 import { ValidationDashboard } from "@/components/validation/ValidationDashboard";
 import { getRunFile, getValidationData, NotFoundError } from "@/lib/data";
 import { pageDescription, pageTitle, sectionTitle } from "@/lib/typography";
@@ -57,9 +58,12 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
             <h2 className={sectionTitle}>This run vs the committee</h2>
             <p className="text-sm text-muted-foreground">
               The current run&apos;s projection against the committee&apos;s
-              published final rankings for {committee.season}.
+              published final rankings for {committee.season}. Overlap measures
+              alignment with the committee, not whether the committee was
+              right.
             </p>
           </div>
+          <CommitteeTakeawayCard data={committee} />
           <CommitteeComparisonPanel data={committee} />
         </section>
       ) : null}

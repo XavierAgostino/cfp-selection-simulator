@@ -30,6 +30,7 @@ import {
   predictiveSignalHeadlineInterpretation,
   predictiveVerdict,
   seasonRange,
+  selectionDigest,
   selectionVerdict,
 } from "@/lib/validationFormat";
 import type {
@@ -258,7 +259,9 @@ export function ValidationDashboard({
             {data.years.length > 1 ? ` (${data.years.length} seasons)` : ""}. This is
             a retrospective accuracy check on finished seasons. The model is
             transparent and rules-based, and it will disagree with the committee.
-            Those disagreements are the point.
+            Those disagreements are the point. Overlap measures how closely the
+            model aligns with the committee&apos;s published selections, not
+            whether those selections were objectively correct.
           </p>
 
           <ValidationScopeStrip years={data.years} outlierYears={data.outlier_years} />
@@ -400,7 +403,20 @@ export function ValidationDashboard({
                     {formatValidationFieldSizeLabel(row.correct_field_size)}
                   </Badge>
                 </div>
-                <p className="mt-2 text-xs leading-relaxed text-foreground/90">
+                {/* One-glance digest before the prose: scannable across seasons. */}
+                <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-semibold tabular-nums text-foreground">
+                  {selectionDigest(row).map((fragment, i) => (
+                    <span key={fragment} className="inline-flex items-center gap-2">
+                      {i > 0 ? (
+                        <span aria-hidden className="font-normal text-muted-foreground/40">
+                          &middot;
+                        </span>
+                      ) : null}
+                      {fragment}
+                    </span>
+                  ))}
+                </p>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                   {selectionVerdict(row)}
                 </p>
 

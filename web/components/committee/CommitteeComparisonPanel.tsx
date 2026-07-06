@@ -6,6 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoTooltip } from "@/components/explain/InfoTooltip";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
+import {
+  classifyDisagreements,
+  MISS_KIND_DEFINITIONS,
+  type MissTaxonomy,
+} from "@/lib/committeeInsights";
 import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import type {
   CommitteeAgreement,
@@ -129,6 +134,103 @@ function SummaryStat({
 }
 
 /**
+ * What kind of disagreement each difference is. Naming the kind is the point:
+ * "bubble swap" and "auto-bid displacement" are different claims about the
+ * model, and a reviewer should not have to infer which one happened.
+ */
+function DisagreementTaxonomy({ taxonomy }: { taxonomy: MissTaxonomy }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        How to read a disagreement
+      </p>
+      <div className="mt-2 overflow-hidden rounded-lg border border-border/60">
+        {MISS_KIND_DEFINITIONS.map((def) => {
+          const count = taxonomy.counts[def.kind];
+          const active = count > 0;
+          const instances = taxonomy.instances.filter(
+            (m) => m.kind === def.kind,
+          );
+          const perRunNA = def.kind === "rule_era_difference";
+          return (
+            <div
+              key={def.kind}
+              className={cn(
+                "flex items-start gap-3 border-b border-border/40 px-3 py-2.5 last:border-b-0",
+                active && "bg-tag-gold-bg/15",
+              )}
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "mt-1.5 size-1.5 shrink-0 rounded-full",
+                  active ? "bg-tag-gold-text" : "bg-muted-foreground/30",
+                )}
+              />
+              <div className="min-w-0 flex-1">
+                <span className="text-xs font-semibold text-foreground">
+                  {def.label}
+                </span>
+                <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                  {def.meaning}
+                </p>
+                {instances.map((m) => (
+                  <p
+                    key={m.detail}
+                    className="mt-1 text-xs leading-relaxed text-tag-gold-text"
+                  >
+                    {m.detail}
+                  </p>
+                ))}
+              </div>
+              <span className="shrink-0 pt-0.5">
+                {active ? (
+                  <Badge variant="chip-gold">
+                    {count} this run
+                  </Badge>
+                ) : (
+                  <span className="text-xs text-muted-foreground/60">
+                    {perRunNA ? "Historical only" : "None"}
+                  </span>
+                )}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Every chip and row tint the comparison table uses, stated instead of
+ * implied. Reuses the real Badge variants so the legend cannot drift.
+ */
+function ChipLegend() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+      <span className="font-semibold uppercase tracking-wide">Legend</span>
+      <span className="inline-flex items-center gap-1.5">
+        <Badge variant="chip-green">In both fields</Badge>
+        model and committee agree
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Badge variant="chip-gold">Model only</Badge>
+        the model&apos;s field, not the committee&apos;s
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Badge variant="chip-red">Committee only</Badge>
+        the committee&apos;s field, not the model&apos;s
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <span className="text-muted-foreground/70">Out in both</span>
+        outside both fields
+      </span>
+    </div>
+  );
+}
+
+/**
  * Model vs Committee: this run's projected field and ranks next to the
  * committee's published final rankings for the same season. Disagreements are
  * surfaced as the product's headline, not buried as errors.
@@ -142,6 +244,7 @@ export function CommitteeComparisonPanel({
   const modelOnly = data.teams.filter((t) => t.agreement === "model_only");
   const committeeOnly = data.teams.filter((t) => t.agreement === "committee_only");
   const hasDisagreement = modelOnly.length > 0 || committeeOnly.length > 0;
+  const taxonomy = classifyDisagreements(data);
 
   return (
     <Card className="border-border bg-card">
@@ -229,6 +332,10 @@ export function CommitteeComparisonPanel({
           </p>
         )}
 
+        <DisagreementTaxonomy taxonomy={taxonomy} />
+
+        <ChipLegend />
+
         <div className="overflow-x-auto">
           <table className="w-full min-w-[28rem] border-collapse text-sm">
             <thead>
@@ -276,7 +383,11 @@ export function CommitteeComparisonPanel({
           checked into the repo from the official release. &quot;NR&quot; means a
           team was outside that side&apos;s published top 25. Shift is committee
           rank minus model rank; an up arrow means the model ranks the team
-          higher than the committee did.
+          higher than the committee did. Field agreement measures how closely
+          the transparent model aligns with the committee&apos;s published
+          selections; it is not a claim that the committee&apos;s picks are
+          objectively correct. The comparison exists to make the differences
+          auditable.
         </p>
       </CardContent>
     </Card>

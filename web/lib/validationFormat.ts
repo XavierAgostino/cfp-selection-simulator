@@ -125,6 +125,34 @@ export function selectionVerdict(row: SelectionValidationRow): string {
   return line;
 }
 
+/**
+ * Compact scannable fragments for one selection season, rendered as a
+ * middot-separated digest line, e.g.
+ * "11/12 field · Selected Notre Dame · Missed Miami · First out: BYU vs Notre Dame".
+ * "Selected" and "Missed" are from the model's point of view against the
+ * committee's actual field.
+ */
+export function selectionDigest(row: SelectionValidationRow): string[] {
+  const fragments = [`${row.field_overlap_label} field`];
+  if (row.false_positives.length === 0 && row.false_negatives.length === 0) {
+    fragments.push("Exact field match");
+  }
+  if (row.false_positives.length > 0) {
+    fragments.push(`Selected ${row.false_positives.join(", ")}`);
+  }
+  if (row.false_negatives.length > 0) {
+    fragments.push(`Missed ${row.false_negatives.join(", ")}`);
+  }
+  if (row.first_team_out_match === true) {
+    fragments.push("First team out matched");
+  } else if (row.first_team_out_sim && row.first_team_out_ref) {
+    fragments.push(
+      `First out: ${row.first_team_out_sim} vs ${row.first_team_out_ref}`,
+    );
+  }
+  return fragments;
+}
+
 /** Plain-English verdict for one predictive season block. */
 export function predictiveVerdict(
   year: number,
