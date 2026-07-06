@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   ReferenceLine,
   ResponsiveContainer,
@@ -17,6 +17,7 @@ import { TeamHoverContent } from "@/components/team/TeamHoverCard";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { METRIC_EXPLANATIONS } from "@/lib/explain";
 import type { RankingRow } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface ResumePredictiveScatterProps {
   teams: RankingRow[];
@@ -70,11 +71,44 @@ function QuadrantLabel({
   return (
     <span
       aria-hidden
-      className={`pointer-events-none absolute text-[0.6rem] uppercase tracking-wide text-muted-foreground/70 ${className}`}
+      className={`pointer-events-none absolute hidden text-[0.6rem] uppercase tracking-wide text-muted-foreground/70 sm:block ${className}`}
     >
       {children}
     </span>
   );
+}
+
+type ScatterFilter = "all" | "top25" | "field" | "bubble";
+
+const SCATTER_FILTERS: Array<{ id: ScatterFilter; label: string }> = [
+  { id: "all", label: "All teams" },
+  { id: "top25", label: "Top 25" },
+  { id: "field", label: "In field" },
+  { id: "bubble", label: "Bubble" },
+];
+
+/**
+ * Subset of teams for one filter. The bubble is the last four in plus the
+ * out-of-field teams within eight ranks of the cut line, matching the
+ * rankings table's bubble filter.
+ */
+function filterTeams(
+  teams: RankingRow[],
+  filter: ScatterFilter,
+  cutRank: number,
+): RankingRow[] {
+  switch (filter) {
+    case "top25":
+      return teams.filter((t) => t.rank <= 25);
+    case "field":
+      return teams.filter((t) => t.in_field);
+    case "bubble":
+      return teams.filter((t) =>
+        t.in_field ? t.rank >= cutRank - 3 : t.rank - cutRank <= 8,
+      );
+    default:
+      return teams;
+  }
 }
 
 function LegendSwatch({ color, label }: { color: string; label: string }) {
@@ -99,17 +133,30 @@ function LegendSwatch({ color, label }: { color: string; label: string }) {
  */
 export function ResumePredictiveScatter({ teams }: ResumePredictiveScatterProps) {
   const { openTeam } = useTeamDrawer();
+  const [filter, setFilter] = useState<ScatterFilter>("all");
 
-  const { xDomain, yDomain, xMedian, yMedian } = useMemo(() => {
-    const predictive = teams.map((t) => t.predictive_score);
-    const resume = teams.map((t) => t.resume_score);
-    return {
-      xDomain: paddedDomain(predictive),
-      yDomain: paddedDomain(resume),
-      xMedian: median(predictive),
-      yMedian: median(resume),
-    };
+  const cutRank = useMemo(() => {
+    const inField = teams.filter((t) => t.in_field);
+    if (inField.length === 0) return 0;
+    return Math.max(...inField.map((t) => t.rank));
   }, [teams]);
+
+  const visible = useMemo(
+    () => filterTeams(teams, filter, cutRank),
+    [teams, filter, cutRank],
+  );
+
+  // Medians stay fixed at the full-field values so the quadrants keep their
+  // meaning; only the plot domain zooms to the visible subset.
+  const { xDomain, yDomain, xMedian, yMedian } = useMemo(() => {
+    const domainSource = visible.length > 0 ? visible : teams;
+    return {
+      xDomain: paddedDomain(domainSource.map((t) => t.predictive_score)),
+      yDomain: paddedDomain(domainSource.map((t) => t.resume_score)),
+      xMedian: median(teams.map((t) => t.predictive_score)),
+      yMedian: median(teams.map((t) => t.resume_score)),
+    };
+  }, [teams, visible]);
 
   if (teams.length === 0) return null;
 
@@ -128,9 +175,35 @@ export function ResumePredictiveScatter({ teams }: ResumePredictiveScatterProps)
       </CardHeader>
       <CardContent className="px-4">
         <div
+          className="mb-3 flex flex-wrap gap-1.5"
+          role="group"
+          aria-label="Filter the plotted teams"
+        >
+          {SCATTER_FILTERS.map((option) => {
+            const isActive = filter === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setFilter(option.id)}
+                aria-pressed={isActive}
+                className={cn(
+                  "rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                  isActive
+                    ? "border-foreground/30 bg-secondary font-semibold text-foreground"
+                    : "border-border bg-transparent text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                )}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+        <div
           className="relative"
           role="img"
-          aria-label={`Scatter plot of ${teams.length} ranked teams by resume score and predictive score. The same scores appear in the rankings table below.`}
+          aria-label={`Scatter plot of ${visible.length} ranked teams by resume score and predictive score. The same scores appear in the rankings table below.`}
         >
           <ResponsiveContainer width="100%" height={380}>
             <ScatterChart margin={{ top: 14, right: 18, bottom: 6, left: 0 }}>
@@ -175,7 +248,7 @@ export function ResumePredictiveScatter({ teams }: ResumePredictiveScatterProps)
                 wrapperStyle={{ zIndex: 10, pointerEvents: "none" }}
               />
               <Scatter
-                data={teams}
+                data={visible}
                 isAnimationActive={false}
                 shape={(props: unknown) => {
                   const { cx, cy, payload } = props as {
