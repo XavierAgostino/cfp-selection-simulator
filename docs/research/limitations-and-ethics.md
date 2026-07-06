@@ -35,12 +35,16 @@ explicit go/no-go. No research track changes production defaults.
 
 Present model output alongside committee rankings and uncertainty. Avoid unsupported claims about bias or institutional favoritism without cited evidence. Use projected/simulated language, not "official projection" or "true accuracy."
 
-## Public demo
+## Public site
 
-The hosted **public demo** (Vercel) serves **bundled generated artifacts** only.
-It does not run live CFBD fetches, does not offer hosted run generation, and does
-not present static sample data as live predictions. Local OSS users can run the
-full engine themselves.
+The hosted public site (Vercel) features a real, completed **2025 season run**
+(through the Week 15 conference-championship slate) from **bundled generated
+artifacts**. It does not run live CFBD fetches and does not offer hosted run
+generation. The field and bracket are the model's **projection computed from
+real game results** — framed as projected/simulated output, not a live or
+current-week prediction, and not an official CFP projection. When the 2026
+season begins, users run their own live runs. Local OSS users can run the full
+engine themselves for any season and week.
 
 ## Non-Affiliation
 

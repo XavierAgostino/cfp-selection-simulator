@@ -25,7 +25,7 @@ import {
 | Mode | Env | Artifacts | Metadata | Execution |
 |------|-----|-----------|----------|-----------|
 | Local (default) | unset | Filesystem | DuckDB / runs.json | Subprocess |
-| Public demo | demo env | Bundled `.demo-data` | Fixture runs.json | Disabled |
+| Public site | demo env | Bundled `.demo-data` (real 2025 run) | Fixture runs.json | Disabled |
 | Hosted | `SELECTION_ROOM_RUNTIME=hosted` | Supabase Storage when `SELECTION_ROOM_ARTIFACT_STORE=supabase` | Postgres | H5 (throws today) |
 
 All web reads go through `/api/data` (proxy). Storage URLs and service role keys never reach the client.
