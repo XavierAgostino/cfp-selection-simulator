@@ -323,6 +323,39 @@ def champions_from_ccg_games(ccg_df: pd.DataFrame) -> Dict[str, str]:
     return champions
 
 
+def champions_from_cached_ccgs(games_df: pd.DataFrame) -> Dict[str, str]:
+    """
+    Champions from real title-game results already present in cached games.
+
+    Conference championship games are the intra-conference games played in the
+    title week (CFBD weeks 14-16), one per league, after the regular season is
+    over. When the season is loaded from cache and the CFBD CCG endpoint is
+    unreachable (offline, completed seasons), these games let us use the actual
+    championship result instead of simulating a CCG from conference records.
+
+    Returns an empty map unless the loaded slate looks like a genuine title
+    week: the latest week is >= 14 and each eligible conference plays at most
+    one intra-conference game there. A rivalry week (many intra-conference
+    games per league) or a pre-championship week yields ``{}`` so the caller
+    falls back to the record/simulation waterfall.
+    """
+    required = {"week", "home_conference", "away_conference", "home_score", "away_score"}
+    if games_df.empty or not required.issubset(games_df.columns):
+        return {}
+
+    champ_week = int(games_df["week"].max())
+    if champ_week < 14:
+        return {}
+
+    slate = games_df[games_df["week"] == champ_week]
+    intra = slate[slate["home_conference"] == slate["away_conference"]].copy()
+    intra = intra[intra["home_conference"].map(_eligible_conference)]
+    if intra.empty or intra["home_conference"].duplicated().any():
+        return {}
+
+    return champions_from_ccg_games(intra)
+
+
 def conference_leaders_with_tiebreaks(
     records: List[Dict[str, Any]],
     rankings_df: pd.DataFrame,

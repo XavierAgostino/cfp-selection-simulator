@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2025-12-07T18:15:00Z",
+  "generated_at": "2026-07-06T16:25:31.988942+00:00",
   "latest": {
     "season": 2025,
     "week": 15,
@@ -14,13 +14,13 @@
       "season": 2025,
       "week": 15,
       "ruleset": "2025_plus",
-      "data_source": "sample",
-      "champion_source": "cfbd",
-      "generated_at": "2025-12-07T18:15:00Z",
+      "data_source": "cfbd",
+      "champion_source": "cache_ccg",
+      "generated_at": "2026-07-06T16:25:30.324120+00:00",
       "has_bracket": true,
       "has_sensitivity": true,
       "simulator_version": "3.0.0",
-      "config_hash": "sample_fixture_hash",
+      "config_hash": "a641160b2d78e908",
       "weights": {
         "resume": 0.4,
         "predictive": 0.3,

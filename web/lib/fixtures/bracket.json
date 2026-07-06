@@ -11,209 +11,69 @@
         {
           "seed": 8,
           "rank": 8,
-          "team": "Indiana",
-          "abbreviation": "IND",
-          "conference": "Big Ten",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/84.png",
-          "primary_color": "#990000",
-          "secondary_color": "#EEEDEB",
+          "team": "Notre Dame",
+          "abbreviation": "ND",
+          "conference": "FBS Independents",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
+          "primary_color": "#0c2340",
+          "secondary_color": "#333333",
           "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.818,
-          "resume_score": 0.844,
-          "predictive_score": 0.786,
-          "sor": 0.82,
-          "sos": 0.5,
+          "composite_score": 0.7046082548306204,
+          "resume_score": 0.835883270998997,
+          "predictive_score": 0.7269960870037717,
+          "sor": 0.5989167692676836,
+          "sos": 0.4932209595959595,
           "record": {
-            "wins": 11,
-            "losses": 1
+            "wins": 10,
+            "losses": 2
           }
         },
         {
           "seed": 9,
           "rank": 9,
-          "team": "Alabama",
-          "abbreviation": "ALA",
+          "team": "Ole Miss",
+          "abbreviation": "MISS",
           "conference": "SEC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
-          "primary_color": "#9E1B32",
-          "secondary_color": "#828A8F",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
+          "primary_color": "#13294b",
+          "secondary_color": "#333333",
           "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.803,
-          "resume_score": 0.825,
-          "predictive_score": 0.777,
-          "sor": 0.8,
-          "sos": 0.63,
+          "composite_score": 0.701904060775583,
+          "resume_score": 0.898179016348687,
+          "predictive_score": 0.6148396668389665,
+          "sor": 0.8551446161494561,
+          "sos": 0.4558704174613265,
           "record": {
             "wins": 10,
-            "losses": 2
+            "losses": 1
           }
         }
       ],
       "bye": {
         "seed": 1,
         "rank": 1,
-        "team": "Ohio State",
-        "abbreviation": "OSU",
+        "team": "Indiana",
+        "abbreviation": "IU",
         "conference": "Big Ten",
-        "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
-        "primary_color": "#BB0000",
-        "secondary_color": "#666666",
+        "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/84.png",
+        "primary_color": "#990000",
+        "secondary_color": "#333333",
         "bid_type": "auto",
         "is_bye": true,
-        "composite_score": 0.932,
-        "resume_score": 0.951,
-        "predictive_score": 0.905,
-        "sor": 0.93,
-        "sos": 0.61,
+        "composite_score": 0.9240290125506456,
+        "resume_score": 1.0,
+        "predictive_score": 0.7459576594878384,
+        "sor": 1.7471880421156287,
+        "sos": 0.5374583333333333,
         "record": {
           "wins": 12,
-          "losses": 1
+          "losses": 0
         }
       },
       "quarterfinal_id": "QF1",
       "semifinal_side": "top"
-    },
-    {
-      "pod_id": "bottom_2",
-      "first_round": [
-        {
-          "seed": 7,
-          "rank": 7,
-          "team": "Notre Dame",
-          "abbreviation": "ND",
-          "conference": "FBS Independents",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
-          "primary_color": "#0C2340",
-          "secondary_color": "#C99700",
-          "bid_type": "at_large",
-          "is_bye": false,
-          "composite_score": 0.833,
-          "resume_score": 0.868,
-          "predictive_score": 0.792,
-          "sor": 0.86,
-          "sos": 0.52,
-          "record": {
-            "wins": 11,
-            "losses": 1
-          }
-        },
-        {
-          "seed": 10,
-          "rank": 10,
-          "team": "Ole Miss",
-          "abbreviation": "MISS",
-          "conference": "SEC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
-          "primary_color": "#14213D",
-          "secondary_color": "#CE1126",
-          "bid_type": "at_large",
-          "is_bye": false,
-          "composite_score": 0.788,
-          "resume_score": 0.809,
-          "predictive_score": 0.762,
-          "sor": 0.78,
-          "sos": 0.57,
-          "record": {
-            "wins": 10,
-            "losses": 2
-          }
-        }
-      ],
-      "bye": {
-        "seed": 2,
-        "rank": 2,
-        "team": "Georgia",
-        "abbreviation": "UGA",
-        "conference": "SEC",
-        "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
-        "primary_color": "#BA0C2F",
-        "secondary_color": "#000000",
-        "bid_type": "auto",
-        "is_bye": true,
-        "composite_score": 0.918,
-        "resume_score": 0.937,
-        "predictive_score": 0.889,
-        "sor": 0.91,
-        "sos": 0.66,
-        "record": {
-          "wins": 12,
-          "losses": 1
-        }
-      },
-      "quarterfinal_id": "QF2",
-      "semifinal_side": "bottom"
-    },
-    {
-      "pod_id": "bottom_1",
-      "first_round": [
-        {
-          "seed": 6,
-          "rank": 6,
-          "team": "Miami",
-          "abbreviation": "MIA",
-          "conference": "ACC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png",
-          "primary_color": "#005030",
-          "secondary_color": "#F47321",
-          "bid_type": "auto",
-          "is_bye": false,
-          "composite_score": 0.845,
-          "resume_score": 0.861,
-          "predictive_score": 0.826,
-          "sor": 0.83,
-          "sos": 0.55,
-          "record": {
-            "wins": 11,
-            "losses": 1
-          }
-        },
-        {
-          "seed": 11,
-          "rank": 11,
-          "team": "Iowa State",
-          "abbreviation": "ISU",
-          "conference": "Big 12",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/66.png",
-          "primary_color": "#C8102E",
-          "secondary_color": "#F1BE48",
-          "bid_type": "at_large",
-          "is_bye": false,
-          "composite_score": 0.771,
-          "resume_score": 0.799,
-          "predictive_score": 0.738,
-          "sor": 0.77,
-          "sos": 0.46,
-          "record": {
-            "wins": 10,
-            "losses": 2
-          }
-        }
-      ],
-      "bye": {
-        "seed": 3,
-        "rank": 3,
-        "team": "Oregon",
-        "abbreviation": "ORE",
-        "conference": "Big Ten",
-        "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
-        "primary_color": "#154733",
-        "secondary_color": "#FEE123",
-        "bid_type": "at_large",
-        "is_bye": true,
-        "composite_score": 0.901,
-        "resume_score": 0.905,
-        "predictive_score": 0.897,
-        "sor": 0.89,
-        "sos": 0.58,
-        "record": {
-          "wins": 12,
-          "losses": 1
-        }
-      },
-      "quarterfinal_id": "QF3",
-      "semifinal_side": "bottom"
     },
     {
       "pod_id": "top_2",
@@ -221,42 +81,42 @@
         {
           "seed": 5,
           "rank": 5,
-          "team": "BYU",
-          "abbreviation": "BYU",
-          "conference": "Big 12",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png",
-          "primary_color": "#002E5D",
-          "secondary_color": "#FFFFFF",
-          "bid_type": "auto",
+          "team": "Oregon",
+          "abbreviation": "ORE",
+          "conference": "Big Ten",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
+          "primary_color": "#007030",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.86,
-          "resume_score": 0.882,
-          "predictive_score": 0.831,
-          "sor": 0.85,
-          "sos": 0.49,
+          "composite_score": 0.773483851851195,
+          "resume_score": 0.9001173036288083,
+          "predictive_score": 0.76489644299029,
+          "sor": 0.8658708513917611,
+          "sos": 0.48607438016528925,
           "record": {
-            "wins": 12,
+            "wins": 10,
             "losses": 1
           }
         },
         {
           "seed": 12,
-          "rank": 12,
-          "team": "Boise State",
-          "abbreviation": "BSU",
-          "conference": "Mountain West",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png",
-          "primary_color": "#0033A0",
-          "secondary_color": "#D64309",
+          "rank": 22,
+          "team": "James Madison",
+          "abbreviation": "JMU",
+          "conference": "Sun Belt",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/256.png",
+          "primary_color": "#450084",
+          "secondary_color": "#333333",
           "bid_type": "auto",
           "is_bye": false,
-          "composite_score": 0.754,
-          "resume_score": 0.812,
-          "predictive_score": 0.681,
-          "sor": 0.79,
-          "sos": 0.31,
+          "composite_score": 0.566639755603127,
+          "resume_score": 0.8380186204169999,
+          "predictive_score": 0.5406008066565375,
+          "sor": 0.18315922310835558,
+          "sos": 0.4413573232323232,
           "record": {
-            "wins": 12,
+            "wins": 11,
             "losses": 1
           }
         }
@@ -264,210 +124,350 @@
       "bye": {
         "seed": 4,
         "rank": 4,
-        "team": "Texas A&M",
-        "abbreviation": "TAMU",
+        "team": "Texas Tech",
+        "abbreviation": "TTU",
+        "conference": "Big 12",
+        "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/2641.png",
+        "primary_color": "#CC0000",
+        "secondary_color": "#333333",
+        "bid_type": "auto",
+        "is_bye": true,
+        "composite_score": 0.8009210728264966,
+        "resume_score": 0.8975685932497736,
+        "predictive_score": 0.8697639250140305,
+        "sor": 0.7329834050570104,
+        "sos": 0.49238888888888876,
+        "record": {
+          "wins": 11,
+          "losses": 1
+        }
+      },
+      "quarterfinal_id": "QF2",
+      "semifinal_side": "top"
+    },
+    {
+      "pod_id": "bottom_1",
+      "first_round": [
+        {
+          "seed": 6,
+          "rank": 6,
+          "team": "Alabama",
+          "abbreviation": "ALA",
+          "conference": "SEC",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+          "primary_color": "#9e1632",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
+          "is_bye": false,
+          "composite_score": 0.739842887624576,
+          "resume_score": 0.7969889151917043,
+          "predictive_score": 0.7982566634598715,
+          "sor": 0.600168732152983,
+          "sos": 0.560128787878788,
+          "record": {
+            "wins": 9,
+            "losses": 3
+          }
+        },
+        {
+          "seed": 11,
+          "rank": 20,
+          "team": "Tulane",
+          "abbreviation": "TULN",
+          "conference": "American Athletic",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/2655.png",
+          "primary_color": "#006547",
+          "secondary_color": "#333333",
+          "bid_type": "auto",
+          "is_bye": false,
+          "composite_score": 0.5699344092800711,
+          "resume_score": 0.8225587576198776,
+          "predictive_score": 0.505850045742311,
+          "sor": 0.2580754615618698,
+          "sos": 0.4851596736596736,
+          "record": {
+            "wins": 11,
+            "losses": 2
+          }
+        }
+      ],
+      "bye": {
+        "seed": 3,
+        "rank": 3,
+        "team": "Georgia",
+        "abbreviation": "UGA",
         "conference": "SEC",
-        "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/245.png",
-        "primary_color": "#500000",
-        "secondary_color": "#FFFFFF",
+        "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
+        "primary_color": "#ba0c2f",
+        "secondary_color": "#333333",
+        "bid_type": "auto",
+        "is_bye": true,
+        "composite_score": 0.8190702189565406,
+        "resume_score": 0.9279403834586522,
+        "predictive_score": 0.6591152077440169,
+        "sor": 1.4128455945550216,
+        "sos": 0.5271527777777778,
+        "record": {
+          "wins": 11,
+          "losses": 1
+        }
+      },
+      "quarterfinal_id": "QF3",
+      "semifinal_side": "bottom"
+    },
+    {
+      "pod_id": "bottom_2",
+      "first_round": [
+        {
+          "seed": 7,
+          "rank": 7,
+          "team": "Oklahoma",
+          "abbreviation": "OU",
+          "conference": "SEC",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/201.png",
+          "primary_color": "#a32036",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
+          "is_bye": false,
+          "composite_score": 0.7177997485604891,
+          "resume_score": 0.8513671625632255,
+          "predictive_score": 0.6039232501007183,
+          "sor": 0.8364755479011418,
+          "sos": 0.5785151515151515,
+          "record": {
+            "wins": 9,
+            "losses": 2
+          }
+        },
+        {
+          "seed": 10,
+          "rank": 10,
+          "team": "Texas A&M",
+          "abbreviation": "TA&M",
+          "conference": "SEC",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/245.png",
+          "primary_color": "#500000",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
+          "is_bye": false,
+          "composite_score": 0.6894804511221151,
+          "resume_score": 0.8959826659612727,
+          "predictive_score": 0.6063596944225316,
+          "sor": 0.7573123065654868,
+          "sos": 0.4648677685950413,
+          "record": {
+            "wins": 10,
+            "losses": 1
+          }
+        }
+      ],
+      "bye": {
+        "seed": 2,
+        "rank": 2,
+        "team": "Ohio State",
+        "abbreviation": "OSU",
+        "conference": "Big Ten",
+        "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+        "primary_color": "#ce1141",
+        "secondary_color": "#333333",
         "bid_type": "at_large",
         "is_bye": true,
-        "composite_score": 0.887,
-        "resume_score": 0.899,
-        "predictive_score": 0.872,
-        "sor": 0.87,
-        "sos": 0.64,
+        "composite_score": 0.8340641330405599,
+        "resume_score": 0.9333137105821107,
+        "predictive_score": 0.7711366194461216,
+        "sor": 1.07905145699212,
+        "sos": 0.5470530303030302,
         "record": {
           "wins": 11,
           "losses": 1
         }
       },
       "quarterfinal_id": "QF4",
-      "semifinal_side": "top"
+      "semifinal_side": "bottom"
     }
   ],
   "rounds": {
     "first_round": [
       {
-        "game_id": "FR1",
+        "game_id": "top_1_r1",
         "team_a": {
           "seed": 8,
           "rank": 8,
-          "team": "Indiana",
-          "abbreviation": "IND",
-          "conference": "Big Ten",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/84.png",
-          "primary_color": "#990000",
-          "secondary_color": "#EEEDEB",
+          "team": "Notre Dame",
+          "abbreviation": "ND",
+          "conference": "FBS Independents",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
+          "primary_color": "#0c2340",
+          "secondary_color": "#333333",
           "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.818,
-          "resume_score": 0.844,
-          "predictive_score": 0.786,
-          "sor": 0.82,
-          "sos": 0.5,
-          "record": {
-            "wins": 11,
-            "losses": 1
-          }
-        },
-        "team_b": {
-          "seed": 9,
-          "rank": 9,
-          "team": "Alabama",
-          "abbreviation": "ALA",
-          "conference": "SEC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
-          "primary_color": "#9E1B32",
-          "secondary_color": "#828A8F",
-          "bid_type": "at_large",
-          "is_bye": false,
-          "composite_score": 0.803,
-          "resume_score": 0.825,
-          "predictive_score": 0.777,
-          "sor": 0.8,
-          "sos": 0.63,
+          "composite_score": 0.7046082548306204,
+          "resume_score": 0.835883270998997,
+          "predictive_score": 0.7269960870037717,
+          "sor": 0.5989167692676836,
+          "sos": 0.4932209595959595,
           "record": {
             "wins": 10,
             "losses": 2
           }
         },
+        "team_b": {
+          "seed": 9,
+          "rank": 9,
+          "team": "Ole Miss",
+          "abbreviation": "MISS",
+          "conference": "SEC",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
+          "primary_color": "#13294b",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
+          "is_bye": false,
+          "composite_score": 0.701904060775583,
+          "resume_score": 0.898179016348687,
+          "predictive_score": 0.6148396668389665,
+          "sor": 0.8551446161494561,
+          "sos": 0.4558704174613265,
+          "record": {
+            "wins": 10,
+            "losses": 1
+          }
+        },
         "winner_to_seed": 1
       },
       {
-        "game_id": "FR2",
+        "game_id": "top_2_r1",
         "team_a": {
           "seed": 5,
           "rank": 5,
-          "team": "BYU",
-          "abbreviation": "BYU",
-          "conference": "Big 12",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png",
-          "primary_color": "#002E5D",
-          "secondary_color": "#FFFFFF",
-          "bid_type": "auto",
+          "team": "Oregon",
+          "abbreviation": "ORE",
+          "conference": "Big Ten",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
+          "primary_color": "#007030",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.86,
-          "resume_score": 0.882,
-          "predictive_score": 0.831,
-          "sor": 0.85,
-          "sos": 0.49,
+          "composite_score": 0.773483851851195,
+          "resume_score": 0.9001173036288083,
+          "predictive_score": 0.76489644299029,
+          "sor": 0.8658708513917611,
+          "sos": 0.48607438016528925,
           "record": {
-            "wins": 12,
+            "wins": 10,
             "losses": 1
           }
         },
         "team_b": {
           "seed": 12,
-          "rank": 12,
-          "team": "Boise State",
-          "abbreviation": "BSU",
-          "conference": "Mountain West",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png",
-          "primary_color": "#0033A0",
-          "secondary_color": "#D64309",
+          "rank": 22,
+          "team": "James Madison",
+          "abbreviation": "JMU",
+          "conference": "Sun Belt",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/256.png",
+          "primary_color": "#450084",
+          "secondary_color": "#333333",
           "bid_type": "auto",
           "is_bye": false,
-          "composite_score": 0.754,
-          "resume_score": 0.812,
-          "predictive_score": 0.681,
-          "sor": 0.79,
-          "sos": 0.31,
+          "composite_score": 0.566639755603127,
+          "resume_score": 0.8380186204169999,
+          "predictive_score": 0.5406008066565375,
+          "sor": 0.18315922310835558,
+          "sos": 0.4413573232323232,
           "record": {
-            "wins": 12,
+            "wins": 11,
             "losses": 1
           }
         },
         "winner_to_seed": 4
       },
       {
-        "game_id": "FR3",
+        "game_id": "bottom_1_r1",
         "team_a": {
           "seed": 6,
           "rank": 6,
-          "team": "Miami",
-          "abbreviation": "MIA",
-          "conference": "ACC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png",
-          "primary_color": "#005030",
-          "secondary_color": "#F47321",
-          "bid_type": "auto",
+          "team": "Alabama",
+          "abbreviation": "ALA",
+          "conference": "SEC",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+          "primary_color": "#9e1632",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.845,
-          "resume_score": 0.861,
-          "predictive_score": 0.826,
-          "sor": 0.83,
-          "sos": 0.55,
+          "composite_score": 0.739842887624576,
+          "resume_score": 0.7969889151917043,
+          "predictive_score": 0.7982566634598715,
+          "sor": 0.600168732152983,
+          "sos": 0.560128787878788,
           "record": {
-            "wins": 11,
-            "losses": 1
+            "wins": 9,
+            "losses": 3
           }
         },
         "team_b": {
           "seed": 11,
-          "rank": 11,
-          "team": "Iowa State",
-          "abbreviation": "ISU",
-          "conference": "Big 12",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/66.png",
-          "primary_color": "#C8102E",
-          "secondary_color": "#F1BE48",
-          "bid_type": "at_large",
+          "rank": 20,
+          "team": "Tulane",
+          "abbreviation": "TULN",
+          "conference": "American Athletic",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/2655.png",
+          "primary_color": "#006547",
+          "secondary_color": "#333333",
+          "bid_type": "auto",
           "is_bye": false,
-          "composite_score": 0.771,
-          "resume_score": 0.799,
-          "predictive_score": 0.738,
-          "sor": 0.77,
-          "sos": 0.46,
+          "composite_score": 0.5699344092800711,
+          "resume_score": 0.8225587576198776,
+          "predictive_score": 0.505850045742311,
+          "sor": 0.2580754615618698,
+          "sos": 0.4851596736596736,
           "record": {
-            "wins": 10,
+            "wins": 11,
             "losses": 2
           }
         },
         "winner_to_seed": 3
       },
       {
-        "game_id": "FR4",
+        "game_id": "bottom_2_r1",
         "team_a": {
           "seed": 7,
           "rank": 7,
-          "team": "Notre Dame",
-          "abbreviation": "ND",
-          "conference": "FBS Independents",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
-          "primary_color": "#0C2340",
-          "secondary_color": "#C99700",
+          "team": "Oklahoma",
+          "abbreviation": "OU",
+          "conference": "SEC",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/201.png",
+          "primary_color": "#a32036",
+          "secondary_color": "#333333",
           "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.833,
-          "resume_score": 0.868,
-          "predictive_score": 0.792,
-          "sor": 0.86,
-          "sos": 0.52,
+          "composite_score": 0.7177997485604891,
+          "resume_score": 0.8513671625632255,
+          "predictive_score": 0.6039232501007183,
+          "sor": 0.8364755479011418,
+          "sos": 0.5785151515151515,
           "record": {
-            "wins": 11,
-            "losses": 1
+            "wins": 9,
+            "losses": 2
           }
         },
         "team_b": {
           "seed": 10,
           "rank": 10,
-          "team": "Ole Miss",
-          "abbreviation": "MISS",
+          "team": "Texas A&M",
+          "abbreviation": "TA&M",
           "conference": "SEC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
-          "primary_color": "#14213D",
-          "secondary_color": "#CE1126",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/245.png",
+          "primary_color": "#500000",
+          "secondary_color": "#333333",
           "bid_type": "at_large",
           "is_bye": false,
-          "composite_score": 0.788,
-          "resume_score": 0.809,
-          "predictive_score": 0.762,
-          "sor": 0.78,
-          "sos": 0.57,
+          "composite_score": 0.6894804511221151,
+          "resume_score": 0.8959826659612727,
+          "predictive_score": 0.6063596944225316,
+          "sor": 0.7573123065654868,
+          "sos": 0.4648677685950413,
           "record": {
             "wins": 10,
-            "losses": 2
+            "losses": 1
           }
         },
         "winner_to_seed": 2
@@ -479,100 +479,100 @@
         "bye_team": {
           "seed": 1,
           "rank": 1,
-          "team": "Ohio State",
-          "abbreviation": "OSU",
+          "team": "Indiana",
+          "abbreviation": "IU",
           "conference": "Big Ten",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
-          "primary_color": "#BB0000",
-          "secondary_color": "#666666",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/84.png",
+          "primary_color": "#990000",
+          "secondary_color": "#333333",
           "bid_type": "auto",
           "is_bye": true,
-          "composite_score": 0.932,
-          "resume_score": 0.951,
-          "predictive_score": 0.905,
-          "sor": 0.93,
-          "sos": 0.61,
+          "composite_score": 0.9240290125506456,
+          "resume_score": 1.0,
+          "predictive_score": 0.7459576594878384,
+          "sor": 1.7471880421156287,
+          "sos": 0.5374583333333333,
           "record": {
             "wins": 12,
-            "losses": 1
+            "losses": 0
           }
         },
-        "feeds_from": "FR1"
+        "feeds_from": "Winner 8/9"
       },
       {
         "game_id": "QF2",
         "bye_team": {
-          "seed": 2,
-          "rank": 2,
-          "team": "Georgia",
-          "abbreviation": "UGA",
-          "conference": "SEC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
-          "primary_color": "#BA0C2F",
-          "secondary_color": "#000000",
+          "seed": 4,
+          "rank": 4,
+          "team": "Texas Tech",
+          "abbreviation": "TTU",
+          "conference": "Big 12",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/2641.png",
+          "primary_color": "#CC0000",
+          "secondary_color": "#333333",
           "bid_type": "auto",
           "is_bye": true,
-          "composite_score": 0.918,
-          "resume_score": 0.937,
-          "predictive_score": 0.889,
-          "sor": 0.91,
-          "sos": 0.66,
+          "composite_score": 0.8009210728264966,
+          "resume_score": 0.8975685932497736,
+          "predictive_score": 0.8697639250140305,
+          "sor": 0.7329834050570104,
+          "sos": 0.49238888888888876,
           "record": {
-            "wins": 12,
+            "wins": 11,
             "losses": 1
           }
         },
-        "feeds_from": "FR4"
+        "feeds_from": "Winner 5/12"
       },
       {
         "game_id": "QF3",
         "bye_team": {
           "seed": 3,
           "rank": 3,
-          "team": "Oregon",
-          "abbreviation": "ORE",
-          "conference": "Big Ten",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
-          "primary_color": "#154733",
-          "secondary_color": "#FEE123",
-          "bid_type": "at_large",
-          "is_bye": true,
-          "composite_score": 0.901,
-          "resume_score": 0.905,
-          "predictive_score": 0.897,
-          "sor": 0.89,
-          "sos": 0.58,
-          "record": {
-            "wins": 12,
-            "losses": 1
-          }
-        },
-        "feeds_from": "FR3"
-      },
-      {
-        "game_id": "QF4",
-        "bye_team": {
-          "seed": 4,
-          "rank": 4,
-          "team": "Texas A&M",
-          "abbreviation": "TAMU",
+          "team": "Georgia",
+          "abbreviation": "UGA",
           "conference": "SEC",
-          "logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/245.png",
-          "primary_color": "#500000",
-          "secondary_color": "#FFFFFF",
-          "bid_type": "at_large",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
+          "primary_color": "#ba0c2f",
+          "secondary_color": "#333333",
+          "bid_type": "auto",
           "is_bye": true,
-          "composite_score": 0.887,
-          "resume_score": 0.899,
-          "predictive_score": 0.872,
-          "sor": 0.87,
-          "sos": 0.64,
+          "composite_score": 0.8190702189565406,
+          "resume_score": 0.9279403834586522,
+          "predictive_score": 0.6591152077440169,
+          "sor": 1.4128455945550216,
+          "sos": 0.5271527777777778,
           "record": {
             "wins": 11,
             "losses": 1
           }
         },
-        "feeds_from": "FR2"
+        "feeds_from": "Winner 6/11"
+      },
+      {
+        "game_id": "QF4",
+        "bye_team": {
+          "seed": 2,
+          "rank": 2,
+          "team": "Ohio State",
+          "abbreviation": "OSU",
+          "conference": "Big Ten",
+          "logo_url": "http://a.espncdn.com/i/teamlogos/ncaa/500/194.png",
+          "primary_color": "#ce1141",
+          "secondary_color": "#333333",
+          "bid_type": "at_large",
+          "is_bye": true,
+          "composite_score": 0.8340641330405599,
+          "resume_score": 0.9333137105821107,
+          "predictive_score": 0.7711366194461216,
+          "sor": 1.07905145699212,
+          "sos": 0.5470530303030302,
+          "record": {
+            "wins": 11,
+            "losses": 1
+          }
+        },
+        "feeds_from": "Winner 7/10"
       }
     ],
     "semifinals": [
@@ -580,14 +580,14 @@
         "side": "top",
         "pods": [
           "QF1",
-          "QF4"
+          "QF2"
         ]
       },
       {
         "side": "bottom",
         "pods": [
-          "QF2",
-          "QF3"
+          "QF3",
+          "QF4"
         ]
       }
     ],

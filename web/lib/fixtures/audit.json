@@ -5,94 +5,255 @@
   "ruleset": "2025_plus",
   "steps": [
     {
-      "step": "conference_champions",
-      "message": "Identified 10 FBS conference champions from final regular-season and championship-game results."
-    },
-    {
-      "step": "conference_champions",
-      "message": "Highest-ranked champion per conference retained for auto-bid consideration: Ohio State (Big Ten), Georgia (SEC), BYU (Big 12), Miami (ACC), Boise State (Mountain West)."
+      "step": "found_champions",
+      "message": "Found 9 conference champions"
     },
     {
       "step": "auto_bids",
-      "message": "Awarded automatic bids to the five highest-ranked conference champions."
+      "message": "Automatic bids (top 5 conference champions):"
     },
     {
       "step": "auto_bids",
-      "message": "Boise State (Mountain West, rank 12) claims the Group of Five automatic bid over Memphis (American Athletic, rank 24)."
+      "message": "  1. #1 Indiana (Yes (Big Ten))"
     },
     {
-      "step": "at_large_selection",
-      "message": "Filled the remaining 7 at-large slots with the highest-ranked eligible teams: Oregon, Texas A&M, Notre Dame, Indiana, Alabama, Ole Miss, Iowa State."
+      "step": "auto_bids",
+      "message": "  2. #3 Georgia (Yes (SEC))"
     },
     {
-      "step": "at_large_selection",
-      "message": "Tennessee (rank 13) is the first team left out of the field."
+      "step": "auto_bids",
+      "message": "  3. #4 Texas Tech (Yes (Big 12))"
     },
     {
-      "step": "seeding",
-      "message": "2025+ ruleset uses straight seeding: all 12 field teams are seeded 1-12 in composite rank order, regardless of auto vs. at-large status."
+      "step": "auto_bids",
+      "message": "  4. #20 Tulane (Yes (American Athletic))"
     },
     {
-      "step": "seeding",
-      "message": "Top four seeds (Ohio State, Georgia, Oregon, Texas A&M) receive first-round byes."
+      "step": "auto_bids",
+      "message": "  5. #22 James Madison (Yes (Sun Belt))"
     },
     {
-      "step": "bracket_reveal",
-      "message": "Paired first-round matchups by seed: 8v9 feeds the 1-seed's pod, 7v10 feeds the 2-seed's pod, 6v11 feeds the 3-seed's pod, 5v12 feeds the 4-seed's pod."
+      "step": "at_large",
+      "message": "At-large bids (7 spots):"
+    },
+    {
+      "step": "at_large",
+      "message": "  1. #2 Ohio State"
+    },
+    {
+      "step": "at_large",
+      "message": "  2. #5 Oregon"
+    },
+    {
+      "step": "at_large",
+      "message": "  3. #6 Alabama"
+    },
+    {
+      "step": "at_large",
+      "message": "  4. #7 Oklahoma"
+    },
+    {
+      "step": "at_large",
+      "message": "  5. #8 Notre Dame"
+    },
+    {
+      "step": "at_large",
+      "message": "  6. #9 Ole Miss"
+    },
+    {
+      "step": "at_large",
+      "message": "  7. #10 Texas A&M"
+    },
+    {
+      "step": "displacement",
+      "message": "CHAMPION PULLED IN: #22 James Madison (auto bid outside top 12)"
+    },
+    {
+      "step": "displacement",
+      "message": "DISPLACED: #11 BYU"
+    },
+    {
+      "step": "final_field",
+      "message": "Final 12-team playoff field:"
+    },
+    {
+      "step": "final_field",
+      "message": "  1. #1 Indiana (AUTO)"
+    },
+    {
+      "step": "final_field",
+      "message": "  2. #2 Ohio State (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  3. #3 Georgia (AUTO)"
+    },
+    {
+      "step": "final_field",
+      "message": "  4. #4 Texas Tech (AUTO)"
+    },
+    {
+      "step": "final_field",
+      "message": "  5. #5 Oregon (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  6. #6 Alabama (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  7. #7 Oklahoma (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  8. #8 Notre Dame (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  9. #9 Ole Miss (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  10. #10 Texas A&M (AT-LARGE)"
+    },
+    {
+      "step": "final_field",
+      "message": "  11. #20 Tulane (AUTO)"
+    },
+    {
+      "step": "final_field",
+      "message": "  12. #22 James Madison (AUTO)"
+    },
+    {
+      "step": "first_four_out",
+      "message": "First four out:"
+    },
+    {
+      "step": "first_four_out",
+      "message": "  1. #11 BYU"
+    },
+    {
+      "step": "first_four_out",
+      "message": "  2. #12 Miami"
+    },
+    {
+      "step": "first_four_out",
+      "message": "  3. #13 USC"
+    },
+    {
+      "step": "first_four_out",
+      "message": "  4. #14 Vanderbilt"
     }
   ],
   "phases": [
     {
-      "step": "conference_champions",
+      "step": "found_champions",
       "messages": [
-        "Identified 10 FBS conference champions from final regular-season and championship-game results.",
-        "Highest-ranked champion per conference retained for auto-bid consideration: Ohio State (Big Ten), Georgia (SEC), BYU (Big 12), Miami (ACC), Boise State (Mountain West)."
+        "Found 9 conference champions"
       ]
     },
     {
       "step": "auto_bids",
       "messages": [
-        "Awarded automatic bids to the five highest-ranked conference champions.",
-        "Boise State (Mountain West, rank 12) claims the Group of Five automatic bid over Memphis (American Athletic, rank 24)."
+        "Automatic bids (top 5 conference champions):",
+        "  1. #1 Indiana (Yes (Big Ten))",
+        "  2. #3 Georgia (Yes (SEC))",
+        "  3. #4 Texas Tech (Yes (Big 12))",
+        "  4. #20 Tulane (Yes (American Athletic))",
+        "  5. #22 James Madison (Yes (Sun Belt))"
       ]
     },
     {
-      "step": "at_large_selection",
+      "step": "at_large",
       "messages": [
-        "Filled the remaining 7 at-large slots with the highest-ranked eligible teams: Oregon, Texas A&M, Notre Dame, Indiana, Alabama, Ole Miss, Iowa State.",
-        "Tennessee (rank 13) is the first team left out of the field."
+        "At-large bids (7 spots):",
+        "  1. #2 Ohio State",
+        "  2. #5 Oregon",
+        "  3. #6 Alabama",
+        "  4. #7 Oklahoma",
+        "  5. #8 Notre Dame",
+        "  6. #9 Ole Miss",
+        "  7. #10 Texas A&M"
       ]
     },
     {
-      "step": "seeding",
+      "step": "displacement",
       "messages": [
-        "2025+ ruleset uses straight seeding: all 12 field teams are seeded 1-12 in composite rank order, regardless of auto vs. at-large status.",
-        "Top four seeds (Ohio State, Georgia, Oregon, Texas A&M) receive first-round byes."
+        "CHAMPION PULLED IN: #22 James Madison (auto bid outside top 12)",
+        "DISPLACED: #11 BYU"
       ]
     },
     {
-      "step": "bracket_reveal",
+      "step": "final_field",
       "messages": [
-        "Paired first-round matchups by seed: 8v9 feeds the 1-seed's pod, 7v10 feeds the 2-seed's pod, 6v11 feeds the 3-seed's pod, 5v12 feeds the 4-seed's pod."
+        "Final 12-team playoff field:",
+        "  1. #1 Indiana (AUTO)",
+        "  2. #2 Ohio State (AT-LARGE)",
+        "  3. #3 Georgia (AUTO)",
+        "  4. #4 Texas Tech (AUTO)",
+        "  5. #5 Oregon (AT-LARGE)",
+        "  6. #6 Alabama (AT-LARGE)",
+        "  7. #7 Oklahoma (AT-LARGE)",
+        "  8. #8 Notre Dame (AT-LARGE)",
+        "  9. #9 Ole Miss (AT-LARGE)",
+        "  10. #10 Texas A&M (AT-LARGE)",
+        "  11. #20 Tulane (AUTO)",
+        "  12. #22 James Madison (AUTO)"
+      ]
+    },
+    {
+      "step": "first_four_out",
+      "messages": [
+        "First four out:",
+        "  1. #11 BYU",
+        "  2. #12 Miami",
+        "  3. #13 USC",
+        "  4. #14 Vanderbilt"
       ]
     }
   ],
   "log": [
-    "Identified 10 FBS conference champions from final regular-season and championship-game results.",
-    "Highest-ranked champion per conference retained for auto-bid consideration: Ohio State (Big Ten), Georgia (SEC), BYU (Big 12), Miami (ACC), Boise State (Mountain West).",
-    "Awarded automatic bids to the five highest-ranked conference champions.",
-    "Boise State (Mountain West, rank 12) claims the Group of Five automatic bid over Memphis (American Athletic, rank 24).",
-    "Filled the remaining 7 at-large slots with the highest-ranked eligible teams: Oregon, Texas A&M, Notre Dame, Indiana, Alabama, Ole Miss, Iowa State.",
-    "Tennessee (rank 13) is the first team left out of the field.",
-    "2025+ ruleset uses straight seeding: all 12 field teams are seeded 1-12 in composite rank order, regardless of auto vs. at-large status.",
-    "Top four seeds (Ohio State, Georgia, Oregon, Texas A&M) receive first-round byes.",
-    "Paired first-round matchups by seed: 8v9 feeds the 1-seed's pod, 7v10 feeds the 2-seed's pod, 6v11 feeds the 3-seed's pod, 5v12 feeds the 4-seed's pod."
+    "Found 9 conference champions",
+    "Automatic bids (top 5 conference champions):",
+    "  1. #1 Indiana (Yes (Big Ten))",
+    "  2. #3 Georgia (Yes (SEC))",
+    "  3. #4 Texas Tech (Yes (Big 12))",
+    "  4. #20 Tulane (Yes (American Athletic))",
+    "  5. #22 James Madison (Yes (Sun Belt))",
+    "At-large bids (7 spots):",
+    "  1. #2 Ohio State",
+    "  2. #5 Oregon",
+    "  3. #6 Alabama",
+    "  4. #7 Oklahoma",
+    "  5. #8 Notre Dame",
+    "  6. #9 Ole Miss",
+    "  7. #10 Texas A&M",
+    "CHAMPION PULLED IN: #22 James Madison (auto bid outside top 12)",
+    "DISPLACED: #11 BYU",
+    "Final 12-team playoff field:",
+    "  1. #1 Indiana (AUTO)",
+    "  2. #2 Ohio State (AT-LARGE)",
+    "  3. #3 Georgia (AUTO)",
+    "  4. #4 Texas Tech (AUTO)",
+    "  5. #5 Oregon (AT-LARGE)",
+    "  6. #6 Alabama (AT-LARGE)",
+    "  7. #7 Oklahoma (AT-LARGE)",
+    "  8. #8 Notre Dame (AT-LARGE)",
+    "  9. #9 Ole Miss (AT-LARGE)",
+    "  10. #10 Texas A&M (AT-LARGE)",
+    "  11. #20 Tulane (AUTO)",
+    "  12. #22 James Madison (AUTO)",
+    "First four out:",
+    "  1. #11 BYU",
+    "  2. #12 Miami",
+    "  3. #13 USC",
+    "  4. #14 Vanderbilt"
   ],
-  "displaced_team": null,
+  "displaced_team": "BYU",
   "first_four_out": [
-    "Tennessee",
-    "Missouri",
-    "Utah",
-    "Michigan"
+    "BYU",
+    "Miami",
+    "USC",
+    "Vanderbilt"
   ]
 }

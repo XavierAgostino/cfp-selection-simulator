@@ -3,18 +3,20 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 import pandas as pd
 
 from src import __version__
 from src.api_contracts.export import export_run_api
 from src.api_contracts.records import build_record_games_df, build_record_meta
+from src.config.conferences import team_conference_map
 from src.config.formats import get_format_for_year
 from src.config.simulator import SimulatorConfig
-from src.data.fetcher import fetch_season_games, get_api_key
+from src.data.fetcher import fetch_season_games, get_api_key, get_fbs_teams_list
 from src.pipeline.cache_paths import (
     games_cache_candidates,
     games_cache_covers,
@@ -37,6 +39,29 @@ from src.selection.seeding import seed_playoff_teams
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_CACHE = REPO_ROOT / "data" / "cache"
+
+
+def resolve_fbs_teams(
+    games: pd.DataFrame,
+    year: int,
+    api_key: Optional[str] = None,
+) -> Set[str]:
+    """FBS team set for filtering, cache-first and offline-safe.
+
+    Uses the CFBD ``/teams/fbs`` list when an API key is available, but falls
+    back to deriving the set from the loaded games' conference labels. CFBD tags
+    only FBS conferences, so any team appearing with a conference is FBS. This
+    keeps cached, completed-season runs fully offline with no wasted API calls.
+    """
+    key = api_key or os.getenv("CFBD_API_KEY")
+    if key and key.strip():
+        try:
+            teams = get_fbs_teams_list(year, key.strip())
+            if teams:
+                return teams
+        except Exception:
+            pass
+    return set(team_conference_map(games).keys())
 
 
 def load_games(
@@ -79,8 +104,8 @@ def load_games(
     games = games[(games["week"] >= config.start_week) & (games["week"] <= config.week)]
 
     if config.fbs_only:
-        key = api_key or get_api_key()
-        games = filter_games_to_fbs(games, config.year, api_key=key)
+        fbs_teams = resolve_fbs_teams(games, config.year, api_key)
+        games = filter_games_to_fbs(games, config.year, fbs_teams=fbs_teams)
     return games
 
 

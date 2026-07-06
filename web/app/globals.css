@@ -75,6 +75,10 @@
   --color-tag-green-border: var(--tag-green-border);
   --color-tag-green-text: var(--tag-green-text);
   --color-tag-green-dot: var(--tag-green-dot);
+  --color-tag-purple-bg: var(--tag-purple-bg);
+  --color-tag-purple-border: var(--tag-purple-border);
+  --color-tag-purple-text: var(--tag-purple-text);
+  --color-tag-purple-dot: var(--tag-purple-dot);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -163,6 +167,11 @@
   --tag-green-border: rgba(46, 133, 64, 0.28);
   --tag-green-text: #1a5c2e;
   --tag-green-dot: #2e8540;
+
+  --tag-purple-bg: rgba(122, 60, 172, 0.12);
+  --tag-purple-border: rgba(122, 60, 172, 0.3);
+  --tag-purple-text: #5c2d8c;
+  --tag-purple-dot: #7a3cac;
 }
 
 .dark {
@@ -238,6 +247,11 @@
   --tag-green-border: rgba(46, 132, 64, 0.28);
   --tag-green-text: #7ee2a8;
   --tag-green-dot: #2e8540;
+
+  --tag-purple-bg: rgba(191, 149, 255, 0.14);
+  --tag-purple-border: rgba(191, 149, 255, 0.3);
+  --tag-purple-text: #d6bcff;
+  --tag-purple-dot: #bf95ff;
 }
 
 @layer base {

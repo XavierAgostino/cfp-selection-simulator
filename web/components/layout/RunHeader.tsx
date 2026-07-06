@@ -1,25 +1,21 @@
-import { Badge } from "@/components/ui/badge";
-import { BadgeTooltip } from "@/components/explain/InfoTooltip";
-import { RulesetBadge } from "@/components/team/RulesetBadge";
+import { ChevronDown, Info, TriangleAlert } from "lucide-react";
+
 import { RunHeaderActions } from "@/components/layout/RunHeaderActions";
 import { RunFreshness } from "@/components/layout/RunFreshness";
+import { RunSourceBadge } from "@/components/layout/RunSourceBadge";
 import { RunSwitcher } from "@/components/layout/RunSwitcher";
 import { getRuns, NotFoundError } from "@/lib/data";
 import {
-  dataSourceLabel,
-  formatRulesetShort,
   formatWeightsLabeled,
-  isBaseRun,
-  isLiveRun,
   runConfigLabel,
   runFreshness,
-  runPrimaryLabel,
-  runProjectionSubtitle,
-  SAMPLE_DEMO_HELPER,
+  runHeaderSubline,
+  runHeaderTitle,
+  runSourceBadge,
 } from "@/lib/runDisplay";
-import { formatRunCapabilityLabel, formatRunKindLabel } from "@/lib/displayLabels";
 import type { RunsPayload, RunSummary } from "@/lib/types";
 import { bodyMuted } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 async function loadRuns(): Promise<RunsPayload | null> {
   try {
@@ -84,72 +80,65 @@ export async function RunHeader({ stem }: RunHeaderProps) {
     );
   }
 
-  const isLive = isLiveRun(run);
-  const isSample = !isLive;
-  const isScenario = !isBaseRun(run);
+  const badge = runSourceBadge(run);
+  const freshness = runFreshness(run);
+  const isSample = badge.tone === "sample";
+  const ContextIcon = isSample ? TriangleAlert : Info;
 
   return (
-    <header className="mb-8 rounded-xl border border-border/60 bg-card px-5 py-4 sm:px-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        {/* LEFT + MIDDLE: run identity and assumptions */}
-        <div className="min-w-0 flex-1 space-y-3">
-          <div>
-            <p className="text-lg font-semibold tracking-tight text-foreground">
-              {runPrimaryLabel(run)}
-            </p>
-            <p className={`${bodyMuted} mt-0.5`}>
-              {isScenario
-                ? runProjectionSubtitle(run)
-                : `${dataSourceLabel(run)} · ${formatRulesetShort(run.ruleset)} model projection`}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {isScenario ? (
-              <Badge variant="chip-neutral">{formatRunKindLabel(true)}</Badge>
-            ) : (
-              <Badge variant="chip-neutral">{formatRunKindLabel(false)}</Badge>
-            )}
-            <RulesetBadge ruleset={run.ruleset} />
-            <BadgeTooltip badge={isLive ? "live_data" : "sample_data"}>
-              <Badge variant="chip-neutral" tabIndex={0} className="cursor-help">
-                {dataSourceLabel(run)}
-              </Badge>
-            </BadgeTooltip>
-            {run.has_bracket ? (
-              <BadgeTooltip badge="bracket_ready">
-                <Badge variant="chip-neutral" tabIndex={0}>
-                  {formatRunCapabilityLabel("bracket")}
-                </Badge>
-              </BadgeTooltip>
-            ) : null}
-          </div>
-
-          <p className="text-xs text-muted-foreground">
-            <span className="text-foreground/80">Weights:</span>{" "}
-            {formatWeightsLabeled(run.weights)}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground/90">
-            <RunFreshness freshness={runFreshness(run)} />
-            <span aria-hidden className="text-muted-foreground/40">
-              ·
-            </span>
-            <span className="tabular-nums">{runConfigLabel(run)}</span>
-          </div>
-
-          {isSample ? (
-            <p className="text-xs text-muted-foreground">{SAMPLE_DEMO_HELPER}</p>
-          ) : null}
-        </div>
-
-        {/* RIGHT: actions */}
+    <header className="mb-8 rounded-xl border border-border/60 bg-card px-5 py-5 sm:px-6">
+      {/* Top row: dominant source signal (left), actions (right, stacks on mobile) */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <RunSourceBadge tone={badge.tone} label={badge.label} />
         <RunHeaderActions
           initialRuns={runs}
           currentRun={run}
           currentStem={currentStem}
         />
       </div>
+
+      {/* Identity: what this run is, in plain terms */}
+      <div className="mt-4 min-w-0">
+        <p className="text-xl font-semibold tracking-tight text-balance text-foreground">
+          {runHeaderTitle(run)}
+        </p>
+        <p className={`${bodyMuted} mt-1`}>{runHeaderSubline(run)}</p>
+      </div>
+
+      {/* Context / caveat, tied to the source badge above */}
+      <div
+        className={cn(
+          "mt-3 flex max-w-prose items-start gap-2 text-xs leading-5",
+          isSample ? "text-tag-gold-text" : "text-muted-foreground",
+        )}
+      >
+        <ContextIcon className="mt-px size-3.5 shrink-0" aria-hidden />
+        <p>{badge.description}</p>
+      </div>
+
+      {/* Quiet model details — weights, config, freshness behind a disclosure */}
+      <details className="group mt-4 border-t border-border/50 pt-3">
+        <summary className="flex w-fit cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+          Model details
+          <ChevronDown
+            className="size-3.5 transition-transform group-open:rotate-180"
+            aria-hidden
+          />
+        </summary>
+        <div className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
+          <p>
+            <span className="text-foreground/80">Weights</span>{" "}
+            <span className="tabular-nums">{formatWeightsLabeled(run.weights)}</span>
+          </p>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 leading-5">
+            <RunFreshness freshness={freshness} />
+            <span aria-hidden className="text-muted-foreground/40">
+              ·
+            </span>
+            <span className="tabular-nums">{runConfigLabel(run)}</span>
+          </div>
+        </div>
+      </details>
     </header>
   );
 }

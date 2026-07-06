@@ -15,6 +15,7 @@ from src.data.fetcher import (
 )
 from src.selection.conference_champions import (
     apply_champion_labels,
+    champions_from_cached_ccgs,
     champions_from_ccg_games,
     champions_from_games,
     conference_leaders_with_tiebreaks,
@@ -151,7 +152,8 @@ def enrich_live_rankings(
     Attach conference metadata and champion labels for live pipeline runs.
 
     Returns (enriched_df, champion_source) where champion_source is one of:
-    ``cfbd_ccg``, ``cfbd_records``, ``cfbd_records_tiebreak``, or ``games_waterfall``.
+    ``cfbd_ccg``, ``cfbd_records``, ``cfbd_records_tiebreak``, ``cache_ccg``, or
+    ``games_waterfall``.
     """
     df = rankings_df.copy()
     conf_map = team_conference_map(games_df)
@@ -179,5 +181,11 @@ def enrich_live_rankings(
                     return apply_champion_labels(df, leaders), source
         except Exception:
             pass
+
+    # Offline / cache-first fallback: use real title-game results already in the
+    # loaded games before simulating a CCG from records (games_waterfall).
+    cache_champions = champions_from_cached_ccgs(games_df)
+    if cache_champions:
+        return apply_champion_labels(df, cache_champions), "cache_ccg"
 
     return infer_conference_champions(df, games_df), "games_waterfall"

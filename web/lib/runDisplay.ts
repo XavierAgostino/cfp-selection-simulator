@@ -22,6 +22,66 @@ export function runProjectionSubtitle(run: RunSummary): string {
   return run.scenario_id;
 }
 
+/** Scenario variant name without the "projection" suffix (e.g. "Base", "w33-25-32-10"). */
+function runVariantName(run: RunSummary): string {
+  if (run.scenario_id === "base") return "Base";
+  const parts = run.label.split("·").map((s) => s.trim());
+  const tail = parts[parts.length - 1];
+  if (tail && tail.toLowerCase() !== "base") return tail;
+  return run.scenario_id;
+}
+
+/** Header H1: "2025 Week 15 · Base Projection". */
+export function runHeaderTitle(run: RunSummary): string {
+  return `${run.season} Week ${run.week} · ${runVariantName(run)} Projection`;
+}
+
+/** Header subline: ruleset format plus bracket readiness. */
+export function runHeaderSubline(run: RunSummary): string {
+  const parts = [`${formatRulesetShort(run.ruleset)} format`];
+  if (run.has_bracket) parts.push("Bracket ready");
+  return parts.join(" · ");
+}
+
+/**
+ * Dominant source signal for the run header. One large, color-coded badge that
+ * tells the reader what kind of data they are looking at before anything else:
+ * a real CFBD run, a static sample, or a weight-variant scenario. Scenario wins
+ * over source so the comparison context reads first. Purely presentational —
+ * the run's mode/selection behavior is unchanged.
+ */
+export type RunSourceTone = "live" | "sample" | "scenario";
+
+export interface RunSourceBadgeInfo {
+  label: string;
+  tone: RunSourceTone;
+  /** Short context sentence rendered under the badge. */
+  description: string;
+}
+
+export function runSourceBadge(run: RunSummary): RunSourceBadgeInfo {
+  if (!isBaseRun(run)) {
+    return {
+      label: "Scenario",
+      tone: "scenario",
+      description: `Weight-variant projection (${runVariantName(run)}), for comparison against the base run.`,
+    };
+  }
+  if (isLiveRun(run)) {
+    return {
+      label: "Live data",
+      tone: "live",
+      description:
+        "Real CollegeFootballData results through the selected week. A model projection, not an official CFP forecast.",
+    };
+  }
+  return {
+    label: "Sample",
+    tone: "sample",
+    description: SAMPLE_DEMO_HELPER,
+  };
+}
+
 export function isBaseRun(run: RunSummary): boolean {
   return run.scenario_id === "base";
 }
