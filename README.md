@@ -3,7 +3,7 @@
 _a CFP selection simulator_
 
 <p align="center">
-  <img src="web/public/brand/selection-room-1600x800.png" alt="Selection Room — CFP Selection, Explained" width="480" />
+  <img src="web/public/brand/selection-room-1600x800.png" alt="Selection Room: CFP Selection, Explained" width="480" />
 </p>
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
@@ -15,18 +15,9 @@ A transparent, reproducible decision-support simulator for College Football Play
 The simulator runs from sample data in under a minute, generates a 12-team playoff field, explains why teams made or missed the bracket, and compares model outputs against CFP-style selection rules.
 
 > [!NOTE]
-> **Status: Selection Room v1 beta** — independent CFP selection analysis workspace.
-> The product ships in three modes: **public read-only demo**, **local OSS** with
-> optional Run Analysis, and **hosted live beta** (beta-code gated runs on Vercel +
-> Supabase + Trigger.dev). See [Hosted Runs v1](docs/hosting/hosted-runs-v1.md).
-
-> [!IMPORTANT]
-> **Research frozen for v1 beta:** V2.4 implementation is complete; full 2014–2024
-> evaluation is pending CFBD quota/cache population. V2.5 is deferred. V2 research
-> does not change production defaults.
-
-> [!TIP]
-> **Primary UI:** Run `make web` for the Selection Room site. The CLI and CSV/JSON exports are the engine; the web app is how most people explore results.
+> **v1 beta.** The **web app is the primary way to explore results**: run `make web`.
+> The Python CLI and CSV/JSON exports are the engine underneath. The two runtime modes
+> (local OSS and hosted) are compared in [Operating modes](#operating-modes) below.
 
 <p align="center">
   <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/84.png" width="44" alt="Indiana" />
@@ -56,10 +47,10 @@ The simulator runs from sample data in under a minute, generates a 12-team playo
 **Selection Room web app**
 
 - Projected field, rankings, and bubble/cut-line views with per-team resume drawers
-- In-browser **Run Analysis** — launch a season/week run from sample or live CFBD data
-- **Scenario Lab** — reweight the pillars and diff the resulting field, seeds, and bubble
-- **Validation Dashboard** — committee alignment, field accuracy, and predictive-signal tracks across seasons
-- **Export / share** — rankings CSV, bracket share image, and per-team resume cards
+- In-browser **Run Analysis**: launch a season/week run from sample or live CFBD data
+- **Scenario Lab**: reweight the pillars and diff the resulting field, seeds, and bubble
+- **Validation Dashboard**: committee alignment, field accuracy, and predictive-signal tracks across seasons
+- **Export / share**: rankings CSV, bracket share image, and per-team resume cards
 
 ---
 
@@ -77,22 +68,27 @@ make web       # Selection Room site at http://localhost:3000
 ```
 
 The site walks you through setup if you open it first, and new analyses can
-be launched from the run bar (**Run Analysis**) — season, week, sample or
+be launched from the run bar (**Run Analysis**): season, week, sample or
 live CFBD data.
 
 One-shot script: `./scripts/demo.sh` · Web app docs: [docs/web-app.md](docs/web-app.md)
 
 ### Operating modes
 
-| | **Public demo (Vercel)** | **Local OSS** | **Hosted live beta** |
-|---|--------------------------|---------------|----------------------|
-| Data | Bundled fixtures at build | `make demo` or your runs | Supabase Storage + Postgres |
-| Run Analysis | Hidden (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE=1`) | Subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | Beta access code + Trigger worker |
-| Accounts | None | None | None (beta code only) |
-| CFBD key | Not required | Required for live runs | Server/worker only |
-| Setup | Deployed on Vercel | `make setup && make demo && make web` | [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) |
+Two runtime modes share the same JSON contract and Python engine. Browsing is
+open in both; the difference is how runs get launched.
 
-Hosted runs are **beta-code gated**. No sign-in or billing required for v1.
+| | **Local OSS** | **Hosted (Vercel + Supabase + Trigger)** |
+|---|---------------|------------------------------------------|
+| Data | `make demo` or your own runs, read from `data/output/` | Seeded official catalog in Supabase Storage + Postgres |
+| Browsing | Open, no setup beyond `make demo` | Open to everyone, no account |
+| Run Analysis | Optional subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | GitHub sign-in with a per-user daily quota; Trigger.dev worker |
+| CFBD key | Required for live runs | Server/worker only |
+| Setup | `make setup && make demo && make web` | [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) |
+
+On the hosted deployment, browsing the catalog needs no account; launching a run
+requires a GitHub sign-in with a per-user daily quota (a legacy access code still
+works as an optional bypass). No billing in v1.
 
 ---
 
@@ -203,7 +199,7 @@ One composite pipeline with explainable components.
 - [Contributing](CONTRIBUTING.md)
 - [Development Guide](docs/development.md)
 - [Project Structure](docs/project-structure.md)
-- [Hosted Runs v1](docs/hosting/hosted-runs-v1.md) — deploy hosted live beta
+- [Hosted Runs v1](docs/hosting/hosted-runs-v1.md): deploy the hosted app
 - [Supabase setup](docs/hosting/supabase-setup.md)
 - [Trigger worker setup](docs/hosting/trigger-worker.md)
 
@@ -220,16 +216,19 @@ make verify
 
 ## Roadmap
 
-**v1 beta (now) — public demo, local OSS, hosted live beta docs.**
+**v1 beta (now): local OSS and hosted.**
 
-- Public demo: read-only on bundled artifacts.
-- Local OSS: full engine + optional Run Analysis subprocess jobs.
-- Hosted live beta: Vercel + Supabase + Trigger.dev; beta-code gated UI ([Hosted Runs v1](docs/hosting/hosted-runs-v1.md)).
+- Local OSS: full engine plus optional Run Analysis subprocess jobs.
+- Hosted: Vercel + Supabase + Trigger.dev. Open browsing of the seeded catalog; run launch behind GitHub sign-in with a per-user daily quota ([Hosted Runs v1](docs/hosting/hosted-runs-v1.md)).
 
 **Future (v1.1+), documented but not implemented:**
 
-- **Shareable scenario URLs** — deep-link a Scenario Lab diff.
-- **Accounts / billing** — not in v1 hosted beta.
+- **Shareable scenario URLs**: deep-link a Scenario Lab diff.
+- **Billing and shareable authenticated links**: not in v1.
+
+_Research track: V2 experiments (through V2.4) are implemented but intentionally do
+not change v1 production defaults; full historical evaluation and V2.5 are deferred.
+See [research methodology](docs/research/index.md)._
 
 Adapter design history: [docs/architecture/hosted-production.md](docs/architecture/hosted-production.md).
 
@@ -239,6 +238,6 @@ Adapter design history: [docs/architecture/hosted-production.md](docs/architectu
 
 MIT License. See [LICENSE](LICENSE).
 
-Game data via [College Football Data API](https://collegefootballdata.com/). Team logos may load from ESPN CDN fallbacks in demo mode.
+Game data via [College Football Data API](https://collegefootballdata.com/). Team logos may load from ESPN CDN fallbacks when a local asset is missing.
 
 Author: **Xavier Agostino**

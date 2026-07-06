@@ -96,16 +96,16 @@ current default weights and full-season data window:
 
 | Year | Field overlap | Misses |
 |------|---------------|--------|
-| 2014 | 4/4 | — |
+| 2014 | 4/4 | None |
 | 2015 | 3/4 | Stanford in, Oklahoma out |
 | 2016 | 3/4 | Michigan in, Clemson out |
 | 2017 | 2/4 | Auburn/UCF in, Alabama/Oklahoma out |
 | 2018 | 3/4 | Georgia in, Oklahoma out |
 | 2019 | 3/4 | Penn State in, Oklahoma out |
 | 2020 | 1/4 | COVID year: conference-only P5 schedules starve the graph |
-| 2021 | 4/4 | — |
-| 2022 | 4/4 | — |
-| 2023 | 4/4 | — |
+| 2021 | 4/4 | None |
+| 2022 | 4/4 | None |
+| 2023 | 4/4 | None |
 | 2024 | 11/12 | Alabama in, Tennessee out (auto bids 5/5) |
 
 Mean field overlap ~79%; the only structural failure is 2020, where G5
@@ -130,7 +130,7 @@ The current defaults came from a weight sweep evaluated with this harness
 calibration command remains future work:
 
 ```bash
-# Planned — do not mix with validation
+# Planned: do not mix with validation
 sroom calibrate --train-years 2014:2021 --holdout-years 2022,2024
 ```
 

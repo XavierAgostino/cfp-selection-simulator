@@ -2,10 +2,10 @@
 
 Selection Room supports **two operating modes** with the same JSON web contract and Python analytics engine:
 
-1. **Local / open-source mode** — filesystem artifacts, DuckDB, subprocess jobs (today)
-2. **Hosted production mode** — Vercel web, external worker, object storage, Postgres metadata (target)
+1. **Local / open-source mode**: filesystem artifacts, DuckDB, subprocess jobs (today)
+2. **Hosted production mode**: Vercel web, external worker, object storage, Postgres metadata (target)
 
-This document is the architectural map for **local vs hosted** adapter boundaries. **Hosted Runs v1 (H1–H7) is implemented** — see the operational runbook at [`docs/hosting/hosted-runs-v1.md`](../hosting/hosted-runs-v1.md).
+This document is the architectural map for **local vs hosted** adapter boundaries. **Hosted Runs v1 (H1–H7) is implemented**; see the operational runbook at [`docs/hosting/hosted-runs-v1.md`](../hosting/hosted-runs-v1.md).
 
 **Doctrine:** JSON payload shape stays the web contract ([`docs/api-contracts.md`](../api-contracts.md)). Python remains the analytics source of truth. Local OSS workflow must keep working.
 
@@ -23,7 +23,7 @@ Hosted mode separates concerns for a serious public product:
 | Long-running Python | Subprocess on same machine | **External worker** (Trigger.dev or Inngest) |
 | JSON artifacts | `data/output/api/` | **Object storage** (R2 / Vercel Blob / S3) |
 | Run / job metadata | DuckDB + files + `runs.json` | **Postgres** (Neon via Vercel Marketplace) |
-| DuckDB | Dual-write, CLI, local diffs | **Dev/worker-side only** — not central hosted state |
+| DuckDB | Dual-write, CLI, local diffs | **Dev/worker-side only**, not central hosted state |
 
 Vercel must **not** run multi-minute Python jobs inside normal serverless request handlers. Pattern: API creates job → worker executes → Vercel polls metadata and reads artifacts.
 
@@ -69,13 +69,13 @@ flowchart TB
 | Artifacts | **Cloudflare R2** or Vercel Blob | R2 for portability/cost; Blob for fastest Vercel setup |
 | Metadata | **Neon Postgres** (Vercel Marketplace) | Run catalog, jobs, scenarios, shares, validation summaries |
 | Not recommended for metadata | DynamoDB alone | Weak for scenario diffs and analytical joins |
-| Not for payloads | Edge Config, Redis | Config/cache — not run JSON |
+| Not for payloads | Edge Config, Redis | Config/cache, not run JSON |
 
 ---
 
 ## Postgres vs object storage (do not blur)
 
-**Postgres** — metadata and queryable summaries only:
+**Postgres**: metadata and queryable summaries only:
 
 - Runs index (stem, scenario_id, config_hash, weights, artifact_prefix, …)
 - Jobs (status, timestamps, stem, error)
@@ -83,7 +83,7 @@ flowchart TB
 - Validation summaries (later)
 - **Not** full `team-resumes.json` blobs unless there is a specific query reason
 
-**Object storage** — full export payloads:
+**Object storage**: full export payloads:
 
 - `runs.json`, `latest.json`, `team-assets.json`
 - `runs/{stem}/rankings.json`, `field.json`, `bracket.json`, `audit.json`, `team-resumes.json`, `sensitivity.json`
@@ -111,7 +111,7 @@ runs/{stem}/field.json
 
 | Adapter | Implementation |
 |---------|------------------|
-| Local | `data/output/api/` — [`src/api_contracts/export.py`](../../src/api_contracts/export.py), [`web/app/api/data/[...path]/route.ts`](../../web/app/api/data/[...path]/route.ts) |
+| Local | `data/output/api/`: [`src/api_contracts/export.py`](../../src/api_contracts/export.py), [`web/app/api/data/[...path]/route.ts`](../../web/app/api/data/[...path]/route.ts) |
 | Hosted | Vercel Blob / R2 / S3 SDK |
 
 ### 2. `RunCatalogStore`
@@ -143,7 +143,7 @@ Who runs the Python engine.
 
 Worker invokes [`run_pipeline`](../../src/pipeline/run.py) + export with hosted stores injected.
 
-### 5. `ScenarioDiffService` (Scenario Lab — name now, implement with Scenario Lab)
+### 5. `ScenarioDiffService` (Scenario Lab: named now, implemented with Scenario Lab)
 
 Compare base run vs scenario run for product UI (moved in/out, rank/seed/bracket/bubble changes). **Do not scatter diff logic in React components.**
 
@@ -164,9 +164,9 @@ Introduce during Scenario Lab MVP; keeps local and hosted diff contracts aligned
 
 | Environment | Role |
 |-------------|------|
-| Local dev / OSS | Keep — dual-write, `sroom store`, Scenario Lab prototyping |
-| CI | Optional — store tests stay filesystem-backed |
-| Hosted worker | Optional — generate diff summaries before writing Postgres |
+| Local dev / OSS | Keep: dual-write, `sroom store`, Scenario Lab prototyping |
+| CI | Optional: store tests stay filesystem-backed |
+| Hosted worker | Optional: generate diff summaries before writing Postgres |
 | Vercel / production metadata | **Not** central state |
 
 ---
@@ -187,8 +187,8 @@ A **Render-style monolith** (Next + Python + persistent disk in one container) i
 | 0b | Run Analysis UX polish (local) | Pending |
 | 1 | **Scenario Lab MVP** on local adapters | **Shipped** (`d81e91a`) |
 | 2 | Validation dashboard MVP | **Shipped** (`98f1934`) |
-| 3 | Share / export layer (rankings CSV, bracket image, resume card) | **Shipped** — scenario share URLs remain |
-| 4 | Hosted Architecture H1–H7 | **Done** — see [Hosted Runs v1](../hosting/hosted-runs-v1.md) |
+| 3 | Share / export layer (rankings CSV, bracket image, resume card) | **Shipped**; scenario share URLs remain |
+| 4 | Hosted Architecture H1–H7 | **Done**; see [Hosted Runs v1](../hosting/hosted-runs-v1.md) |
 
 ### Hosted phase steps (H1–H7)
 
@@ -270,5 +270,5 @@ runs/2025_week15__scenario_abc/rankings.json
 
 ## Related docs
 
-- [Development guide](../development.md) — local env vars, DuckDB, jobs
+- [Development guide](../development.md): local env vars, DuckDB, jobs
 - [API contracts](../api-contracts.md)

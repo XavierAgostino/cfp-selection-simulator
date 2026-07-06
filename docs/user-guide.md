@@ -6,7 +6,7 @@ For analysts, researchers, and fans who want to understand what the simulator pr
 
 ## Where to explore results
 
-The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product surface — dashboard, bracket, bubble watch, team resumes, and Selection Stability. Run `make web` to start it.
+The **Next.js web app** ([Web App Guide](web-app.md)) is the primary product surface: dashboard, bracket, bubble watch, team resumes, and Selection Stability. Run `make web` to start it.
 
 > [!TIP]
 > Use **Run Analysis** in the site header to launch sample or live runs without leaving the browser (requires a persistent Node server and Python on the same machine).
@@ -69,12 +69,12 @@ See [Output Files](output-files.md) for full column definitions and run identity
 
 **Quick tips:**
 
-- **Rankings CSV** — `composite_score` is the primary sort key; component columns show resume vs predictive breakdown.
-- **Record column (web)** — labeled FBS record, Demo record, or Model-window record from `record_meta`. Sample runs use a partial mid-season fixture (week 5+), so demo records are not full-season totals.
-- **Field CSV** — `bid_type` is `AUTO` or `AT-LARGE`.
-- **Bracket CSV** — `is_bye` marks teams with first-round byes; `seed` is final bracket seed.
-- **Audit JSON** — `steps` are structured; `log` is human-readable text.
-- **Manifest JSON** — records ruleset, config hash, active weights, data source, output paths, and `record_meta`.
+- **Rankings CSV**: `composite_score` is the primary sort key; component columns show the resume vs predictive breakdown.
+- **Record column (web)**: labeled FBS record, Demo record, or Model-window record from `record_meta`. Sample runs use a partial mid-season fixture (week 5+), so demo records are not full-season totals.
+- **Field CSV**: `bid_type` is `AUTO` or `AT-LARGE`.
+- **Bracket CSV**: `is_bye` marks teams with first-round byes; `seed` is the final bracket seed.
+- **Audit JSON**: `steps` are structured; `log` is human-readable text.
+- **Manifest JSON**: records ruleset, config hash, active weights, data source, output paths, and `record_meta`.
 
 ### Team resumes
 

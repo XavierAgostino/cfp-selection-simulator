@@ -22,8 +22,8 @@ Inspect bye assignments in `data/output/brackets/*_bracket.csv`.
 
 ## Implementation
 
-- `src/config/formats.py` — `champion_byes` seeding mode
-- `src/selection/seeding.py` — `seed_champion_byes()`
+- `src/config/formats.py`: `champion_byes` seeding mode
+- `src/selection/seeding.py`: `seed_champion_byes()`
 - Tests: `tests/test_seeding_2024.py`
 
 ## Related

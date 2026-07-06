@@ -78,7 +78,7 @@ Reference glossary for Selection Room ranking and uncertainty metrics. For pipel
 
 **Definition:** Losses against opponents below a strength tier threshold.
 
-**Higher means (count):** More losses to weaker opponents — a negative resume signal.
+**Higher means (count):** More losses to weaker opponents, a negative resume signal.
 
 **In the app:** Team Resume concerns / selection case text.
 
@@ -94,7 +94,7 @@ Reference glossary for Selection Room ranking and uncertainty metrics. For pipel
 
 **Higher means:** Better overall rank in the transparent model.
 
-**In the app:** Primary sort key everywhere — Rankings, Field, Bracket, Bubble cut line.
+**In the app:** Primary sort key everywhere: Rankings, Field, Bracket, Bubble cut line.
 
 **Caveat:** Active weights are exported per run in manifest / `latest.json`; defaults are not secret committee weights.
 
@@ -110,6 +110,6 @@ Reference glossary for Selection Room ranking and uncertainty metrics. For pipel
 
 **In the app:** Bubble Selection Stability board, Team Resume stability strip (web app only; omitted when `sensitivity.json` is missing).
 
-**Caveat:** Varies model weights only — does not simulate future game outcomes, injuries, or alternate championship results. Conference champion labels are fixed per run.
+**Caveat:** Varies model weights only; does not simulate future game outcomes, injuries, or alternate championship results. Conference champion labels are fixed per run.
 
 **See also:** [Sensitivity Analysis](sensitivity-analysis.md)

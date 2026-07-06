@@ -26,7 +26,7 @@ A transparent **decision-support** tool for exploring CFP selection under publis
 Several known limitations have research tracks with priorities, guardrails, and
 go/no-go criteria in [v2-tracks-research.md](v2-tracks-research.md).
 Calibration/ablations, Committee Emulation lite, and a PPA predictive
-substitution are implemented as research-only tools — the PPA candidate was
+substitution are implemented as research-only tools; the PPA candidate was
 evaluated and **not promoted** (blocked by the 2024 modern-format holdout).
 SOR/résumé refinement is next; injury modeling stays deferred behind an
 explicit go/no-go. No research track changes production defaults.
@@ -41,7 +41,7 @@ The hosted public site (Vercel) features a real, completed **2025 season run**
 (through the Week 15 conference-championship slate) from **bundled generated
 artifacts**. It does not run live CFBD fetches and does not offer hosted run
 generation. The field and bracket are the model's **projection computed from
-real game results** — framed as projected/simulated output, not a live or
+real game results**, framed as projected/simulated output, not a live or
 current-week prediction, and not an official CFP projection. When the 2026
 season begins, users run their own live runs. Local OSS users can run the full
 engine themselves for any season and week.

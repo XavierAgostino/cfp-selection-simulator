@@ -18,7 +18,7 @@ Hosted Runs v1 lets a **hosted Vercel deployment** create live analysis runs wit
 | **Local OSS** | Default (no `SELECTION_ROOM_RUNTIME=hosted`) | Optional subprocess jobs (`SELECTION_ROOM_ENABLE_RUN_JOBS=1`) | Setup wizard on first run; Option B job polling |
 | **Hosted live** | `SELECTION_ROOM_RUNTIME=hosted` | GitHub sign-in gated Trigger worker | Sign in with GitHub to launch; job polling; no local setup copy |
 
-The two modes stay isolated: hosted users never see `SELECTION_ROOM_ENABLE_RUN_JOBS` copy; local users keep the existing subprocess flow. (The former standalone read-only **Public demo** mode — `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE` — was retired in the single-product cutover: the hosted deployment is now canonical and browsing its seeded catalog is open to everyone.)
+The two modes stay isolated: hosted users never see `SELECTION_ROOM_ENABLE_RUN_JOBS` copy; local users keep the existing subprocess flow. (The former standalone read-only **Public demo** mode, `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE`, was retired in the single-product cutover: the hosted deployment is now canonical and browsing its seeded catalog is open to everyone.)
 
 ---
 
@@ -120,7 +120,7 @@ A Trigger.dev schedule (`weekly-official-run`, `web/trigger/weekly-official-run.
 keeps the catalog's default field current without anyone launching by hand. It
 fires **Tuesday 10pm ET**, right after the CFP committee's weekly release, resolves
 the **latest committee week** from CFBD, and launches an official run (`user_id`
-null — no per-user quota) through the same `run-hosted-job` path as user runs. So
+null, no per-user quota) through the same `run-hosted-job` path as user runs. So
 the freshest run becomes the default view automatically.
 
 Dormant unless `SELECTION_ROOM_OFFICIAL_RUN_ENABLED=1`; ships now, launches nothing
@@ -160,22 +160,21 @@ queued → running → succeeded
 
 Poll endpoints:
 
-- `GET /api/run/:jobId` — full job record
-- `GET /api/run/:jobId/logs` — `{ lines: string[] }` from `logs_text`
-- `GET /api/run/jobs` — recent jobs list
+- `GET /api/run/:jobId`: full job record
+- `GET /api/run/:jobId/logs`: `{ lines: string[] }` from `logs_text`
+- `GET /api/run/jobs`: recent jobs list
 
 ---
 
 ## Limitations (v1)
 
-- Beta-code gated; no per-user accounts or quotas beyond daily cap + one active job.
+- Run launch is gated by GitHub sign-in with a per-user daily quota (a legacy access code still works as an optional bypass). Browsing the catalog needs no account.
 - No billing, workspaces, or shareable authenticated links.
 - Global daily job cap (`SELECTION_ROOM_HOSTED_DAILY_JOB_CAP`, default 10).
 - One concurrent hosted job (`SELECTION_ROOM_HOSTED_MAX_CONCURRENT=1`).
 - Live CFBD runs require `CFBD_API_KEY` on server/worker only.
 - Worker must have Python, repo checkout, and network access to Supabase.
 - Orphan Storage objects possible if a job fails after partial upload (see ops notes in hosting docs).
-- Public demo deploy must **not** include hosted env vars.
 
 ---
 
@@ -212,7 +211,7 @@ Use this after deploying hosted Vercel + Supabase + Trigger:
 - [ ] Successful job → `/dashboard?run=<stem>` loads rankings/field
 - [ ] Scenario Lab hosted launch with weights → diff loads
 - [ ] Job logs do not contain `CFBD_API_KEY`, service role key, DB URL, or beta codes
-- [ ] Public demo project still has no hosted env vars and hides Run Analysis
+- [ ] Signed-out visitor can browse the seeded catalog but cannot launch a run
 
 ---
 

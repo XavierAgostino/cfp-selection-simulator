@@ -5,7 +5,7 @@ seeded catalog, GitHub sign-in gates run launch. The standalone read-only demo w
 retired (see [Phase 4](#phase-4--single-official-vercel-project)); server secrets stay
 off any client bundle.
 
-## Phase 1 — Local hosted smoke (Supabase + API)
+## Phase 1: Local hosted smoke (Supabase + API)
 
 ```bash
 supabase link --project-ref tucqckdwtbrgmqlnwfhj
@@ -29,7 +29,7 @@ Expected **before Trigger**:
 > with GitHub. The smoke script needs `NEXT_PUBLIC_SUPABASE_URL` +
 > `NEXT_PUBLIC_SUPABASE_ANON_KEY` set (it derives them from the linked project).
 
-## Phase 2 — Local worker (no Trigger cloud)
+## Phase 2: Local worker (no Trigger cloud)
 
 ```bash
 ./scripts/hosted-worker-smoke.sh
@@ -45,7 +45,7 @@ Expected:
 ## Seed the official sample field
 
 So a fresh anonymous visitor browses real data with zero setup (this is what lets
-the hosted project stand alone — no separate read-only demo project needed):
+the hosted project stand alone, with no separate read-only demo project needed):
 
 ```bash
 node scripts/seed-hosted-catalog.mjs --dry-run   # preview
@@ -65,21 +65,21 @@ of the global caps.
 
 **Manual (you), one time:**
 
-1. **GitHub OAuth app** — GitHub → Settings → Developer settings → OAuth Apps → New.
+1. **GitHub OAuth app**: GitHub → Settings → Developer settings → OAuth Apps → New.
    - Homepage URL: your hosted domain.
    - Authorization callback URL: `https://<supabase-ref>.supabase.co/auth/v1/callback`
      (Supabase brokers the OAuth handshake; the app returns to `/auth/callback`).
    - Copy the Client ID and generate a Client Secret.
-2. **Supabase → Authentication → Providers → GitHub** — enable, paste Client ID/Secret.
-3. **Supabase → Authentication → URL Configuration** — add your hosted origin(s) and
+2. **Supabase → Authentication → Providers → GitHub**: enable, paste Client ID/Secret.
+3. **Supabase → Authentication → URL Configuration**: add your hosted origin(s) and
    `http://localhost:3099` (smoke) to the redirect allow-list.
 4. **Apply the migration** so per-user quota can be counted:
-   `supabase db push` (adds `run_jobs.user_id` + index — `20260705180000_run_jobs_user_id.sql`).
+   `supabase db push` (adds `run_jobs.user_id` + index, `20260705180000_run_jobs_user_id.sql`).
 
-The two `NEXT_PUBLIC_SUPABASE_*` values are public (they ship in the bundle) — set
+The two `NEXT_PUBLIC_SUPABASE_*` values are public (they ship in the bundle), so set
 them on Vercel and in `web/.env.hosted.local`.
 
-## Phase 3 — Trigger.dev
+## Phase 3: Trigger.dev
 
 **Dashboard/manual (you):**
 
@@ -130,13 +130,13 @@ rankings, resolves the **latest committee week** from CFBD, and launches an
 official run (`user_id` null, so no per-user quota is consumed) through the same
 `run-hosted-job` path as user runs.
 
-It is **dormant by default** — the run body returns `skipped: disabled` unless
+It is **dormant by default**: the run body returns `skipped: disabled` unless
 `SELECTION_ROOM_OFFICIAL_RUN_ENABLED=1`, so the schedule can deploy now and spend
 zero CFBD quota off-season. The schedule itself still registers on
 `pnpm deploy:trigger` and shows up in the Trigger dashboard (each dormant fire is
 a benign skipped run).
 
-**Activate in-season** (Trigger worker env — server only):
+**Activate in-season** (Trigger worker env, server only):
 
 - `SELECTION_ROOM_OFFICIAL_RUN_ENABLED=1`
 - `SELECTION_ROOM_OFFICIAL_RUN_SOURCE=cfbd` (default; `sample` for off-season tests)
@@ -153,22 +153,22 @@ a benign skipped run).
 `SOURCE=sample` and an explicit `WEEK`, trigger `weekly-official-run` once from
 the dashboard, and confirm a `run_jobs` row + catalog `runs` row appear.
 
-## Phase 4 — Single official Vercel project
+## Phase 4: Single official Vercel project
 
 The official project (`selection-room`, renamed from `selection-room-hosted`) is
 now **the** product: anonymous visitors browse the seeded official catalog,
 GitHub sign-in gates run launch. It serves at `https://selection-room.vercel.app`.
 The standalone read-only demo (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE`) has been
-retired in code — no demo flag, banner, or gating remains.
+retired in code: no demo flag, banner, or gating remains.
 
 **Dashboard/manual (you):**
 
 1. The official Vercel project (`selection-room`)
 2. Root Directory: `web`
 3. Build: `pnpm seed-fixtures:demo && pnpm build` (the `seed-fixtures:demo` npm
-   script only bundles fallback fixtures at build time — unrelated to the retired
+   script only bundles fallback fixtures at build time, unrelated to the retired
    demo *mode*; hosted reads Supabase at runtime)
-4. Set env vars from [Hosted Runs v1](hosted-runs-v1.md) — all server-side except `NEXT_PUBLIC_SITE_URL`
+4. Set env vars from [Hosted Runs v1](hosted-runs-v1.md), all server-side except `NEXT_PUBLIC_SITE_URL`
 
 **CLI** (logged in as `xavieragostino`):
 
@@ -203,7 +203,7 @@ Deploy from **repo root**, not `web/`. CLI deploys from `web/` fail with `web/we
 
 **Deployment protection:** if `/api/run/capabilities` returns an HTML login page, disable Vercel Authentication / Deployment Protection for `selection-room`, or use a protection bypass token for smoke tests.
 
-## Phase 5 — End-to-end hosted preview
+## Phase 5: End-to-end hosted preview
 
 On preview URL:
 
@@ -218,7 +218,7 @@ On preview URL:
 ## Ops
 
 - Per-user quota: `SELECTION_ROOM_HOSTED_USER_DAILY_JOB_CAP` (default 5) on Vercel
-- Abusive user: no `user_id` allow/deny list yet — lower the per-user cap or revoke at
+- Abusive user: no `user_id` allow/deny list yet, so lower the per-user cap or revoke at
   the Supabase Auth level (delete/ban the user)
 - Legacy beta bypass: `SELECTION_ROOM_BETA_RUN_CODES` still works if set; leave unset
   to make GitHub sign-in the only path

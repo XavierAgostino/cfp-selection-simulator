@@ -1,7 +1,7 @@
 # Selection Room Web App
 
 The **primary product surface**: a Next.js app under [`web/`](../web/) that renders
-the engine's exported JSON as a broadcast-style selection show — dashboard,
+the engine's exported JSON as a broadcast-style selection show: dashboard,
 bracket, rankings, bubble watch, team resumes, and methodology.
 
 > [!TIP]
@@ -17,7 +17,7 @@ launch live runs (per-user daily quota). See [Hosted Runs v1](hosting/hosted-run
 and the [deployment checklist](hosting/deployment-checklist.md).
 
 > The former standalone `NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE` read-only demo was
-> retired in the single-product cutover — the hosted deployment now covers both
+> retired in the single-product cutover; the hosted deployment now covers both
 > open browsing and gated run launch.
 
 ---
@@ -58,14 +58,14 @@ for data and switches to the dashboard automatically once the first run lands.
 
 ## Running analyses from the site
 
-The **Run Analysis** button in the run header opens a workspace with three tabs —
-**Create**, **Runs**, and **Jobs** — to launch the Python engine via server-backed
+The **Run Analysis** button in the run header opens a workspace with three tabs,
+**Create**, **Runs**, and **Jobs**, to launch the Python engine via server-backed
 jobs (Option B MVP):
 
 1. On open, the dialog probes `GET /api/run/capabilities`.
 2. Pick season (2014–2035), week (1–16), and data source:
-   - **Sample data** — no API key
-   - **Live CFBD** — uses the server's `CFBD_API_KEY` (never exposed to the browser)
+   - **Sample data**: no API key
+   - **Live CFBD**: uses the server's `CFBD_API_KEY` (never exposed to the browser)
 3. `POST /api/run` accepts the job and returns `{ job_id }` with HTTP 202.
 4. The UI polls `GET /api/run/[jobId]` and `GET /api/run/[jobId]/logs` every 2s.
 5. On success, the site navigates to `?run=<stem>` where `stem` is resolved from
@@ -78,8 +78,8 @@ Run Analysis defaults to the **latest selection-relevant week** for the chosen s
 
 | Week | Meaning (when shown) |
 |------|----------------------|
-| **16** | Final selection window — preferred when data includes conference championship results |
-| **15** | Pre-final / championship window — fallback when Week 16 is unavailable |
+| **16** | Final selection window; preferred when data includes conference championship results |
+| **15** | Pre-final / championship window; fallback when Week 16 is unavailable |
 
 > [!NOTE]
 > The bundled **sample demo** fixture currently stops at Week 15, so sample runs default to Week 15. **Live CFBD** runs prefer Week 16 when no local cache caps the season lower. The server resolves defaults via `GET /api/run/week-defaults`.
@@ -131,14 +131,14 @@ whole site between them.
 
 Three client-side export primitives, all scoped to the active run:
 
-- **Rankings CSV** — "Download CSV" in the `/rankings` toolbar exports the
+- **Rankings CSV**: "Download CSV" in the `/rankings` toolbar exports the
   full table in rank order (filters never change the artifact, so the file is
   reproducible from the run alone). Columns mirror the engine's rankings CSV
   plus web enrichment (record, bid type, seed).
-- **Bracket image** — "Download image" on `/bracket` renders the full bracket
+- **Bracket image**: "Download image" on `/bracket` renders the full bracket
   as a branded share card (2× PNG). Titled "Projected … CFP Bracket", never
   "official".
-- **Resume card** — "Download card" in the team drawer and on `/teams/[team]`
+- **Resume card**: "Download card" in the team drawer and on `/teams/[team]`
   exports a team's resume as a share graphic: rank, record, score bars, and
   the selection case.
 
@@ -149,7 +149,7 @@ independence disclaimer. Team logos come from ESPN's CDN, which serves
 `access-control-allow-origin: *`, so captures stay untainted; a logo that
 fails to fetch falls back to the initials tile. Before capture,
 `exportNodeToPng` bakes each inline SVG's computed `fill`/`stroke`/`color`
-into inline styles — `html-to-image` drops class-based paint on SVG
+into inline styles, since `html-to-image` drops class-based paint on SVG
 internals (the CFP Playoff mark would otherwise export with default black
 fills).
 
@@ -160,7 +160,7 @@ Selection Stability board and the Team Resume drawer shows a compact stability
 strip. Frequencies are 0–1 on the wire; the UI renders percentages.
 
 If `sensitivity.json` is missing (older runs), Selection Stability surfaces are
-omitted entirely — no proxy values.
+omitted entirely, with no proxy values.
 
 Selection Stability varies model weights only. It does not simulate future game
 outcomes. See [Sensitivity Analysis](research/sensitivity-analysis.md).
@@ -170,7 +170,7 @@ outcomes. See [Sensitivity Analysis](research/sensitivity-analysis.md).
 `/scenario-lab` lets you fork a base run, reweight the four composite
 components with sliders, and re-run selection to see how the projected field
 responds. It is a **weights-only** what-if: like Selection Stability, it never
-simulates future game outcomes and never speaks in win probabilities — only a
+simulates future game outcomes and never speaks in win probabilities, only a
 projected reordering under different assumptions.
 
 - **Sliders** work in whole percents that always sum to 100 (moving one
@@ -180,7 +180,7 @@ projected reordering under different assumptions.
 - **Launch** goes through the same Option B job path as Run Analysis, passing
   `weights` on `POST /api/run`. The scenario run writes its own
   `{run_id}__{scenario_id}` stem and **never** promotes itself to `latest.json`,
-  the flat API files, or the `runs.json` `latest` pointer — the base run stays
+the flat API files, or the `runs.json` `latest` pointer, so the base run stays
   the site default.
 - **Diff** is computed server-side by the ScenarioDiffService
   (`web/lib/scenarioDiff.ts`, pure) from the two runs' `rankings.json` +
@@ -197,15 +197,15 @@ projected reordering under different assumptions.
 `/validation` is the trust layer: a retrospective accuracy check of the model
 against the real CFP Selection Committee on **completed seasons only**. It
 renders `data/output/api/validation.json` (repo-level, written by
-`sroom validate` — see [api-contracts.md](api-contracts.md)) and shows three
+`sroom validate`, see [api-contracts.md](api-contracts.md)) and shows three
 trust dimensions:
 
-- **Committee alignment** — how closely the composite reproduces the
+- **Committee alignment**: how closely the composite reproduces the
   committee's top-12 ordering (Spearman + overlap), per season.
-- **Era-correct field selection** — each season judged against the playoff
+- **Era-correct field selection**: each season judged against the playoff
   format that actually applied that year (4-team, then 12-team), with the
   teams the model added/dropped and first-team-out comparison.
-- **Predictive Signal** — how the composite's game-level signal scored
+- **Predictive Signal**: how the composite's game-level signal scored
   completed games next to simpler baselines (Elo, SRS, home-field).
   Retrospective scoring, never a live forecast or win probability.
 

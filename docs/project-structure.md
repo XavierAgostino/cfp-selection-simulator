@@ -27,7 +27,7 @@ cfp-selection-simulator/
 │   ├── assets/               # Team logos/colors registry
 │   ├── data/                 # CFBD fetcher + season cache helpers
 │   ├── validation/           # Backtest, Selection Stability (v1 + reused by calibrate)
-│   ├── calibration/          # v2 research harness (`sroom calibrate`) — isolated from production defaults
+│   ├── calibration/          # v2 research harness (`sroom calibrate`), isolated from production defaults
 │   └── utils/                # Metrics, conference helpers
 ├── tests/                    # pytest suite
 ├── docs/                     # Documentation funnel
@@ -52,7 +52,7 @@ cfp-selection-simulator/
 |--------|------|
 | `web/` | Next.js Selection Room app (primary product surface) |
 | `src/api_contracts/` | JSON export contract for web app (`runs.json`, `sensitivity.json`, etc.) |
-| `src/store/` | DuckDB run store — dual-write on export; CLI query/rebuild for local analytics |
+| `src/store/` | DuckDB run store: dual-write on export; CLI query/rebuild for local analytics |
 | `src/config/formats.py` | 2024 vs 2025+ CFP rules |
 | `src/selection/field.py` | 5+7 field selection, displacement |
 | `src/selection/seeding.py` | Champion-bye vs straight seeding |

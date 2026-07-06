@@ -4,14 +4,14 @@
 component. It does not change the production SOR, the composite weights
 (40/30/20/10), or any Scenario Lab default.** Every variant is an opt-in
 calibration experiment behind `--include-sor-variants`; the production
-`calculate_sor` stays exactly as it is unless a future, deliberate decision —
-backed by this research board — promotes a variant.
+`calculate_sor` stays exactly as it is unless a future, deliberate decision,
+backed by this research board, promotes a variant.
 
 ```bash
 ./bin/sroom calibrate --years 2014:2024 --include-sor-variants
 ```
 
-The variants run entirely from existing local data — no new data source, no
+The variants run entirely from existing local data: no new data source, no
 network, fully deterministic.
 
 ## Why SOR
@@ -24,7 +24,7 @@ documented approximations worth auditing:
 
 1. **Averaged-probability aggregation.** Production SOR asks "what is the
    probability an average top-25 team (rating 0.75) achieves this record
-   against this schedule?" — but for every real schedule size (n ≤ 20 games)
+   against this schedule?", but for every real schedule size (n ≤ 20 games)
    it answers with a binomial on the *averaged* per-game win probability.
    That erases the distribution of opponent difficulty: beating one elite and
    one weak opponent scores the same as beating two average ones, which is
@@ -35,7 +35,7 @@ documented approximations worth auditing:
    was played; a road win and a home win against the same opponent are worth
    the same.
 3. **Opponent-rating source.** Production rates SOR opponents by a provisional
-   composite of 0.50·resume + 0.30·predictive — so the SOR pillar partially
+   composite of 0.50·resume + 0.30·predictive, so the SOR pillar partially
    double-counts resume signal that the composite already weights at 0.40.
 
 ## The variants
@@ -53,7 +53,7 @@ block in `calibration.json`.
 | `sor_opponent_rating_balanced` | Opponent ratings: balanced 0.50 resume / 0.50 predictive blend | Averaged-binomial aggregation, venue-blind |
 | `sor_opponent_rating_predictive` | Opponent ratings: predictive-leaning 0.30 resume / 0.70 predictive blend | Averaged-binomial aggregation, venue-blind |
 
-The opponent-rating variants are deliberately limited to those two blends —
+The opponent-rating variants are deliberately limited to those two blends;
 this is an audit of the resume double-count, not a grid search.
 
 ### Home-field constant caveat
@@ -63,7 +63,7 @@ The home-field variant uses one constant, `HOME_FIELD_RATING_OFFSET = 0.033`
 games shift the hypothetical top-25 team's rating edge up by 0.033, away games
 down by 0.033, neutral-site games (per the `neutral_site` flag in the games
 data) are untouched. On the production logistic that gives the top-25 team a
-~57.5% win probability at home against an equally rated opponent — a
+~57.5% win probability at home against an equally rated opponent, a
 conventional ballpark for college-football home advantage. **This constant is
 a documented research assumption, not a fitted or definitive home-field
 value.** It is deliberately a single named constant so it is easy to change;
@@ -90,7 +90,7 @@ degrade if that data is genuinely absent.
 
 ## Audit note: conference championship games
 
-Conference championship games are played inside the week-15 selection window —
+Conference championship games are played inside the week-15 selection window;
 the committee sees their results before selecting the field. They are
 therefore **not leakage** for selection-time analysis, and SOR (baseline and
 all variants) correctly includes them. No experiment is needed to "fix" CCGs;
@@ -108,7 +108,7 @@ only how the SOR component is calculated.
 **Status: implemented and tested; full 2014–2024 evaluation pending.** The
 first full run attempt (2026-07-04) was blocked by an exhausted CFBD monthly
 API quota: the harness previously re-fetched every season's games from the
-CFBD API on every calibration run, and the quota ran out — 10 of 11 seasons
+CFBD API on every calibration run, and the quota ran out: 10 of 11 seasons
 failed to load, which is not an evaluation. Two things came out of that run:
 
 - **The harness is now cache-first for season games.** It reads and writes

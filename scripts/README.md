@@ -19,4 +19,4 @@ Installs the package, runs `sroom doctor`, executes sample pipeline, generates b
 ## Related
 
 - [Quickstart](../docs/quickstart.md)
-- [Makefile](../Makefile) — preferred entry point for most commands
+- [Makefile](../Makefile): preferred entry point for most commands
