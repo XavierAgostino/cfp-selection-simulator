@@ -1,6 +1,7 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
+import { ChevronRight } from "lucide-react";
 import { MetricTooltip } from "@/components/explain/InfoTooltip";
 import { ScoreBar } from "@/components/common/ScoreBar";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
@@ -196,6 +197,23 @@ export function createRankingColumns(recordMeta?: RecordMeta | null) {
       ),
       sortingFn: "basic",
       size: 88,
+    }),
+    // Visible affordance that a row opens the team resume drawer. The whole
+    // row is the click target; this cell is display-only.
+    columnHelper.display({
+      id: "why",
+      header: "",
+      cell: () => (
+        <span
+          aria-hidden
+          className="flex items-center justify-end gap-0.5 text-xs font-medium text-muted-foreground/70 transition-colors group-hover:text-foreground"
+        >
+          Why?
+          <ChevronRight className="size-3.5" />
+        </span>
+      ),
+      enableSorting: false,
+      size: 64,
     }),
   ];
 }
