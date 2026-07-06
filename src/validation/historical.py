@@ -178,6 +178,34 @@ HISTORICAL_CFP_TOP25: Dict[int, List[str]] = {
         "UNLV",
         "Memphis",
     ],
+    # Final CFP rankings released 2025-12-07 (collegefootballplayoff.com)
+    2025: [
+        "Indiana",
+        "Ohio State",
+        "Georgia",
+        "Texas Tech",
+        "Oregon",
+        "Ole Miss",
+        "Texas A&M",
+        "Oklahoma",
+        "Alabama",
+        "Miami",
+        "Notre Dame",
+        "BYU",
+        "Texas",
+        "Vanderbilt",
+        "Utah",
+        "USC",
+        "Arizona",
+        "Michigan",
+        "Virginia",
+        "Tulane",
+        "Houston",
+        "Georgia Tech",
+        "Iowa",
+        "James Madison",
+        "North Texas",
+    ],
 }
 
 # Backward-compatible alias (top 12 slice of published rankings)
@@ -199,7 +227,8 @@ HISTORICAL_CFP_FOUR_TEAM: Dict[int, List[str]] = {
     2023: ["Michigan", "Washington", "Texas", "Alabama"],
 }
 
-# 12-team playoff participants by committee seed (2024 champion-bye era)
+# 12-team playoff participants by committee seed (2024 champion-bye era,
+# 2025+ straight seeding)
 HISTORICAL_CFP_TWELVE_TEAM_FIELD: Dict[int, List[str]] = {
     2024: [
         "Oregon",
@@ -215,21 +244,38 @@ HISTORICAL_CFP_TWELVE_TEAM_FIELD: Dict[int, List[str]] = {
         "SMU",
         "Clemson",
     ],
+    2025: [
+        "Indiana",
+        "Ohio State",
+        "Georgia",
+        "Texas Tech",
+        "Oregon",
+        "Ole Miss",
+        "Texas A&M",
+        "Oklahoma",
+        "Alabama",
+        "Miami",
+        "Tulane",
+        "James Madison",
+    ],
 }
 
-# Conference champions receiving auto bids (2024)
+# Conference champions receiving auto bids (12-team era)
 HISTORICAL_CFP_AUTO_BIDS: Dict[int, List[str]] = {
     2024: ["Oregon", "Georgia", "Boise State", "Arizona State", "Clemson"],
+    2025: ["Indiana", "Georgia", "Texas Tech", "Tulane", "James Madison"],
 }
 
 # First / second team out of the field when documented
 HISTORICAL_FIRST_TEAM_OUT: Dict[int, str] = {
     2014: "TCU",  # Baylor also debated; TCU highest-profile snub
     2024: "Alabama",
+    2025: "Notre Dame",
 }
 
 HISTORICAL_SECOND_TEAM_OUT: Dict[int, str] = {
     2024: "Miami",
+    2025: "BYU",
 }
 
 # Case-study notes for validation reports
@@ -239,6 +285,7 @@ VALIDATION_NOTES: Dict[int, str] = {
     2022: "Outlier year: low committee-formula agreement (TCU, Kansas State)",
     2023: "Florida State undefeated ACC champion ranked #4",
     2024: "First 12-team field; Clemson auto bid at rank #16; Alabama displaced",
+    2025: "Straight-seeding debut; Miami (10) selected over Notre Dame (11) at 10-2",
 }
 
 OUTLIER_YEARS: frozenset[int] = frozenset({2022})

@@ -119,7 +119,7 @@ Job files live under `data/output/jobs/` (not served via `/api/data/`).
 | `/rankings` | Full composite table with score bars, search, and sorting |
 | `/bubble` | Last four in / first four out / next four out + selection audit + **Selection Stability** board |
 | `/scenario-lab` | **Scenario Lab**: reweight the composite and diff the projected field against a base run |
-| `/validation` | **Validation Dashboard**: retrospective accuracy vs the real committee (committee, field, predictive tracks) |
+| `/validation` | **Validation Dashboard**: per-run **Model vs Committee** comparison + retrospective accuracy vs the real committee (committee, field, predictive tracks) |
 | `/teams/[team]` | Team resume: schedule, score breakdown, selection case + **Selection Stability** strip |
 | `/methodology` | Live weights, 5+7 field rules, seeding eras, data sources |
 
@@ -214,6 +214,21 @@ means exclude outlier seasons, and the predictive headline is composite-only.
 A scope strip and footer metadata row state exactly which seasons the artifact
 covers. If `validation.json` is missing, the page shows an empty state with the
 command to generate it.
+
+## Model vs Committee
+
+When `committee.json` exists for the active run (only for seasons with
+checked-in committee reference data in `src/validation/historical.py`), the
+Validation page opens with a **Model vs Committee** panel: the run's projected
+field and ranks next to the committee's published final rankings, with
+field-agreement and seed-match summary stats, a "where they disagree" callout,
+and a full rank-by-rank table. Every team row opens the resume drawer so the
+model's reasoning for a disagreement is one click away. The Dashboard shows a
+compact snapshot card that links to the full panel (preserving `?run=`).
+
+Disagreements are framed as something to audit, never as errors. If
+`committee.json` is missing (e.g. a mid-season run before final rankings), all
+Model vs Committee surfaces are omitted entirely.
 
 ## Data plumbing
 

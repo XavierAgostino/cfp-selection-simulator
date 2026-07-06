@@ -219,12 +219,13 @@ data/output/api/
 ├── audit.json          Latest selection audit
 ├── team-resumes.json   Latest per-team resumes (summary for all ranked teams; full detail for field, bubble, and top-ranked teams)
 ├── sensitivity.json    Latest Selection Stability (when generated)
+├── committee.json      Latest Model vs Committee comparison (only for seasons with checked-in committee data)
 ├── validation.json     Historical validation summary (repo-level, written by sroom validate)
 ├── team-assets.json    Logos and colors keyed by team name
 └── runs/{stem}/        Per-run copies of the payloads above, e.g.:
     └── 2025_week15/
         rankings.json field.json bracket.json audit.json
-        team-resumes.json sensitivity.json
+        team-resumes.json sensitivity.json committee.json
 ```
 
 Scenario stems prevent weight-variant collisions, e.g. `runs/2025_week15__a13f9c2b4e5d6f70/`.
