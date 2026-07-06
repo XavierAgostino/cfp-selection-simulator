@@ -80,6 +80,66 @@ export function percentsMatchBase(percents: WeightPercents): boolean {
   return WEIGHT_KEYS.every((key) => percents[key] === DEFAULT_PERCENTS[key]);
 }
 
+// ---------------------------------------------------------------------------
+// Scenario presets — named starting points for the sliders. Each is a
+// hypothesis about what the committee values, not a probability claim.
+// ---------------------------------------------------------------------------
+
+export interface ScenarioPreset {
+  id: string;
+  label: string;
+  /** One plain sentence: whose worldview this weighting represents. */
+  description: string;
+  percents: WeightPercents;
+}
+
+export const SCENARIO_PRESETS: ScenarioPreset[] = [
+  {
+    id: "committee-like",
+    label: "Committee-like",
+    description:
+      "The calibrated base weights: the blend that best reproduced the committee's picks across 2014-2024.",
+    percents: { ...DEFAULT_PERCENTS },
+  },
+  {
+    id: "resume-heavy",
+    label: "Resume-heavy",
+    description:
+      "Rewards what teams earned on the field: wins, losses, and quality results dominate the composite.",
+    percents: { resume: 55, predictive: 20, sor: 15, sos: 10 },
+  },
+  {
+    id: "predictive-heavy",
+    label: "Best-team",
+    description:
+      "Rewards underlying team strength: pick the twelve best teams even when their records lag.",
+    percents: { resume: 20, predictive: 55, sor: 15, sos: 10 },
+  },
+  {
+    id: "sor-heavy",
+    label: "SOR-heavy",
+    description:
+      "Rewards records in schedule context: who achieved the most given the slate they actually played.",
+    percents: { resume: 25, predictive: 20, sor: 45, sos: 10 },
+  },
+  {
+    id: "equal",
+    label: "Equal weights",
+    description:
+      "No opinion: all four components count the same, a neutral reference point for the other presets.",
+    percents: { resume: 25, predictive: 25, sor: 25, sos: 25 },
+  },
+];
+
+/** The preset whose percents exactly match `percents`, if any. */
+export function matchingPreset(percents: WeightPercents): ScenarioPreset | null {
+  return (
+    SCENARIO_PRESETS.find((preset) =>
+      WEIGHT_KEYS.every((key) => preset.percents[key] === percents[key]),
+    ) ?? null
+  );
+}
+
 /**
  * Move one slider to `rawValue` and rebalance the other three so the four still
  * sum to exactly 100. The remainder is split proportionally to the others'
