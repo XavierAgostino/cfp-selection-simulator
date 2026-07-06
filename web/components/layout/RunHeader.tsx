@@ -91,8 +91,8 @@ export async function RunHeader({ stem }: RunHeaderProps) {
   const badge = offSeasonFinal
     ? {
         tone: "final" as const,
-        label: `Final field · ${run.season}`,
-        description: `The committee's final ${run.season} field. Live weekly projections return when the ${run.season + 1} committee rankings begin.`,
+        label: `Final ${run.season} projection`,
+        description: `Selection Room's projection built from final ${run.season} regular-season data. The model's field can differ from the committee's actual selections. Live weekly projections return when the ${run.season + 1} committee rankings begin.`,
       }
     : runSourceBadge(run);
   const freshness = runFreshness(run);
