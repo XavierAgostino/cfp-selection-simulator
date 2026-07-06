@@ -14,7 +14,7 @@ export default async function LandingPage() {
   const data = await getLandingPreviewData();
 
   return (
-    <div className="dark overflow-x-hidden bg-background">
+    <div className="overflow-x-hidden bg-background">
       <LandingHero data={data} />
       <LandingFeatureSections data={data} />
       <FinalCtaSection />

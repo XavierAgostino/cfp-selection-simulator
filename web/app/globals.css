@@ -87,6 +87,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Landing elevation — flips per theme (soft lift on light, deep glow on dark). */
+  --shadow-board: var(--elevation-board);
+  --shadow-panel: var(--elevation-panel);
 }
 
 /*
@@ -172,6 +176,12 @@
   --tag-purple-border: rgba(122, 60, 172, 0.3);
   --tag-purple-text: #5c2d8c;
   --tag-purple-dot: #7a3cac;
+
+  /* Soft, cool-neutral lift for the light desk — no heavy smear on the gray ground. */
+  --elevation-board:
+    0 24px 64px -28px rgba(18, 22, 30, 0.3),
+    0 0 0 1px rgba(18, 22, 30, 0.05);
+  --elevation-panel: 0 20px 48px -24px rgba(18, 22, 30, 0.2);
 }
 
 .dark {
@@ -252,6 +262,12 @@
   --tag-purple-border: rgba(191, 149, 255, 0.3);
   --tag-purple-text: #d6bcff;
   --tag-purple-dot: #bf95ff;
+
+  /* Deep studio glow + faint top highlight on the charcoal ground. */
+  --elevation-board:
+    0 20px 60px -12px rgba(0, 0, 0, 0.72),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  --elevation-panel: 0 16px 48px -16px rgba(0, 0, 0, 0.55);
 }
 
 @layer base {

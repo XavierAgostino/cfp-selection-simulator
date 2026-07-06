@@ -109,7 +109,7 @@ export function LandingProductBoard({ data }: { data: LandingPreviewData }) {
         className="pointer-events-none absolute -inset-2 rounded-2xl bg-accent-gold/[0.06] blur-xl sm:-inset-4 sm:rounded-3xl sm:bg-accent-gold/[0.09] sm:blur-2xl"
         aria-hidden
       />
-      <div className="relative overflow-hidden rounded-xl border border-border/90 bg-card shadow-[0_20px_60px_-12px_rgba(0,0,0,0.72),0_0_0_1px_rgba(255,255,255,0.04)] sm:rounded-2xl">
+      <div className="relative overflow-hidden rounded-xl border border-border/90 bg-card shadow-board sm:rounded-2xl">
         <div className="flex items-center justify-between border-b border-border bg-surface-raised/80 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
             <Image

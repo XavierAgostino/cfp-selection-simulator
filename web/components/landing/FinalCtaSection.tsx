@@ -12,7 +12,7 @@ const GITHUB_HREF =
 export function FinalCtaSection() {
   return (
     <section className="border-t border-border px-4 py-16 sm:px-6 sm:py-24 lg:py-28">
-      <div className="mx-auto max-w-3xl rounded-2xl border border-border/80 bg-card/50 px-6 py-12 text-center shadow-[0_16px_48px_-16px_rgba(0,0,0,0.55)] sm:px-12 sm:py-16">
+      <div className="mx-auto max-w-3xl rounded-2xl border border-border/80 bg-card/50 px-6 py-12 text-center shadow-panel sm:px-12 sm:py-16">
         <h2 className={landingCtaTitle}>Open the room</h2>
         <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
           Start with the latest projected field, then inspect the bubble, compare scenarios, and
