@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { BidBadge } from "@/components/team/BidBadge";
@@ -81,7 +82,7 @@ export function BubbleColumn({
                 type="button"
                 onClick={() => openTeam(team.team)}
                 aria-label={`Open resume for ${team.team}`}
-                className="flex w-full items-center gap-3 rounded-md border border-transparent px-2 py-2 text-left transition-colors duration-150 hover:border-border hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                className="group flex w-full items-center gap-3 rounded-md border border-transparent px-2 py-2 text-left transition-colors duration-150 hover:border-border hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               >
               <span className="w-6 shrink-0 text-center text-xs tabular-nums text-muted-foreground">
                 {team.rank}
@@ -127,6 +128,10 @@ export function BubbleColumn({
                     </span>
                   </MetricTooltip>
                 </div>
+                <ChevronRight
+                  aria-hidden
+                  className="size-3.5 shrink-0 text-muted-foreground/60 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                />
               </button>
             </TeamHoverCard>
           );

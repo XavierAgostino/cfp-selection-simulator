@@ -35,7 +35,9 @@ export default async function RankingsPage({
       <div>
         <h1 className={pageTitle}>Rankings</h1>
         <p className={pageDescription}>
-          The full composite rankings, with resume, predictive, SOR, and SOS components.
+          The full composite rankings, with resume, predictive, SOR, and SOS
+          components. Click any team for its full resume and the model&apos;s
+          selection case.
         </p>
       </div>
 

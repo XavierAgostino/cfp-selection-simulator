@@ -66,7 +66,9 @@ export default async function BubblePage({ searchParams }: BubblePageProps) {
       <div>
         <h1 className={pageTitle}>Bubble Watch</h1>
         <p className={pageDescription}>
-          The last teams in and the first teams out, and how close it is.
+          The last teams in and the first teams out, how close it is, and how
+          stable each spot stays when the model&apos;s weights shift. Click any
+          team for its full resume.
         </p>
       </div>
       {field ? (
