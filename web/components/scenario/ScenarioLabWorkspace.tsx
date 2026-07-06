@@ -30,11 +30,14 @@ import type { RunCapabilities } from "@/lib/runJob";
 import type { ScenarioDiff } from "@/lib/scenarioDiff";
 import {
   DEFAULT_PERCENTS,
+  matchingPreset,
   percentsMatchBase,
   percentsToWeights,
+  SCENARIO_PRESETS,
   weightsScenarioId,
   type WeightPercents,
 } from "@/lib/scenarioWeights";
+import { cn } from "@/lib/utils";
 import type { RunSummary } from "@/lib/types";
 import { bodyMuted, sectionTitle } from "@/lib/typography";
 import {
@@ -64,6 +67,66 @@ async function fetchDiff(baseStem: string, scenarioStem: string): Promise<Scenar
     throw new Error(code ?? "diff_failed");
   }
   return (await res.json()) as ScenarioDiff;
+}
+
+/**
+ * Named starting points for the sliders. Each preset is a hypothesis about
+ * what a committee might value; picking one just sets the sliders, so it can
+ * be tweaked further before launching.
+ */
+function ScenarioPresetChips({
+  percents,
+  onSelect,
+  disabled,
+}: {
+  percents: WeightPercents;
+  onSelect: (next: WeightPercents) => void;
+  disabled?: boolean;
+}) {
+  const active = matchingPreset(percents);
+
+  return (
+    <div className="mb-4">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Presets
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {SCENARIO_PRESETS.map((preset) => {
+          const isActive = active?.id === preset.id;
+          return (
+            <InfoTooltip
+              key={preset.id}
+              title={preset.label}
+              content={`${preset.description} (${preset.percents.resume}/${preset.percents.predictive}/${preset.percents.sor}/${preset.percents.sos})`}
+              side="top"
+            >
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => onSelect({ ...preset.percents })}
+                aria-pressed={isActive}
+                className={cn(
+                  "rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                  isActive
+                    ? "border-foreground/30 bg-secondary font-semibold text-foreground"
+                    : "border-border bg-transparent text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                  disabled && "cursor-not-allowed opacity-50",
+                )}
+              >
+                {preset.label}
+              </button>
+            </InfoTooltip>
+          );
+        })}
+      </div>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">
+        {active
+          ? active.description
+          : "Custom weights. Presets are starting points; fine-tune with the sliders below."}
+      </p>
+    </div>
+  );
 }
 
 export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceProps) {
@@ -170,6 +233,12 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
               </SelectContent>
             </Select>
           </div>
+
+          <ScenarioPresetChips
+            percents={percents}
+            onSelect={setPercents}
+            disabled={run.running}
+          />
 
           <WeightSliders percents={percents} onChange={setPercents} disabled={run.running} />
 
