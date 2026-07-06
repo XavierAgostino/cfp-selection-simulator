@@ -30,6 +30,7 @@ env/
 *.ipynb_checkpoints
 
 # IDE & Editors
+.claude/
 .vscode/
 .idea/
 .ipython/
