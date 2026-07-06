@@ -78,7 +78,7 @@ CI runs engine and web jobs separately (see `.github/workflows/ci.yml`).
 make verify
 ```
 
-Runs Python tests, lint, and a sample-mode smoke run. Web checks are separate — run them manually before web-facing changes.
+Runs Python tests, lint, and a sample-mode smoke run. Web checks are separate; run them manually before web-facing changes.
 
 ---
 
@@ -156,7 +156,7 @@ The Next.js app does **not** read DuckDB in this phase. JSON under `data/output/
 | `SELECTION_ROOM_ENABLE_RUN_JOBS` | unset (disabled) | Set to `1` to enable browser run generation |
 | `SELECTION_ROOM_LIVE_RUN_THROTTLE_MINUTES` | `5` | Minimum minutes between live CFBD runs (`0` = off) |
 | `SELECTION_ROOM_STORE_REQUIRED` | `1` | When `1`, DuckDB store write failures fail export; set `0` for JSON-only escape hatch |
-| `CFBD_API_KEY` | — | Server-side only; set in repo-root `.env` (same file as CLI). Enables live CFBD in capabilities probe |
+| `CFBD_API_KEY` | unset | Server-side only; set in repo-root `.env` (same file as CLI). Enables live CFBD in capabilities probe |
 
 Local dev with run generation:
 
@@ -172,9 +172,9 @@ CI does **not** run web job generation.
 
 Jobs are file-backed under `data/output/jobs/`:
 
-- `{job_id}.json` — metadata and status
-- `{job_id}.log` — redacted subprocess output
-- `active.json` — pointer while a job is queued or running
+- `{job_id}.json`: metadata and status
+- `{job_id}.log`: redacted subprocess output
+- `active.json`: pointer while a job is queued or running
 
 If the server restarts mid-run or a job appears stuck:
 

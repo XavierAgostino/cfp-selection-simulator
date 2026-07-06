@@ -1,16 +1,16 @@
-# v2 Tracks — Research Board
+# v2 Tracks: Research Board
 
 **Status: active research board.** Tracks 1–3 are implemented (calibration
-harness, Committee Emulation lite, PPA predictive substitution — the last
+harness, Committee Emulation lite, PPA predictive substitution, with the last
 evaluated and **not promoted**); track 4 (SOR refinement) is implemented and
-in progress — full evaluation pending CFBD API quota; track 5 stays deferred
+in progress, with full evaluation pending CFBD API quota; track 5 stays deferred
 behind an explicit go/no-go.
-This document is **not** a roadmap commitment — every implemented track is
+This document is **not** a roadmap commitment: every implemented track is
 research-only, and nothing here changes production defaults.
 
 > **v1 beta release hardening:** V2.4 implementation is complete; full 2014–2024
 > evaluation is pending CFBD quota/cache population. V2.5 is deferred. Research
-> implementation is frozen for v1 beta — do not start V2.5 or promote experiments
+> implementation is frozen for v1 beta: do not start V2.5 or promote experiments
 > before the public demo launch.
 
 ---
@@ -25,7 +25,7 @@ but because it makes every assumption **testable, auditable, and comparable**.
 > transparent assumptions, validate model behavior historically, and export
 > reproducible scenarios.
 
-### Four model layers — keep separate
+### Four model layers (keep separate)
 
 | Layer | Question it answers |
 |---|---|
@@ -39,13 +39,13 @@ layer it touches and must not leak conclusions across layers.
 
 ### Three traps to avoid
 
-1. **Black-box oracle** — never "this model knows the correct field"; always "this
+1. **Black-box oracle**: never "this model knows the correct field"; always "this
    platform shows how transparent selection assumptions change the field."
-2. **Overfitting to the committee** — Committee Emulation measures alignment under
+2. **Overfitting to the committee**: Committee Emulation measures alignment under
    transparent assumptions; it does not optimize for perfect mimicry. Results must
    say when the model is committee-aligned, intentionally different, or trading
    alignment for predictive signal.
-3. **Mixing predictive football with selection modeling** — EPA/PPA upgrades the
+3. **Mixing predictive football with selection modeling**: EPA/PPA upgrades the
    football-quality signal; it is not a substitute for selection logic or for the
    validation tracks.
 
@@ -56,7 +56,7 @@ layer it touches and must not leak conclusions across layers.
 - **Composite pipeline** with default weights 40% resume / 30% predictive /
   20% SOR / 10% SOS (`src/pipeline/weights.py`; canonical description in
   [model-methodology.md](model-methodology.md)). Strength of Record is already
-  shipped — Poisson-binomial, weighted at 20%.
+  shipped as Poisson-binomial, weighted at 20%.
 - **Three-track historical validation** (`sroom validate`, 2014–2024; see
   [historical-validation.md](historical-validation.md)). Live artifact summary,
   outlier season 2022 excluded from committee/selection means:
@@ -65,49 +65,49 @@ layer it touches and must not leak conclusions across layers.
   - Era-correct selection: correct field size in **100%** of seasons, mean field
     overlap **76.7%**.
   - Predictive signal (composite rows only): mean Brier **0.178**, win-side
-    accuracy **72.2%**, margin MAE **14.1** across 11 seasons — retrospective
+    accuracy **72.2%**, margin MAE **14.1** across 11 seasons, retrospective
     scoring, not spread-beating or live forecasting.
-- **Scenario Lab** — weights-only reweighting with run-grounded diffs.
-- **Selection Stability** — Monte Carlo weight perturbation
+- **Scenario Lab**: weights-only reweighting with run-grounded diffs.
+- **Selection Stability**: Monte Carlo weight perturbation
   ([sensitivity-analysis.md](sensitivity-analysis.md)).
-- **Reproducibility foundation** — run manifests with config hash and weights,
+- **Reproducibility foundation**: run manifests with config hash and weights,
   audit steps in run output, exportable artifacts.
 
 ## 2. What limitations remain
 
-- **Injuries / availability** — not modeled; roster changes can move committee
+- **Injuries / availability**: not modeled; roster changes can move committee
   judgment without changing box scores.
-- **Recency** — no explicit recency weighting (note: Elo is already chronological,
-  so "add recency decay" is not automatically a win — see corrections below).
-- **CFP 2025 record-strength parity** — published 2025 guidance emphasizes record
+- **Recency**: no explicit recency weighting (note: Elo is already chronological,
+  so "add recency decay" is not automatically a win; see corrections below).
+- **CFP 2025 record-strength parity**: published 2025 guidance emphasizes record
   strength in ways the current composite may not fully separate.
-- **No play-by-play data** — predictive layer runs on game-level results; no
+- **No play-by-play data**: predictive layer runs on game-level results; no
   EPA/PPA efficiency signal.
 
 ## 3. Candidate improvements (priority order)
 
-1. **Calibration and ablations** — most important; turns Selection Room into a
+1. **Calibration and ablations**: most important; turns Selection Room into a
    research tool. **Implemented (v2.1):** `sroom calibrate` runs weight sweeps
    and component ablations (remove SOR, shift predictive weight, cap SOS, …)
    against the validation harness with a research quality gate. See
    [calibration.md](calibration.md).
-2. **Committee Emulation lite** — measure the historical relationship between
+2. **Committee Emulation lite**: measure the historical relationship between
    transparent assumptions and committee selections. **Implemented (v2.2):**
    every `sroom calibrate` run derives a committee-emulation summary from the
    calibration results. See guardrail below and
    [committee-emulation.md](committee-emulation.md).
-3. **EPA/PPA predictive layer** — biggest football-quality upgrade. Use CFBD
+3. **EPA/PPA predictive layer**: biggest football-quality upgrade. Use CFBD
    `/ppa/teams` and `/ppa/games` first; full play-by-play only after PPA proves
-   marginal value. **Implemented (v2.3), evaluated, not promoted —
+   marginal value. **Implemented (v2.3), evaluated, not promoted,
    research-only:** `sroom calibrate --include-ppa` runs a single
    component-substitution candidate (baseline weights, predictive component
    swapped for CFBD per-game PPA) through the calibration and
-   committee-emulation gates — never a wholesale predictive rewrite, and no
+   committee-emulation gates, never a wholesale predictive rewrite, and no
    production default changes. First full evaluation: improved broad
    historical metrics (including the best field overlap in the experiment
-   set) but **blocked by the 2024 modern-format holdout** — see
+   set) but **blocked by the 2024 modern-format holdout**; see
    [calibration.md](calibration.md).
-4. **SOR / resume refinement** — home-field adjustment, opponent-strength
+4. **SOR / resume refinement**: home-field adjustment, opponent-strength
    treatment, era-aware handling. Selection Room–native work. **Implemented,
    evaluation pending (v2.4).** Cache-first historical games loading added;
    full 2014–2024 SOR variant results pending CFBD quota/cache population.
@@ -119,12 +119,12 @@ layer it touches and must not leak conclusions across layers.
    research-only, through the calibration and committee-emulation gates,
    2022/2024 holdout protection, no production or Scenario Lab default
    changes. The full 2014–2024 evaluation is pending CFBD API quota (the
-   harness is now cache-first, so it needs quota exactly once) — see
+   harness is now cache-first, so it needs quota exactly once); see
    [sor-refinement.md](sor-refinement.md). Résumé quality-win threshold
    variants are deferred to a separate résumé-pillar slice. Audit note:
    conference championship games are inside the week-15 selection window and
    are not treated as leakage.
-5. **Injuries / VORP / full PBP** — last; data quality, subjective assumptions,
+5. **Injuries / VORP / full PBP**: last; data quality, subjective assumptions,
    and maintenance burden are all high. Gated behind an explicit go/no-go:
    only if the research board shows remaining model misses are plausibly
    explained by player-availability context or play-level efficiency.
@@ -132,20 +132,20 @@ layer it touches and must not leak conclusions across layers.
 
 ### Current research board (after v2.1–v2.3, full 2014–2024 runs)
 
-What the gate has actually said so far — candidates are follow-up research,
+What the gate has actually said so far: candidates are follow-up research,
 never production changes:
 
 - **Resume/SOR-heavy assumptions look more committee-aligned.** The
   committee-aligned candidates are `no_sos`, `resume_heavy`, `sor_heavy`, and
-  `committee_alignment_candidate` — all tilt toward selection-native signals.
+  `committee_alignment_candidate`, which all tilt toward selection-native signals.
 - **SOS may carry less standalone value than expected.** Removing it
   (`no_sos`) improves alignment, field overlap, and Brier simultaneously.
 - **Removing the predictive component looks tempting historically but is
   unsafe.** `no_predictive` posts the best tuning-view Spearman yet is
-  `blocked` — it collapses on the 2024 modern-format holdout.
+  `blocked`; it collapses on the 2024 modern-format holdout.
 - **PPA substitution improves broad historical metrics but is blocked by the
   modern format.** The v2.3 experiment improved every tuning-view metric
-  (best field overlap in the set) and still failed the 2024 holdout — the
+  (best field overlap in the set) and still failed the 2024 holdout, the
   clearest demonstration that the platform refuses to promote assumptions
   that help the four-team era at the expense of the current format.
 
@@ -174,7 +174,7 @@ exportable, reproducible artifact rather than a screenshot.
   tuning target.
 - Every experiment records: config hash, weights/parameters, seasons used,
   validation artifact, and a one-line statement of which model layer it touches.
-- Results are comparable only within a track — committee alignment numbers and
+- Results are comparable only within a track: committee alignment numbers and
   predictive numbers are never averaged together.
 
 ## 6. Go/no-go criteria
@@ -182,19 +182,19 @@ exportable, reproducible artifact rather than a screenshot.
 An experiment graduates from research to product only if:
 
 - It shows a **marginal improvement in field overlap** (selection track) or
-  **Brier score** (predictive track) on the holdout seasons — not just the tuning
+  **Brier score** (predictive track) on the holdout seasons, not just the tuning
   seasons.
 - The result explicitly states whether the change makes the model
   **committee-aligned**, **intentionally different**, or **trading alignment for
-  predictive signal** — one of the three, stated in the artifact.
+  predictive signal**: one of the three, stated in the artifact.
 - Realistic targets: top-12 Spearman is capped at **0.75–0.85** (the current mean
   is 0.765; chasing 0.90+ means overfitting the committee). Predictive win-side
-  accuracy is a retrospective metric — do not conflate it with against-the-spread
+  accuracy is a retrospective metric; do not conflate it with against-the-spread
   performance, whose edges are far smaller.
 
-## 7. Deferred implementation checklist — do not start
+## 7. Deferred implementation checklist (do not start)
 
-- ~~`sroom calibrate` implementation~~ — shipped as v2.1 ([calibration.md](calibration.md))
+- ~~`sroom calibrate` implementation~~: shipped as v2.1 ([calibration.md](calibration.md))
 - Recency decay
 - Injury feed / VORP multiplier
 - Play-by-play DuckDB schema
@@ -206,7 +206,7 @@ Every v2 capability should move toward answering, for any scenario:
 
 - What changed? Why? Which teams?
 - Was this assumption historically better?
-- Is it committee-aligned or predictive — and is the divergence intentional?
+- Is it committee-aligned or predictive, and is the divergence intentional?
 - Can I export and share it as a reproducible artifact?
 
 ---
@@ -215,11 +215,11 @@ Every v2 capability should move toward answering, for any scenario:
 
 | Assumed gap | Repo reality |
 |---|---|
-| Build SOR for v1.5 | Already shipped — Poisson-binomial at 20% of the composite |
-| Target 0.90 Spearman | Unrealistic — cap expectations at 0.75–0.85 (current mean 0.765) |
-| 65% predictive target | Metric confusion — win-side accuracy (currently 72.2%, retrospective) is not against-the-spread accuracy; ATS edges are much smaller and must not be conflated |
+| Build SOR for v1.5 | Already shipped: Poisson-binomial at 20% of the composite |
+| Target 0.90 Spearman | Unrealistic; cap expectations at 0.75–0.85 (current mean 0.765) |
+| 65% predictive target | Metric confusion: win-side accuracy (currently 72.2%, retrospective) is not against-the-spread accuracy; ATS edges are much smaller and must not be conflated |
 | Recency decay = committee win | May conflict with CFP's stated behavior; Elo is already chronological |
-| Full PBP DuckDB for EPA | Premature — CFBD `/ppa/teams` and `/ppa/games` first |
+| Full PBP DuckDB for EPA | Premature: CFBD `/ppa/teams` and `/ppa/games` first |
 
 ---
 

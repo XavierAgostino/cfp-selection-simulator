@@ -133,7 +133,7 @@ experiment, and applies a research quality gate: deltas vs the production
 baseline, per-year metrics, 2022/2024 holdout checks, and a decision label
 (`recommended | promising | neutral | rejected | needs_more_data`) with a
 reason. It measures how transparent assumptions changed historical alignment
-and predictive signal — it never changes the default production weights.
+and predictive signal. It never changes the default production weights.
 
 ```bash
 ./bin/sroom calibrate [--years 2014:2024] [--include-ppa] [--include-sor-variants]
@@ -147,12 +147,12 @@ PPA score (per-game PPA through week 15, cached under
 `data/cache/cfbd/{year}/`). The default run never touches PPA data; seasons
 with missing PPA are reported as unavailable, never silently filled. Status:
 evaluated and currently **blocked** by the 2024 modern-format holdout despite
-broad historical gains — research-only, not promoted. See
+broad historical gains, but it stays research-only and is not promoted. See
 [research/calibration.md](research/calibration.md#opt-in-ppa-predictive-substitution-v23-research-only).
 
 `--include-sor-variants` adds the four research-only **SOR component-variant**
 experiments (v2.4): same baseline weights, SOR component recalculated with one
-changed assumption per variant — exact Poisson-binomial aggregation,
+changed assumption per variant: exact Poisson-binomial aggregation,
 venue-adjusted win probabilities, or a balanced / predictive-leaning
 opponent-rating source. Offline and deterministic (no new data source, no
 network beyond the games the harness already loads); the default run never
@@ -168,15 +168,15 @@ costs CFBD API quota at most once ever; cached seasons run fully offline.
 
 Outputs in `data/output/calibration/`:
 
-- `calibration.json` — machine-readable contract (experiments, metrics, deltas, holdouts, decisions)
-- `calibration.md` — human-readable report
-- `calibration.csv` — one summary row per experiment
-- `committee-emulation.{json,md,csv}` — Committee Emulation lite summary derived
+- `calibration.json`: machine-readable contract (experiments, metrics, deltas, holdouts, decisions)
+- `calibration.md`: human-readable report
+- `calibration.csv`: one summary row per experiment
+- `committee-emulation.{json,md,csv}`: Committee Emulation lite summary derived
   deterministically from the calibration results (committee-aligned candidate
   profiles, tradeoffs, holdout safety)
 
 "Recommended" and "committee-aligned candidate" mean *worth follow-up
-research* — no calibration run changes the production model.
+research*. No calibration run changes the production model.
 
 See [research/calibration.md](research/calibration.md) and
 [research/committee-emulation.md](research/committee-emulation.md) for

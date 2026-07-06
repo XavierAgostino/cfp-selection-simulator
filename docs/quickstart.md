@@ -3,7 +3,7 @@
 Get the simulator running in under five minutes. No API key required for demo mode.
 
 > [!TIP]
-> Prefer the web UI? Skip ahead to [step 4](#4-launch-the-web-app) after `make demo`, or run `make web` first — the setup wizard walks you through the rest.
+> Prefer the web UI? Skip ahead to [step 4](#4-launch-the-web-app) after `make demo`, or run `make web` first and let the setup wizard walk you through the rest.
 
 ---
 
@@ -118,7 +118,7 @@ Installs, runs doctor, executes sample pipeline, generates bracket HTML, and lis
 
 ## Next steps
 
-- [User Guide](user-guide.md) — how selection and seeding work
-- [Web App](web-app.md) — Next.js product surface
-- [CLI Reference](cli-reference.md) — all commands and flags
-- [Research Methodology](research/index.md) — model and validation
+- [User Guide](user-guide.md): how selection and seeding work
+- [Web App](web-app.md): the Next.js product surface
+- [CLI Reference](cli-reference.md): all commands and flags
+- [Research Methodology](research/index.md): the model and validation

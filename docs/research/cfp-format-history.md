@@ -29,7 +29,7 @@ PlayoffFormat(
 
 ## 2025–26 and Beyond: Straight Seeding
 
-- **Field:** unchanged — 5 highest-ranked conference champions + 7 at-large.
+- **Field:** unchanged, 5 highest-ranked conference champions + 7 at-large.
 - **Seeding:** Teams seeded 1–12 by **final committee ranking** (straight seeding).
 - **Byes:** Top four **overall** ranked teams receive first-round byes, regardless of conference champion status.
 - First-round pairings unchanged (5/12, 6/11, 7/10, 8/9).
@@ -60,4 +60,4 @@ Use `get_format_for_year(year)` from `src.config.formats`:
 | 2024 | `2024` | `champion_byes` |
 | 2025+ | `2025_plus` | `straight` |
 
-Years 2014–2023 raise `ValueError` — use historical validation modules for the 4-team era.
+Years 2014–2023 raise `ValueError`; use historical validation modules for the 4-team era.

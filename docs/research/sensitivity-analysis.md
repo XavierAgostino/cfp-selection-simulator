@@ -32,15 +32,15 @@ Status bands (exhaustive, non-overlapping):
 
 ## Weight perturbation method
 
-1. Start from the **run's actual weights** (engine defaults: resume 0.40 / predictive 0.30 / SOR 0.20 / SOS 0.10 — `src/pipeline/weights.py`).
+1. Start from the **run's actual weights** (engine defaults: resume 0.40 / predictive 0.30 / SOR 0.20 / SOS 0.10, see `src/pipeline/weights.py`).
 2. Per scenario, multiply each weight by an independent uniform factor `U(1 − r, 1 + r)` with `r = relative_range = 0.10`, clamp at zero, renormalize to sum 1.0.
-3. Recompute the weighted composite from the **precomputed** normalized component scores (min-max normalization is weight-independent, so components are computed once by the ranking pipeline and reused — no Colley/Massey/Elo rerun).
+3. Recompute the weighted composite from the **precomputed** normalized component scores (min-max normalization is weight-independent, so components are computed once by the ranking pipeline and reused, with no Colley/Massey/Elo rerun).
 4. Sort by composite, rerun `select_playoff_field` (5 auto bids + 7 at-large, displacement included), and record who made the field.
 5. Aggregate over `n_scenarios = 1000` trials with `random_seed = 42` (`numpy.random.default_rng`; same seed ⇒ byte-identical output).
 
 Scope: the base field plus first four out, next four out, and any displaced team (~20 teams).
 
-Per-scenario ranks use a stable pure-composite sort; the committee near-tie tiebreakers (±0.01 tolerance, `resolve_rank_ties`) are **not** re-applied inside scenarios. Teams separated only by a tiebreaker therefore read as genuinely unstable relative to each other — which is the signal this feature exists to surface. The deterministic base run (`base_rank`, `base_selected`, `base_field_cutoff`) still uses the fully tiebroken pipeline ranks.
+Per-scenario ranks use a stable pure-composite sort; the committee near-tie tiebreakers (±0.01 tolerance, `resolve_rank_ties`) are **not** re-applied inside scenarios. Teams separated only by a tiebreaker therefore read as genuinely unstable relative to each other, which is the signal this feature exists to surface. The deterministic base run (`base_rank`, `base_selected`, `base_field_cutoff`) still uses the fully tiebroken pipeline ranks.
 
 `primary_risk` classifies why a team misses: `auto_bid_displacement` (ranked inside the field size but pushed out by a champion's auto bid in most missed scenarios), `weight_sensitivity` (flips with the weights), `composite_gap` (never selected in any scenario), or `none`.
 
@@ -51,7 +51,7 @@ Per-scenario ranks use a stable pure-composite sort; the committee near-tie tieb
 - High selection frequency for a bubble team → selection robust to model assumptions.
 - Low frequency → small methodology changes flip the outcome; report with caution.
 - `median_rank` far from `base_rank` signals a profile whose components disagree (weight changes move it a lot).
-- On sample datasets with wide composite gaps, most teams legitimately land at 0.0 or 1.0 — that is honest output, not a stub.
+- On sample datasets with wide composite gaps, most teams legitimately land at 0.0 or 1.0. That is honest output, not a stub.
 
 ---
 

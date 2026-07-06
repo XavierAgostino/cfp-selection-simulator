@@ -6,7 +6,7 @@ Alabama made the 4-team playoff despite not winning the SEC championship. Ohio S
 
 ## Simulator relevance
 
-Use historical validation for 2017 to compare model rankings vs published CFP rankings. The composite pipeline separates **resume** (Colley + win%) from **predictive** (Massey + Elo) components — useful for post-hoc analysis of this decision.
+Use historical validation for 2017 to compare model rankings vs published CFP rankings. The composite pipeline separates **resume** (Colley + win%) from **predictive** (Massey + Elo) components, useful for post-hoc analysis of this decision.
 
 ## Questions to explore
 

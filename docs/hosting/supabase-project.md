@@ -1,4 +1,4 @@
-# Hosted Runs v1 — Supabase project
+# Hosted Runs v1: Supabase project
 
 Dedicated Supabase project for Selection Room hosted live beta. **Do not reuse unrelated app projects.**
 
@@ -23,8 +23,8 @@ supabase db push
 
 | Version | Name |
 |---------|------|
-| `20250704180000` | `hosted_runs_v1` — `run_jobs`, `runs`, `scenarios`, RLS + revokes |
-| `20250704181500` | `hosted_artifacts_bucket` — private `artifacts` Storage bucket |
+| `20250704180000` | `hosted_runs_v1`: `run_jobs`, `runs`, `scenarios`, RLS + revokes |
+| `20250704181500` | `hosted_artifacts_bucket`: private `artifacts` Storage bucket |
 
 Verify with MCP or SQL:
 
@@ -51,7 +51,7 @@ Public object URL returns non-200 (bucket is not public). Reads go through `/api
 
 - `run_jobs`, `runs`, `scenarios`: RLS enabled, **no policies**, `anon`/`authenticated` have **no grants**
 - Only `service_role` has table privileges
-- Service role key and database URL: **server/worker only** — set in Vercel/Trigger/local `.env.local`, never `NEXT_PUBLIC_*`
+- Service role key and database URL: **server/worker only**, set in Vercel/Trigger/local `.env.local`, never `NEXT_PUBLIC_*`
 
 ## Local env (manual)
 

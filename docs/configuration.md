@@ -58,7 +58,7 @@ sroom run --config configs/2025.yaml --year 2025 --week 14 --sample
 |-------|------|-------------|
 | `year` | int | Season (≥ 2024 for 12-team selection) |
 | `week` | int | Last week included in analysis |
-| `start_week` | int | First week for CFBD fetch (default 1 — full season) |
+| `start_week` | int | First week for CFBD fetch (default 1, the full season) |
 | `fbs_only` | bool | FBS teams only |
 | `mode` | string | `composite` (v2.0 default) |
 | `weights` | object | Ranking component weights (must sum to 1.0) |

@@ -1,7 +1,7 @@
-# Selection Room — JSON API Contracts (schema_version 1)
+# Selection Room JSON API Contracts (schema_version 1)
 
 The Python engine emits stable JSON under `data/output/api/`. The Next.js app in `web/`
-consumes these files verbatim (snake_case on the wire; TS types mirror snake_case — no
+consumes these files verbatim (snake_case on the wire; TS types mirror snake_case, no
 mapping layer). Pydantic v2 models in `src/api_contracts/models.py` are the source of
 truth; this doc mirrors them.
 
@@ -79,7 +79,7 @@ All top-level payloads carry `schema_version: 1`.
 }
 ```
 
-**Run identity:** `run_id` groups season/week (`2025_week15`). `scenario_id` distinguishes weight variants under the same week. Base pipeline runs use `scenario_id: "base"` and `stem === run_id`. Scenario runs use `stem: "{run_id}__{scenario_id}"` so API directories never collide. Scenario Lab derives `scenario_id` deterministically from the four composite weights as whole percents — `w{resume}-{predictive}-{sor}-{sos}` (e.g. `w45-25-20-10`) — so identical weights always map to the same stem and default weights collapse to `base`.
+**Run identity:** `run_id` groups season/week (`2025_week15`). `scenario_id` distinguishes weight variants under the same week. Base pipeline runs use `scenario_id: "base"` and `stem === run_id`. Scenario runs use `stem: "{run_id}__{scenario_id}"` so API directories never collide. Scenario Lab derives `scenario_id` deterministically from the four composite weights as whole percents, `w{resume}-{predictive}-{sor}-{sos}` (e.g. `w45-25-20-10`), so identical weights always map to the same stem and default weights collapse to `base`.
 
 Example scenario entry:
 
@@ -112,7 +112,7 @@ Example scenario entry:
   "weights": { "resume": 0.40, "predictive": 0.30, "sor": 0.20, "sos": 0.10 },
   "counts": { "n_games": 800, "n_teams": 134 },
   "has_bracket": true,
-  "record_meta": { /* RecordMeta — see below */ }
+  "record_meta": { /* RecordMeta, see below */ }
 }
 ```
 
@@ -260,8 +260,8 @@ Step values come from `src/selection/audit.py` `AuditStep` enum.
 
 **Coverage:** every team in `rankings.json` has an entry.
 
-- **`detail_level: "full"`** — projected field, first-four-out, next-four-out, and highest-ranked teams. Includes `schedule`, `selection_case`, `why_in`, and `concerns`.
-- **`detail_level: "summary"`** — all other ranked teams. Core scores, record, component ranks, and a basic `selection_case`; empty schedule.
+- **`detail_level: "full"`**: projected field, first-four-out, next-four-out, and highest-ranked teams. Includes `schedule`, `selection_case`, `why_in`, and `concerns`.
+- **`detail_level: "summary"`**: all other ranked teams. Core scores, record, component ranks, and a basic `selection_case`; empty schedule.
 
 Selection case bullets are generated from the active run in `src/api_contracts/selection_case.py` (rank, seed, bid type, ruleset, cutoffs, component ranks, displacement, stability, and record metadata). They are not static team blurbs.
 
@@ -270,7 +270,7 @@ The web drawer synthesizes a summary from `rankings.json` when an older run lack
 ## sensitivity.json
 
 Selection Stability: Monte Carlo weight-perturbation results
-(`src/validation/sensitivity.py`). It varies **model weights only** — never
+(`src/validation/sensitivity.py`). It varies **model weights only**, never
 future game outcomes; conference-champion labels are fixed per run. Frequencies
 are 0–1 on the wire (the UI renders percentages).
 
@@ -318,7 +318,7 @@ See `docs/research/sensitivity-analysis.md` for methodology.
 
 Historical validation for the `/validation` dashboard, written by
 `sroom validate` (`src/api_contracts/build.py::build_validation_payload`). It is
-**repo-level, not per-run** — one artifact for the whole deployment, refreshed
+**repo-level, not per-run**: one artifact for the whole deployment, refreshed
 whenever validation reruns. Missing file ⇒ the web UI shows the validation
 empty state (no proxy values).
 
@@ -381,4 +381,4 @@ Keyed by team name; passthrough of `src/assets/teams.py` `load_team_assets()`:
 ## Error contract (web route handler)
 
 `web/app/api/data/[...path]/route.ts` serves these files; missing file returns
-HTTP 404 with `{ "error": "not_found" }` — the first-run setup gate keys off this.
+HTTP 404 with `{ "error": "not_found" }`. The first-run setup gate keys off this.

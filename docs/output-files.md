@@ -57,7 +57,7 @@ Path: `data/output/rankings/{run_id}_rankings.csv`
 | `elo_rating` | Raw Elo rating |
 | `win_pct` | Win percentage in dataset |
 
-When using sample mode, `conference` and `conf_champ` are added during enrichment (not always present in CSV export — check field CSV for bid context).
+When using sample mode, `conference` and `conf_champ` are added during enrichment (not always present in CSV export, so check the field CSV for bid context).
 
 ---
 
@@ -148,7 +148,7 @@ Path: `data/output/validation/` (multiple files)
 
 Produced by `sroom validate`. See [Historical Validation](research/historical-validation.md) for `committee_replication.csv`, `era_selection_validation.csv`, `predictive_validation.csv`, and legacy `backtest_results.csv`.
 
-`sroom validate` also refreshes `data/output/api/validation.json` — the web
+`sroom validate` also refreshes `data/output/api/validation.json`, the web
 contract behind the `/validation` dashboard (schema in
 [api-contracts.md](api-contracts.md)). Its headline summary mirrors the
 Markdown report: committee/selection means exclude outlier seasons, and the
@@ -160,16 +160,16 @@ predictive summary covers composite rows only.
 
 Path: `data/output/calibration/`
 
-Produced by `sroom calibrate` (v2 research mode — never feeds the production
+Produced by `sroom calibrate` (v2 research mode, never feeds the production
 pipeline or the web app):
 
-- `calibration.json` — machine-readable contract: experiments, per-year
+- `calibration.json`: machine-readable contract with experiments, per-year
   metrics, deltas vs baseline, 2022/2024 holdout checks, decision labels
-- `calibration.md` — human-readable report
-- `calibration.csv` — one summary row per experiment
-- `committee-emulation.json` — committee-aligned candidate assessments derived
+- `calibration.md`: human-readable report
+- `calibration.csv`: one summary row per experiment
+- `committee-emulation.json`: committee-aligned candidate assessments derived
   deterministically from `calibration.json`
-- `committee-emulation.md` / `committee-emulation.csv` — report and table views
+- `committee-emulation.md` / `committee-emulation.csv`: report and table views
 
 With `--include-ppa`, the experiment list also contains the research-only
 `ppa_predictive_substitution` entry (marked `"experiment_type":
@@ -182,7 +182,7 @@ research-only SOR component-variant entries (`sor_exact_poisson_binomial`,
 `sor_opponent_rating_predictive`), each marked `"experiment_type":
 "component_variant"`, `"research_only": true` with a `"variant"` metadata
 block naming the component, variant id, and baseline/candidate methods. The
-variants recompute SOR from the games data the harness already loads — no new
+variants recompute SOR from the games data the harness already loads, with no new
 cache files of their own.
 
 Calibration season games are cached per year as

@@ -32,7 +32,7 @@ Example:
 | Doc | Audience | Purpose |
 |-----|----------|---------|
 | [Quickstart](quickstart.md) | Everyone | Install and run in 5 minutes |
-| [Web App](web-app.md) | Everyone | **Primary product surface** — Next.js Selection Room app |
+| [Web App](web-app.md) | Everyone | **Primary product surface**: the Next.js Selection Room app |
 | [User Guide](user-guide.md) | Analysts, fans | Understand outputs and workflows |
 | [CLI Reference](cli-reference.md) | Power users | Complete command reference |
 | [Output Files](output-files.md) | Data explorers | CSV/JSON column reference and run identity |
@@ -43,7 +43,7 @@ Example:
 
 ## Research and methodology
 
-The [Research index](research/index.md) is the **methodology homepage** — committee alignment, model design, validation, and limitations.
+The [Research index](research/index.md) is the **methodology homepage**: committee alignment, model design, validation, and limitations.
 
 | Doc | Purpose |
 |-----|---------|
