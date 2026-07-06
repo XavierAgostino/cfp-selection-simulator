@@ -50,7 +50,7 @@ export function runHeaderSubline(run: RunSummary): string {
  * over source so the comparison context reads first. Purely presentational —
  * the run's mode/selection behavior is unchanged.
  */
-export type RunSourceTone = "live" | "sample" | "scenario";
+export type RunSourceTone = "live" | "sample" | "scenario" | "final";
 
 export interface RunSourceBadgeInfo {
   label: string;
