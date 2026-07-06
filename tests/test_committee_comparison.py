@@ -144,9 +144,7 @@ def test_roster_covers_committee_top25(payload: CommitteeComparisonPayload):
 
 def test_rows_sorted_by_committee_rank_first(payload: CommitteeComparisonPayload):
     ranked = [row for row in payload.teams if row.committee_rank is not None]
-    assert [row.committee_rank for row in ranked] == sorted(
-        row.committee_rank for row in ranked
-    )
+    assert [row.committee_rank for row in ranked] == sorted(row.committee_rank for row in ranked)
     # Committee-unranked rows sort after all ranked rows.
     tail = payload.teams[len(ranked) :]
     assert all(row.committee_rank is None for row in tail)
@@ -156,9 +154,7 @@ def test_payload_identity_and_serialization(payload: CommitteeComparisonPayload)
     assert payload.season == 2025
     assert payload.reference == "final"
     assert "2025" in payload.reference_label
-    round_tripped = CommitteeComparisonPayload.model_validate_json(
-        payload.model_dump_json()
-    )
+    round_tripped = CommitteeComparisonPayload.model_validate_json(payload.model_dump_json())
     assert round_tripped == payload
 
 
