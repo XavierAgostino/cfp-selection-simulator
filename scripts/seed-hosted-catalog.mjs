@@ -14,8 +14,13 @@
  *
  * Reads web/.env.hosted.local (gitignored) for the hosted Supabase credentials.
  *
- *   node scripts/seed-hosted-catalog.mjs            # seed
+ *   node scripts/seed-hosted-catalog.mjs            # seed (upsert only)
  *   node scripts/seed-hosted-catalog.mjs --dry-run  # preview, write nothing
+ *   node scripts/seed-hosted-catalog.mjs --prune    # seed, then delete catalog
+ *                                                    # rows + Storage runs/<stem>/
+ *                                                    # prefixes absent from runs.json
+ *                                                    # (opt-in — syncs prod to the
+ *                                                    #  exact set in runs.json)
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -30,6 +35,7 @@ const { createClient } = require(
 );
 
 const dryRun = process.argv.includes("--dry-run");
+const prune = process.argv.includes("--prune");
 const envPath = path.join(root, "web", ".env.hosted.local");
 const dataDir =
   process.env.SELECTION_ROOM_DATA_DIR ?? path.join(root, "data", "output", "api");
@@ -98,7 +104,14 @@ async function main() {
   );
   const runs = Array.isArray(runsIndex.runs) ? runsIndex.runs : [];
 
-  console.log(`Selection Room — seed hosted catalog${dryRun ? " (dry run)" : ""}`);
+  const keepStems = runs.map((run) => run.stem);
+  // Guard: pruning against an empty index would wipe the whole catalog.
+  if (prune && keepStems.length === 0) {
+    die("--prune refused: runs.json lists zero runs (would delete everything).");
+  }
+
+  const modeLabel = dryRun ? " (dry run)" : prune ? " (prune)" : "";
+  console.log(`Selection Room — seed hosted catalog${modeLabel}`);
   console.log(`  data dir : ${dataDir}`);
   console.log(`  bucket   : ${bucket}`);
   console.log(`  artifacts: ${storageKeys.length} JSON files`);
@@ -111,9 +124,19 @@ async function main() {
     for (const run of runs) {
       console.log(`  • ${run.stem}  (${run.label ?? run.scenario_id})`);
     }
+    if (prune) {
+      console.log(
+        "\nWould prune (live-only, requires a connection to enumerate): any " +
+          "catalog row + runs/<stem>/ Storage prefix whose stem is NOT one of:",
+      );
+      for (const stem of keepStems) console.log(`  ✓ keep ${stem}`);
+    }
     console.log("\nDry run — nothing written.");
     return;
   }
+
+  let prunedRows = 0;
+  let prunedFiles = 0;
 
   // 1. Upload artifacts to Supabase Storage.
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
@@ -172,13 +195,51 @@ async function main() {
       `;
       console.log(`  • upserted ${run.stem}`);
     }
+
+    // 3. Optional prune: drop catalog rows for stems no longer in runs.json.
+    if (prune) {
+      const existing = await sql`SELECT stem FROM runs`;
+      const staleStems = existing
+        .map((row) => row.stem)
+        .filter((stem) => !keepStems.includes(stem));
+      if (staleStems.length === 0) {
+        console.log("  • prune: catalog already matches runs.json");
+      } else {
+        await sql`DELETE FROM runs WHERE stem = ANY(${staleStems})`;
+        prunedRows = staleStems.length;
+        for (const stem of staleStems) console.log(`  • pruned row ${stem}`);
+      }
+    }
   } finally {
     await sql.end({ timeout: 5 });
   }
 
+  // 4. Optional prune: remove Storage runs/<stem>/ prefixes for stale stems.
+  if (prune) {
+    const { data: runDirs, error } = await supabase.storage
+      .from(bucket)
+      .list("runs");
+    if (error) die(`Prune: could not list runs/ in Storage: ${error.message}`);
+    for (const dir of runDirs ?? []) {
+      if (keepStems.includes(dir.name)) continue;
+      const { data: files } = await supabase.storage
+        .from(bucket)
+        .list(`runs/${dir.name}`);
+      const paths = (files ?? []).map((f) => `runs/${dir.name}/${f.name}`);
+      if (paths.length === 0) continue;
+      const { error: rmError } = await supabase.storage.from(bucket).remove(paths);
+      if (rmError) die(`Prune: failed to remove runs/${dir.name}/: ${rmError.message}`);
+      prunedFiles += paths.length;
+      console.log(`  • pruned Storage runs/${dir.name}/ (${paths.length} files)`);
+    }
+  }
+
+  const pruneNote = prune
+    ? ` Pruned ${prunedRows} row(s) + ${prunedFiles} Storage file(s).`
+    : "";
   console.log(
-    `\n✓ Seeded ${uploaded} artifacts + ${runs.length} runs. ` +
-      "Hosted deployment now browses the official sample field.",
+    `\n✓ Seeded ${uploaded} artifacts + ${runs.length} runs.${pruneNote} ` +
+      "Hosted deployment now browses the current run set.",
   );
 }
 
