@@ -33,6 +33,7 @@ export function ShareCardFrame({
               alt=""
               width={36}
               height={36}
+              crossOrigin="anonymous"
               className="h-9 w-9"
             />
             <span className="text-lg font-semibold tracking-tight text-foreground">

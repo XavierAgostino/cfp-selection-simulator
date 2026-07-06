@@ -27,14 +27,67 @@ function inlineSvgPaint(node: HTMLElement): void {
   }
 }
 
+/** Resolve Next.js image optimizer URLs to their origin CDN src for CORS capture. */
+function unwrapOptimizedImages(node: HTMLElement): void {
+  for (const img of node.querySelectorAll("img")) {
+    const src = img.getAttribute("src") ?? "";
+    if (src.includes("/_next/image")) {
+      try {
+        const parsed = new URL(src, window.location.origin);
+        const original = parsed.searchParams.get("url");
+        if (original) {
+          img.crossOrigin = "anonymous";
+          img.src = original;
+        }
+      } catch {
+        // Keep existing src if parsing fails.
+      }
+    } else if (src.startsWith("http://") || src.startsWith("https://")) {
+      img.crossOrigin = "anonymous";
+    } else if (src.startsWith("/")) {
+      img.crossOrigin = "anonymous";
+    }
+  }
+}
+
+/** Wait until every image in the capture subtree has loaded or failed. */
+async function waitForImages(node: HTMLElement): Promise<void> {
+  const images = [...node.querySelectorAll("img")];
+  await Promise.all(
+    images.map(
+      (img) =>
+        new Promise<void>((resolve) => {
+          if (img.complete) {
+            resolve();
+            return;
+          }
+          const done = () => resolve();
+          img.addEventListener("load", done, { once: true });
+          img.addEventListener("error", done, { once: true });
+        }),
+    ),
+  );
+}
+
+/** One animation frame so refs/layout/fonts settle after off-screen mount. */
+function waitForPaint(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
+}
+
 export async function exportNodeToPng(
   node: HTMLElement,
   filename: string,
   options: ExportPngOptions = {},
 ): Promise<void> {
-  // Fonts must be resolved before capture or text falls back mid-render.
+  await waitForPaint();
   await document.fonts.ready;
   inlineSvgPaint(node);
+  unwrapOptimizedImages(node);
+  await waitForImages(node);
   const dataUrl = await toPng(node, {
     pixelRatio: options.pixelRatio ?? 2,
     // Refetch images with CORS instead of reusing the <img> no-cors cache
