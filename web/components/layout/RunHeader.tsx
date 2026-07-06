@@ -1,4 +1,4 @@
-import { ChevronDown, Info, TriangleAlert } from "lucide-react";
+import { ChevronDown, Info, Lock, TriangleAlert } from "lucide-react";
 
 import { RunHeaderActions } from "@/components/layout/RunHeaderActions";
 import { RunFreshness } from "@/components/layout/RunFreshness";
@@ -7,12 +7,14 @@ import { RunSwitcher } from "@/components/layout/RunSwitcher";
 import { getRuns, NotFoundError } from "@/lib/data";
 import {
   formatWeightsLabeled,
+  isBaseRun,
   runConfigLabel,
   runFreshness,
   runHeaderSubline,
   runHeaderTitle,
   runSourceBadge,
 } from "@/lib/runDisplay";
+import { resolveSeasonPhase } from "@/lib/seasonPhase";
 import type { RunsPayload, RunSummary } from "@/lib/types";
 import { bodyMuted } from "@/lib/typography";
 import { cn } from "@/lib/utils";
@@ -80,7 +82,19 @@ export async function RunHeader({ stem }: RunHeaderProps) {
     );
   }
 
-  const badge = runSourceBadge(run);
+  const phase = resolveSeasonPhase();
+
+  // Off-season, a base run isn't a "live" projection anymore — it's the season's
+  // settled final field. Reframe the badge (amber "final" tone) so the reader
+  // isn't told stale committee-era data is live. Scenarios keep their identity.
+  const offSeasonFinal = phase.phase === "offseason" && isBaseRun(run);
+  const badge = offSeasonFinal
+    ? {
+        tone: "final" as const,
+        label: `Final field · ${run.season}`,
+        description: `The committee's final ${run.season} field. Live weekly projections return when the ${run.season + 1} committee rankings begin.`,
+      }
+    : runSourceBadge(run);
   const freshness = runFreshness(run);
   const isSample = badge.tone === "sample";
   const ContextIcon = isSample ? TriangleAlert : Info;
@@ -90,11 +104,24 @@ export async function RunHeader({ stem }: RunHeaderProps) {
       {/* Top row: dominant source signal (left), actions (right, stacks on mobile) */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <RunSourceBadge tone={badge.tone} label={badge.label} />
-        <RunHeaderActions
-          initialRuns={runs}
-          currentRun={run}
-          currentStem={currentStem}
-        />
+        {phase.phase === "live" ? (
+          <RunHeaderActions
+            initialRuns={runs}
+            currentRun={run}
+            currentStem={currentStem}
+          />
+        ) : (
+          <div className="flex shrink-0 flex-wrap items-center gap-2 lg:flex-col lg:items-end">
+            {runs.runs.length > 1 ? (
+              <RunSwitcher
+                runs={runs.runs}
+                currentStem={currentStem}
+                latestStem={runs.latest.stem}
+              />
+            ) : null}
+            <RunAnalysisLocked nextOpen={phase.nextOpen} />
+          </div>
+        )}
       </div>
 
       {/* Identity: what this run is, in plain terms */}
@@ -140,6 +167,43 @@ export async function RunHeader({ stem }: RunHeaderProps) {
         </div>
       </details>
     </header>
+  );
+}
+
+/**
+ * Off-season stand-in for the live "Run Analysis" action. The action isn't
+ * broken — there's simply no live field to project until the committee starts
+ * ranking. This states that plainly and names the reopen date, and because
+ * RunHeader is a server component that recomputes each request, it flips itself
+ * back to the live control on the calendar with no redeploy. The standby dot
+ * (a muted-amber pulse) signals "armed, waiting" rather than "disabled".
+ */
+function RunAnalysisLocked({ nextOpen }: { nextOpen: Date }) {
+  const opensLabel = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(nextOpen);
+
+  return (
+    <div className="flex flex-col items-start gap-1.5 lg:items-end">
+      <span
+        className="inline-flex items-center gap-2 rounded-md border border-dashed border-border/70 bg-secondary/40 px-3 py-1.5 text-xs font-medium text-muted-foreground"
+        title="Live analysis reopens when the committee's first rankings post."
+      >
+        <Lock className="size-3.5 shrink-0 text-muted-foreground/80" aria-hidden />
+        Live analysis opens in season
+      </span>
+      <span className="inline-flex items-center gap-1.5 pr-0.5 text-[11px] text-muted-foreground/70">
+        <span className="relative flex size-1.5" aria-hidden>
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-tag-gold-dot opacity-60" />
+          <span className="relative inline-flex size-1.5 rounded-full bg-tag-gold-dot" />
+        </span>
+        Projections resume {opensLabel}
+      </span>
+    </div>
   );
 }
 

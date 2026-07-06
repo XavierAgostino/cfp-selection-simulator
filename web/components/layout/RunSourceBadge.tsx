@@ -11,12 +11,14 @@ const toneShell: Record<RunSourceTone, string> = {
   live: "border-tag-green-border bg-tag-green-bg text-tag-green-text",
   sample: "border-tag-gold-border bg-tag-gold-bg text-tag-gold-text",
   scenario: "border-tag-purple-border bg-tag-purple-bg text-tag-purple-text",
+  final: "border-tag-gold-border bg-tag-gold-bg text-tag-gold-text",
 };
 
 const toneDot: Record<RunSourceTone, string> = {
   live: "bg-tag-green-dot",
   sample: "bg-tag-gold-dot",
   scenario: "bg-tag-purple-dot",
+  final: "bg-tag-gold-dot",
 };
 
 interface RunSourceBadgeProps {
