@@ -12,6 +12,7 @@ import type {
   TeamResumesPayload,
   ValidationPayload,
 } from "@/lib/types";
+import { getSiteUrl } from "@/lib/site";
 
 /** Thrown when a requested data file does not exist yet (HTTP 404). */
 export class NotFoundError extends Error {
@@ -56,7 +57,7 @@ async function resolveUrl(path: string): Promise<string> {
   const protocol = h.get("x-forwarded-proto") ?? "http";
   const origin = host
     ? `${protocol}://${host}`
-    : (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000");
+    : getSiteUrl();
   return `${origin}${DATA_BASE_PATH}/${path}`;
 }
 

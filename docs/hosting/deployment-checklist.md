@@ -71,10 +71,22 @@ of the global caps.
      (Supabase brokers the OAuth handshake; the app returns to `/auth/callback`).
    - Copy the Client ID and generate a Client Secret.
 2. **Supabase → Authentication → Providers → GitHub**: enable, paste Client ID/Secret.
-3. **Supabase → Authentication → URL Configuration**: add your hosted origin(s) and
-   `http://localhost:3099` (smoke) to the redirect allow-list.
+3. **Supabase → Authentication → URL Configuration**:
+   - **Site URL:** `https://www.selectionroom.org`
+   - **Redirect URLs:** add each line exactly:
+     - `https://www.selectionroom.org/auth/callback`
+     - `https://selectionroom.org/auth/callback`
+     - `https://selection-room.vercel.app/auth/callback` (legacy / previews)
+     - `http://localhost:3000/auth/callback`
+     - `http://localhost:3099/auth/callback` (hosted smoke)
 4. **Apply the migration** so per-user quota can be counted:
    `supabase db push` (adds `run_jobs.user_id` + index, `20260705180000_run_jobs_user_id.sql`).
+
+**CLI (optional):** with a [Supabase personal access token](https://supabase.com/dashboard/account/tokens):
+
+```bash
+SUPABASE_ACCESS_TOKEN=sbp_... ./scripts/update-hosted-auth-urls.sh
+```
 
 The two `NEXT_PUBLIC_SUPABASE_*` values are public (they ship in the bundle), so set
 them on Vercel and in `web/.env.hosted.local`.
@@ -157,7 +169,8 @@ the dashboard, and confirm a `run_jobs` row + catalog `runs` row appear.
 
 The official project (`selection-room`, renamed from `selection-room-hosted`) is
 now **the** product: anonymous visitors browse the seeded official catalog,
-GitHub sign-in gates run launch. It serves at `https://selection-room.vercel.app`.
+GitHub sign-in gates run launch. Production URL: **`https://www.selectionroom.org`**
+(apex `selectionroom.org` redirects to www). Legacy alias: `https://selection-room.vercel.app`.
 The standalone read-only demo (`NEXT_PUBLIC_SELECTION_ROOM_DEMO_MODE`) has been
 retired in code: no demo flag, banner, or gating remains.
 
@@ -174,7 +187,7 @@ retired in code: no demo flag, banner, or gating remains.
 
 ```bash
 ./scripts/vercel-link-hosted.sh
-NEXT_PUBLIC_SITE_URL=https://selection-room.vercel.app ./scripts/sync-vercel-hosted-env.sh production
+NEXT_PUBLIC_SITE_URL=https://www.selectionroom.org ./scripts/sync-vercel-hosted-env.sh production
 # Deploy from repo root (project rootDirectory=web)
 npx vercel deploy --prod --yes
 ```
@@ -193,8 +206,8 @@ npx vercel deploy --prod --yes
 The standalone read-only demo has been retired. The separate demo project
 (originally named `selection-room`) was deleted, the former hosted project was
 renamed `selection-room-hosted` -> `selection-room` (same projectId, so the Git
-link and future deploys are unaffected), and the canonical
-`selection-room.vercel.app` domain now points at that single official project.
+link and future deploys are unaffected), and the canonical production domain is
+**`www.selectionroom.org`**. The `selection-room.vercel.app` alias remains valid.
 
 The `scripts/vercel-link-demo.sh` helper and `NEXT_PUBLIC_SITE_URL`-mirroring for
 the demo project have been removed.

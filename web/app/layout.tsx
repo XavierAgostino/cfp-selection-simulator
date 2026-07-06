@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { TeamAssetsProvider } from "@/components/team/TeamAssetsProvider";
 import { TeamDrawerProvider } from "@/components/team/TeamDrawerProvider";
 import { themeBootstrapScript } from "@/lib/theme-bootstrap";
+import { getSiteUrl } from "@/lib/site";
 import { RootProvider } from "fumadocs-ui/provider/next";
 
 const geistSans = Geist({
@@ -24,6 +25,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Selection Room | CFP Selection Simulator",
   description:
     "A premium College Football Playoff selection simulator: live field projections, rankings, bubble watch, and bracket reveal.",
