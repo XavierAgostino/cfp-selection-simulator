@@ -8,7 +8,13 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ChevronsUpDown, SearchX } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ChevronRight,
+  ChevronsUpDown,
+  SearchX,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -19,6 +25,8 @@ import {
 } from "@/components/ui/table";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { TeamHoverCard } from "@/components/team/TeamHoverCard";
+import { TeamLogoTile } from "@/components/team/TeamLogoTile";
+import { BidBadge } from "@/components/team/BidBadge";
 import { useActiveRun } from "@/components/team/useActiveRun";
 import { createRankingColumns } from "@/components/rankings/columns";
 import {
@@ -26,8 +34,59 @@ import {
   type BidStatusFilter,
 } from "@/components/rankings/TableToolbar";
 import { buildCsv, downloadCsv } from "@/lib/exportCsv";
+import { formatRecord, formatScore } from "@/lib/format";
 import type { RankingRow, RecordMeta } from "@/lib/types";
+import { teamName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
+
+/** Compact tappable team card — the mobile stand-in for one table row. */
+function RankingCard({
+  team,
+  onOpen,
+}: {
+  team: RankingRow;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`Open resume for ${team.team}`}
+      className={cn(
+        "flex w-full items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 text-left transition-colors",
+        "hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+        team.in_field && "bg-secondary/20",
+      )}
+    >
+      <span className="w-6 shrink-0 text-center text-sm font-semibold tabular-nums text-foreground">
+        {team.rank}
+      </span>
+      <TeamLogoTile
+        team={team.team}
+        logoUrl={team.logo_url}
+        abbreviation={team.abbreviation}
+        primaryColor={team.primary_color}
+        size={30}
+      />
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className={teamName}>{team.team}</span>
+        <span className="text-xs text-muted-foreground">
+          {team.conference} &middot; {formatRecord(team.record)}
+        </span>
+      </div>
+      <div className="flex shrink-0 flex-col items-end gap-1">
+        <span className="text-sm tabular-nums text-foreground">
+          {formatScore(team.composite_score)}
+        </span>
+        <BidBadge bidType={team.bid_type} />
+      </div>
+      <ChevronRight
+        aria-hidden
+        className="size-4 shrink-0 text-muted-foreground/60"
+      />
+    </button>
+  );
+}
 
 interface RankingTableProps {
   teams: RankingRow[];
@@ -170,7 +229,24 @@ export function RankingTable({ teams, recordMeta, season, week }: RankingTablePr
         resultCount={filtered.length}
         onDownloadCsv={handleDownloadCsv}
       />
-      <div className="overflow-hidden rounded-xl bg-card">
+      {/* Mobile: compact card list; the full table needs more width than a phone has. */}
+      <div className="flex flex-col gap-2 md:hidden">
+        {table.getRowModel().rows.length === 0 ? (
+          <div className="flex flex-col items-center gap-2 rounded-xl bg-card py-16 text-muted-foreground">
+            <SearchX className="h-5 w-5" />
+            <span className="text-sm">No teams match these filters.</span>
+          </div>
+        ) : (
+          table.getRowModel().rows.map((row) => (
+            <RankingCard
+              key={row.id}
+              team={row.original}
+              onOpen={() => openTeam(row.original.team)}
+            />
+          ))
+        )}
+      </div>
+      <div className="hidden overflow-hidden rounded-xl bg-card md:block">
         <div className="max-h-[70vh] overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-card">
@@ -255,7 +331,7 @@ export function RankingTable({ teams, recordMeta, season, week }: RankingTablePr
                           }
                         }}
                         className={cn(
-                          "cursor-pointer outline-none focus-visible:bg-secondary/60",
+                          "group cursor-pointer outline-none focus-visible:bg-secondary/60",
                           team.in_field && "bg-secondary/20",
                         )}
                       >

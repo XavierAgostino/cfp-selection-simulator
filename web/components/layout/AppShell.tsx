@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { MobileSectionNav } from "@/components/layout/MobileSectionNav";
 import { PageBreadcrumbs } from "@/components/layout/PageBreadcrumbs";
 import { cn } from "@/lib/utils";
 
@@ -15,16 +16,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 
   return (
-    <main
-      className={cn(
-        "mx-auto w-full flex-1 py-8",
-        wideCanvas
-          ? "max-w-none px-3 sm:px-4 md:px-5"
-          : "max-w-6xl px-4 sm:px-6",
-      )}
-    >
-      <PageBreadcrumbs />
-      {children}
-    </main>
+    <>
+      <MobileSectionNav />
+      <main
+        className={cn(
+          "mx-auto w-full flex-1 py-8",
+          wideCanvas
+            ? "max-w-none px-3 sm:px-4 md:px-5"
+            : "max-w-6xl px-4 sm:px-6",
+        )}
+      >
+        <PageBreadcrumbs />
+        {children}
+      </main>
+    </>
   );
 }
