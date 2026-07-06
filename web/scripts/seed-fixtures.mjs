@@ -17,6 +17,7 @@ const PER_RUN_KINDS = [
   "audit",
   "team-resumes",
   "sensitivity",
+  "committee",
 ];
 
 fs.mkdirSync(DEST, { recursive: true });

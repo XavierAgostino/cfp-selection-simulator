@@ -18,6 +18,9 @@ from src.api_contracts.models import (
     BracketPod,
     BracketRounds,
     Championship,
+    CommitteeComparisonPayload,
+    CommitteeComparisonSummary,
+    CommitteeComparisonTeam,
     CommitteeSummary,
     CommitteeValidationRow,
     ComponentRanks,
@@ -628,6 +631,167 @@ def build_sensitivity_payload(
         ),
         base_field_cutoff=BaseFieldCutoff(**sensitivity_result.base_field_cutoff),
         teams=teams,
+    )
+
+
+COMMITTEE_COMPARISON_TOP_N = 25
+
+
+def build_committee_comparison_payload(
+    config: SimulatorConfig,
+    rankings_payload: RankingsPayload,
+    use_sample: bool,
+) -> Optional[CommitteeComparisonPayload]:
+    """Compare this run's projection to the committee's published final
+    rankings and field for the same season.
+
+    Returns None for seasons without checked-in committee reference data, so
+    the artifact is simply absent rather than empty. The roster is the union of
+    the committee's final top 25 and the model's top 25 plus its full field.
+    """
+    from src.validation.historical import (
+        HISTORICAL_CFP_AUTO_BIDS,
+        HISTORICAL_FIRST_TEAM_OUT,
+        historical_playoff_field,
+        historical_top25,
+    )
+
+    year = config.year
+    committee_top25 = historical_top25(year)
+    committee_field = historical_playoff_field(year)
+    if not committee_top25 or not committee_field:
+        return None
+
+    committee_rank = {team: i + 1 for i, team in enumerate(committee_top25)}
+    # Field lists are stored in committee-seed order, so position = seed.
+    committee_seed = {team: i + 1 for i, team in enumerate(committee_field)}
+    committee_field_set = set(committee_field)
+    committee_autos = set(HISTORICAL_CFP_AUTO_BIDS.get(year, []))
+
+    model_by_team = {t.team: t for t in rankings_payload.teams}
+    model_field = [t for t in rankings_payload.teams if t.in_field]
+    field_comparable = len(model_field) == len(committee_field)
+
+    roster = set(committee_top25) | {
+        t.team
+        for t in rankings_payload.teams
+        if t.in_field or t.rank <= COMMITTEE_COMPARISON_TOP_N
+    }
+
+    rows: List[CommitteeComparisonTeam] = []
+    for team in roster:
+        model = model_by_team.get(team)
+        c_rank = committee_rank.get(team)
+        m_rank = model.rank if model is not None else None
+        model_in = bool(model.in_field) if model is not None else False
+        committee_in = team in committee_field_set
+
+        if model_in and committee_in:
+            agreement = "both_in"
+        elif model_in:
+            agreement = "model_only"
+        elif committee_in:
+            agreement = "committee_only"
+        else:
+            agreement = "both_out"
+
+        if model is not None:
+            abbreviation = model.abbreviation
+            conference = model.conference
+            logo_url = model.logo_url
+            primary_color = model.primary_color
+        else:
+            asset = _team_asset(team, use_sample)
+            abbreviation = _abbreviation(asset)
+            conference = None
+            logo_url = _logo_url(team, use_sample)
+            primary_color = asset.primary_color if asset else None
+
+        rows.append(
+            CommitteeComparisonTeam(
+                team=team,
+                abbreviation=abbreviation,
+                conference=conference,
+                logo_url=logo_url,
+                primary_color=primary_color,
+                model_rank=m_rank,
+                committee_rank=c_rank,
+                rank_delta=(c_rank - m_rank) if c_rank is not None and m_rank is not None else None,
+                model_in_field=model_in,
+                committee_in_field=committee_in,
+                model_seed=model.seed if model is not None else None,
+                committee_seed=committee_seed.get(team),
+                model_bid_type=model.bid_type if model is not None else None,
+                committee_bid_type=(
+                    ("auto" if team in committee_autos else "at_large") if committee_in else None
+                ),
+                agreement=agreement,
+            )
+        )
+
+    rows.sort(
+        key=lambda r: (
+            r.committee_rank if r.committee_rank is not None else 99,
+            r.model_rank if r.model_rank is not None else 99,
+            r.team,
+        )
+    )
+
+    model_field_set = {t.team for t in model_field}
+    overlap = model_field_set & committee_field_set
+    model_only = sorted(
+        model_field_set - committee_field_set,
+        key=lambda t: model_by_team[t].rank,
+    )
+    committee_only = sorted(
+        committee_field_set - model_field_set,
+        key=lambda t: committee_rank.get(t, 99),
+    )
+
+    # Model first team out: best-ranked team the model left outside its field.
+    model_first_out = next(
+        (t.team for t in rankings_payload.teams if not t.in_field),
+        None,
+    )
+    committee_first_out = HISTORICAL_FIRST_TEAM_OUT.get(year)
+    if committee_first_out is None:
+        committee_first_out = next(
+            (t for t in committee_top25 if t not in committee_field_set), None
+        )
+
+    seed_exact_matches: Optional[int] = None
+    if field_comparable:
+        seed_exact_matches = sum(
+            1
+            for t in model_field
+            if t.seed is not None and committee_seed.get(t.team) == t.seed
+        )
+
+    summary = CommitteeComparisonSummary(
+        committee_field_size=len(committee_field),
+        model_field_size=len(model_field),
+        field_overlap_count=len(overlap),
+        field_overlap_ratio=round(len(overlap) / len(committee_field), 4),
+        model_only_field=model_only,
+        committee_only_field=committee_only,
+        model_first_team_out=model_first_out,
+        committee_first_team_out=committee_first_out,
+        seed_exact_matches=seed_exact_matches,
+    )
+
+    return CommitteeComparisonPayload(
+        season=year,
+        week=config.week,
+        ruleset=_ruleset_name(config),
+        generated_at=_now_iso(),
+        reference_label=f"Final {year} CFP committee rankings",
+        source_note=(
+            "Committee reference data is checked into the repo "
+            "(src/validation/historical.py) from the official final CFP rankings release."
+        ),
+        field_comparable=field_comparable,
+        summary=summary,
+        teams=rows,
     )
 
 

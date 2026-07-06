@@ -1,9 +1,10 @@
 import { Terminal } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
+import { CommitteeComparisonPanel } from "@/components/committee/CommitteeComparisonPanel";
 import { ValidationDashboard } from "@/components/validation/ValidationDashboard";
-import { getValidationData } from "@/lib/data";
-import { pageDescription, pageTitle } from "@/lib/typography";
-import type { ValidationPayload } from "@/lib/types";
+import { getRunFile, getValidationData, NotFoundError } from "@/lib/data";
+import { pageDescription, pageTitle, sectionTitle } from "@/lib/typography";
+import type { CommitteeComparisonPayload, ValidationPayload } from "@/lib/types";
 
 export const metadata = {
   title: "Model Validation | Selection Room",
@@ -11,12 +12,33 @@ export const metadata = {
     "How the transparent, rules-based model compares to the real CFP Selection Committee across historical seasons.",
 };
 
+interface ValidationPageProps {
+  searchParams: Promise<{ run?: string }>;
+}
+
 async function loadValidation(): Promise<ValidationPayload | null> {
   return getValidationData();
 }
 
-export default async function ValidationPage() {
-  const data = await loadValidation();
+/** Per-run committee comparison; absent for seasons without committee data. */
+async function loadCommittee(
+  stem: string | null,
+): Promise<CommitteeComparisonPayload | null> {
+  try {
+    return await getRunFile(stem, "committee");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}
+
+export default async function ValidationPage({ searchParams }: ValidationPageProps) {
+  const { run } = await searchParams;
+  const stem = run ?? null;
+  const [data, committee] = await Promise.all([
+    loadValidation(),
+    loadCommittee(stem),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -29,8 +51,32 @@ export default async function ValidationPage() {
         </p>
       </header>
 
+      {committee ? (
+        <section className="flex flex-col gap-3">
+          <div>
+            <h2 className={sectionTitle}>This run vs the committee</h2>
+            <p className="text-sm text-muted-foreground">
+              The current run&apos;s projection against the committee&apos;s
+              published final rankings for {committee.season}.
+            </p>
+          </div>
+          <CommitteeComparisonPanel data={committee} />
+        </section>
+      ) : null}
+
       {data ? (
-        <ValidationDashboard data={data} />
+        <section className="flex flex-col gap-3">
+          {committee ? (
+            <div>
+              <h2 className={sectionTitle}>Historical validation</h2>
+              <p className="text-sm text-muted-foreground">
+                The same comparison run across every completed season with
+                committee data.
+              </p>
+            </div>
+          ) : null}
+          <ValidationDashboard data={data} />
+        </section>
       ) : (
         <EmptyState
           title="No validation run yet"

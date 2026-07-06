@@ -372,6 +372,69 @@ class SensitivityPayload(BaseModel):
     teams: List[SelectionStabilityTeam] = Field(default_factory=list)
 
 
+# --- committee.json -----------------------------------------------------------------
+#
+# Per-run comparison of this run's projection against the real committee's
+# published final rankings and field for the same season. Optional artifact:
+# only written for seasons with checked-in committee reference data
+# (src/validation/historical.py). Frames every difference as a disagreement to
+# audit, never as an error in either direction.
+
+CommitteeAgreement = Literal["both_in", "both_out", "model_only", "committee_only"]
+
+
+class CommitteeComparisonTeam(BaseModel):
+    team: str
+    abbreviation: Optional[str] = None
+    conference: Optional[str] = None
+    logo_url: Optional[str] = None
+    primary_color: Optional[str] = None
+    model_rank: Optional[int] = None
+    committee_rank: Optional[int] = None
+    # committee_rank - model_rank; positive = the model ranks this team higher
+    # (better) than the committee did. None when either side is unranked.
+    rank_delta: Optional[int] = None
+    model_in_field: bool = False
+    committee_in_field: bool = False
+    model_seed: Optional[int] = None
+    committee_seed: Optional[int] = None
+    model_bid_type: Optional[BidType] = None
+    committee_bid_type: Optional[BidType] = None
+    agreement: CommitteeAgreement
+
+
+class CommitteeComparisonSummary(BaseModel):
+    committee_field_size: int
+    model_field_size: int
+    field_overlap_count: int
+    # Overlap over the committee field size.
+    field_overlap_ratio: float
+    model_only_field: List[str] = Field(default_factory=list)
+    committee_only_field: List[str] = Field(default_factory=list)
+    model_first_team_out: Optional[str] = None
+    committee_first_team_out: Optional[str] = None
+    # Only present when both fields are the same size.
+    seed_exact_matches: Optional[int] = None
+
+
+class CommitteeComparisonPayload(BaseModel):
+    schema_version: int = SCHEMA_VERSION
+    season: int
+    week: int
+    ruleset: Optional[Ruleset] = None
+    generated_at: str
+    # The reference is always the season's final published committee rankings,
+    # even for mid-season runs; the label spells that out for the UI.
+    reference: Literal["final"] = "final"
+    reference_label: str
+    source_note: str
+    # False when the run's field size differs from the committee era's field
+    # (e.g. a 12-team projection of a 4-team season); rank comparison still applies.
+    field_comparable: bool
+    summary: CommitteeComparisonSummary
+    teams: List[CommitteeComparisonTeam] = Field(default_factory=list)
+
+
 # --- validation.json ----------------------------------------------------------------
 #
 # Repo-level (not per-run) historical validation of the model against the real

@@ -11,11 +11,11 @@ truth; this doc mirrors them.
 data/output/api/
   runs.json                      # index across all runs (drives season/week switcher)
   latest.json                    # meta for most recent run
-  rankings.json  field.json  bracket.json  audit.json  team-resumes.json  sensitivity.json   # latest run (flat copies)
+  rankings.json  field.json  bracket.json  audit.json  team-resumes.json  sensitivity.json  committee.json   # latest run (flat copies)
   validation.json                # repo-level historical validation (written by sroom validate, not per-run)
   team-assets.json               # passthrough of data/cache/team_assets.json (or sample)
-  runs/{stem}/                   # per-run dirs (base or scenario stem), same 6 files
-    rankings.json field.json bracket.json audit.json team-resumes.json sensitivity.json
+  runs/{stem}/                   # per-run dirs (base or scenario stem), same 7 files
+    rankings.json field.json bracket.json audit.json team-resumes.json sensitivity.json committee.json
 ```
 
 Example scenario directory: `runs/2025_week15__w45-25-20-10/`
@@ -313,6 +313,55 @@ are 0–1 on the wire (the UI renders percentages).
 `n_scenarios` + `random_seed` + `perturbation_spec` fully reproduce a run.
 Missing file ⇒ the web UI omits Selection Stability surfaces entirely (no proxy).
 See `docs/research/sensitivity-analysis.md` for methodology.
+
+## committee.json
+
+Model vs Committee comparison for one run: the run's projected field and ranks
+next to the committee's published **final** rankings for the same season
+(`src/api_contracts/build.py::build_committee_comparison_payload`). Reference
+data is checked into the repo (`src/validation/historical.py`) from the
+official final CFP rankings release, so generating it costs no CFBD quota.
+The file is **only written for seasons with checked-in committee data**;
+missing file means the web UI omits the comparison surfaces entirely.
+
+The roster is the union of the committee's final top 25 and the model's top 25
+plus its full field, sorted by committee rank (unranked teams last).
+
+```jsonc
+{
+  "schema_version": 1, "season": 2025, "week": 15,
+  "ruleset": "2025_plus",
+  "generated_at": "...",
+  "reference": "final",                     // always the season's final rankings
+  "reference_label": "Final 2025 CFP committee rankings",
+  "source_note": "Committee reference data is checked into the repo ...",
+  "field_comparable": true,                 // fields are the same size
+  "summary": {
+    "committee_field_size": 12, "model_field_size": 12,
+    "field_overlap_count": 11, "field_overlap_ratio": 0.9167,
+    "model_only_field": ["Notre Dame"],     // model rank order
+    "committee_only_field": ["Miami"],      // committee rank order
+    "model_first_team_out": "BYU",
+    "committee_first_team_out": "Notre Dame",
+    "seed_exact_matches": 7                 // int | null (null when fields differ in size)
+  },
+  "teams": [
+    {
+      "team": "Miami", "abbreviation": "MIA", "conference": "ACC",
+      "logo_url": "https://...", "primary_color": "#005030",
+      "model_rank": 12, "committee_rank": 10,
+      "rank_delta": -2,                     // committee_rank - model_rank; positive = model ranks higher
+      "model_in_field": false, "committee_in_field": true,
+      "model_seed": null, "committee_seed": 10,   // committee seed = position in the actual bracket field
+      "model_bid_type": null, "committee_bid_type": "at_large",
+      "agreement": "committee_only"         // "both_in" | "both_out" | "model_only" | "committee_only"
+    }
+  ]
+}
+```
+
+Fixture: `web/lib/fixtures/committee.json`.
+Contract tests: `tests/test_committee_comparison.py`.
 
 ## validation.json
 

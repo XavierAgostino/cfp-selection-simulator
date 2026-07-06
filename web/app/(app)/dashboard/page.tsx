@@ -4,10 +4,15 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { ProjectedFieldPanel } from "@/components/dashboard/ProjectedFieldPanel";
 import { FirstRoundMatchups } from "@/components/dashboard/FirstRoundMatchups";
 import { BubbleSnapshotStrip } from "@/components/dashboard/BubbleSnapshotStrip";
+import { CommitteeSnapshotCard } from "@/components/committee/CommitteeSnapshotCard";
 import { EmptyState } from "@/components/common/EmptyState";
 import { getRunFile, NotFoundError } from "@/lib/data";
 import { formatScore } from "@/lib/format";
-import type { BracketPayload, FieldPayload } from "@/lib/types";
+import type {
+  BracketPayload,
+  CommitteeComparisonPayload,
+  FieldPayload,
+} from "@/lib/types";
 import { pageDescription, pageTitle } from "@/lib/typography";
 
 interface DashboardPageProps {
@@ -32,10 +37,26 @@ async function loadBracket(stem: string | null): Promise<BracketPayload | null> 
   }
 }
 
+/** Optional: only present when the season has published committee rankings. */
+async function loadCommittee(
+  stem: string | null,
+): Promise<CommitteeComparisonPayload | null> {
+  try {
+    return await getRunFile(stem, "committee");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}
+
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const { run } = await searchParams;
   const stem = run ?? null;
-  const [field, bracket] = await Promise.all([loadField(stem), loadBracket(stem)]);
+  const [field, bracket, committee] = await Promise.all([
+    loadField(stem),
+    loadBracket(stem),
+    loadCommittee(stem),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -82,6 +103,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <FirstRoundMatchups
                 games={bracket ? bracket.rounds.first_round : null}
               />
+              {committee ? (
+                <CommitteeSnapshotCard data={committee} stem={stem} />
+              ) : null}
             </div>
           </div>
 

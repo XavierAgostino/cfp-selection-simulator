@@ -22,6 +22,7 @@ from src import __version__
 from src.api_contracts.build import (
     build_audit_payload,
     build_bracket_payload,
+    build_committee_comparison_payload,
     build_field_payload,
     build_rankings_payload,
     build_sensitivity_payload,
@@ -63,6 +64,7 @@ FLAT_FILE_NAMES = {
     "audit": "audit.json",
     "team_resumes": "team-resumes.json",
     "sensitivity": "sensitivity.json",
+    "committee": "committee.json",
 }
 
 
@@ -242,6 +244,11 @@ def export_run_api(
         stability_by_team=stability_by_team,
     )
 
+    # Absent (None) for seasons without checked-in committee reference data.
+    committee_payload = build_committee_comparison_payload(
+        config, rankings_payload, use_sample
+    )
+
     run_dir = API_ROOT / "runs" / paths.stem
     written: Dict[str, Path] = {}
 
@@ -259,6 +266,7 @@ def export_run_api(
     write_payload("audit", audit_payload)
     write_payload("team_resumes", team_resumes_payload)
     write_payload("sensitivity", sensitivity_payload)
+    write_payload("committee", committee_payload)
 
     store_payloads = {
         "rankings": rankings_payload,
@@ -301,6 +309,7 @@ def export_run_api(
                 ("audit", audit_payload),
                 ("team_resumes", team_resumes_payload),
                 ("sensitivity", sensitivity_payload),
+                ("committee", committee_payload),
             ):
                 if payload is None:
                     continue

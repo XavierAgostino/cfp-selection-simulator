@@ -20,6 +20,7 @@ export type ExplainMetricKey =
   | "cut_line"
   | "record"
   | "selection_stability"
+  | "committee_comparison"
   | "composite_profile"
   | "resume_edge"
   | "predictive_edge"
@@ -66,6 +67,11 @@ export const METRIC_EXPLANATIONS: Record<ExplainMetricKey, MetricExplanation> = 
     label: "Selection Stability",
     description:
       "The share of Monte Carlo weight scenarios where a team remains in the projected field. It varies model weights, not future game results.",
+  },
+  committee_comparison: {
+    label: "Model vs Committee",
+    description:
+      "This run's projected field next to the committee's published final rankings for the same season. Where they differ, the model shows its reasoning; a disagreement is something to audit, not an error.",
   },
   composite_profile: {
     label: "Composite Profile",

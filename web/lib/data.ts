@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import type {
   AuditPayload,
   BracketPayload,
+  CommitteeComparisonPayload,
   FieldPayload,
   LatestPayload,
   RankingsPayload,
@@ -26,7 +27,8 @@ export type RunFileKind =
   | "bracket"
   | "audit"
   | "team-resumes"
-  | "sensitivity";
+  | "sensitivity"
+  | "committee";
 
 interface RunFilePayloadMap {
   rankings: RankingsPayload;
@@ -35,6 +37,7 @@ interface RunFilePayloadMap {
   audit: AuditPayload;
   "team-resumes": TeamResumesPayload;
   sensitivity: SensitivityPayload;
+  committee: CommitteeComparisonPayload;
 }
 
 const DATA_BASE_PATH = "/api/data";

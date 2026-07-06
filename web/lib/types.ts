@@ -379,6 +379,63 @@ export interface SensitivityPayload {
 }
 
 // ---------------------------------------------------------------------------
+// committee.json — Model vs Committee comparison for one run (optional; only
+// present when the season has checked-in committee reference data)
+// ---------------------------------------------------------------------------
+
+export type CommitteeAgreement =
+  | "both_in"
+  | "both_out"
+  | "model_only"
+  | "committee_only";
+
+export interface CommitteeComparisonTeam {
+  team: string;
+  abbreviation: string | null;
+  conference: string | null;
+  logo_url: string | null;
+  primary_color: string | null;
+  model_rank: number | null;
+  committee_rank: number | null;
+  /** committee_rank - model_rank; positive = the model ranks the team higher. */
+  rank_delta: number | null;
+  model_in_field: boolean;
+  committee_in_field: boolean;
+  model_seed: number | null;
+  committee_seed: number | null;
+  model_bid_type: BidType | null;
+  committee_bid_type: BidType | null;
+  agreement: CommitteeAgreement;
+}
+
+export interface CommitteeComparisonSummary {
+  committee_field_size: number;
+  model_field_size: number;
+  field_overlap_count: number;
+  field_overlap_ratio: number;
+  model_only_field: string[];
+  committee_only_field: string[];
+  model_first_team_out: string | null;
+  committee_first_team_out: string | null;
+  /** Only set when the fields are the same size (field_comparable). */
+  seed_exact_matches: number | null;
+}
+
+export interface CommitteeComparisonPayload {
+  schema_version: 1;
+  season: number;
+  week: number;
+  ruleset: Ruleset;
+  generated_at: string;
+  reference: "final";
+  reference_label: string;
+  source_note: string;
+  field_comparable: boolean;
+  summary: CommitteeComparisonSummary;
+  teams: CommitteeComparisonTeam[];
+}
+
+// ---------------------------------------------------------------------------
 // validation.json  (repo-level, optional — how the model differs from the
 // real CFP committee across historical seasons)
 // ---------------------------------------------------------------------------

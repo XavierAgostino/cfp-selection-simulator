@@ -17,6 +17,7 @@ PER_RUN_ARTIFACT_FILES = (
     "audit.json",
     "team-resumes.json",
     "sensitivity.json",
+    "committee.json",
 )
 
 
