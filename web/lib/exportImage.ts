@@ -27,32 +27,80 @@ function inlineSvgPaint(node: HTMLElement): void {
   }
 }
 
-/** Resolve Next.js image optimizer URLs to their origin CDN src for CORS capture. */
-function unwrapOptimizedImages(node: HTMLElement): void {
-  for (const img of node.querySelectorAll("img")) {
-    const src = img.getAttribute("src") ?? "";
-    if (src.includes("/_next/image")) {
-      try {
-        const parsed = new URL(src, window.location.origin);
-        const original = parsed.searchParams.get("url");
-        if (original) {
-          img.crossOrigin = "anonymous";
-          img.src = original;
-        }
-      } catch {
-        // Keep existing src if parsing fails.
-      }
-    } else if (src.startsWith("http://") || src.startsWith("https://")) {
-      img.crossOrigin = "anonymous";
-    } else if (src.startsWith("/")) {
-      img.crossOrigin = "anonymous";
+function resolveImageSrc(rawSrc: string): string | null {
+  if (!rawSrc) return null;
+
+  if (rawSrc.includes("/_next/image")) {
+    try {
+      const parsed = new URL(rawSrc, window.location.origin);
+      const original = parsed.searchParams.get("url");
+      if (original) return normalizeRemoteUrl(original);
+    } catch {
+      return null;
     }
   }
+
+  if (rawSrc.startsWith("//")) {
+    return normalizeRemoteUrl(`https:${rawSrc}`);
+  }
+
+  if (rawSrc.startsWith("http://") || rawSrc.startsWith("https://")) {
+    return normalizeRemoteUrl(rawSrc);
+  }
+
+  if (rawSrc.startsWith("/")) {
+    return `${window.location.origin}${rawSrc}`;
+  }
+
+  return null;
 }
 
-/** Wait until every image in the capture subtree has loaded or failed. */
-async function waitForImages(node: HTMLElement): Promise<void> {
+/** ESPN and other artifact URLs are stored as http; upgrade for HTTPS pages. */
+function normalizeRemoteUrl(url: string): string {
+  return url.replace(/^http:\/\//i, "https://");
+}
+
+async function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") resolve(reader.result);
+      else reject(new Error("Failed to read image blob"));
+    };
+    reader.onerror = () => reject(reader.error ?? new Error("Failed to read image blob"));
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Prefetch every <img> as a data URL so html-to-image never hits a tainted
+ * canvas (mixed http/https ESPN logos, Next optimizer URLs, no-cors cache).
+ */
+async function inlineImagesAsDataUrls(node: HTMLElement): Promise<void> {
   const images = [...node.querySelectorAll("img")];
+
+  await Promise.all(
+    images.map(async (img) => {
+      const resolved = resolveImageSrc(img.getAttribute("src") ?? "");
+      if (!resolved) return;
+
+      try {
+        const response = await fetch(resolved, { mode: "cors", cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const dataUrl = await blobToDataUrl(await response.blob());
+        img.removeAttribute("crossorigin");
+        img.src = dataUrl;
+      } catch {
+        // Best-effort: leave the original src for html-to-image to retry.
+        if (resolved !== img.getAttribute("src")) {
+          img.src = resolved;
+        }
+      }
+    }),
+  );
+
   await Promise.all(
     images.map(
       (img) =>
@@ -70,7 +118,7 @@ async function waitForImages(node: HTMLElement): Promise<void> {
 }
 
 /** One animation frame so refs/layout/fonts settle after off-screen mount. */
-function waitForPaint(): Promise<void> {
+export function waitForExportMount(): Promise<void> {
   return new Promise((resolve) => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => resolve());
@@ -83,16 +131,13 @@ export async function exportNodeToPng(
   filename: string,
   options: ExportPngOptions = {},
 ): Promise<void> {
-  await waitForPaint();
+  await waitForExportMount();
   await document.fonts.ready;
   inlineSvgPaint(node);
-  unwrapOptimizedImages(node);
-  await waitForImages(node);
+  await inlineImagesAsDataUrls(node);
   const dataUrl = await toPng(node, {
     pixelRatio: options.pixelRatio ?? 2,
-    // Refetch images with CORS instead of reusing the <img> no-cors cache
-    // entry, which would taint the capture.
-    cacheBust: true,
+    cacheBust: false,
   });
   const anchor = document.createElement("a");
   anchor.href = dataUrl;

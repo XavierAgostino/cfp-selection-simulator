@@ -8,7 +8,7 @@ import { OffscreenExportLayer } from "@/components/share/OffscreenExportLayer";
 import { ResumeShareCard } from "@/components/share/ResumeShareCard";
 import { useActiveRun } from "@/components/team/useActiveRun";
 import { fileSlug } from "@/lib/exportCsv";
-import { exportNodeToPng } from "@/lib/exportImage";
+import { exportNodeToPng, waitForExportMount } from "@/lib/exportImage";
 import type { RecordMeta, TeamResume } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -34,12 +34,19 @@ export function ResumeExportButton({
 
   useEffect(() => {
     if (!exporting) return;
-    const node = cardRef.current;
-    if (!node) return;
     let active = true;
     const runPart =
       stem ?? (season && week ? `${season}_week${week}` : "latest");
     const capture = async () => {
+      await waitForExportMount();
+      const node = cardRef.current;
+      if (!node) {
+        if (active) {
+          toast.error("Couldn't render the resume card");
+          setExporting(false);
+        }
+        return;
+      }
       try {
         await exportNodeToPng(
           node,

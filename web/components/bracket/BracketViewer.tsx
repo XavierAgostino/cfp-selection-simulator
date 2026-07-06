@@ -14,7 +14,7 @@ import { BRACKET_VIEW_MODES } from "@/components/bracket/types";
 import type { BracketViewMode } from "@/components/bracket/types";
 import { BracketShareCard } from "@/components/share/BracketShareCard";
 import { OffscreenExportLayer } from "@/components/share/OffscreenExportLayer";
-import { exportNodeToPng } from "@/lib/exportImage";
+import { exportNodeToPng, waitForExportMount } from "@/lib/exportImage";
 import type { BracketPayload } from "@/lib/types";
 
 interface BracketViewerProps {
@@ -30,14 +30,22 @@ export function BracketViewer({ bracket }: BracketViewerProps) {
   // in the DOM, then unmount it.
   useEffect(() => {
     if (!exporting) return;
-    const node = shareCardRef.current;
-    if (!node) return;
     let active = true;
     const capture = async () => {
+      await waitForExportMount();
+      const node = shareCardRef.current;
+      if (!node) {
+        if (active) {
+          toast.error("Couldn't render the bracket image");
+          setExporting(false);
+        }
+        return;
+      }
       try {
         await exportNodeToPng(
           node,
           `selection-room_${bracket.season}_week${bracket.week}_bracket.png`,
+          { pixelRatio: 1.5 },
         );
         if (active) toast.success("Bracket image saved");
       } catch {
