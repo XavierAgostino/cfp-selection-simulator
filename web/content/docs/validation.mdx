@@ -3,25 +3,29 @@ title: Validation
 description: Historical backtests and model validation metrics in Selection Room.
 ---
 
-The Validation dashboard compares model-selected fields and rankings against historical CFP outcomes and committee-published lists.
+The Validation dashboard is the trust layer: it checks the model against the real CFP Selection Committee on completed seasons, and against the current season's final rankings when they exist.
 
-## What validation measures
+## Three trust dimensions
 
-Validation surfaces metrics such as:
+The dashboard reports the same three dimensions the harness measures, using the labels you see in the app:
 
-- **Field overlap**: how often the model's projected 4-team (pre-2024) or 12-team field matches actual participants.
-- **Ranking alignment**: correlation and rank error versus committee top-25 or top-12 lists where available.
-- **Team-level flags**: model-added, model-dropped, and first-out cases when the payload includes them.
+- **Committee alignment**: how closely the composite reproduces the committee's top-12 ordering (rank correlation plus overlap), per season.
+- **Era-correct field selection**: each season judged against the playoff format that actually applied that year (4-team through 2023, 12-team from 2024), with the teams the model added or dropped and a first-team-out comparison.
+- **Predictive signal**: how the composite's game-level signal scored completed games next to simpler baselines (Elo, SRS, home field). Retrospective scoring, never a live forecast or win probability.
 
-These metrics describe historical fit under documented assumptions, not real-time prediction accuracy.
+Overlap measures how closely the model aligns with the committee's published selections, not whether those selections were objectively correct.
+
+## Model vs Committee
+
+When final committee rankings exist for the active run's season, the page opens with a per-run **Model vs Committee** panel: field agreement, seed matches, and a rank-by-rank table. See [Model vs committee](/docs/model-vs-committee) for how to read it.
 
 ## What validation does not prove
 
-Validation does **not** prove that Selection Room replicates committee deliberation, insider criteria, or future outcomes. Pre-2024 field checks use actual participants; committee top-12 overlap is a separate metric with its own limits. Sample and Live CFBD runs are not directly comparable.
+Validation does **not** prove that Selection Room replicates committee deliberation, insider criteria, or future outcomes. Field checks use actual participants under era-correct rules; committee top-12 overlap is a separate metric with its own limits. Sample and Live CFBD runs are not directly comparable.
 
-## How to refresh validation artifacts
+## Hosted vs local artifacts
 
-Validation data is a single repo-level artifact (`data/output/api/validation.json`), not a per-run export. To refresh:
+On the hosted site, validation data comes from the seeded catalog; nothing to refresh. Running locally, validation is a single repo-level artifact (`data/output/api/validation.json`):
 
 1. Run the validation harness: `make validate` (or `./bin/sroom validate --years 2014:2024`).
 2. Confirm `data/output/api/validation.json` regenerated for the target seasons.
@@ -33,12 +37,8 @@ If the artifact is missing, the dashboard shows an empty or partial state rather
 Historical validation is informative, not proof of committee replication. Treat overlap scores as backtest summaries, not forecasts.
 </Callout>
 
-## Open the app
-
-Use [Validation](/validation) when validation artifacts are present in the active run catalog.
-
 <NextSteps links={[
   { href: "/validation", label: "Open Validation dashboard" },
-  { href: "/docs/limitations-and-ethics", label: "Limitations & ethics" },
+  { href: "/docs/model-vs-committee", label: "Model vs committee" },
   { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/research/historical-validation.md", label: "Full validation doc on GitHub", external: true }
 ]} />

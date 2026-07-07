@@ -5,15 +5,37 @@ description: How Selection Room builds composite rankings and projected CFP fiel
 
 Selection Room models committee-style selection from transparent inputs: resume metrics, predictive ratings, strength of schedule, and configurable weights.
 
-## What this page covers
-
-- Composite ranking pipeline
-- Default weight philosophy
-- Links to in-app and research docs
-
 ## Composite pipeline
 
-Each team receives normalized sub-scores (resume, predictive, SOR, SOS, and related inputs). A weighted composite rank drives field selection and bracket seeding. Weights are configurable in Scenario Lab; defaults are documented in run metadata.
+Each team receives normalized sub-scores, and a weighted composite drives field selection and bracket seeding. The four weight components:
+
+| Component | What it measures |
+|-----------|------------------|
+| **Resume** | What a team earned on the field: wins, losses, and quality results |
+| **Predictive** | Underlying team strength from predictive ratings, regardless of record |
+| **SOR** | Strength of record: how impressive the record is given the schedule actually played |
+| **SOS** | Strength of schedule: how hard the slate was, independent of results |
+
+Defaults are recorded in every run's metadata and are adjustable in [Scenario Lab](/scenario-lab). Formulas and metric definitions live in the research docs on GitHub.
+
+## How selection works (5+7)
+
+The 12-team field follows the published CFP format:
+
+- **Automatic bids (5)**: the five highest-ranked conference champions qualify automatically.
+- **At-large bids (7)**: remaining spots go to the highest-ranked teams not already selected.
+- **Displacement**: if an automatic qualifier ranks outside the top 12, it still gets in, and the lowest-ranked at-large team is displaced. Every displacement is recorded in the run's audit trail.
+
+## Seeding rulesets
+
+Two eras of seeding rules apply, and every run records which one it used:
+
+| Ruleset | Seeding | Byes |
+|---------|---------|------|
+| **2024** | Top 4 conference champions take seeds 1-4 | Champion byes |
+| **2025+** | Straight by final ranking | Top 4 overall |
+
+First-round pairings: 5 vs 12, 6 vs 11, 7 vs 10, 8 vs 9. Always check a run's ruleset before comparing seeding across seasons.
 
 ## Key concepts
 
@@ -30,7 +52,7 @@ Scores are min-max normalized within each run universe. Sample data and Live CFB
 
 ## In-app reference
 
-The live [Methodology page](/methodology) mirrors metric definitions used in rankings tables and tooltips.
+The live [Methodology page](/methodology) shows the active run's weights and mirrors the metric definitions used in rankings tables and tooltips.
 
 <NextSteps links={[
   { href: "/docs/methodology/data-sources", label: "Data sources" },

@@ -13,13 +13,27 @@ Scenario Lab reweights the composite ranking inputs (resume, predictive, SOR, SO
 
 Scenario Lab does **not** simulate future games, injuries, suspensions, or hypothetical championship outcomes. It does not ingest new schedules or rewrite historical scores. The underlying team set and game results stay fixed.
 
+## Weight presets
+
+Five named presets give the sliders meaningful starting points:
+
+| Preset | Emphasis |
+|--------|----------|
+| **Committee-like** | The calibrated base weights: the blend that best reproduced the committee's picks across 2014-2024. |
+| **Resume-heavy** | Rewards what teams earned on the field: wins, losses, and quality results dominate the composite. |
+| **Best-team** | Rewards underlying team strength: pick the twelve best teams even when their records lag. |
+| **SOR-heavy** | Rewards records in schedule context: who achieved the most given the slate they actually played. |
+| **Equal weights** | No opinion: all four components count the same, a neutral reference point for the other presets. |
+
+Any slider position works; presets are shortcuts, not the only options. Weights are whole percents that always sum to 100, and the engine defaults collapse to the base run so a no-op scenario cannot launch.
+
 ## How to interpret diffs
 
 - **Field diff**: teams added to or dropped from the projected CFP field under the new weights.
 - **Ranking diff**: movement in composite order; large jumps often trace to teams near the bubble cutoff.
 - **Bracket diff**: seeding and matchup changes that follow from the revised top 12.
 
-Compare scenario stems side by side in the run switcher. Scenario suffixes in the catalog keep exports traceable to the base run they were derived from.
+Compare scenario stems side by side in the run switcher. Scenario suffixes in the catalog keep exports traceable to the base run they were derived from. Already-generated scenarios are listed for one-click comparison, so the page stays useful even without launching anything.
 
 <Callout type="warn" title="Important">
 Scenario Lab varies weights only. It is sensitivity analysis on the ranking model, not a game simulator.
@@ -27,7 +41,7 @@ Scenario Lab varies weights only. It is sensitivity analysis on the ranking mode
 
 ## Open the app
 
-Use [Scenario Lab](/scenario-lab) in the product nav when a base run is loaded.
+Use [Scenario Lab](/scenario-lab) in the product nav when a base run is loaded. On the hosted site, launching a new scenario requires GitHub sign-in; browsing saved scenarios does not.
 
 <NextSteps links={[
   { href: "/scenario-lab", label: "Open Scenario Lab" },

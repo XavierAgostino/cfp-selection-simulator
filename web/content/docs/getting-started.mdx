@@ -1,18 +1,38 @@
 ---
 title: Getting started
-description: Install Selection Room and launch the web app in under five minutes.
+description: Use the hosted site with zero setup, or run the simulator locally.
 ---
 
-Get the simulator running with sample data. No CFBD API key is required for the first run.
+The fastest way into Selection Room is the hosted site. Running locally is for developers who want the Python engine on their own machine.
 
-## What this page covers
+## Part A: Use the hosted site (default path)
 
-- Clone and install
-- Run sample data
-- Launch the Next.js web app
-- Where outputs land on disk
+Open [www.selectionroom.org](https://www.selectionroom.org). No account, install, or API key is needed to browse.
 
-## 1. Install
+**Signed out, you can:**
+
+- Browse every run in the catalog with the run switcher in the header
+- Explore [Rankings](/rankings), [Bubble](/bubble), [Bracket](/bracket), and team resumes
+- Read the [Validation](/validation) dashboard and Model vs Committee comparison
+- Compare already-generated scenarios in [Scenario Lab](/scenario-lab)
+- Read these docs
+
+**Signing in with GitHub adds:**
+
+- Launching live analysis runs from the Run Analysis dialog
+- Launching your own Scenario Lab reweight runs
+
+Run launches have a per-user daily quota so the shared worker stays available for everyone. Browsing is never gated.
+
+<Callout type="success" title="Tip">
+Start on the [Dashboard](/dashboard), click any team name to open its resume drawer, then check [Validation](/validation) to see how the model compares to the real committee.
+</Callout>
+
+## Part B: Run locally (for developers)
+
+Get the simulator running on your machine with sample data. No CFBD API key is required for the first run.
+
+### 1. Install
 
 ```bash
 git clone https://github.com/XavierAgostino/cfp-selection-simulator.git
@@ -30,7 +50,7 @@ sroom doctor
 A missing CFBD API key is fine for sample data. Doctor may warn but still pass.
 </Callout>
 
-## 2. Run sample data
+### 2. Run sample data
 
 ```bash
 make demo
@@ -42,7 +62,7 @@ Equivalent:
 sroom run --year 2025 --week 15 --sample
 ```
 
-## 3. Launch the web app
+### 3. Launch the web app
 
 From the repo root:
 
@@ -52,7 +72,7 @@ make web
 
 Open the local URL shown in the terminal. The setup wizard walks you through first-run configuration when pipeline data is missing.
 
-## 4. Inspect outputs
+### 4. Inspect outputs
 
 ```bash
 sroom outputs --latest
@@ -60,12 +80,8 @@ sroom outputs --latest
 
 Artifacts land under `data/output/` (rankings, fields, brackets, audits, manifests).
 
-<Callout type="success" title="Tip">
-Prefer the UI? Run `make web` after `make demo` and explore Dashboard, Rankings, and Bracket without touching the CLI again.
-</Callout>
-
 <NextSteps links={[
-  { href: "/docs/methodology", label: "Methodology overview" },
+  { href: "/docs/using-the-app", label: "Using the app" },
   { href: "/docs/local-development", label: "Local development" },
   { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/quickstart.md", label: "Full quickstart on GitHub", external: true }
 ]} />

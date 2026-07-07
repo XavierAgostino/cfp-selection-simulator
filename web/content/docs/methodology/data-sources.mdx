@@ -19,6 +19,10 @@ Live runs use [CollegeFootballData.com](https://collegefootballdata.com/) (CFBD)
 
 Sample data ships a fixed CSV subset under `data/processed/sample/` so contributors and CI can run without network access.
 
+## Committee reference data
+
+Final CFP committee rankings for completed seasons are checked into the repository as reference data. They power the [Model vs Committee](/docs/model-vs-committee) comparison and the historical validation harness. Seasons without checked-in final rankings simply omit those surfaces.
+
 ## Conference championships
 
 When CFBD championship results exist (weeks 14–16), Selection Room uses them. Before results are available, documented tiebreakers and simulated resolution may apply.

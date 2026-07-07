@@ -3,27 +3,26 @@ title: Introduction
 description: What Selection Room is, who it is for, and how the docs are organized.
 ---
 
-Selection Room is a transparent CFP selection simulator. It projects fields, explains bubble logic, and surfaces bracket clarity from reproducible ranking inputs.
+Selection Room is a transparent College Football Playoff selection simulator. It builds a composite ranking from public inputs, selects a 12-team field under the published 5+7 rules, seeds a bracket, and shows its work at every step. The live site is at [www.selectionroom.org](https://www.selectionroom.org).
 
-## What this page covers
+## Two ways to use it
 
-- The purpose of Selection Room
-- How product pages and docs relate
-- Where to go next
+**Browse the hosted site (no install).** Everything on [selectionroom.org](https://www.selectionroom.org) is open: pick a run from the header switcher, then explore the [Dashboard](/dashboard), [Rankings](/rankings), [Bubble](/bubble), [Bracket](/bracket), [Validation](/validation), and [Scenario Lab](/scenario-lab). Signing in with GitHub lets you launch your own live runs.
 
-## Who this is for
-
-Analysts, fans, and developers who want to understand **how** a projected field is built, not just what the top four look like. The web app is the primary surface; these docs explain setup, methodology, and contracts.
+**Run it locally or contribute.** The whole project is open source: a Python engine plus this Next.js app. Start at [Getting started](/docs/getting-started) and [Local development](/docs/local-development).
 
 ## Product vs docs
 
 | Surface | Purpose |
 |---------|---------|
-| [Dashboard](/) | Active run overview |
-| [Methodology](/methodology) | In-app metric reference |
-| [Validation](/validation) | Historical backtest dashboard |
-| [Scenario Lab](/scenario-lab) | Weight sensitivity experiments |
-| Docs (here) | Setup, architecture, and research context |
+| [Dashboard](/dashboard) | Active run overview: projected field, matchups, bubble snapshot |
+| [Rankings](/rankings) | Full composite table with score bars and the team resume drawer |
+| [Bubble](/bubble) | Cut line, last four in / first four out, Selection Stability board |
+| [Bracket](/bracket) | Seeded bracket views with image download |
+| [Scenario Lab](/scenario-lab) | Reweight the composite and diff the projected field |
+| [Validation](/validation) | Historical backtests plus the Model vs Committee comparison |
+| [Methodology](/methodology) | In-app metric reference and live weights |
+| Docs (here) | How the product works, what the model claims, and developer contracts |
 
 <Callout type="info" title="Note">
 Selection Room is an independent project. It is not affiliated with the College Football Playoff, NCAA, ESPN, or any conference.
@@ -31,12 +30,13 @@ Selection Room is an independent project. It is not affiliated with the College 
 
 ## Reading order
 
-1. [Getting started](/docs/getting-started) if you are new
-2. [Methodology](/docs/methodology) for model design
-3. [API contracts](/docs/api-contracts) if you integrate with exports
+1. [Using the app](/docs/using-the-app) for a tour of every page
+2. [Model vs committee](/docs/model-vs-committee) for how the model compares to the real committee
+3. [Methodology](/docs/methodology) for how the ranking is built
+4. [Getting started](/docs/getting-started) if you want to run it yourself
 
 <NextSteps links={[
-  { href: "/docs/getting-started", label: "Getting started" },
-  { href: "/docs/methodology", label: "Methodology overview" },
+  { href: "/docs/using-the-app", label: "Using the app" },
+  { href: "/docs/model-vs-committee", label: "Model vs committee" },
   { href: "https://github.com/XavierAgostino/cfp-selection-simulator/tree/main/docs", label: "Full repository docs on GitHub", external: true }
 ]} />

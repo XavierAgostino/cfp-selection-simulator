@@ -1,47 +1,50 @@
 ---
-title: Hosted production architecture
-description: Target topology for a hosted Selection Room deployment.
+title: Hosted production
+description: How the live Selection Room deployment at selectionroom.org works.
 ---
 
-Selection Room supports local open-source mode today and defines a hosted production target for a public deployment. **No hosted adapters are implemented yet.**
+Selection Room runs in production at [www.selectionroom.org](https://www.selectionroom.org). This page is a public summary of that deployment; operator runbooks live in the GitHub hosting docs.
 
-## Local mode today
+## Topology
 
-| Concern | Local (today) |
-|---------|---------------|
-| Web UI | Next.js self-host |
-| Long Python jobs | Subprocess on the same machine |
-| Artifacts | `data/output/api/` on disk |
-| Run metadata | DuckDB + JSON files |
+| Concern | Production |
+|---------|-----------|
+| Web UI | Vercel (Next.js, repo root `web/`) |
+| Run artifacts | Supabase Storage, mirroring the local `data/output/api/` layout |
+| Run and job metadata | Supabase Postgres |
+| Python engine jobs | Trigger.dev background worker |
+| Sign-in | Supabase Auth with GitHub |
 
-This is the supported workflow for development and self-hosted demos. The web app reads exports directly from the filesystem via API routes.
+The JSON artifact contract is identical in local and hosted mode: the same files the engine writes to disk locally are uploaded to Storage and served through the same API paths. Pages cannot tell the difference.
 
-## Hosted target later
+## Browsing
 
-| Concern | Hosted (target) |
-|---------|-----------------|
-| Web UI | Vercel (or equivalent edge host) |
-| Long Python jobs | External worker service |
-| Artifacts | Object storage (S3-compatible) |
-| Run metadata | Postgres |
+Browsing is fully open. The site serves a seeded catalog of official runs; anyone can switch runs, read rankings, open team resumes, and use the Validation dashboard with no account.
 
-Vercel must not run multi-minute Python jobs in standard serverless handlers. The intended pattern: API creates a job record, a worker executes the engine, the web app polls job status and reads artifacts from storage.
+## Launching runs
 
-## Why hosted adapters are not implemented yet
+Signed-in GitHub users can launch live analysis and Scenario Lab runs:
 
-Hosted mode requires durable job queues, artifact upload/download, and auth boundaries that do not exist in the local OSS path. The adapters are **designed** (see repository architecture doc) but deliberately unbuilt until local mode and JSON contracts are stable.
+1. The API validates the session and quotas, records a queued job, and enqueues a background task.
+2. The Python worker runs the pipeline, uploads artifacts to Storage, and updates the catalog.
+3. The browser polls job status and opens the finished run.
 
-Design doctrine that survives either mode:
+Per-user and global daily quotas keep the shared worker available; one hosted job runs at a time. A scheduled weekly official run keeps the default catalog current during the season without anyone launching by hand.
+
+## Local mode still works
+
+The open-source local workflow is unchanged: the web app reads exports directly from disk, and run generation uses a local subprocess instead of the hosted worker. Design doctrine that holds in both modes:
 
 - JSON payload shape stays the web contract
 - Python remains the analytics source of truth
-- Local OSS workflow must keep working
+- The local OSS workflow must keep working
 
 <Callout type="info" title="Note">
-This page is a summary. DDL, migration order, and adapter boundaries are documented in the repository architecture doc.
+This page intentionally omits environment variables, project references, and deployment steps. Operators should use the hosting docs on GitHub.
 </Callout>
 
 <NextSteps links={[
   { href: "/docs/api-contracts", label: "API contracts summary" },
-  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/architecture/hosted-production.md", label: "Full hosted architecture on GitHub", external: true }
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/hosting/hosted-runs-v1.md", label: "Hosted Runs v1 on GitHub", external: true },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/hosting/deployment-checklist.md", label: "Deployment checklist on GitHub", external: true }
 ]} />

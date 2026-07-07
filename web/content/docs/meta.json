@@ -3,16 +3,17 @@
   "pages": [
     "index",
     "getting-started",
-    "---Research---",
-    "methodology",
-    "---Product---",
+    "---Using Selection Room---",
+    "using-the-app",
+    "model-vs-committee",
     "scenario-lab",
     "validation",
+    "---How it works---",
+    "methodology",
+    "limitations-and-ethics",
     "---Developers---",
     "api-contracts",
     "local-development",
-    "hosted-production",
-    "---Project---",
-    "limitations-and-ethics"
+    "hosted-production"
   ]
 }

@@ -1,0 +1,52 @@
+---
+title: Model vs committee
+description: How Selection Room compares its projected field to the real committee's published rankings.
+---
+
+When final committee rankings exist for a run's season, Selection Room puts its projected field directly next to them: rank by rank, seed by seed, with every disagreement surfaced. This page explains how to read that comparison.
+
+## What it compares
+
+The comparison uses the run's projected field and the CFP Selection Committee's published final rankings for the same season. It reports:
+
+- **Field agreement**: how many of the committee's field teams the model also selected (for example 11 of 12).
+- **Seed matches**: how many field teams landed on exactly the same seed line.
+- **Model-only and committee-only teams**: who each side took that the other left out.
+- **First team out**: each side's closest miss.
+
+## How to read a disagreement
+
+Disagreements are classified so a difference is legible, not just flagged:
+
+| Kind | Meaning |
+|------|---------|
+| Bubble swap | The two sides disagree on the final at-large spot. A weighting judgment, not a rules failure. |
+| Seed order | Both sides selected the team but placed it on a different seed line. |
+| Auto-bid displacement | A field difference caused by a conference champion claiming an automatic bid on one side. |
+| Rule-era difference | A selection affected by which playoff format applied. Only arises in historical replays. |
+| Data limitation | Missing or incomplete reference data, such as an undocumented first team out. |
+
+## The 2025 example
+
+For the 2025 season the model matched 11 of 12 of the committee's field teams and placed all four first-round byes on the same teams. The one field disagreement is a bubble swap: the model takes Notre Dame where the committee selected Miami, both as at-large picks.
+
+That difference comes from how the model weighs resume quality, predictive strength, and schedule metrics. Because every input is published, you can open either team's resume and trace exactly why the model lands where it does. The comparison exists to make that difference auditable, not to argue the committee was wrong.
+
+<Callout type="warn" title="Important">
+Field agreement measures how closely the model aligns with the committee's published selections. It is not a claim that the committee's picks are objectively correct, and a disagreement is not an error on either side.
+</Callout>
+
+## Where to find it
+
+- The [Validation page](/validation) opens with the full Model vs Committee panel: summary stats, a where-they-disagree callout, and a rank-by-rank table where every row opens the team's resume drawer.
+- The [Dashboard](/dashboard) shows a compact snapshot card that links to the full panel.
+
+## When it is absent
+
+The comparison only exists when committee reference data is checked in for the run's season. Mid-season runs and seasons without final committee rankings omit all Model vs Committee surfaces entirely; nothing is estimated.
+
+<NextSteps links={[
+  { href: "/validation", label: "Open the comparison" },
+  { href: "/docs/validation", label: "Validation overview" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/api-contracts.md", label: "committee.json schema on GitHub", external: true }
+]} />

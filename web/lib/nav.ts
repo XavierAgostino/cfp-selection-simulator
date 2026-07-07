@@ -39,9 +39,10 @@ export const FOOTER_NAV: FooterNavSection[] = [
     title: "Docs",
     links: [
       { href: "/docs/getting-started", label: "Getting started" },
+      { href: "/docs/using-the-app", label: "Using the app" },
+      { href: "/docs/model-vs-committee", label: "Model vs committee" },
       { href: "/docs/methodology", label: "Methodology" },
-      { href: "/docs/api-contracts", label: "API contracts" },
-      { href: "/docs/local-development", label: "Local development" },
+      { href: "/docs/limitations-and-ethics", label: "Limitations & ethics" },
     ],
   },
   {
@@ -53,8 +54,9 @@ export const FOOTER_NAV: FooterNavSection[] = [
         external: true,
         icon: "github",
       },
+      { href: "/docs/api-contracts", label: "API contracts" },
+      { href: "/docs/local-development", label: "Local development" },
       { href: "/docs/methodology/data-sources", label: "Data sources" },
-      { href: "/docs/limitations-and-ethics", label: "Limitations & ethics" },
     ],
   },
 ];
@@ -96,6 +98,10 @@ export const MOBILE_NAV_GROUPS: readonly MobileNavGroup[] = [
   },
   {
     title: "Docs",
-    links: [{ href: "/docs", label: "Documentation" }],
+    links: [
+      { href: "/docs", label: "Documentation" },
+      { href: "/docs/using-the-app", label: "Using the app" },
+      { href: "/docs/model-vs-committee", label: "Model vs committee" },
+    ],
   },
 ] as const;

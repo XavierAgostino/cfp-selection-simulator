@@ -24,20 +24,22 @@ Each completed run lives under `data/output/api/runs/{stem}/`:
 
 | File | Purpose |
 |------|---------|
-| `meta.json` | Season, week, mode, weights, timestamps |
 | `rankings.json` | Full ranking table for that stem |
 | `field.json` | Projected field for that stem |
 | `bracket.json` | Bracket structure and matchups |
-| `validation.json` | Backtest metrics when generated |
 | `audit.json` | Selection audit trail when exported |
+| `team-resumes.json` | Per-team resumes: schedule, score breakdown, selection case |
+| `sensitivity.json` | Selection Stability frequencies (optional; older runs omit it) |
+| `committee.json` | Model vs Committee comparison (optional; only for seasons with final committee reference data) |
 
-Scenario stems reuse the same layout with a distinct suffix so diffs stay traceable.
+Run metadata (season, week, mode, weights, timestamps) lives in the catalog entries, not in a per-run file. Scenario stems reuse the same layout with a distinct suffix so diffs stay traceable. Optional files are omitted entirely when their inputs do not exist; the UI hides the matching surfaces rather than inventing values.
 
 ## Run catalog files
 
 | File | Purpose |
 |------|---------|
 | `runs.json` | Catalog for the run switcher: all stems, labels, latest pointer |
+| `validation.json` | Repo-level backtest metrics from the validation harness |
 
 The web app reads `runs.json` once per session (shared catalog hook) and resolves per-run payloads by stem. There is no mapping layer between Python exports and TypeScript types.
 
@@ -46,7 +48,7 @@ The web app reads `runs.json` once per session (shared catalog hook) and resolve
 Pydantic v2 models in `src/api_contracts/models.py` define the contract. Breaking changes require a schema version bump and coordinated web updates.
 
 <Callout type="info" title="Note">
-The full contract includes TeamSlot shapes, audit payloads, sensitivity exports, and scenario stems. See the GitHub doc for complete JSONC examples.
+The full contract includes TeamSlot shapes, audit payloads, and complete JSONC examples for every file above. See the GitHub doc.
 </Callout>
 
 <NextSteps links={[

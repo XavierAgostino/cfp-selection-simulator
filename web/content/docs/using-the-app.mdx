@@ -1,0 +1,55 @@
+---
+title: Using the app
+description: A tour of every Selection Room page, from the run switcher to team resumes.
+---
+
+Selection Room renders one analysis run at a time as a broadcast-style selection show. This page walks through each surface in the order most people meet them.
+
+## Runs and the run switcher
+
+Everything on the site is scoped to a **run**: one execution of the engine for a season and week, with a fixed set of completed games. The run switcher in the header flips the whole site between runs, and the URL carries the choice (`?run=<stem>`), so any view is shareable.
+
+Two kinds of runs appear in the catalog:
+
+- **Base runs** use the calibrated default weights. The freshest official run is the site default.
+- **Scenario runs** carry a weight suffix (for example `w45-25-20-10`). They come from [Scenario Lab](/scenario-lab) and never replace the default view.
+
+## Dashboard
+
+[Dashboard](/dashboard) is the run overview: the projected 12-team field with seeds and bids, first-round matchups, and a bubble snapshot. When committee reference data exists for the season, a compact Model vs Committee card links to the full comparison on the Validation page.
+
+## Rankings
+
+[Rankings](/rankings) shows the full composite table: every ranked team with its score bars, record, bid type, and seed. Search and sorting work on the table without changing the underlying artifact, and "Download CSV" exports the full table in rank order.
+
+Click any team, anywhere on the site, to open its **resume drawer**: schedule, score breakdown, why-in case, concerns, and a Selection Stability strip. The drawer is the fastest way to answer "why is this team ranked here".
+
+## Bubble
+
+[Bubble](/bubble) is the cut line view: last four in, first four out, next four out, plus the selection audit. When the run includes sensitivity data, the **Selection Stability** board shows how often each bubble team stays in the field when model weights are perturbed. Stability is about weight sensitivity only; it never simulates future games or win probability.
+
+## Bracket
+
+[Bracket](/bracket) renders the seeded bracket in full-bracket, rounds, and matchup-card views. "Download image" exports a branded share card. Exports are titled as projections, never as official brackets.
+
+## Scenario Lab
+
+[Scenario Lab](/scenario-lab) forks a base run, reweights the four composite components, and diffs the projected field against the base. See the dedicated [Scenario Lab doc](/docs/scenario-lab) for presets and how to read diffs.
+
+## Validation
+
+[Validation](/validation) is the trust layer: the per-run Model vs Committee comparison plus retrospective accuracy against the real committee on completed seasons. See [Model vs committee](/docs/model-vs-committee) and the [Validation doc](/docs/validation).
+
+## Methodology, in app vs docs
+
+The in-app [Methodology page](/methodology) shows the active run's live weights, the 5+7 field rules, seeding eras, and metric definitions used in tooltips. The [Methodology doc](/docs/methodology) covers the same model as narrative: how the composite is built and why.
+
+<Callout type="info" title="Note">
+All numbers on the site come from the run's exported JSON artifacts. Nothing is editorialized per page; if two views disagree, that is a bug, not an opinion.
+</Callout>
+
+<NextSteps links={[
+  { href: "/dashboard", label: "Open the Dashboard" },
+  { href: "/docs/model-vs-committee", label: "Model vs committee" },
+  { href: "https://github.com/XavierAgostino/cfp-selection-simulator/blob/main/docs/user-guide.md", label: "Full user guide on GitHub", external: true }
+]} />
