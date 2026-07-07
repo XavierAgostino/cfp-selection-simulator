@@ -1,17 +1,15 @@
 # v2 Tracks: Research Board
 
-**Status: active research board.** Tracks 1–3 are implemented (calibration
-harness, Committee Emulation lite, PPA predictive substitution, with the last
-evaluated and **not promoted**); track 4 (SOR refinement) is implemented and
-in progress, with full evaluation pending CFBD API quota; track 5 stays deferred
-behind an explicit go/no-go.
+**Status: active research board.** Tracks 1–4 are implemented (calibration
+harness, Committee Emulation lite, PPA predictive substitution, SOR refinement);
+track 5 (revealed committee preferences) is **in progress** as research-only
+inverse fitting. Injuries/VORP/full PBP stays deferred behind an explicit go/no-go.
 This document is **not** a roadmap commitment: every implemented track is
 research-only, and nothing here changes production defaults.
 
-> **v1 beta release hardening:** V2.4 implementation is complete; full 2014–2024
-> evaluation is pending CFBD quota/cache population. V2.5 is deferred. Research
-> implementation is frozen for v1 beta: do not start V2.5 or promote experiments
-> before the public demo launch.
+> **v1 beta release hardening:** V2.4 evaluation is pending CFBD quota/cache
+> population. V2.5 (revealed preferences) is research implementation — no
+> production promotion before the public demo launch.
 
 ---
 
@@ -124,7 +122,14 @@ layer it touches and must not leak conclusions across layers.
    variants are deferred to a separate résumé-pillar slice. Audit note:
    conference championship games are inside the week-15 selection window and
    are not treated as leakage.
-5. **Injuries / VORP / full PBP**: last; data quality, subjective assumptions,
+5. **Revealed committee preferences**: inverse fitting — what transparent factor
+   mix best approximates published CFP rankings per season/week. **In progress
+   (v2.5), research-only:** `sroom fit-preferences` grid-searches composite
+   weights against committee top-25 rank error, reports near-optimal regions and
+   baseline drift. Never changes production defaults. Weekly backtest requires
+   incremental CFP weekly fixture curation. See
+   [revealed-committee-preferences.md](revealed-committee-preferences.md).
+6. **Injuries / VORP / full PBP**: last; data quality, subjective assumptions,
    and maintenance burden are all high. Gated behind an explicit go/no-go:
    only if the research board shows remaining model misses are plausibly
    explained by player-availability context or play-level efficiency.

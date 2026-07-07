@@ -2,6 +2,30 @@
 
 All notable changes to the Selection Room project.
 
+## [Unreleased]
+
+### Fixed
+
+- **2024 games cache refreshed from weeks 5-15 to weeks 1-15 (2026-07-07).**
+  The prior cache was missing weeks 1-4 (about 8.3 games per team instead of
+  ~11), which distorted resume/SOR/SOS component scores for the whole 2024
+  season. Any validation, calibration, or revealed-preferences artifact
+  generated before this date used the truncated season and should be
+  regenerated before comparison. The truncated file is preserved as
+  `data/cache/cfbd/2024/games_w15.parquet.bak-truncated-w5`.
+
+### Added
+
+- **Revealed committee preferences research track (v2.5, research-only)**:
+  `sroom fit-preferences` inverse-fits the four composite weights to published
+  CFP rankings via a two-stage search that selects under the production ranking
+  function (including tiebreakers). Reports near-optimal region with
+  per-component spread, edge-weight and incomplete-coverage warnings (the
+  latter caps confidence at directional), experimental `--objective
+  top25|top12|bubble` modes, an honest Miami/Notre Dame 2025 diagnostic
+  (`reproduces_committee_order`), and per-fit "explains / does not explain"
+  sections. Never changes production defaults.
+
 ## [3.0.0-beta] - 2026-07-03
 
 **Selection Room v1: first feature-complete release under the Selection Room name.**

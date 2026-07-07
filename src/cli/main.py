@@ -338,6 +338,88 @@ def calibrate(
         typer.echo(f"Wrote emulation {kind}: {path}")
 
 
+@app.command(name="fit-preferences")
+def fit_preferences(
+    years: Optional[str] = typer.Option(
+        None, help="Year range e.g. 2014:2024 or comma-separated (use with --season)"
+    ),
+    season: Optional[int] = typer.Option(None, help="Single season year"),
+    weeks: Optional[str] = typer.Option(
+        None,
+        help="Week number or 'all' for every available weekly fixture (default: final week)",
+    ),
+    objective: str = typer.Option(
+        "top25",
+        help="Committee slice to fit against: top25, top12, or bubble (experimental)",
+    ),
+) -> None:
+    """Revealed committee preferences research harness (v2.5 research mode).
+
+    Inverse-fits composite weights to approximate published CFP rankings.
+    Descriptive only — never changes production defaults.
+    """
+    from src.calibration import (
+        build_revealed_preferences_payload,
+        run_revealed_preferences,
+        write_revealed_preferences_outputs,
+    )
+
+    if season is not None and years is not None:
+        raise typer.BadParameter("Pass either --season or --years, not both")
+    if season is not None:
+        year_list = [season]
+    elif years is not None:
+        if ":" in years:
+            start, end = years.split(":")
+            year_list = list(range(int(start), int(end) + 1))
+        else:
+            year_list = [int(y) for y in years.split(",")]
+    else:
+        year_list = list(range(2014, 2025))
+
+    weeks_spec: Optional[int] | str = None
+    if weeks is not None:
+        weeks_spec = "all" if weeks.lower() == "all" else int(weeks)
+
+    objective_names = {
+        "top25": "rank_error_top25",
+        "top12": "rank_error_top12",
+        "bubble": "rank_error_bubble",
+    }
+    objective_key = objective.lower()
+    if objective_key not in objective_names:
+        raise typer.BadParameter(
+            f"Unknown objective '{objective}'; expected one of {', '.join(objective_names)}"
+        )
+
+    result = run_revealed_preferences(
+        year_list, weeks=weeks_spec, objective=objective_names[objective_key]
+    )
+    out_dir = DATA_OUTPUT / "calibration"
+    payload = build_revealed_preferences_payload(result)
+    paths = write_revealed_preferences_outputs(result, out_dir, payload=payload)
+
+    typer.echo("\nRevealed preferences (research-only, production weights unchanged):")
+    for entry in payload.get("entries", []):
+        if not isinstance(entry, dict):
+            continue
+        interp = entry.get("interpretation", {})
+        fq = entry.get("fit_quality", {})
+        typer.echo(
+            f"  {entry.get('year')} w{entry.get('week')}: "
+            f"rank_error {fq.get('rank_error')} "
+            f"[{interp.get('confidence')}] {interp.get('headline')}"
+        )
+    public_case = payload.get("public_case_2025")
+    if isinstance(public_case, dict):
+        typer.echo("\n2025 Miami/Notre Dame diagnostic:")
+        typer.echo(f"  {public_case.get('explanation')}")
+
+    typer.echo("")
+    for kind, path in paths.items():
+        typer.echo(f"Wrote {kind}: {path}")
+
+
 @app.command()
 def reproduce(
     season: int = typer.Option(..., help="Season to reproduce"),

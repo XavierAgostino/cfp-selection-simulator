@@ -184,6 +184,70 @@ methodology, thresholds, and interpretation guardrails.
 
 ---
 
+## `sroom fit-preferences`
+
+Revealed committee preferences research harness (v2.5 research mode). **Inverse-fits**
+the four composite weights to approximate published CFP rankings for a season or
+week. Descriptive only: it estimates what factor blend best explains the
+committee's published order under Selection Room's transparent model. It never
+changes production defaults in [`src/pipeline/weights.py`](../src/pipeline/weights.py).
+
+```bash
+# Season-final fit (default: final CFP ranking week per season)
+./bin/sroom fit-preferences [--years 2014:2024]
+./bin/sroom fit-preferences --season 2025
+
+# Weekly backtest when weekly fixtures exist (Phase 2.5)
+./bin/sroom fit-preferences --season 2025 --weeks all
+./bin/sroom fit-preferences --years 2014:2025 --weeks all
+./bin/sroom fit-preferences --season 2025 --weeks 12
+
+# Experimental objective zones
+./bin/sroom fit-preferences --season 2025 --objective top12
+./bin/sroom fit-preferences --season 2025 --objective bubble
+```
+
+| Option | Description |
+|--------|-------------|
+| `--years` | Year range (`2014:2024`) or comma-separated list. Default: `2014–2024` when neither `--years` nor `--season` is set |
+| `--season` | Single season year (mutually exclusive with `--years`) |
+| `--weeks` | Week number, or `all` for every week with a weekly CFP fixture. Default: final ranking week (week 15) |
+| `--objective` | Committee slice to fit against: `top25` (default), `top12`, or `bubble` (positions 7–18, experimental) |
+
+Year range format matches `sroom calibrate`: `2014:2024` or `2014,2015,2016`.
+
+The fitter runs a **two-stage search**: a fast tiebreaker-free pass prunes the
+four-weight simplex grid (5% step, always including the production baseline
+40/30/20/10 and equal weights 25/25/25/25 as explicit candidates), then the
+surviving candidates are re-scored with the production ranking function
+(`rankings_for_weights`, including committee tiebreakers) and the best fit is
+selected there. It reports a **near-optimal region** (re-scored candidates within
+0.25 rank error of the best fit) with a per-component spread that drives the
+confidence label, plus an **edge-weight warning** when any fitted component lands
+near 0% or at/above 50%, and an **incomplete-coverage warning** (confidence capped
+at directional) when the season cache averages fewer than ~10 games per team.
+The coverage warning distinguishes a truncated cache (earliest week > 1: refetch
+from week 1) from a genuinely short season already starting at week 1 (for
+example 2020, ~7.7 games per team: interpret with extra caution).
+Weekly fits carry directional-confidence warnings; early weeks are noisier than
+final-field fits.
+
+Season games load **cache-first** (same `data/cache/cfbd/{year}/` path as
+`calibrate` and `validate`). Requires cached games for integration runs; no new
+network calls beyond what the harness already uses.
+
+Outputs in `data/output/calibration/` (all artifacts include `research_only: true`):
+
+- `revealed-preferences.json`: machine-readable contract (fits, near-optimal region, baselines, 2025 public-case diagnostic)
+- `revealed-preferences.md`: human-readable report with weekly drift block when multiple weeks are fitted
+- `revealed-preferences.csv`: one row per `(season, week)` with weights, rank error, confidence, headline
+
+See [research/revealed-committee-preferences.md](research/revealed-committee-preferences.md)
+for methodology, canonical language, near-optimal interpretation, and weekly
+backtest guardrails.
+
+---
+
 ## `sroom reproduce`
 
 Re-run a season with current code and write manifest.

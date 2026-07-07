@@ -290,9 +290,37 @@ VALIDATION_NOTES: Dict[int, str] = {
 
 OUTLIER_YEARS: frozenset[int] = frozenset({2022})
 
+# Final CFP committee ranking week (selection window end).
+FINAL_CFP_RANKING_WEEK = 15
 
-def historical_top25(year: int) -> Optional[List[str]]:
+# Weekly CFP top-25 fixtures: year -> week -> ordered teams.
+# Week 15 is seeded from final rankings for every season with data.
+# Additional weeks are added incrementally as weekly releases are curated.
+HISTORICAL_CFP_WEEKLY_TOP25: Dict[int, Dict[int, List[str]]] = {
+    year: {FINAL_CFP_RANKING_WEEK: list(teams)}
+    for year, teams in HISTORICAL_CFP_TOP25.items()
+}
+
+
+def historical_top25(year: int, *, week: Optional[int] = None) -> Optional[List[str]]:
+    if week is not None:
+        weekly = HISTORICAL_CFP_WEEKLY_TOP25.get(year, {}).get(week)
+        return list(weekly) if weekly else None
     return HISTORICAL_CFP_TOP25.get(year)
+
+
+def historical_weeks_available(year: int) -> List[int]:
+    weeks = HISTORICAL_CFP_WEEKLY_TOP25.get(year)
+    if not weeks:
+        return []
+    return sorted(weeks.keys())
+
+
+def register_weekly_top25(year: int, week: int, teams: List[str]) -> None:
+    """Register or replace a weekly CFP top-25 fixture (research curation helper)."""
+    if year not in HISTORICAL_CFP_WEEKLY_TOP25:
+        HISTORICAL_CFP_WEEKLY_TOP25[year] = {}
+    HISTORICAL_CFP_WEEKLY_TOP25[year][week] = list(teams)
 
 
 def historical_top12(year: int) -> Optional[List[str]]:
