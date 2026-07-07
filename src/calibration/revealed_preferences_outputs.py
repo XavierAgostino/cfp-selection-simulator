@@ -45,9 +45,7 @@ def _round(value: Optional[float], digits: int = 4) -> Optional[float]:
 
 
 def _weights_dict(weights: object) -> Dict[str, float]:
-    return {
-        key: round(float(getattr(weights, key)), 4) for key in COMPONENT_KEYS
-    }
+    return {key: round(float(getattr(weights, key)), 4) for key in COMPONENT_KEYS}
 
 
 def _fit_entry(fit: FitResult) -> Dict[str, object]:
@@ -208,9 +206,7 @@ def build_revealed_preferences_payload(
     for entry in entries:
         case = (
             public_case
-            if public_case is not None
-            and entry.get("year") == 2025
-            and entry.get("week") == 15
+            if public_case is not None and entry.get("year") == 2025 and entry.get("week") == 15
             else None
         )
         entry["explanation_scope"] = _explanation_scope(entry, case)
@@ -240,19 +236,14 @@ def _weekly_drift_lines(entries: List[FitResult]) -> List[str]:
         for prev, curr in zip(season_entries, season_entries[1:]):
             prior_delta = curr.baseline_delta_pp.get("prior_week")
             if prior_delta:
-                parts = [
-                    f"{key} {prior_delta[key]:+d}"
-                    for key in COMPONENT_KEYS
-                ]
+                parts = [f"{key} {prior_delta[key]:+d}" for key in COMPONENT_KEYS]
             else:
                 parts = [
                     f"{key} "
                     f"{int(round((getattr(curr.fitted_weights, key) - getattr(prev.fitted_weights, key)) * 100)):+d}"
                     for key in COMPONENT_KEYS
                 ]
-            lines.append(
-                f"Week {prev.week} -> Week {curr.week}: " + ", ".join(parts)
-            )
+            lines.append(f"Week {prev.week} -> Week {curr.week}: " + ", ".join(parts))
     return lines
 
 
@@ -291,9 +282,7 @@ def _markdown_report(payload: Dict[str, object]) -> str:
         )
         spread = entry.get("near_optimal_spread_pp")
         if isinstance(spread, dict) and spread:
-            spread_str = ", ".join(
-                f"{key} {value}pp" for key, value in spread.items()
-            )
+            spread_str = ", ".join(f"{key} {value}pp" for key, value in spread.items())
             lines.append(f"- Near-optimal spread: {spread_str}")
         lines.append(f"- {interp.get('headline')} [{interp.get('confidence')}]")
         if entry.get("fit_warning"):
@@ -308,12 +297,7 @@ def _markdown_report(payload: Dict[str, object]) -> str:
                 lines.append(f"- {item}")
         lines.append("")
 
-    drift = _weekly_drift_lines(
-        [
-            fit
-            for fit in _entries_from_payload(payload)
-        ]
-    )
+    drift = _weekly_drift_lines([fit for fit in _entries_from_payload(payload)])
     if drift:
         lines.extend(["## Committee preference drift by week", ""])
         lines.extend(drift)

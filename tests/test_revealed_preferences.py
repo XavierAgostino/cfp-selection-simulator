@@ -236,9 +236,7 @@ def test_headline_phrasing_is_human_readable():
     from src.calibration.revealed_preferences import _headline
 
     headline = _headline({"resume": 25, "predictive": -10, "sor": -5, "sos": -10})
-    assert headline == (
-        "More résumé-heavy and less predictive-driven than the production baseline"
-    )
+    assert headline == ("More résumé-heavy and less predictive-driven than the production baseline")
     assert "heavier" not in headline and "lighter" not in headline
     assert _headline({"resume": 0, "predictive": 0, "sor": 0, "sos": 0}) == (
         "Close to production baseline"

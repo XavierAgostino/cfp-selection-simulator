@@ -297,8 +297,7 @@ FINAL_CFP_RANKING_WEEK = 15
 # Week 15 is seeded from final rankings for every season with data.
 # Additional weeks are added incrementally as weekly releases are curated.
 HISTORICAL_CFP_WEEKLY_TOP25: Dict[int, Dict[int, List[str]]] = {
-    year: {FINAL_CFP_RANKING_WEEK: list(teams)}
-    for year, teams in HISTORICAL_CFP_TOP25.items()
+    year: {FINAL_CFP_RANKING_WEEK: list(teams)} for year, teams in HISTORICAL_CFP_TOP25.items()
 }
 
 

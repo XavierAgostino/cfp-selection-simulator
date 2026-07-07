@@ -231,9 +231,7 @@ def _committee_order(year: int, week: int) -> Optional[List[str]]:
     return list(order)
 
 
-def _objective_positions(
-    committee_order: Sequence[str], objective: ObjectiveName
-) -> List[int]:
+def _objective_positions(committee_order: Sequence[str], objective: ObjectiveName) -> List[int]:
     start, end = OBJECTIVE_POSITIONS[objective]
     end = min(end, len(committee_order))
     return list(range(start, end + 1))
@@ -306,9 +304,7 @@ def _slice_rank_error(
     return float(np.mean(errors)) if errors else None
 
 
-def _delta_pp(
-    fitted: RankingWeights, reference: RankingWeights
-) -> Dict[str, int]:
+def _delta_pp(fitted: RankingWeights, reference: RankingWeights) -> Dict[str, int]:
     return {
         key: int(round((getattr(fitted, key) - getattr(reference, key)) * 100))
         for key in COMPONENT_KEYS
@@ -368,8 +364,7 @@ def _confidence_label(
 
 def _is_edge_fit(weights: RankingWeights) -> bool:
     return any(
-        getattr(weights, key) <= EDGE_WEIGHT_LOW
-        or getattr(weights, key) >= EDGE_WEIGHT_HIGH
+        getattr(weights, key) <= EDGE_WEIGHT_LOW or getattr(weights, key) >= EDGE_WEIGHT_HIGH
         for key in COMPONENT_KEYS
     )
 
@@ -378,9 +373,7 @@ def _has_full_games(games_df: pd.DataFrame) -> bool:
     return {"home_score", "away_score", "week"}.issubset(games_df.columns)
 
 
-def _games_coverage_warning(
-    games_df: pd.DataFrame, team_count: int
-) -> Optional[str]:
+def _games_coverage_warning(games_df: pd.DataFrame, team_count: int) -> Optional[str]:
     """Warn when the cached season is truncated (too few games per team)."""
     if not _has_full_games(games_df) or not team_count or games_df.empty:
         return None
@@ -427,9 +420,7 @@ def _resolve_rankings(
 
 
 def _rank_map(rankings_df: pd.DataFrame) -> Dict[str, int]:
-    return {
-        str(row["team"]): int(row["rank"]) for _, row in rankings_df.iterrows()
-    }
+    return {str(row["team"]): int(row["rank"]) for _, row in rankings_df.iterrows()}
 
 
 def _focus_team_shifts(
@@ -480,10 +471,7 @@ def _team_shifts(
         fitted_rank = fitted_map[team]
         if baseline_rank == fitted_rank:
             continue
-        if (
-            team not in committee_ranks
-            and min(baseline_rank, fitted_rank) > relevance_rank
-        ):
+        if team not in committee_ranks and min(baseline_rank, fitted_rank) > relevance_rank:
             continue
         shifts.append(
             TeamShift(
@@ -531,9 +519,7 @@ def fit_weights_for_season(
 
     grid = candidates or build_candidate_grid()
     components, teams = _component_matrix(base_rankings_df)
-    fast_errors = _fast_rank_errors(
-        components, teams, grid, resolved_committee, positions
-    )
+    fast_errors = _fast_rank_errors(components, teams, grid, resolved_committee, positions)
 
     model_teams = set(teams)
     missing_teams = [
@@ -542,25 +528,17 @@ def fit_weights_for_season(
         if resolved_committee[pos - 1] not in model_teams
     ]
 
-    baseline_rankings = _resolve_rankings(
-        base_rankings_df, games_df, PRODUCTION_BASELINE
-    )
-    baseline_rank_error = _slice_rank_error(
-        baseline_rankings, resolved_committee, positions
-    )
+    baseline_rankings = _resolve_rankings(base_rankings_df, games_df, PRODUCTION_BASELINE)
+    baseline_rank_error = _slice_rank_error(baseline_rankings, resolved_committee, positions)
 
     if _has_full_games(games_df):
         # Stage 2: re-score the fast-path survivors under the production
         # ranking function (composite + committee tiebreakers) and select
         # the best fit there — the fast pass only prunes.
         fast_min = min(fast_errors)
-        rerank_pool = sorted(
-            zip(grid, fast_errors), key=lambda item: item[1]
-        )
+        rerank_pool = sorted(zip(grid, fast_errors), key=lambda item: item[1])
         rerank_pool = [
-            (weights, error)
-            for weights, error in rerank_pool
-            if error <= fast_min + RERANK_BAND
+            (weights, error) for weights, error in rerank_pool if error <= fast_min + RERANK_BAND
         ][:RERANK_LIMIT]
         rerank_keys = {_weights_key(weights) for weights, _ in rerank_pool}
         if _weights_key(PRODUCTION_BASELINE) not in rerank_keys:
@@ -576,9 +554,7 @@ def fit_weights_for_season(
             evaluations.append(
                 CandidateEvaluation(
                     weights=weights,
-                    rank_error=(
-                        float(rank_error) if rank_error is not None else float("inf")
-                    ),
+                    rank_error=(float(rank_error) if rank_error is not None else float("inf")),
                     spearman_top12=None,
                     top12_overlap=None,
                 )
@@ -599,20 +575,12 @@ def fit_weights_for_season(
 
     best = min(evaluations, key=lambda ev: ev.rank_error)
     near_optimal = sorted(
-        [
-            ev
-            for ev in evaluations
-            if ev.rank_error <= best.rank_error + NEAR_OPTIMAL_BAND
-        ],
+        [ev for ev in evaluations if ev.rank_error <= best.rank_error + NEAR_OPTIMAL_BAND],
         key=lambda ev: ev.rank_error,
     )
 
     baseline_eval = next(
-        (
-            ev
-            for ev in evaluations
-            if _weights_key(ev.weights) == _weights_key(PRODUCTION_BASELINE)
-        ),
+        (ev for ev in evaluations if _weights_key(ev.weights) == _weights_key(PRODUCTION_BASELINE)),
         None,
     )
     if baseline_eval is not None and np.isfinite(baseline_eval.rank_error):
@@ -620,9 +588,7 @@ def fit_weights_for_season(
 
     fitted_rankings = _resolve_rankings(base_rankings_df, games_df, best.weights)
     spearman12, _p = spearman_on_list(fitted_rankings, resolved_committee[:12])
-    overlap = subset_overlap(
-        fitted_rankings, resolved_committee, start_rank=1, end_rank=12
-    )
+    overlap = subset_overlap(fitted_rankings, resolved_committee, start_rank=1, end_rank=12)
 
     selection = None
     predictive = None
@@ -630,13 +596,9 @@ def fit_weights_for_season(
         selection = validate_selection(
             year, fitted_rankings, games_df, api_key=None, assume_enriched=True
         )
-        predictive = evaluate_predictive(
-            games_df, fitted_rankings, method="composite", year=year
-        )
+        predictive = evaluate_predictive(games_df, fitted_rankings, method="composite", year=year)
 
-    helped, hurt = _team_shifts(
-        baseline_rankings, fitted_rankings, resolved_committee
-    )
+    helped, hurt = _team_shifts(baseline_rankings, fitted_rankings, resolved_committee)
 
     focus_shifts: Dict[str, TeamShift] = {}
     if year == 2025:
@@ -653,9 +615,7 @@ def fit_weights_for_season(
         "equal_weights": _delta_pp(best.weights, EQUAL_WEIGHTS),
     }
     if historical_mean_weights is not None:
-        baseline_deltas["historical_mean"] = _delta_pp(
-            best.weights, historical_mean_weights
-        )
+        baseline_deltas["historical_mean"] = _delta_pp(best.weights, historical_mean_weights)
     if prior_week_weights is not None:
         baseline_deltas["prior_week"] = _delta_pp(best.weights, prior_week_weights)
 
@@ -885,9 +845,8 @@ def miami_notre_dame_attribution(fit: FitResult) -> Optional[Dict[str, object]]:
         return None
 
     reproduces = miami.fitted_rank < notre_dame.fitted_rank
-    relative_gain = (
-        (notre_dame.fitted_rank - notre_dame.baseline_rank)
-        - (miami.fitted_rank - miami.baseline_rank)
+    relative_gain = (notre_dame.fitted_rank - notre_dame.baseline_rank) - (
+        miami.fitted_rank - miami.baseline_rank
     )
     if reproduces:
         explanation = (
