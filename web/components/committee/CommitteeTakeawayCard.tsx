@@ -8,7 +8,6 @@ import type {
   CommitteeComparisonTeam,
 } from "@/lib/types";
 import { metricLabel } from "@/lib/typography";
-import { cn } from "@/lib/utils";
 
 /** Small tappable team reference that sits inside a sentence. */
 function InlineTeamChip({ team }: { team: CommitteeComparisonTeam }) {
@@ -80,15 +79,8 @@ export function CommitteeTakeawayCard({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border border-l-2 border-l-tag-gold-text/50 bg-card px-4 py-4 sm:px-5">
-      {/* Ghosted season numeral: broadcast-graphic texture, purely decorative. */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-1 top-1/2 -translate-y-1/2 select-none text-[5.5rem] font-black leading-none tracking-tighter text-foreground/[0.045] sm:text-[7rem]"
-      >
-        {takeaway.season}
-      </span>
-      <div className="relative flex flex-col gap-2.5">
+    <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
+      <div className="flex flex-col gap-2.5">
         <span className={metricLabel}>The {takeaway.season} takeaway</span>
         <p className="max-w-3xl text-sm leading-relaxed text-foreground sm:text-[15px]">
           Selection Room matched{" "}
@@ -124,11 +116,7 @@ export function CommitteeTakeawayCard({
             reflecting a ranking disagreement.
           </p>
         ) : null}
-        <div
-          className={cn(
-            "flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold tabular-nums text-muted-foreground",
-          )}
-        >
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold tabular-nums text-muted-foreground">
           {digest.map((item, i) => (
             <span key={item} className="inline-flex items-center gap-2">
               {i > 0 ? (

@@ -4,6 +4,11 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoTooltip } from "@/components/explain/InfoTooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import {
@@ -202,30 +207,60 @@ function DisagreementTaxonomy({ taxonomy }: { taxonomy: MissTaxonomy }) {
   );
 }
 
+const LEGEND_DESCRIPTIONS: Record<CommitteeAgreement, string> = {
+  both_in:
+    "In both the model's projected field and the committee's actual field.",
+  model_only:
+    "In the model's projected field but not the committee's. These rows carry a gold tint.",
+  committee_only:
+    "In the committee's field but not the model's. These rows carry a red tint.",
+  both_out: "Outside both fields.",
+};
+
 /**
- * Every chip and row tint the comparison table uses, stated instead of
- * implied. Reuses the real Badge variants so the legend cannot drift.
+ * Every chip the comparison table uses, explained on demand: hover on
+ * desktop, tap on touch (openOnHover keeps the click behavior, so both
+ * work). Reuses the real Badge variants so the legend cannot drift.
  */
+function LegendChip({ agreement }: { agreement: CommitteeAgreement }) {
+  const chip = AGREEMENT_CHIP[agreement];
+  const label = chip?.label ?? "Out in both";
+  const description = LEGEND_DESCRIPTIONS[agreement];
+  return (
+    <Popover>
+      <PopoverTrigger
+        openOnHover
+        delay={0}
+        render={
+          <button
+            type="button"
+            aria-label={`${label}: ${description}`}
+            className="cursor-help rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          />
+        }
+      >
+        {chip ? (
+          <Badge variant={chip.variant}>{chip.label}</Badge>
+        ) : (
+          <span className="text-xs text-muted-foreground">Out in both</span>
+        )}
+      </PopoverTrigger>
+      <PopoverContent side="top">{description}</PopoverContent>
+    </Popover>
+  );
+}
+
 function ChipLegend() {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
-      <span className="font-semibold uppercase tracking-wide">Legend</span>
-      <span className="inline-flex items-center gap-1.5">
-        <Badge variant="chip-green">In both fields</Badge>
-        model and committee agree
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Legend
       </span>
-      <span className="inline-flex items-center gap-1.5">
-        <Badge variant="chip-gold">Model only</Badge>
-        the model&apos;s field, not the committee&apos;s
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <Badge variant="chip-red">Committee only</Badge>
-        the committee&apos;s field, not the model&apos;s
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <span className="text-muted-foreground/70">Out in both</span>
-        outside both fields
-      </span>
+      {(
+        ["both_in", "model_only", "committee_only", "both_out"] as const
+      ).map((agreement) => (
+        <LegendChip key={agreement} agreement={agreement} />
+      ))}
     </div>
   );
 }
