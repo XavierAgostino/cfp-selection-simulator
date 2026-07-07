@@ -3,14 +3,18 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { CommitteeComparisonPanel } from "@/components/committee/CommitteeComparisonPanel";
 import { CommitteeTakeawayCard } from "@/components/committee/CommitteeTakeawayCard";
 import { CommitteeTendenciesCard } from "@/components/validation/CommitteeTendenciesCard";
+import { CommitteeTendenciesWeeklyTracker } from "@/components/validation/CommitteeTendenciesWeeklyTracker";
 import { ValidationDashboard } from "@/components/validation/ValidationDashboard";
 import { getRunFile, getValidationData, NotFoundError } from "@/lib/data";
 import { finalFit2025, loadRevealedPreferences } from "@/lib/revealedPreferences";
+import { latestWeeklySeason, loadRevealedWeekly } from "@/lib/revealedWeekly";
 import { pageDescription, pageTitle, sectionTitle } from "@/lib/typography";
 import type {
   CommitteeComparisonPayload,
   RevealedPreferencesEntry,
   RevealedPreferencesPayload,
+  RevealedWeeklyPayload,
+  RevealedWeeklySeason,
   ValidationPayload,
 } from "@/lib/types";
 
@@ -46,6 +50,21 @@ async function loadRevealed(
   return { payload, entry };
 }
 
+/** Hidden weekly tracker, same gate as the final-fit card: fail closed. */
+async function loadRevealedWeeklySeason(
+  debug: string | undefined,
+): Promise<{
+  payload: RevealedWeeklyPayload;
+  season: RevealedWeeklySeason;
+} | null> {
+  if (debug !== "revealed") return null;
+  const payload = await loadRevealedWeekly();
+  if (!payload) return null;
+  const season = latestWeeklySeason(payload);
+  if (!season) return null;
+  return { payload, season };
+}
+
 /** Per-run committee comparison; absent for seasons without committee data. */
 async function loadCommittee(
   stem: string | null,
@@ -61,10 +80,11 @@ async function loadCommittee(
 export default async function ValidationPage({ searchParams }: ValidationPageProps) {
   const { run, debug } = await searchParams;
   const stem = run ?? null;
-  const [data, committee, revealed] = await Promise.all([
+  const [data, committee, revealed, revealedWeekly] = await Promise.all([
     loadValidation(),
     loadCommittee(stem),
     loadRevealed(debug),
+    loadRevealedWeeklySeason(debug),
   ]);
 
   return (
@@ -83,6 +103,15 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
           <CommitteeTendenciesCard
             payload={revealed.payload}
             entry={revealed.entry}
+          />
+        </section>
+      ) : null}
+
+      {revealedWeekly ? (
+        <section className="flex flex-col gap-3">
+          <CommitteeTendenciesWeeklyTracker
+            payload={revealedWeekly.payload}
+            season={revealedWeekly.season}
           />
         </section>
       ) : null}

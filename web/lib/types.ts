@@ -620,6 +620,50 @@ export interface RevealedPreferencesPayload {
   caveats: string[];
 }
 
+// revealed-preferences-weekly.json (research-only, never served; see
+// docs/api-contracts.md). Fits are keyed by committee release identity.
+
+export interface RevealedWeeklyFit {
+  research_only: true;
+  ranking_release: number | null;
+  release_date: string | null;
+  source: string | null;
+  games_through_week: number;
+  fitted_weights: FittedWeights;
+  baseline_delta_pp: Record<string, Record<string, number> | null>;
+  prior_release_delta_pp: Record<string, number> | null;
+  fit_quality: {
+    rank_error: number | null;
+    spearman_top12: number | null;
+    baseline_rank_error: number | null;
+  };
+  confidence: "directional" | "moderate" | "high";
+  warning_badges: string[];
+}
+
+export interface RevealedSeasonVolatility {
+  releases_compared: number;
+  mean_abs_shift_pp: Record<string, number>;
+  max_abs_shift_pp: Record<string, number>;
+  volatility_note: string | null;
+}
+
+export interface RevealedWeeklySeason {
+  season: number;
+  weekly_fits: RevealedWeeklyFit[];
+  volatility: RevealedSeasonVolatility;
+}
+
+export interface RevealedWeeklyPayload {
+  schema_version: 1;
+  research_only: true;
+  generated_at: string;
+  production_baseline: FittedWeights;
+  disclaimer: string;
+  seasons: RevealedWeeklySeason[];
+  caveats: string[];
+}
+
 // ---------------------------------------------------------------------------
 // team-assets.json
 // ---------------------------------------------------------------------------
