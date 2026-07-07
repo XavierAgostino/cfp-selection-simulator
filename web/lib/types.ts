@@ -522,6 +522,105 @@ export interface ValidationPayload {
 }
 
 // ---------------------------------------------------------------------------
+// revealed-preferences.json (research-only; read from data/output/calibration,
+// NEVER promoted to web/lib/fixtures or the public data routes without an
+// explicit review decision — see docs/api-contracts.md)
+// ---------------------------------------------------------------------------
+
+export interface FittedWeights {
+  resume: number;
+  predictive: number;
+  sor: number;
+  sos: number;
+}
+
+export interface RevealedTeamShift {
+  team: string;
+  committee_rank: number | null;
+  baseline_rank: number;
+  fitted_rank: number;
+  rank_delta: number;
+}
+
+export interface RevealedNearOptimalCandidate {
+  weights: FittedWeights;
+  rank_error: number | null;
+  spearman_top12: number | null;
+}
+
+export interface RevealedFitQuality {
+  rank_error: number | null;
+  spearman_top12: number | null;
+  baseline_rank_error: number | null;
+  top12_overlap: number | null;
+  field_overlap: number | null;
+  brier: number | null;
+}
+
+export interface RevealedInterpretation {
+  headline: string;
+  confidence: "directional" | "moderate" | "high";
+  warning: string | null;
+}
+
+export interface RevealedExplanationScope {
+  explains: string[];
+  does_not_explain: string[];
+}
+
+export interface RevealedPreferencesEntry {
+  research_only: true;
+  objective: string;
+  search_step: number;
+  committee_rank_source: string;
+  year: number;
+  week: number;
+  fitted_weights: FittedWeights;
+  near_optimal_count: number;
+  near_optimal_spread_pp: Partial<Record<keyof FittedWeights, number>>;
+  near_optimal_region: RevealedNearOptimalCandidate[];
+  baseline_delta_pp: Record<string, Record<string, number> | null>;
+  fit_quality: RevealedFitQuality;
+  fit_warning: string | null;
+  warning_badges: string[];
+  interpretation: RevealedInterpretation;
+  teams_helped: RevealedTeamShift[];
+  teams_hurt: RevealedTeamShift[];
+  focus_team_shifts: Record<string, RevealedTeamShift>;
+  explanation_scope: RevealedExplanationScope;
+}
+
+export interface RevealedPublicCase {
+  reproduces_committee_order: boolean;
+  committee_order: string;
+  fitted_shift: Record<
+    string,
+    {
+      committee_rank: number | null;
+      baseline_rank: number;
+      fitted_rank: number;
+      rank_delta: number;
+    }
+  >;
+  baseline_delta_pp: Record<string, number>;
+  explanation: string;
+  headline: string;
+}
+
+export interface RevealedPreferencesPayload {
+  schema_version: 1;
+  research_only: true;
+  generated_at: string;
+  requested_years: number[];
+  production_baseline: FittedWeights;
+  disclaimer: string;
+  warning_badges: string[];
+  entries: RevealedPreferencesEntry[];
+  public_case_2025: RevealedPublicCase | null;
+  caveats: string[];
+}
+
+// ---------------------------------------------------------------------------
 // team-assets.json
 // ---------------------------------------------------------------------------
 

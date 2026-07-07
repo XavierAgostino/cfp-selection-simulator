@@ -2,10 +2,17 @@ import { Terminal } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { CommitteeComparisonPanel } from "@/components/committee/CommitteeComparisonPanel";
 import { CommitteeTakeawayCard } from "@/components/committee/CommitteeTakeawayCard";
+import { CommitteeTendenciesCard } from "@/components/validation/CommitteeTendenciesCard";
 import { ValidationDashboard } from "@/components/validation/ValidationDashboard";
 import { getRunFile, getValidationData, NotFoundError } from "@/lib/data";
+import { finalFit2025, loadRevealedPreferences } from "@/lib/revealedPreferences";
 import { pageDescription, pageTitle, sectionTitle } from "@/lib/typography";
-import type { CommitteeComparisonPayload, ValidationPayload } from "@/lib/types";
+import type {
+  CommitteeComparisonPayload,
+  RevealedPreferencesEntry,
+  RevealedPreferencesPayload,
+  ValidationPayload,
+} from "@/lib/types";
 
 export const metadata = {
   title: "Model Validation | Selection Room",
@@ -14,11 +21,29 @@ export const metadata = {
 };
 
 interface ValidationPageProps {
-  searchParams: Promise<{ run?: string }>;
+  searchParams: Promise<{ run?: string; debug?: string }>;
 }
 
 async function loadValidation(): Promise<ValidationPayload | null> {
   return getValidationData();
+}
+
+/**
+ * Hidden research card, only behind ?debug=revealed and only when the local
+ * research artifact passes the fail-closed loader. Renders nothing otherwise.
+ */
+async function loadRevealed(
+  debug: string | undefined,
+): Promise<{
+  payload: RevealedPreferencesPayload;
+  entry: RevealedPreferencesEntry;
+} | null> {
+  if (debug !== "revealed") return null;
+  const payload = await loadRevealedPreferences();
+  if (!payload) return null;
+  const entry = finalFit2025(payload);
+  if (!entry) return null;
+  return { payload, entry };
 }
 
 /** Per-run committee comparison; absent for seasons without committee data. */
@@ -34,11 +59,12 @@ async function loadCommittee(
 }
 
 export default async function ValidationPage({ searchParams }: ValidationPageProps) {
-  const { run } = await searchParams;
+  const { run, debug } = await searchParams;
   const stem = run ?? null;
-  const [data, committee] = await Promise.all([
+  const [data, committee, revealed] = await Promise.all([
     loadValidation(),
     loadCommittee(stem),
+    loadRevealed(debug),
   ]);
 
   return (
@@ -51,6 +77,15 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
           completed games. Measured against history, not asserted.
         </p>
       </header>
+
+      {revealed ? (
+        <section className="flex flex-col gap-3">
+          <CommitteeTendenciesCard
+            payload={revealed.payload}
+            entry={revealed.entry}
+          />
+        </section>
+      ) : null}
 
       {committee ? (
         <section className="flex flex-col gap-3">
