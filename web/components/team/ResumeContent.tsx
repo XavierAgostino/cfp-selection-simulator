@@ -182,24 +182,34 @@ export function ResumeContent({ resume, recordMeta, variant, footer }: ResumeCon
     );
   }
 
+  // Drawer: the whole body is one scroll region so short mobile viewports can
+  // reach the schedule and every section below the fold. The footer stays
+  // pinned beneath it. (Scoping the scroll to just the schedule collapsed its
+  // window to ~1 row on phones and left the rest of the drawer unscrollable.)
   return (
-    <div className="flex h-full flex-col gap-5">
-      <ResumeHeader resume={resume} recordMeta={recordMeta} />
-      {isSummary ? <SummaryResumeNotice /> : null}
-      <ScoreBars resume={resume} />
-      <ResumeStabilityBlock team={resume.team} />
-      <WhyInConcerns resume={resume} />
-      {!isSummary ? (
-        <div className="flex min-h-0 flex-1 flex-col gap-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Schedule
-          </h3>
-          <ScrollArea className="min-h-0 flex-1 rounded-xl bg-secondary/30">
-            <ResumeScheduleList schedule={resume.schedule} className="px-4" />
-          </ScrollArea>
+    <div className="flex h-full flex-col">
+      <ScrollArea className="min-h-0 flex-1">
+        <div className="flex flex-col gap-5 px-4 pb-4">
+          <ResumeHeader resume={resume} recordMeta={recordMeta} />
+          {isSummary ? <SummaryResumeNotice /> : null}
+          <ScoreBars resume={resume} />
+          <ResumeStabilityBlock team={resume.team} />
+          <WhyInConcerns resume={resume} />
+          {!isSummary ? (
+            <div className="flex flex-col gap-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Schedule
+              </h3>
+              <div className="rounded-xl bg-secondary/30 px-4">
+                <ResumeScheduleList schedule={resume.schedule} />
+              </div>
+            </div>
+          ) : null}
         </div>
+      </ScrollArea>
+      {footer ? (
+        <div className="border-t border-border/60 px-4 pt-4">{footer}</div>
       ) : null}
-      {footer}
     </div>
   );
 }

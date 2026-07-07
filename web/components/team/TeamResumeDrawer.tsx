@@ -91,9 +91,9 @@ export function TeamResumeDrawer({
           <SheetDescription>Team resume</SheetDescription>
         </SheetHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col px-4 pb-4">
+        <div className="flex min-h-0 flex-1 flex-col pb-4">
           {loading ? (
-            <div className="flex flex-col gap-4 pt-2">
+            <div className="flex flex-col gap-4 px-4 pt-2">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-13 w-13 rounded-full" />
                 <div className="flex flex-1 flex-col gap-2">
@@ -106,7 +106,7 @@ export function TeamResumeDrawer({
               <Skeleton className="h-full w-full flex-1" />
             </div>
           ) : resumeState.status === "error" && rankingsState.status === "error" ? (
-            <div className="pt-2">
+            <div className="px-4 pt-2">
               <EmptyState
                 icon={<SearchX className="h-5 w-5" />}
                 title="Couldn't load team resumes"
@@ -119,7 +119,7 @@ export function TeamResumeDrawer({
               recordMeta={recordMeta}
               variant="drawer"
               footer={
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <ResumeExportButton
                     resume={resume}
                     recordMeta={recordMeta}
@@ -129,17 +129,17 @@ export function TeamResumeDrawer({
                   />
                   <Link
                     href={`/teams/${encodeURIComponent(team)}`}
-                    className="flex items-center justify-center gap-1.5 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                    className="flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-border bg-card px-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
                     onClick={() => onOpenChange(false)}
                   >
                     Full team page
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                   </Link>
                 </div>
               }
             />
           ) : (
-            <div className="pt-2">
+            <div className="px-4 pt-2">
               <EmptyState
                 icon={<SearchX className="h-5 w-5" />}
                 title={`No resume for ${team}`}
