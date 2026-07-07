@@ -3,10 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { AppIcon } from "@/components/icons/AppIcon";
 import { HeaderAccountMenu } from "@/components/auth/HeaderAccountMenu";
-import { DOCS_NAV_ICON, NAV_ICONS } from "@/components/icons/nav-icons";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -63,15 +62,6 @@ function DesktopNavLink({
   );
 }
 
-function NavItemIcon({ href }: { href: string }) {
-  const icon =
-    href in NAV_ICONS
-      ? NAV_ICONS[href as keyof typeof NAV_ICONS]
-      : DOCS_NAV_ICON;
-
-  return <AppIcon icon={icon} size={18} strokeWidth={1.75} className="opacity-80" />;
-}
-
 function MobileNavRow({
   href,
   label,
@@ -89,7 +79,7 @@ function MobileNavRow({
           <Link
             href={href}
             className={cn(
-              "flex items-center gap-3 rounded-md py-2.5 pr-2 pl-3 text-sm font-medium transition-colors duration-150",
+              "flex items-center rounded-md py-2.5 pr-2 pl-3 text-sm font-medium transition-colors duration-150",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
               active
                 ? "bg-foreground/[0.06] text-foreground"
@@ -97,14 +87,7 @@ function MobileNavRow({
             )}
             aria-current={active ? "page" : undefined}
           >
-            <NavItemIcon href={href} />
             <span className="min-w-0 flex-1 truncate">{label}</span>
-            <AppIcon
-              icon={ChevronRight}
-              size={16}
-              strokeWidth={2}
-              className="shrink-0 text-muted-foreground/50"
-            />
           </Link>
         }
       />

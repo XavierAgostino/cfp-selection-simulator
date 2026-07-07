@@ -1,8 +1,13 @@
 "use client";
 
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { InfoTooltip } from "@/components/explain/InfoTooltip";
 import {
   Popover,
@@ -144,12 +149,35 @@ function SummaryStat({
  * model, and a reviewer should not have to infer which one happened.
  */
 function DisagreementTaxonomy({ taxonomy }: { taxonomy: MissTaxonomy }) {
+  const activeKinds = MISS_KIND_DEFINITIONS.filter(
+    (def) => taxonomy.counts[def.kind] > 0,
+  );
+  const summary =
+    activeKinds.length > 0
+      ? `This run: ${activeKinds
+          .map((def) => {
+            const count = taxonomy.counts[def.kind];
+            return `${count} ${def.label.toLowerCase()}${count === 1 ? "" : "s"}`;
+          })
+          .join(" · ")}`
+      : "No disagreements this run.";
   return (
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        How to read a disagreement
-      </p>
-      <div className="mt-2 overflow-hidden rounded-lg border border-border/60">
+    <Collapsible>
+      <div className="overflow-hidden rounded-lg border border-border/60">
+        <CollapsibleTrigger className="group flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-secondary/40">
+          <div className="min-w-0">
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              How to read a disagreement
+            </span>
+            <p className="mt-0.5 text-xs text-muted-foreground/80">{summary}</p>
+          </div>
+          <ChevronDown
+            aria-hidden
+            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[panel-open]:rotate-180"
+          />
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="border-t border-border/40">
         {MISS_KIND_DEFINITIONS.map((def) => {
           const count = taxonomy.counts[def.kind];
           const active = count > 0;
@@ -202,8 +230,10 @@ function DisagreementTaxonomy({ taxonomy }: { taxonomy: MissTaxonomy }) {
             </div>
           );
         })}
+          </div>
+        </CollapsibleContent>
       </div>
-    </div>
+    </Collapsible>
   );
 }
 
