@@ -417,6 +417,93 @@ empty state (no proxy values).
 Fixture: `web/lib/fixtures/validation.json` (seeded by `pnpm seed-fixtures`).
 Contract tests: `tests/test_validation_contract.py`.
 
+## revealed-preferences.json (research-only, not served)
+
+Revealed committee preferences fit artifact, written by `sroom fit-preferences`
+(`src/calibration/revealed_preferences_outputs.py`). **This artifact is
+research-only and is never copied into `web/lib/fixtures/` or served by the
+public data routes without an explicit review decision.** It lives at
+`data/output/calibration/revealed-preferences.json` (gitignored, local only).
+
+Consumer rule (fail closed): any UI reading this file must render nothing at
+all if the file is missing, the JSON is malformed, the keys deviate from this
+contract, or `research_only` is not `true`. No fallback copy may be invented
+in TypeScript; every rendered sentence and badge comes from the artifact
+(`disclaimer`, `warning_badges`, `caveats`, `interpretation`,
+`explanation_scope`, `public_case_2025`).
+
+```jsonc
+{
+  "schema_version": 1,
+  "research_only": true,               // consumers MUST fail closed unless true
+  "generated_at": "...",
+  "requested_years": [2014, 2025],
+  "production_baseline": { "resume": 0.4, "predictive": 0.3, "sor": 0.2, "sos": 0.1 },
+  "disclaimer": "Under Selection Room's four-factor model, the committee's published top 25 is best approximated by ...",
+  "warning_badges": ["Research-only", "Directional, not exact", "Edge-weight fit"],
+  "entries": [                         // one per (year, week) fit
+    {
+      "research_only": true,
+      "objective": "rank_error_top25", // rank_error_top25 | rank_error_top12 | rank_error_bubble
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2025, "week": 15,
+      "fitted_weights": { "resume": 0.65, "predictive": 0.2, "sor": 0.15, "sos": 0.0 },
+      "near_optimal_count": 9,
+      "near_optimal_spread_pp": { "resume": 15, "predictive": 10, "sor": 20, "sos": 0 },
+      "near_optimal_region": [         // re-scored candidates within 0.25 rank error (max 20)
+        { "weights": { /* ... */ }, "rank_error": 2.12, "spearman_top12": 0.94 }
+      ],
+      "baseline_delta_pp": {           // fitted minus reference, percentage points
+        "production": { "resume": 25, "predictive": -10, "sor": -5, "sos": -10 },
+        "historical_mean": { /* ... */ }, "equal_weights": { /* ... */ },
+        "prior_week": null             // present for weekly fits
+      },
+      "fit_quality": { "rank_error": 2.12, "spearman_top12": 0.94,
+                       "baseline_rank_error": 3.76, "top12_overlap": 0.92,
+                       "field_overlap": 0.92, "brier": 0.17 },
+      "fit_warning": "Edge-weight fit: ...",  // null or "; "-joined warning sentences
+      "warning_badges": ["Research-only", "Directional, not exact", "Edge-weight fit"],
+      "interpretation": { "headline": "More résumé-heavy and less predictive-driven ...",
+                          "confidence": "directional",  // directional | moderate | high
+                          "warning": "..." },           // nullable
+      "teams_helped": [                // moved toward committee position vs baseline
+        { "team": "Miami", "committee_rank": 10, "baseline_rank": 12,
+          "fitted_rank": 12, "rank_delta": 0 }
+      ],
+      "teams_hurt": [ /* same shape */ ],
+      "focus_team_shifts": {           // keyed by team name, same shape as teams_helped rows
+        "Miami": { /* ... */ }, "Notre Dame": { /* ... */ }
+      },
+      "explanation_scope": {           // honest scope bullets, render verbatim
+        "explains": ["..."], "does_not_explain": ["..."]
+      }
+    }
+  ],
+  "public_case_2025": {                // null unless a 2025 week-15 fit is present
+    "reproduces_committee_order": false,
+    "committee_order": "Miami over Notre Dame",
+    "fitted_shift": { "Miami": { "committee_rank": 10, "baseline_rank": 12, "fitted_rank": 12 },
+                      "Notre Dame": { /* ... */ } },
+    "baseline_delta_pp": { /* ... */ },
+    "explanation": "...",              // honest narrative; render as-is
+    "headline": "..."
+  },
+  "caveats": ["..."]                   // render-ready caveat sentences
+}
+```
+
+`warning_badges` derivation (root = ordered union of entry badges):
+`Research-only` (always), `Directional, not exact` (confidence is
+`directional`), `Edge-weight fit`, `Short season`, `Incomplete season
+coverage` (each when the matching sentence is in `fit_warning`), and
+`Weekly fit (noisier)` (week before the final ranking week).
+
+Golden fixture: `tests/fixtures/revealed_preferences_payload_keys.json` pins
+the root, entry, and public-case key sets; changing any key requires updating
+that fixture and this document together. Contract tests:
+`tests/test_revealed_preferences.py`.
+
 ## team-assets.json
 
 Keyed by team name; passthrough of `src/assets/teams.py` `load_team_assets()`:

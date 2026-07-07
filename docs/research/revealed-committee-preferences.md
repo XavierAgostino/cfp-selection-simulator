@@ -214,6 +214,14 @@ added incrementally as CFP weekly releases are curated.
 
 ## Artifact contract
 
+The contract is frozen at `schema_version: 1` and documented field-by-field in
+[api-contracts.md](../api-contracts.md); the golden fixture
+`tests/fixtures/revealed_preferences_payload_keys.json` pins the root, entry,
+and public-case key sets. The root payload carries render-ready language for
+any future frontend (`disclaimer` with the canonical "published top 25"
+sentence, `warning_badges`, `caveats`) so no wording is ever re-declared in
+TypeScript.
+
 Each fit entry includes:
 
 - `research_only: true`
@@ -225,6 +233,10 @@ Each fit entry includes:
 - `interpretation` (headline, confidence, warning)
 - `fit_warning` (early season, outlier divergence, wide near-optimal region,
   incomplete season coverage)
+- `warning_badges` (render-ready badge strings: Research-only, Directional
+  not exact, Edge-weight fit, Short season, Incomplete season coverage,
+  Weekly fit)
+- `teams_helped`, `teams_hurt`, `focus_team_shifts`
 - `explanation_scope` (`explains` / `does_not_explain` bullet lists derived from
   the fit: direction vs baseline, rank-error improvement, teams helped; versus
   unreproduced orderings, collapsed or edge components, unidentifiable splits,

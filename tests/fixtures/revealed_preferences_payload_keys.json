@@ -1,10 +1,43 @@
-[
-  "caveats",
-  "entries",
-  "generated_at",
-  "production_baseline",
-  "public_case_2025",
-  "requested_years",
-  "research_only",
-  "schema_version"
-]
+{
+  "root": [
+    "caveats",
+    "disclaimer",
+    "entries",
+    "generated_at",
+    "production_baseline",
+    "public_case_2025",
+    "requested_years",
+    "research_only",
+    "schema_version",
+    "warning_badges"
+  ],
+  "entry": [
+    "baseline_delta_pp",
+    "committee_rank_source",
+    "explanation_scope",
+    "fit_quality",
+    "fit_warning",
+    "fitted_weights",
+    "focus_team_shifts",
+    "interpretation",
+    "near_optimal_count",
+    "near_optimal_region",
+    "near_optimal_spread_pp",
+    "objective",
+    "research_only",
+    "search_step",
+    "teams_helped",
+    "teams_hurt",
+    "warning_badges",
+    "week",
+    "year"
+  ],
+  "public_case_2025": [
+    "baseline_delta_pp",
+    "committee_order",
+    "explanation",
+    "fitted_shift",
+    "headline",
+    "reproduces_committee_order"
+  ]
+}

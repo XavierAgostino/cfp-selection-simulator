@@ -19,8 +19,24 @@ from src.calibration.revealed_preferences import (
     miami_notre_dame_attribution,
 )
 from src.pipeline.weights import COMPONENT_KEYS
+from src.validation.historical import FINAL_CFP_RANKING_WEEK
 
 SCHEMA_VERSION = 1
+
+# Canonical public sentence. Frontends render this string from the artifact;
+# never re-declare it in TypeScript or import it across languages.
+PUBLIC_DISCLAIMER = (
+    "Under Selection Room's four-factor model, the committee's published top 25 "
+    "is best approximated by a more résumé-heavy and less predictive-driven "
+    "blend than baseline."
+)
+
+BADGE_RESEARCH_ONLY = "Research-only"
+BADGE_DIRECTIONAL = "Directional, not exact"
+BADGE_EDGE_FIT = "Edge-weight fit"
+BADGE_SHORT_SEASON = "Short season"
+BADGE_INCOMPLETE_COVERAGE = "Incomplete season coverage"
+BADGE_WEEKLY_FIT = "Weekly fit (noisier)"
 
 CAVEATS = [
     CANONICAL_DISCLAIMER,
@@ -46,6 +62,23 @@ def _round(value: Optional[float], digits: int = 4) -> Optional[float]:
 
 def _weights_dict(weights: object) -> Dict[str, float]:
     return {key: round(float(getattr(weights, key)), 4) for key in COMPONENT_KEYS}
+
+
+def _warning_badges(fit: FitResult) -> List[str]:
+    """Render-ready badge strings for one fit, in display order."""
+    badges = [BADGE_RESEARCH_ONLY]
+    if fit.interpretation.confidence == "directional":
+        badges.append(BADGE_DIRECTIONAL)
+    warning_text = fit.fit_warning or ""
+    if "Edge-weight fit" in warning_text:
+        badges.append(BADGE_EDGE_FIT)
+    if "Short season" in warning_text:
+        badges.append(BADGE_SHORT_SEASON)
+    if "Incomplete season coverage" in warning_text:
+        badges.append(BADGE_INCOMPLETE_COVERAGE)
+    if fit.week < FINAL_CFP_RANKING_WEEK:
+        badges.append(BADGE_WEEKLY_FIT)
+    return badges
 
 
 def _fit_entry(fit: FitResult) -> Dict[str, object]:
@@ -77,6 +110,7 @@ def _fit_entry(fit: FitResult) -> Dict[str, object]:
             "brier": _round(fit.fit_quality.brier),
         },
         "fit_warning": fit.fit_warning,
+        "warning_badges": _warning_badges(fit),
         "interpretation": {
             "headline": fit.interpretation.headline,
             "confidence": fit.interpretation.confidence,
@@ -102,6 +136,16 @@ def _fit_entry(fit: FitResult) -> Dict[str, object]:
             }
             for t in fit.teams_hurt
         ],
+        "focus_team_shifts": {
+            name: {
+                "team": t.team,
+                "committee_rank": t.committee_rank,
+                "baseline_rank": t.baseline_rank,
+                "fitted_rank": t.fitted_rank,
+                "rank_delta": t.rank_delta,
+            }
+            for name, t in fit.focus_team_shifts.items()
+        },
     }
 
 
@@ -211,12 +255,20 @@ def build_revealed_preferences_payload(
         )
         entry["explanation_scope"] = _explanation_scope(entry, case)
 
+    root_badges: List[str] = []
+    for entry in entries:
+        for badge in entry.get("warning_badges", []):
+            if badge not in root_badges:
+                root_badges.append(badge)
+
     return {
         "schema_version": SCHEMA_VERSION,
         "research_only": True,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "requested_years": result.requested_years,
         "production_baseline": _weights_dict(result.production_baseline),
+        "disclaimer": PUBLIC_DISCLAIMER,
+        "warning_badges": root_badges,
         "entries": entries,
         "public_case_2025": public_case,
         "caveats": CAVEATS,
@@ -250,6 +302,8 @@ def _weekly_drift_lines(entries: List[FitResult]) -> List[str]:
 def _markdown_report(payload: Dict[str, object]) -> str:
     lines = [
         "# Revealed Committee Preferences",
+        "",
+        payload.get("disclaimer", PUBLIC_DISCLAIMER),
         "",
         CANONICAL_DISCLAIMER,
         "",

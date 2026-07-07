@@ -181,12 +181,16 @@ def test_artifact_payload_contract(tmp_path: Path):
 
     assert payload["research_only"] is True
     assert payload["schema_version"] == 1
+    assert "published top 25" in payload["disclaimer"]
+    assert payload["warning_badges"][0] == "Research-only"
     assert len(payload["entries"]) == 1
     entry = payload["entries"][0]
     assert entry["objective"] == "rank_error_top25"
     assert "fitted_weights" in entry
     assert "near_optimal_region" in entry
     assert "interpretation" in entry
+    assert entry["warning_badges"][0] == "Research-only"
+    assert isinstance(entry["focus_team_shifts"], dict)
 
     scope = entry["explanation_scope"]
     assert isinstance(scope["explains"], list)
@@ -455,12 +459,11 @@ def test_golden_payload_keys_match_fixture(tmp_path: Path):
     result = RevealedPreferencesResult(requested_years=[2024], evaluated_entries=[fit])
     payload = build_revealed_preferences_payload(result)
 
+    # The contract is frozen (schema_version 1, docs/api-contracts.md). Any key
+    # change must be deliberate: update the fixture and the contract doc together.
     fixture_path = FIXTURES / "revealed_preferences_payload_keys.json"
-    fixture_path.parent.mkdir(parents=True, exist_ok=True)
-    if not fixture_path.exists():
-        fixture_path.write_text(
-            json.dumps(sorted(payload.keys()), indent=2),
-            encoding="utf-8",
-        )
-    expected_keys = set(json.loads(fixture_path.read_text()))
-    assert expected_keys == set(payload.keys())
+    frozen = json.loads(fixture_path.read_text())
+    assert set(payload.keys()) == set(frozen["root"])
+    assert set(payload["entries"][0].keys()) == set(frozen["entry"])
+    if payload["public_case_2025"] is not None:
+        assert set(payload["public_case_2025"].keys()) == set(frozen["public_case_2025"])
