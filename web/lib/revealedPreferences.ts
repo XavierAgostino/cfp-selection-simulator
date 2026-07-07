@@ -62,6 +62,10 @@ function isPayload(value: unknown): value is RevealedPreferencesPayload {
     payload.schema_version === 1 &&
     typeof payload.disclaimer === "string" &&
     payload.disclaimer.length > 0 &&
+    typeof payload.disclaimer_short === "string" &&
+    payload.disclaimer_short.length > 0 &&
+    typeof payload.badge_explainers === "object" &&
+    payload.badge_explainers !== null &&
     Array.isArray(payload.warning_badges) &&
     Array.isArray(payload.caveats) &&
     isWeights(payload.production_baseline) &&

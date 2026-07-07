@@ -18,7 +18,12 @@ function validPayload(): Record<string, unknown> {
     requested_years: [2025],
     production_baseline: { resume: 0.4, predictive: 0.3, sor: 0.2, sos: 0.1 },
     disclaimer:
-      "Under Selection Room's four-factor model, the committee's published top 25 is best approximated by a more résumé-heavy and less predictive-driven blend than baseline.",
+      "Under Selection Room's four-factor model, the committee's published top 25 looks more résumé-heavy and less predictive-driven than Selection Room's baseline.",
+    disclaimer_short:
+      "These weights are descriptive approximations, not the committee's actual weights.",
+    badge_explainers: {
+      "Edge-weight fit": "One or more factors landed near 0% or very high.",
+    },
     warning_badges: ["Research-only", "Directional, not exact"],
     entries: [
       {
@@ -93,6 +98,12 @@ describe("parseRevealedPreferences (fail closed)", () => {
 
     const empty = { ...validPayload(), disclaimer: "" };
     expect(parseRevealedPreferences(JSON.stringify(empty))).toBeNull();
+  });
+
+  it("returns null when disclaimer_short is missing", () => {
+    const tampered = { ...validPayload() };
+    delete (tampered as Record<string, unknown>).disclaimer_short;
+    expect(parseRevealedPreferences(JSON.stringify(tampered))).toBeNull();
   });
 
   it("returns null when an entry is off-contract", () => {

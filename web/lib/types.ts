@@ -614,6 +614,8 @@ export interface RevealedPreferencesPayload {
   requested_years: number[];
   production_baseline: FittedWeights;
   disclaimer: string;
+  disclaimer_short: string;
+  badge_explainers: Record<string, string>;
   warning_badges: string[];
   entries: RevealedPreferencesEntry[];
   public_case_2025: RevealedPublicCase | null;
@@ -650,6 +652,8 @@ export interface RevealedSeasonVolatility {
 
 export interface RevealedWeeklySeason {
   season: number;
+  takeaway: string;
+  warning_badges: string[];
   weekly_fits: RevealedWeeklyFit[];
   volatility: RevealedSeasonVolatility;
 }
@@ -660,6 +664,8 @@ export interface RevealedWeeklyPayload {
   generated_at: string;
   production_baseline: FittedWeights;
   disclaimer: string;
+  disclaimer_short: string;
+  badge_explainers: Record<string, string>;
   seasons: RevealedWeeklySeason[];
   caveats: string[];
 }

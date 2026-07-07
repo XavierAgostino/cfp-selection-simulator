@@ -1,3 +1,10 @@
+import { ChevronDown } from "lucide-react";
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import type {
   FittedWeights,
   RevealedPreferencesEntry,
@@ -21,6 +28,69 @@ function signedPp(value: number | undefined): string {
   if (value === undefined) return "—";
   if (value === 0) return "0";
   return `${value > 0 ? "+" : ""}${value}pp`;
+}
+
+/** Badge pill; explainer copy comes from the artifact's badge_explainers. */
+function WarningBadges({
+  badges,
+  explainers,
+}: {
+  badges: string[];
+  explainers: Record<string, string>;
+}) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {badges.map((badge) => (
+        <span
+          key={badge}
+          title={explainers[badge]}
+          className={`rounded-full border border-border bg-secondary/60 px-2 py-0.5 text-[11px] font-medium text-muted-foreground ${
+            explainers[badge] ? "cursor-help" : ""
+          }`}
+        >
+          {badge}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/** Short disclaimer stays visible; the full caveat stack collapses. */
+function MethodologyNotes({
+  disclaimerShort,
+  caveats,
+}: {
+  disclaimerShort: string;
+  caveats: string[];
+}) {
+  return (
+    <div className="flex flex-col gap-2 border-t border-border/50 pt-3">
+      <p className="max-w-3xl text-xs leading-relaxed text-muted-foreground">
+        {disclaimerShort}
+      </p>
+      <Collapsible>
+        <CollapsibleTrigger className="group flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <ChevronDown
+            aria-hidden
+            className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-data-[panel-open]:rotate-180"
+          />
+          Methodology notes
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="flex flex-col gap-1 pt-2">
+            {caveats.map((caveat) => (
+              <p
+                key={caveat}
+                className="max-w-3xl text-xs leading-relaxed text-muted-foreground"
+              >
+                {caveat}
+              </p>
+            ))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
+  );
 }
 
 function ResidualTable({ publicCase }: { publicCase: RevealedPublicCase }) {
@@ -55,7 +125,7 @@ function ResidualTable({ publicCase }: { publicCase: RevealedPublicCase }) {
 /**
  * Hidden research card (debug=revealed only). Every sentence and badge is
  * rendered from revealed-preferences.json; nothing is authored here beyond
- * structural table headers. The caller must fail closed: no payload, no card.
+ * structural section labels. The caller must fail closed: no payload, no card.
  */
 export function CommitteeTendenciesCard({
   payload,
@@ -68,6 +138,9 @@ export function CommitteeTendenciesCard({
   const fitted = entry.fitted_weights;
   const productionDelta = entry.baseline_delta_pp?.production ?? null;
   const publicCase = payload.public_case_2025;
+  const residualTeams = publicCase
+    ? Object.keys(publicCase.fitted_shift).join(" vs ")
+    : null;
 
   return (
     <div className="rounded-xl border border-dashed border-border bg-card px-4 py-4 sm:px-5">
@@ -76,16 +149,10 @@ export function CommitteeTendenciesCard({
           <span className={metricLabel}>
             Committee Tendencies &mdash; {entry.year} Final Ranking
           </span>
-          <div className="flex flex-wrap gap-1.5">
-            {entry.warning_badges.map((badge) => (
-              <span
-                key={badge}
-                className="rounded-full border border-border bg-secondary/60 px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
+          <WarningBadges
+            badges={entry.warning_badges}
+            explainers={payload.badge_explainers}
+          />
         </div>
 
         <p className="max-w-3xl text-sm leading-[1.85] text-foreground sm:text-[15px]">
@@ -115,13 +182,21 @@ export function CommitteeTendenciesCard({
           </table>
         </div>
 
-        <p className="max-w-3xl text-sm leading-relaxed text-foreground">
-          {entry.interpretation.headline}
-        </p>
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Key takeaway
+          </span>
+          <p className="max-w-3xl text-sm leading-relaxed text-foreground">
+            {entry.interpretation.headline}
+          </p>
+        </div>
 
         {publicCase ? (
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium text-muted-foreground">
+          <div className="flex flex-col gap-2 border-t border-border/50 pt-3">
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Residual case{residualTeams ? `: ${residualTeams}` : ""}
+            </span>
+            <span className="text-xs text-muted-foreground">
               {publicCase.committee_order}
             </span>
             <ResidualTable publicCase={publicCase} />
@@ -133,16 +208,10 @@ export function CommitteeTendenciesCard({
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-1">
-          {payload.caveats.map((caveat) => (
-            <p
-              key={caveat}
-              className="max-w-3xl text-xs leading-relaxed text-muted-foreground"
-            >
-              {caveat}
-            </p>
-          ))}
-        </div>
+        <MethodologyNotes
+          disclaimerShort={payload.disclaimer_short}
+          caveats={payload.caveats}
+        />
       </div>
     </div>
   );

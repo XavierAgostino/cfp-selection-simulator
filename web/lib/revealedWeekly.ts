@@ -50,6 +50,10 @@ function isSeason(value: unknown): value is RevealedWeeklySeason {
   if (typeof value !== "object" || value === null) return false;
   const season = value as Record<string, unknown>;
   if (typeof season.season !== "number") return false;
+  if (typeof season.takeaway !== "string" || season.takeaway.length === 0) {
+    return false;
+  }
+  if (!Array.isArray(season.warning_badges)) return false;
   if (!Array.isArray(season.weekly_fits) || season.weekly_fits.length < 2) {
     return false;
   }
@@ -72,6 +76,10 @@ function isPayload(value: unknown): value is RevealedWeeklyPayload {
     payload.schema_version === 1 &&
     typeof payload.disclaimer === "string" &&
     payload.disclaimer.length > 0 &&
+    typeof payload.disclaimer_short === "string" &&
+    payload.disclaimer_short.length > 0 &&
+    typeof payload.badge_explainers === "object" &&
+    payload.badge_explainers !== null &&
     isWeights(payload.production_baseline) &&
     Array.isArray(payload.caveats) &&
     Array.isArray(payload.seasons) &&

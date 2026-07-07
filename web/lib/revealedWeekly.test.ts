@@ -40,10 +40,18 @@ function validPayload(): Record<string, unknown> {
     generated_at: "2026-07-07T00:00:00+00:00",
     production_baseline: { resume: 0.4, predictive: 0.3, sor: 0.2, sos: 0.1 },
     disclaimer:
-      "Under Selection Room's four-factor model, the committee's published top 25 is best approximated by a more résumé-heavy and less predictive-driven blend than baseline.",
+      "Under Selection Room's four-factor model, the committee's published top 25 looks more résumé-heavy and less predictive-driven than Selection Room's baseline.",
+    disclaimer_short:
+      "These weights are descriptive approximations, not the committee's actual weights.",
+    badge_explainers: {
+      "Edge-weight fit": "One or more factors landed near 0% or very high.",
+    },
     seasons: [
       {
         season: 2024,
+        takeaway:
+          "Across 2 releases, the committee's published top 25 consistently looked more résumé-heavy and less predictive-driven than Selection Room's baseline.",
+        warning_badges: ["Research-only", "Directional, not exact"],
         weekly_fits: [fit(10, 1), fit(15, 6)],
         volatility: {
           releases_compared: 1,
@@ -91,6 +99,19 @@ describe("parseRevealedWeekly (fail closed)", () => {
   it("returns null when production_baseline is absent", () => {
     const tampered = validPayload();
     delete (tampered as Record<string, unknown>).production_baseline;
+    expect(parseRevealedWeekly(JSON.stringify(tampered))).toBeNull();
+  });
+
+  it("returns null when disclaimer_short is missing", () => {
+    const tampered = validPayload();
+    delete (tampered as Record<string, unknown>).disclaimer_short;
+    expect(parseRevealedWeekly(JSON.stringify(tampered))).toBeNull();
+  });
+
+  it("returns null when a season is missing its takeaway", () => {
+    const tampered = validPayload();
+    const seasons = tampered.seasons as Record<string, unknown>[];
+    delete seasons[0].takeaway;
     expect(parseRevealedWeekly(JSON.stringify(tampered))).toBeNull();
   });
 
