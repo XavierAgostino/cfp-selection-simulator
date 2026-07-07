@@ -38,6 +38,10 @@ BADGE_SHORT_SEASON = "Short season"
 BADGE_INCOMPLETE_COVERAGE = "Incomplete season coverage"
 BADGE_WEEKLY_FIT = "Weekly fit (noisier)"
 
+# A season whose fitted weights swing at least this much between consecutive
+# releases gets a render-ready volatility downgrade note in the weekly artifact.
+VOLATILITY_NOTE_THRESHOLD_PP = 10
+
 CAVEATS = [
     CANONICAL_DISCLAIMER,
     "Research mode only: fitted weights never change production defaults.",
@@ -275,6 +279,110 @@ def build_revealed_preferences_payload(
     }
 
 
+def _prior_release_delta_pp(prev: FitResult, curr: FitResult) -> Dict[str, int]:
+    prior = curr.baseline_delta_pp.get("prior_week")
+    if isinstance(prior, dict) and prior:
+        return {key: int(prior[key]) for key in COMPONENT_KEYS}
+    return {
+        key: int(
+            round((getattr(curr.fitted_weights, key) - getattr(prev.fitted_weights, key)) * 100)
+        )
+        for key in COMPONENT_KEYS
+    }
+
+
+def build_weekly_volatility_payload(
+    result: RevealedPreferencesResult,
+) -> Optional[Dict[str, object]]:
+    """Weekly volatility artifact: one season block per season with 2+ fits.
+
+    Separate file from revealed-preferences.json so the frozen final-fit
+    contract is untouched. Each fit is keyed by its committee release identity
+    (ranking_release, release_date, games_through_week) when a curated fixture
+    exists; the volatility summary is the week-over-week fitted-weight shift.
+    Returns None when no season has multiple weekly fits.
+    """
+    from src.validation.cfp_weekly import load_weekly_releases, release_index
+
+    try:
+        releases = release_index(load_weekly_releases())
+    except (OSError, ValueError, KeyError):
+        releases = {}
+
+    by_year: Dict[int, List[FitResult]] = {}
+    for fit in result.evaluated_entries:
+        by_year.setdefault(fit.year, []).append(fit)
+
+    seasons: List[Dict[str, object]] = []
+    for year in sorted(by_year):
+        fits = sorted(by_year[year], key=lambda f: f.week)
+        if len(fits) < 2:
+            continue
+
+        weekly_fits: List[Dict[str, object]] = []
+        shifts: List[Dict[str, int]] = []
+        for index, fit in enumerate(fits):
+            release = releases.get((fit.year, fit.week))
+            prior_delta = _prior_release_delta_pp(fits[index - 1], fit) if index > 0 else None
+            if prior_delta is not None:
+                shifts.append(prior_delta)
+            weekly_fits.append(
+                {
+                    "research_only": True,
+                    "ranking_release": release.ranking_release if release else None,
+                    "release_date": release.release_date if release else None,
+                    "source": release.source if release else None,
+                    "games_through_week": fit.week,
+                    "fitted_weights": _weights_dict(fit.fitted_weights),
+                    "baseline_delta_pp": fit.baseline_delta_pp,
+                    "prior_release_delta_pp": prior_delta,
+                    "fit_quality": {
+                        "rank_error": _round(fit.fit_quality.rank_error),
+                        "spearman_top12": _round(fit.fit_quality.spearman_top12),
+                        "baseline_rank_error": _round(fit.fit_quality.baseline_rank_error),
+                    },
+                    "confidence": fit.interpretation.confidence,
+                    "warning_badges": _warning_badges(fit),
+                }
+            )
+
+        max_shift = max(max(abs(shift[key]) for shift in shifts) for key in COMPONENT_KEYS)
+        volatility = {
+            "releases_compared": len(shifts),
+            "mean_abs_shift_pp": {
+                key: round(sum(abs(shift[key]) for shift in shifts) / len(shifts), 1)
+                for key in COMPONENT_KEYS
+            },
+            "max_abs_shift_pp": {
+                key: max(abs(shift[key]) for shift in shifts) for key in COMPONENT_KEYS
+            },
+            # Render-ready downgrade sentence; frontends show it verbatim and
+            # never author their own volatility copy (see docs/api-contracts.md).
+            "volatility_note": (
+                (
+                    f"Fitted weights move by up to {max_shift}pp between releases "
+                    "this season; treat week-over-week shifts as directional noise, "
+                    "not committee signal."
+                )
+                if max_shift >= VOLATILITY_NOTE_THRESHOLD_PP
+                else None
+            ),
+        }
+        seasons.append({"season": year, "weekly_fits": weekly_fits, "volatility": volatility})
+
+    if not seasons:
+        return None
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "research_only": True,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "production_baseline": _weights_dict(result.production_baseline),
+        "disclaimer": PUBLIC_DISCLAIMER,
+        "seasons": seasons,
+        "caveats": CAVEATS,
+    }
+
+
 def _weekly_drift_lines(entries: List[FitResult]) -> List[str]:
     lines: List[str] = []
     by_year: Dict[int, List[FitResult]] = {}
@@ -484,4 +592,12 @@ def write_revealed_preferences_outputs(
                 }
             )
 
-    return {"json": json_path, "markdown": md_path, "csv": csv_path}
+    paths = {"json": json_path, "markdown": md_path, "csv": csv_path}
+
+    weekly_payload = build_weekly_volatility_payload(result)
+    if weekly_payload is not None:
+        weekly_path = out_dir / "revealed-preferences-weekly.json"
+        weekly_path.write_text(json.dumps(weekly_payload, indent=2), encoding="utf-8")
+        paths["weekly"] = weekly_path
+
+    return paths

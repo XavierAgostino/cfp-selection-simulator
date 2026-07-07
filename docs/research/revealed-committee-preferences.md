@@ -182,8 +182,28 @@ those residuals are findings in their own right:
 only after the final field.
 
 **Data:** `HISTORICAL_CFP_WEEKLY_TOP25` in `src/validation/historical.py`. Week 15
-(final) is populated for all seasons with final rankings; additional weeks are
-added incrementally as CFP weekly releases are curated.
+(final) is populated for all seasons with final rankings. Real weekly releases are
+curated as release-dated fixtures in `tests/fixtures/cfp_weekly/` and registered by
+`src/validation/cfp_weekly.py` (the CLI registers them automatically). A fixture
+carries the release identity, not an ambiguous "week": committee release X is fit
+against only the games available before that release (`games_through_week`), and no
+non-final fixture may alias the final ranking (enforced on load and in
+`tests/test_cfp_weekly_fixtures.py`).
+
+**Curated releases (2024, six releases):** the CFP selection committee's weekly
+top-25 as published on 2024-11-05, 2024-11-12, 2024-11-19, 2024-11-26, 2024-12-03,
+and the final on 2024-12-08 (Selection Sunday). Retrieved from the CollegeFootballData
+`/rankings` endpoint, poll "Playoff Committee Rankings", season 2024 regular season
+weeks 11 through 16; each fixture's `source` field carries its citation. Release N
+maps to `games_through_week = poll week - 1` (the Nov 5 release saw games through
+week 10). The final release is validated against `HISTORICAL_CFP_TOP25[2024]` and is
+not re-registered.
+
+**Weekly volatility artifact:** when a season has two or more weekly fits,
+`fit-preferences` also writes `revealed-preferences-weekly.json` (release-keyed fits,
+`prior_release_delta_pp` per release, and per-season `mean_abs_shift_pp` /
+`max_abs_shift_pp` volatility). Contract in `docs/api-contracts.md`; research-only,
+never served.
 
 **Per-week diagnostics:**
 

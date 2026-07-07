@@ -197,10 +197,10 @@ changes production defaults in [`src/pipeline/weights.py`](../src/pipeline/weigh
 ./bin/sroom fit-preferences [--years 2014:2024]
 ./bin/sroom fit-preferences --season 2025
 
-# Weekly backtest when weekly fixtures exist (Phase 2.5)
-./bin/sroom fit-preferences --season 2025 --weeks all
+# Weekly backtest against curated committee releases (2024 has all six)
+./bin/sroom fit-preferences --season 2024 --weeks all
 ./bin/sroom fit-preferences --years 2014:2025 --weeks all
-./bin/sroom fit-preferences --season 2025 --weeks 12
+./bin/sroom fit-preferences --season 2024 --weeks 12
 
 # Experimental objective zones
 ./bin/sroom fit-preferences --season 2025 --objective top12
@@ -211,7 +211,7 @@ changes production defaults in [`src/pipeline/weights.py`](../src/pipeline/weigh
 |--------|-------------|
 | `--years` | Year range (`2014:2024`) or comma-separated list. Default: `2014–2024` when neither `--years` nor `--season` is set |
 | `--season` | Single season year (mutually exclusive with `--years`) |
-| `--weeks` | Week number, or `all` for every week with a weekly CFP fixture. Default: final ranking week (week 15) |
+| `--weeks` | Week number (data cutoff, `games_through_week`), or `all` for every registered weekly CFP fixture. Default: final ranking week (week 15). Curated release-dated fixtures live in `tests/fixtures/cfp_weekly/` (2024: all six committee releases) and are registered automatically |
 | `--objective` | Committee slice to fit against: `top25` (default), `top12`, or `bubble` (positions 7–18, experimental) |
 
 Year range format matches `sroom calibrate`: `2014:2024` or `2014,2015,2016`.
@@ -241,6 +241,7 @@ Outputs in `data/output/calibration/` (all artifacts include `research_only: tru
 - `revealed-preferences.json`: machine-readable contract (fits, near-optimal region, baselines, 2025 public-case diagnostic)
 - `revealed-preferences.md`: human-readable report with weekly drift block when multiple weeks are fitted
 - `revealed-preferences.csv`: one row per `(season, week)` with weights, rank error, confidence, headline
+- `revealed-preferences-weekly.json`: written only when a season has 2+ weekly fits; release-keyed fits with week-over-week volatility (contract in [api-contracts.md](api-contracts.md))
 
 See [research/revealed-committee-preferences.md](research/revealed-committee-preferences.md)
 for methodology, canonical language, near-optimal interpretation, and weekly

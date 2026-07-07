@@ -504,6 +504,59 @@ the root, entry, and public-case key sets; changing any key requires updating
 that fixture and this document together. Contract tests:
 `tests/test_revealed_preferences.py`.
 
+## revealed-preferences-weekly.json (research-only, not served)
+
+Written alongside `revealed-preferences.json` only when a season has two or
+more weekly fits (`fit-preferences --weeks all`). Same access rules as the
+final-fit artifact: research-only, gitignored, never served by `/api/data`,
+never promoted to `web/lib/fixtures/`. Weekly fits are keyed by committee
+release identity, not an ambiguous "week": release X is fit against only the
+games available before that release (`games_through_week`). Release metadata
+comes from the curated fixtures in `tests/fixtures/cfp_weekly/`
+(`src/validation/cfp_weekly.py`); fits for weeks without a curated release
+carry `null` release fields.
+
+```jsonc
+{
+  "schema_version": 1,
+  "research_only": true,                  // consumers must fail closed if not true
+  "generated_at": "ISO-8601 UTC",
+  "production_baseline": { "resume": 0.4, "predictive": 0.3, "sor": 0.2, "sos": 0.1 },
+  "disclaimer": "...",                    // same canonical sentence as the final-fit artifact
+  "seasons": [
+    {
+      "season": 2024,
+      "weekly_fits": [                    // ordered by games_through_week
+        {
+          "research_only": true,
+          "ranking_release": 1,           // committee release number; null if uncurated
+          "release_date": "2024-11-05",   // null if uncurated
+          "source": "...",                // fixture citation (CFP release + CFBD retrieval); null if uncurated
+          "games_through_week": 10,       // data cutoff the fit was computed on
+          "fitted_weights": { "resume": 0.0, "predictive": 0.0, "sor": 0.0, "sos": 0.0 },
+          "baseline_delta_pp": { "production": { /* pp */ }, "prior_week": { /* pp */ } },
+          "prior_release_delta_pp": null, // pp shift vs previous release; null on the first
+          "fit_quality": { "rank_error": 0.0, "spearman_top12": 0.0, "baseline_rank_error": 0.0 },
+          "confidence": "directional",
+          "warning_badges": ["Research-only", "..."]  // same derivation as the final-fit artifact
+        }
+      ],
+      "volatility": {                     // week-over-week fitted-weight movement
+        "releases_compared": 5,
+        "mean_abs_shift_pp": { "resume": 0.0, "predictive": 0.0, "sor": 0.0, "sos": 0.0 },
+        "max_abs_shift_pp": { "resume": 0, "predictive": 0, "sor": 0, "sos": 0 },
+        "volatility_note": null           // render-ready downgrade sentence when any
+                                          // component swings >= 10pp between releases;
+                                          // frontends show it verbatim, never author their own
+      }
+    }
+  ],
+  "caveats": ["..."]
+}
+```
+
+Contract tests: `tests/test_cfp_weekly_fixtures.py`.
+
 ## team-assets.json
 
 Keyed by team name; passthrough of `src/assets/teams.py` `load_team_assets()`:

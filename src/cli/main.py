@@ -363,6 +363,11 @@ def fit_preferences(
         run_revealed_preferences,
         write_revealed_preferences_outputs,
     )
+    from src.validation.cfp_weekly import register_weekly_releases
+
+    # Curated release-dated weekly fixtures (tests/fixtures/cfp_weekly/).
+    # Default runs still fit the final week only; --weeks unlocks these.
+    register_weekly_releases()
 
     if season is not None and years is not None:
         raise typer.BadParameter("Pass either --season or --years, not both")
