@@ -17,14 +17,14 @@ function InlineTeamChip({ team }: { team: CommitteeComparisonTeam }) {
       type="button"
       onClick={() => openTeam(team.team)}
       aria-label={`Open resume for ${team.team}`}
-      className="inline-flex -translate-y-px items-center gap-1 rounded-md border border-border bg-secondary/60 px-1.5 py-0.5 align-middle text-xs font-semibold text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      className="inline-flex -translate-y-px items-center gap-1 rounded-md border border-border bg-secondary/60 px-1.5 py-px align-middle text-xs font-semibold text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
     >
       <TeamLogoTile
         team={team.team}
         logoUrl={team.logo_url}
         abbreviation={team.abbreviation}
         primaryColor={team.primary_color}
-        size={14}
+        size={12}
       />
       {team.team}
     </button>
@@ -82,7 +82,7 @@ export function CommitteeTakeawayCard({
     <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
       <div className="flex flex-col gap-2.5">
         <span className={metricLabel}>The {takeaway.season} takeaway</span>
-        <p className="max-w-3xl text-sm leading-relaxed text-foreground sm:text-[15px]">
+        <p className="max-w-3xl text-sm leading-[1.85] text-foreground sm:text-[15px]">
           Selection Room matched{" "}
           <span className="font-semibold">
             {takeaway.overlapCount} of {takeaway.fieldSize}
