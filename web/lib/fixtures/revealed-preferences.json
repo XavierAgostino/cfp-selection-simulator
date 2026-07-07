@@ -1,0 +1,5061 @@
+{
+  "schema_version": 1,
+  "research_only": true,
+  "generated_at": "2026-07-07T18:41:20.353049+00:00",
+  "requested_years": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "production_baseline": {
+    "resume": 0.4,
+    "predictive": 0.3,
+    "sor": 0.2,
+    "sos": 0.1
+  },
+  "disclaimer": "Under Selection Room's four-factor model, the committee's published top 25 looks more r\u00e9sum\u00e9-heavy and less predictive-driven than Selection Room's baseline.",
+  "disclaimer_short": "These weights are descriptive approximations, not the committee's actual weights. Research-only; they do not change Selection Room's production model.",
+  "badge_explainers": {
+    "Edge-weight fit": "Edge-weight fit means one or more factors landed near 0% or very high, so interpret the direction more than the exact number.",
+    "Volatile weekly fit": "Fitted weights swing between releases this season; read the direction, not week-to-week magnitudes."
+  },
+  "warning_badges": [
+    "Research-only",
+    "Directional, not exact",
+    "Edge-weight fit",
+    "Short season",
+    "Weekly fit (noisier)"
+  ],
+  "entries": [
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2014,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.75,
+        "predictive": 0.1,
+        "sor": 0.1,
+        "sos": 0.05
+      },
+      "near_optimal_count": 19,
+      "near_optimal_spread_pp": {
+        "resume": 45,
+        "predictive": 10,
+        "sor": 40,
+        "sos": 10
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.1,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 1.5,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.5,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.15,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 1.5,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.05
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.05
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.1,
+            "sor": 0.15,
+            "sos": 0.05
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.15,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.05
+          },
+          "rank_error": 1.6667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.05,
+            "sor": 0.25,
+            "sos": 0.05
+          },
+          "rank_error": 1.6667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.15,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.6667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.1,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 1.6667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.2,
+            "sos": 0.05
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.1,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.05,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.1
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.05
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.1,
+            "sor": 0.5,
+            "sos": 0.05
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 35,
+          "predictive": -20,
+          "sor": -10,
+          "sos": -5
+        },
+        "equal_weights": {
+          "resume": 50,
+          "predictive": -15,
+          "sor": -15,
+          "sos": -20
+        },
+        "historical_mean": {
+          "resume": 5,
+          "predictive": -1,
+          "sor": -5,
+          "sos": 1
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.5,
+        "spearman_top12": 0.9371,
+        "baseline_rank_error": 2.5833,
+        "top12_overlap": 0.8333,
+        "field_overlap": 1.0,
+        "brier": 0.1665
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Marshall",
+          "committee_rank": null,
+          "baseline_rank": 26,
+          "fitted_rank": 17,
+          "rank_delta": 9
+        },
+        {
+          "team": "Boise State",
+          "committee_rank": null,
+          "baseline_rank": 17,
+          "fitted_rank": 11,
+          "rank_delta": 6
+        },
+        {
+          "team": "Louisville",
+          "committee_rank": null,
+          "baseline_rank": 31,
+          "fitted_rank": 25,
+          "rank_delta": 6
+        },
+        {
+          "team": "Colorado State",
+          "committee_rank": null,
+          "baseline_rank": 28,
+          "fitted_rank": 22,
+          "rank_delta": 6
+        },
+        {
+          "team": "Arizona",
+          "committee_rank": 11,
+          "baseline_rank": 19,
+          "fitted_rank": 13,
+          "rank_delta": 6
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Arkansas",
+          "committee_rank": null,
+          "baseline_rank": 16,
+          "fitted_rank": 30,
+          "rank_delta": -14
+        },
+        {
+          "team": "Auburn",
+          "committee_rank": null,
+          "baseline_rank": 9,
+          "fitted_rank": 18,
+          "rank_delta": -9
+        },
+        {
+          "team": "Oklahoma",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 27,
+          "rank_delta": -6
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 23,
+          "rank_delta": -5
+        },
+        {
+          "team": "Georgia",
+          "committee_rank": null,
+          "baseline_rank": 11,
+          "fitted_rank": 14,
+          "rank_delta": -3
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive, SOR, and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 2.5833 to 1.5.",
+          "Teams moved toward their committee position: Marshall, Boise State, Louisville."
+        ],
+        "does_not_explain": [
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 45pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2015,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 1.0,
+        "predictive": 0.0,
+        "sor": 0.0,
+        "sos": 0.0
+      },
+      "near_optimal_count": 8,
+      "near_optimal_spread_pp": {
+        "resume": 30,
+        "predictive": 15,
+        "sor": 15,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 1.0,
+            "predictive": 0.0,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.95,
+            "predictive": 0.05,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.1,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.95,
+            "predictive": 0.0,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.15,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.1,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 60,
+          "predictive": -30,
+          "sor": -20,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 75,
+          "predictive": -25,
+          "sor": -25,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": 30,
+          "predictive": -11,
+          "sor": -15,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.8333,
+        "spearman_top12": 0.951,
+        "baseline_rank_error": 4.1667,
+        "top12_overlap": 0.75,
+        "field_overlap": 1.0,
+        "brier": 0.1419
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Fitted weights diverge sharply from the multi-season fitted mean; treat this season as a potential outlier.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Toledo",
+          "committee_rank": null,
+          "baseline_rank": 35,
+          "fitted_rank": 23,
+          "rank_delta": 12
+        },
+        {
+          "team": "North Carolina",
+          "committee_rank": 10,
+          "baseline_rank": 25,
+          "fitted_rank": 13,
+          "rank_delta": 12
+        },
+        {
+          "team": "Northwestern",
+          "committee_rank": null,
+          "baseline_rank": 19,
+          "fitted_rank": 9,
+          "rank_delta": 10
+        },
+        {
+          "team": "Navy",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 15,
+          "rank_delta": 9
+        },
+        {
+          "team": "Florida State",
+          "committee_rank": 9,
+          "baseline_rank": 22,
+          "fitted_rank": 14,
+          "rank_delta": 8
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Arkansas",
+          "committee_rank": null,
+          "baseline_rank": 17,
+          "fitted_rank": 42,
+          "rank_delta": -25
+        },
+        {
+          "team": "Mississippi State",
+          "committee_rank": null,
+          "baseline_rank": 15,
+          "fitted_rank": 34,
+          "rank_delta": -19
+        },
+        {
+          "team": "Tennessee",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 35,
+          "rank_delta": -12
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 8,
+          "fitted_rank": 20,
+          "rank_delta": -12
+        },
+        {
+          "team": "Ole Miss",
+          "committee_rank": 12,
+          "baseline_rank": 10,
+          "fitted_rank": 19,
+          "rank_delta": -9
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive, SOR, and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 4.1667 to 1.8333.",
+          "Teams moved toward their committee position: Toledo, North Carolina, Northwestern."
+        ],
+        "does_not_explain": [
+          "Predictive, sor, and sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 30pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2016,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.55,
+        "predictive": 0.0,
+        "sor": 0.45,
+        "sos": 0.0
+      },
+      "near_optimal_count": 15,
+      "near_optimal_spread_pp": {
+        "resume": 45,
+        "predictive": 5,
+        "sor": 55,
+        "sos": 10
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.0,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.0,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.0,
+            "sor": 0.0,
+            "sos": 0.1
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.0,
+            "sor": 0.15,
+            "sos": 0.05
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.0,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.0,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.0,
+            "sor": 0.3,
+            "sos": 0.05
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.0,
+            "sor": 0.25,
+            "sos": 0.05
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.2,
+            "sos": 0.05
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.0,
+            "sor": 0.2,
+            "sos": 0.1
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.15,
+            "sos": 0.1
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.1
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.05
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.05
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.0,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 15,
+          "predictive": -30,
+          "sor": 25,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 30,
+          "predictive": -25,
+          "sor": 20,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": -15,
+          "predictive": -11,
+          "sor": 30,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.75,
+        "spearman_top12": 0.9091,
+        "baseline_rank_error": 4.3333,
+        "top12_overlap": 0.9167,
+        "field_overlap": 1.0,
+        "brier": 0.178
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Fitted weights diverge sharply from the multi-season fitted mean; treat this season as a potential outlier.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "Less predictive-driven and more SOR-heavy than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Oklahoma State",
+          "committee_rank": 11,
+          "baseline_rank": 49,
+          "fitted_rank": 20,
+          "rank_delta": 29
+        },
+        {
+          "team": "Boise State",
+          "committee_rank": null,
+          "baseline_rank": 32,
+          "fitted_rank": 14,
+          "rank_delta": 18
+        },
+        {
+          "team": "Temple",
+          "committee_rank": null,
+          "baseline_rank": 33,
+          "fitted_rank": 25,
+          "rank_delta": 8
+        },
+        {
+          "team": "Western Michigan",
+          "committee_rank": null,
+          "baseline_rank": 14,
+          "fitted_rank": 7,
+          "rank_delta": 7
+        },
+        {
+          "team": "Stanford",
+          "committee_rank": null,
+          "baseline_rank": 22,
+          "fitted_rank": 15,
+          "rank_delta": 7
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Virginia Tech",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 32,
+          "rank_delta": -14
+        },
+        {
+          "team": "Texas A&M",
+          "committee_rank": null,
+          "baseline_rank": 16,
+          "fitted_rank": 29,
+          "rank_delta": -13
+        },
+        {
+          "team": "Tennessee",
+          "committee_rank": null,
+          "baseline_rank": 10,
+          "fitted_rank": 22,
+          "rank_delta": -12
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 15,
+          "fitted_rank": 27,
+          "rank_delta": -12
+        },
+        {
+          "team": "Washington State",
+          "committee_rank": null,
+          "baseline_rank": 8,
+          "fitted_rank": 17,
+          "rank_delta": -9
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 and SOR emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 4.3333 to 1.75.",
+          "Teams moved toward their committee position: Oklahoma State, Boise State, Temple."
+        ],
+        "does_not_explain": [
+          "Predictive and sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 55pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2017,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.4444,
+        "predictive": 0.3333,
+        "sor": 0.2222,
+        "sos": 0.0
+      },
+      "near_optimal_count": 30,
+      "near_optimal_spread_pp": {
+        "resume": 55,
+        "predictive": 35,
+        "sor": 30,
+        "sos": 15
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.4444,
+            "predictive": 0.3333,
+            "sor": 0.2222,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.3,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.25,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.3,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.25,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.05,
+            "sos": 0.05
+          },
+          "rank_error": 1.75,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.35,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.3,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.25,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.25,
+            "sor": 0.15,
+            "sos": 0.05
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.25,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.25,
+            "sor": 0.2,
+            "sos": 0.05
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.15,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.05,
+            "sos": 0.1
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.4,
+            "predictive": 0.35,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.35,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.25,
+            "predictive": 0.45,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 4,
+          "predictive": 3,
+          "sor": 2,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 19,
+          "predictive": 8,
+          "sor": -3,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": -26,
+          "predictive": 22,
+          "sor": 7,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.75,
+        "spearman_top12": 0.5944,
+        "baseline_rank_error": 2.3333,
+        "top12_overlap": 0.9167,
+        "field_overlap": 0.75,
+        "brier": 0.1715
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Fitted weights diverge sharply from the multi-season fitted mean; treat this season as a potential outlier.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "Less SOS-driven and more r\u00e9sum\u00e9-heavy than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Oklahoma State",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 19,
+          "rank_delta": 5
+        },
+        {
+          "team": "San Diego State",
+          "committee_rank": null,
+          "baseline_rank": 29,
+          "fitted_rank": 25,
+          "rank_delta": 4
+        },
+        {
+          "team": "Virginia Tech",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 20,
+          "rank_delta": 1
+        },
+        {
+          "team": "Oklahoma",
+          "committee_rank": 2,
+          "baseline_rank": 6,
+          "fitted_rank": 5,
+          "rank_delta": 1
+        },
+        {
+          "team": "UCF",
+          "committee_rank": 12,
+          "baseline_rank": 4,
+          "fitted_rank": 3,
+          "rank_delta": 1
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Iowa",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 24,
+          "rank_delta": -6
+        },
+        {
+          "team": "Auburn",
+          "committee_rank": 7,
+          "baseline_rank": 3,
+          "fitted_rank": 7,
+          "rank_delta": -4
+        },
+        {
+          "team": "Notre Dame",
+          "committee_rank": null,
+          "baseline_rank": 11,
+          "fitted_rank": 12,
+          "rank_delta": -1
+        },
+        {
+          "team": "Stanford",
+          "committee_rank": null,
+          "baseline_rank": 14,
+          "fitted_rank": 15,
+          "rank_delta": -1
+        },
+        {
+          "team": "Mississippi State",
+          "committee_rank": null,
+          "baseline_rank": 20,
+          "fitted_rank": 21,
+          "rank_delta": -1
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "A lighter SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 2.3333 to 1.75.",
+          "Teams moved toward their committee position: Oklahoma State, San Diego State, Virginia Tech."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "Several nearby blends fit almost equally well (component spread up to 55pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2018,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.85,
+        "predictive": 0.0,
+        "sor": 0.0,
+        "sos": 0.15
+      },
+      "near_optimal_count": 23,
+      "near_optimal_spread_pp": {
+        "resume": 35,
+        "predictive": 10,
+        "sor": 25,
+        "sos": 15
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.0,
+            "sor": 0.0,
+            "sos": 0.15
+          },
+          "rank_error": 0.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.05,
+            "sos": 0.2
+          },
+          "rank_error": 0.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.0,
+            "sor": 0.0,
+            "sos": 0.2
+          },
+          "rank_error": 0.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.0,
+            "sor": 0.05,
+            "sos": 0.15
+          },
+          "rank_error": 0.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.0,
+            "sor": 0.0,
+            "sos": 0.1
+          },
+          "rank_error": 0.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.05,
+            "sor": 0.0,
+            "sos": 0.15
+          },
+          "rank_error": 0.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.0,
+            "sor": 0.15,
+            "sos": 0.2
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.0,
+            "sor": 0.1,
+            "sos": 0.2
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.0,
+            "sor": 0.15,
+            "sos": 0.15
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.1,
+            "sos": 0.15
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.0,
+            "sor": 0.2,
+            "sos": 0.2
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.0,
+            "sor": 0.05,
+            "sos": 0.25
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.0,
+            "sos": 0.25
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.1,
+            "sos": 0.15
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.0,
+            "sos": 0.25
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.0,
+            "sos": 0.2
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.05,
+            "sos": 0.15
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.05,
+            "sor": 0.25,
+            "sos": 0.15
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.15
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.2,
+            "sos": 0.1
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 45,
+          "predictive": -30,
+          "sor": -20,
+          "sos": 5
+        },
+        "equal_weights": {
+          "resume": 60,
+          "predictive": -25,
+          "sor": -25,
+          "sos": -10
+        },
+        "historical_mean": {
+          "resume": 15,
+          "predictive": -11,
+          "sor": -15,
+          "sos": 11
+        }
+      },
+      "fit_quality": {
+        "rank_error": 0.8333,
+        "spearman_top12": 0.972,
+        "baseline_rank_error": 2.25,
+        "top12_overlap": 0.9167,
+        "field_overlap": 0.75,
+        "brier": 0.1582
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Army",
+          "committee_rank": null,
+          "baseline_rank": 38,
+          "fitted_rank": 17,
+          "rank_delta": 21
+        },
+        {
+          "team": "App State",
+          "committee_rank": null,
+          "baseline_rank": 31,
+          "fitted_rank": 20,
+          "rank_delta": 11
+        },
+        {
+          "team": "Utah",
+          "committee_rank": null,
+          "baseline_rank": 35,
+          "fitted_rank": 24,
+          "rank_delta": 11
+        },
+        {
+          "team": "Boise State",
+          "committee_rank": null,
+          "baseline_rank": 26,
+          "fitted_rank": 19,
+          "rank_delta": 7
+        },
+        {
+          "team": "Syracuse",
+          "committee_rank": null,
+          "baseline_rank": 30,
+          "fitted_rank": 23,
+          "rank_delta": 7
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Vanderbilt",
+          "committee_rank": null,
+          "baseline_rank": 22,
+          "fitted_rank": 45,
+          "rank_delta": -23
+        },
+        {
+          "team": "Boston College",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 43,
+          "rank_delta": -18
+        },
+        {
+          "team": "Michigan State",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 42,
+          "rank_delta": -18
+        },
+        {
+          "team": "West Virginia",
+          "committee_rank": null,
+          "baseline_rank": 12,
+          "fitted_rank": 26,
+          "rank_delta": -14
+        },
+        {
+          "team": "Mississippi State",
+          "committee_rank": null,
+          "baseline_rank": 13,
+          "fitted_rank": 22,
+          "rank_delta": -9
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 and SOS emphasis than the production baseline.",
+          "A lighter predictive and SOR emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 2.25 to 0.8333.",
+          "Teams moved toward their committee position: Army, App State, Utah."
+        ],
+        "does_not_explain": [
+          "Predictive and sor collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 35pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2019,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.7,
+        "predictive": 0.2,
+        "sor": 0.1,
+        "sos": 0.0
+      },
+      "near_optimal_count": 8,
+      "near_optimal_spread_pp": {
+        "resume": 20,
+        "predictive": 5,
+        "sor": 25,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.15,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 1.8333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.15,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.2,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 1.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.15,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.15,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.2,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 2.0,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 30,
+          "predictive": -10,
+          "sor": -10,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 45,
+          "predictive": -5,
+          "sor": -15,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": 0,
+          "predictive": 9,
+          "sor": -5,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.8333,
+        "spearman_top12": 0.7552,
+        "baseline_rank_error": 3.0,
+        "top12_overlap": 0.9167,
+        "field_overlap": 0.75,
+        "brier": 0.1591
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Air Force",
+          "committee_rank": null,
+          "baseline_rank": 32,
+          "fitted_rank": 24,
+          "rank_delta": 8
+        },
+        {
+          "team": "Memphis",
+          "committee_rank": null,
+          "baseline_rank": 17,
+          "fitted_rank": 11,
+          "rank_delta": 6
+        },
+        {
+          "team": "Oklahoma",
+          "committee_rank": 4,
+          "baseline_rank": 12,
+          "fitted_rank": 7,
+          "rank_delta": 5
+        },
+        {
+          "team": "Baylor",
+          "committee_rank": null,
+          "baseline_rank": 27,
+          "fitted_rank": 22,
+          "rank_delta": 5
+        },
+        {
+          "team": "App State",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 19,
+          "rank_delta": 4
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "USC",
+          "committee_rank": null,
+          "baseline_rank": 20,
+          "fitted_rank": 27,
+          "rank_delta": -7
+        },
+        {
+          "team": "Texas A&M",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 31,
+          "rank_delta": -7
+        },
+        {
+          "team": "Auburn",
+          "committee_rank": 12,
+          "baseline_rank": 6,
+          "fitted_rank": 12,
+          "rank_delta": -6
+        },
+        {
+          "team": "Florida Atlantic",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 26,
+          "rank_delta": -5
+        },
+        {
+          "team": "Michigan",
+          "committee_rank": null,
+          "baseline_rank": 9,
+          "fitted_rank": 13,
+          "rank_delta": -4
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive, SOR, and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 3.0 to 1.8333.",
+          "Teams moved toward their committee position: Air Force, Memphis, Oklahoma."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 25pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2020,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.5,
+        "predictive": 0.1,
+        "sor": 0.2,
+        "sos": 0.2
+      },
+      "near_optimal_count": 9,
+      "near_optimal_spread_pp": {
+        "resume": 40,
+        "predictive": 20,
+        "sor": 40,
+        "sos": 15
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.1,
+            "sor": 0.2,
+            "sos": 0.2
+          },
+          "rank_error": 5.9167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.3,
+            "predictive": 0.0,
+            "sor": 0.45,
+            "sos": 0.25
+          },
+          "rank_error": 6.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.15
+          },
+          "rank_error": 6.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.2
+          },
+          "rank_error": 6.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.25,
+            "predictive": 0.15,
+            "sor": 0.4,
+            "sos": 0.2
+          },
+          "rank_error": 6.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.2,
+            "predictive": 0.15,
+            "sor": 0.55,
+            "sos": 0.1
+          },
+          "rank_error": 6.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.2,
+            "sor": 0.35,
+            "sos": 0.1
+          },
+          "rank_error": 6.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.3,
+            "predictive": 0.15,
+            "sor": 0.3,
+            "sos": 0.25
+          },
+          "rank_error": 6.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.2,
+            "sor": 0.3,
+            "sos": 0.15
+          },
+          "rank_error": 6.1667,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 10,
+          "predictive": -20,
+          "sor": 0,
+          "sos": 10
+        },
+        "equal_weights": {
+          "resume": 25,
+          "predictive": -15,
+          "sor": -5,
+          "sos": -5
+        },
+        "historical_mean": {
+          "resume": -20,
+          "predictive": -1,
+          "sor": 5,
+          "sos": 16
+        }
+      },
+      "fit_quality": {
+        "rank_error": 5.9167,
+        "spearman_top12": 0.6503,
+        "baseline_rank_error": 7.0,
+        "top12_overlap": 0.6667,
+        "field_overlap": 0.5,
+        "brier": 0.1685
+      },
+      "fit_warning": "Short season: about 7.7 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution.; Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Fitted weights diverge sharply from the multi-season fitted mean; treat this season as a potential outlier.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit",
+        "Short season"
+      ],
+      "interpretation": {
+        "headline": "Less predictive-driven and more r\u00e9sum\u00e9-heavy than the production baseline",
+        "confidence": "directional",
+        "warning": "Short season: about 7.7 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution."
+      },
+      "teams_helped": [
+        {
+          "team": "Miami (OH)",
+          "committee_rank": null,
+          "baseline_rank": 32,
+          "fitted_rank": 16,
+          "rank_delta": 16
+        },
+        {
+          "team": "Texas A&M",
+          "committee_rank": 5,
+          "baseline_rank": 20,
+          "fitted_rank": 12,
+          "rank_delta": 8
+        },
+        {
+          "team": "Tulsa",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 19,
+          "rank_delta": 6
+        },
+        {
+          "team": "Ball State",
+          "committee_rank": null,
+          "baseline_rank": 27,
+          "fitted_rank": 22,
+          "rank_delta": 5
+        },
+        {
+          "team": "Miami",
+          "committee_rank": 10,
+          "baseline_rank": 15,
+          "fitted_rank": 11,
+          "rank_delta": 4
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Air Force",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 36,
+          "rank_delta": -12
+        },
+        {
+          "team": "Oklahoma",
+          "committee_rank": null,
+          "baseline_rank": 13,
+          "fitted_rank": 21,
+          "rank_delta": -8
+        },
+        {
+          "team": "Marshall",
+          "committee_rank": null,
+          "baseline_rank": 14,
+          "fitted_rank": 20,
+          "rank_delta": -6
+        },
+        {
+          "team": "Northwestern",
+          "committee_rank": null,
+          "baseline_rank": 19,
+          "fitted_rank": 24,
+          "rank_delta": -5
+        },
+        {
+          "team": "Florida",
+          "committee_rank": 6,
+          "baseline_rank": 18,
+          "fitted_rank": 23,
+          "rank_delta": -5
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 and SOS emphasis than the production baseline.",
+          "A lighter predictive emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 7.0 to 5.9167.",
+          "Teams moved toward their committee position: Miami (OH), Texas A&M, Tulsa."
+        ],
+        "does_not_explain": [
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 40pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2021,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.6,
+        "predictive": 0.2,
+        "sor": 0.2,
+        "sos": 0.0
+      },
+      "near_optimal_count": 24,
+      "near_optimal_spread_pp": {
+        "resume": 50,
+        "predictive": 25,
+        "sor": 40,
+        "sos": 10
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.25,
+            "predictive": 0.25,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.2,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.2,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.15,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.15,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.15,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.15,
+            "sos": 0.05
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.0,
+            "sor": 0.25,
+            "sos": 0.1
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.15,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.3,
+            "predictive": 0.25,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.15,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.4,
+            "predictive": 0.15,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.15,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.0,
+            "sor": 0.35,
+            "sos": 0.1
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.05,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.05,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 20,
+          "predictive": -10,
+          "sor": 0,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 35,
+          "predictive": -5,
+          "sor": -5,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": -10,
+          "predictive": 9,
+          "sor": 5,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.0,
+        "spearman_top12": 0.986,
+        "baseline_rank_error": 2.5833,
+        "top12_overlap": 0.9167,
+        "field_overlap": 1.0,
+        "brier": 0.1661
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "UTSA",
+          "committee_rank": null,
+          "baseline_rank": 38,
+          "fitted_rank": 23,
+          "rank_delta": 15
+        },
+        {
+          "team": "Pittsburgh",
+          "committee_rank": 12,
+          "baseline_rank": 30,
+          "fitted_rank": 18,
+          "rank_delta": 12
+        },
+        {
+          "team": "Louisiana",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 16,
+          "rank_delta": 7
+        },
+        {
+          "team": "BYU",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 13,
+          "rank_delta": 5
+        },
+        {
+          "team": "San Diego State",
+          "committee_rank": null,
+          "baseline_rank": 19,
+          "fitted_rank": 15,
+          "rank_delta": 4
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Penn State",
+          "committee_rank": null,
+          "baseline_rank": 16,
+          "fitted_rank": 32,
+          "rank_delta": -16
+        },
+        {
+          "team": "Tennessee",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 33,
+          "rank_delta": -12
+        },
+        {
+          "team": "Arkansas",
+          "committee_rank": null,
+          "baseline_rank": 12,
+          "fitted_rank": 19,
+          "rank_delta": -7
+        },
+        {
+          "team": "Wisconsin",
+          "committee_rank": null,
+          "baseline_rank": 11,
+          "fitted_rank": 17,
+          "rank_delta": -6
+        },
+        {
+          "team": "Texas A&M",
+          "committee_rank": null,
+          "baseline_rank": 20,
+          "fitted_rank": 25,
+          "rank_delta": -5
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 2.5833 to 1.0.",
+          "Teams moved toward their committee position: UTSA, Pittsburgh, Louisiana."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 50pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2022,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.75,
+        "predictive": 0.0,
+        "sor": 0.25,
+        "sos": 0.0
+      },
+      "near_optimal_count": 11,
+      "near_optimal_spread_pp": {
+        "resume": 25,
+        "predictive": 10,
+        "sor": 30,
+        "sos": 5
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.0,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.0,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.0833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.1,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 1.1667,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.05,
+            "sor": 0.05,
+            "sos": 0.05
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.0,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.05,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.05,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.0,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.1,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 1.25,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 35,
+          "predictive": -30,
+          "sor": 5,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 50,
+          "predictive": -25,
+          "sor": 0,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": 5,
+          "predictive": -11,
+          "sor": 10,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.0,
+        "spearman_top12": 0.8741,
+        "baseline_rank_error": 2.5,
+        "top12_overlap": 1.0,
+        "field_overlap": 1.0,
+        "brier": 0.176
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "South Alabama",
+          "committee_rank": null,
+          "baseline_rank": 39,
+          "fitted_rank": 22,
+          "rank_delta": 17
+        },
+        {
+          "team": "UTSA",
+          "committee_rank": null,
+          "baseline_rank": 33,
+          "fitted_rank": 18,
+          "rank_delta": 15
+        },
+        {
+          "team": "Troy",
+          "committee_rank": null,
+          "baseline_rank": 27,
+          "fitted_rank": 14,
+          "rank_delta": 13
+        },
+        {
+          "team": "Washington",
+          "committee_rank": 8,
+          "baseline_rank": 24,
+          "fitted_rank": 12,
+          "rank_delta": 12
+        },
+        {
+          "team": "Oregon",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 13,
+          "rank_delta": 5
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Kentucky",
+          "committee_rank": null,
+          "baseline_rank": 22,
+          "fitted_rank": 38,
+          "rank_delta": -16
+        },
+        {
+          "team": "Louisville",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 39,
+          "rank_delta": -14
+        },
+        {
+          "team": "Mississippi State",
+          "committee_rank": null,
+          "baseline_rank": 15,
+          "fitted_rank": 23,
+          "rank_delta": -8
+        },
+        {
+          "team": "Florida State",
+          "committee_rank": null,
+          "baseline_rank": 12,
+          "fitted_rank": 19,
+          "rank_delta": -7
+        },
+        {
+          "team": "North Carolina",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 30,
+          "rank_delta": -7
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 and SOR emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 2.5 to 1.0.",
+          "Teams moved toward their committee position: South Alabama, UTSA, Troy."
+        ],
+        "does_not_explain": [
+          "Predictive and sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 30pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2023,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.75,
+        "predictive": 0.05,
+        "sor": 0.2,
+        "sos": 0.0
+      },
+      "near_optimal_count": 18,
+      "near_optimal_spread_pp": {
+        "resume": 75,
+        "predictive": 25,
+        "sor": 60,
+        "sos": 10
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 1.3333,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.25,
+            "sor": 0.2,
+            "sos": 0.1
+          },
+          "rank_error": 1.4167,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.05,
+            "sor": 0.3,
+            "sos": 0.05
+          },
+          "rank_error": 1.5,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.1,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 1.5,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.1,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 1.5,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.4,
+            "predictive": 0.15,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.1,
+            "sor": 0.4,
+            "sos": 0.05
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.1,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.15,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.0,
+            "predictive": 0.3,
+            "sor": 0.7,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.05,
+            "predictive": 0.25,
+            "sor": 0.65,
+            "sos": 0.05
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.1,
+            "predictive": 0.25,
+            "sor": 0.6,
+            "sos": 0.05
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.2,
+            "predictive": 0.2,
+            "sor": 0.6,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.25,
+            "predictive": 0.2,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.3,
+            "predictive": 0.15,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.15,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.1
+          },
+          "rank_error": 1.5833,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 35,
+          "predictive": -25,
+          "sor": 0,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 50,
+          "predictive": -20,
+          "sor": -5,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": 5,
+          "predictive": -6,
+          "sor": 5,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 1.3333,
+        "spearman_top12": 0.9091,
+        "baseline_rank_error": 1.75,
+        "top12_overlap": 0.9167,
+        "field_overlap": 0.75,
+        "brier": 0.1611
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Miami (OH)",
+          "committee_rank": null,
+          "baseline_rank": 61,
+          "fitted_rank": 25,
+          "rank_delta": 36
+        },
+        {
+          "team": "Toledo",
+          "committee_rank": null,
+          "baseline_rank": 34,
+          "fitted_rank": 21,
+          "rank_delta": 13
+        },
+        {
+          "team": "Troy",
+          "committee_rank": null,
+          "baseline_rank": 28,
+          "fitted_rank": 17,
+          "rank_delta": 11
+        },
+        {
+          "team": "Tulane",
+          "committee_rank": null,
+          "baseline_rank": 31,
+          "fitted_rank": 20,
+          "rank_delta": 11
+        },
+        {
+          "team": "James Madison",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 14,
+          "rank_delta": 7
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Texas A&M",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 44,
+          "rank_delta": -21
+        },
+        {
+          "team": "Kansas State",
+          "committee_rank": null,
+          "baseline_rank": 12,
+          "fitted_rank": 26,
+          "rank_delta": -14
+        },
+        {
+          "team": "Tennessee",
+          "committee_rank": null,
+          "baseline_rank": 19,
+          "fitted_rank": 31,
+          "rank_delta": -12
+        },
+        {
+          "team": "Oregon State",
+          "committee_rank": null,
+          "baseline_rank": 20,
+          "fitted_rank": 28,
+          "rank_delta": -8
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 8,
+          "fitted_rank": 15,
+          "rank_delta": -7
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 1.75 to 1.3333.",
+          "Teams moved toward their committee position: Miami (OH), Toledo, Troy."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 75pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2024,
+      "week": 10,
+      "fitted_weights": {
+        "resume": 0.4,
+        "predictive": 0.05,
+        "sor": 0.55,
+        "sos": 0.0
+      },
+      "near_optimal_count": 10,
+      "near_optimal_spread_pp": {
+        "resume": 25,
+        "predictive": 15,
+        "sor": 25,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.4,
+            "predictive": 0.05,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "rank_error": 3.28,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.0,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 3.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.0,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 3.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.0,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "rank_error": 3.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.05,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 3.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.0,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 3.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.4,
+            "predictive": 0.1,
+            "sor": 0.5,
+            "sos": 0.0
+          },
+          "rank_error": 3.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.15,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 3.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.4,
+            "predictive": 0.0,
+            "sor": 0.6,
+            "sos": 0.0
+          },
+          "rank_error": 3.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.35,
+            "predictive": 0.1,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "rank_error": 3.52,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 0,
+          "predictive": -25,
+          "sor": 35,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 15,
+          "predictive": -20,
+          "sor": 30,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": -30,
+          "predictive": -6,
+          "sor": 40,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 3.28,
+        "spearman_top12": 0.5944,
+        "baseline_rank_error": 4.48,
+        "top12_overlap": 0.8333,
+        "field_overlap": null,
+        "brier": null
+      },
+      "fit_warning": "Short season: about 7.6 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution.; Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Weekly fits are noisier than final-field fits. Early committee rankings include fewer data points, more unresolved conference-champion paths, and more subjective projection. Weekly preference shifts should be treated as directional signals, not precise estimates.; Fitted weights diverge sharply from the multi-season fitted mean; treat this season as a potential outlier.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit",
+        "Short season",
+        "Weekly fit (noisier)"
+      ],
+      "interpretation": {
+        "headline": "More SOR-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Short season: about 7.6 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution."
+      },
+      "teams_helped": [
+        {
+          "team": "Missouri",
+          "committee_rank": 24,
+          "baseline_rank": 53,
+          "fitted_rank": 28,
+          "rank_delta": 25
+        },
+        {
+          "team": "Syracuse",
+          "committee_rank": null,
+          "baseline_rank": 31,
+          "fitted_rank": 24,
+          "rank_delta": 7
+        },
+        {
+          "team": "Washington State",
+          "committee_rank": 21,
+          "baseline_rank": 20,
+          "fitted_rank": 15,
+          "rank_delta": 5
+        },
+        {
+          "team": "Colorado",
+          "committee_rank": 20,
+          "baseline_rank": 32,
+          "fitted_rank": 27,
+          "rank_delta": 5
+        },
+        {
+          "team": "Kansas State",
+          "committee_rank": 19,
+          "baseline_rank": 27,
+          "fitted_rank": 22,
+          "rank_delta": 5
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Oklahoma",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 40,
+          "rank_delta": -16
+        },
+        {
+          "team": "Iowa",
+          "committee_rank": null,
+          "baseline_rank": 22,
+          "fitted_rank": 26,
+          "rank_delta": -4
+        },
+        {
+          "team": "Iowa State",
+          "committee_rank": 17,
+          "baseline_rank": 12,
+          "fitted_rank": 16,
+          "rank_delta": -4
+        },
+        {
+          "team": "Alabama",
+          "committee_rank": 11,
+          "baseline_rank": 5,
+          "fitted_rank": 9,
+          "rank_delta": -4
+        },
+        {
+          "team": "Ole Miss",
+          "committee_rank": 16,
+          "baseline_rank": 17,
+          "fitted_rank": 20,
+          "rank_delta": -3
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier SOR emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 4.48 to 3.28.",
+          "Teams moved toward their committee position: Missouri, Syracuse, Washington State."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The SOR weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 25pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2024,
+      "week": 11,
+      "fitted_weights": {
+        "resume": 0.7,
+        "predictive": 0.2,
+        "sor": 0.0,
+        "sos": 0.1
+      },
+      "near_optimal_count": 13,
+      "near_optimal_spread_pp": {
+        "resume": 15,
+        "predictive": 20,
+        "sor": 10,
+        "sos": 10
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.0,
+            "sos": 0.1
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.15,
+            "sor": 0.0,
+            "sos": 0.1
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.05,
+            "sos": 0.1
+          },
+          "rank_error": 2.6,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.0,
+            "sos": 0.15
+          },
+          "rank_error": 2.68,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 2.68,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.25,
+            "sor": 0.0,
+            "sos": 0.05
+          },
+          "rank_error": 2.72,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.3,
+            "sor": 0.05,
+            "sos": 0.05
+          },
+          "rank_error": 2.72,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.1,
+            "sor": 0.05,
+            "sos": 0.1
+          },
+          "rank_error": 2.72,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.25,
+            "sor": 0.0,
+            "sos": 0.1
+          },
+          "rank_error": 2.76,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.0,
+            "sos": 0.15
+          },
+          "rank_error": 2.76,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.05,
+            "sos": 0.05
+          },
+          "rank_error": 2.76,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.05,
+            "sos": 0.15
+          },
+          "rank_error": 2.76,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.25,
+            "sor": 0.1,
+            "sos": 0.05
+          },
+          "rank_error": 2.76,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 30,
+          "predictive": -10,
+          "sor": -20,
+          "sos": 0
+        },
+        "equal_weights": {
+          "resume": 45,
+          "predictive": -5,
+          "sor": -25,
+          "sos": -15
+        },
+        "prior_week": {
+          "resume": 30,
+          "predictive": 15,
+          "sor": -55,
+          "sos": 10
+        },
+        "historical_mean": {
+          "resume": 0,
+          "predictive": 9,
+          "sor": -15,
+          "sos": 6
+        }
+      },
+      "fit_quality": {
+        "rank_error": 2.52,
+        "spearman_top12": 0.8881,
+        "baseline_rank_error": 3.56,
+        "top12_overlap": 0.8333,
+        "field_overlap": null,
+        "brier": null
+      },
+      "fit_warning": "Short season: about 8.4 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution.; Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Weekly fits are noisier than final-field fits. Early committee rankings include fewer data points, more unresolved conference-champion paths, and more subjective projection. Weekly preference shifts should be treated as directional signals, not precise estimates.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit",
+        "Short season",
+        "Weekly fit (noisier)"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less SOR-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Short season: about 8.4 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution."
+      },
+      "teams_helped": [
+        {
+          "team": "Missouri",
+          "committee_rank": 23,
+          "baseline_rank": 37,
+          "fitted_rank": 28,
+          "rank_delta": 9
+        },
+        {
+          "team": "Army",
+          "committee_rank": 24,
+          "baseline_rank": 23,
+          "fitted_rank": 18,
+          "rank_delta": 5
+        },
+        {
+          "team": "Indiana",
+          "committee_rank": 5,
+          "baseline_rank": 7,
+          "fitted_rank": 3,
+          "rank_delta": 4
+        },
+        {
+          "team": "Washington State",
+          "committee_rank": 18,
+          "baseline_rank": 19,
+          "fitted_rank": 16,
+          "rank_delta": 3
+        },
+        {
+          "team": "Tennessee",
+          "committee_rank": 7,
+          "baseline_rank": 15,
+          "fitted_rank": 13,
+          "rank_delta": 2
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Iowa",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 33,
+          "rank_delta": -8
+        },
+        {
+          "team": "Georgia",
+          "committee_rank": 12,
+          "baseline_rank": 9,
+          "fitted_rank": 14,
+          "rank_delta": -5
+        },
+        {
+          "team": "LSU",
+          "committee_rank": 22,
+          "baseline_rank": 18,
+          "fitted_rank": 22,
+          "rank_delta": -4
+        },
+        {
+          "team": "Alabama",
+          "committee_rank": 10,
+          "baseline_rank": 3,
+          "fitted_rank": 7,
+          "rank_delta": -4
+        },
+        {
+          "team": "Louisville",
+          "committee_rank": 19,
+          "baseline_rank": 14,
+          "fitted_rank": 17,
+          "rank_delta": -3
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive and SOR emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 3.56 to 2.52.",
+          "Teams moved toward their committee position: Missouri, Army, Indiana."
+        ],
+        "does_not_explain": [
+          "Sor collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 20pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2024,
+      "week": 12,
+      "fitted_weights": {
+        "resume": 0.55,
+        "predictive": 0.15,
+        "sor": 0.3,
+        "sos": 0.0
+      },
+      "near_optimal_count": 33,
+      "near_optimal_spread_pp": {
+        "resume": 50,
+        "predictive": 25,
+        "sor": 55,
+        "sos": 5
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.15,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.05,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.1,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.1,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.05,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 2.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.1,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.2,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.15,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.0,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.1,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.0,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.05,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.05,
+            "sor": 0.05,
+            "sos": 0.05
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.0,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.15,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 15,
+          "predictive": -15,
+          "sor": 10,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 30,
+          "predictive": -10,
+          "sor": 5,
+          "sos": -25
+        },
+        "prior_week": {
+          "resume": -15,
+          "predictive": -5,
+          "sor": 30,
+          "sos": -10
+        },
+        "historical_mean": {
+          "resume": -15,
+          "predictive": 4,
+          "sor": 15,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 2.36,
+        "spearman_top12": 0.6783,
+        "baseline_rank_error": 4.68,
+        "top12_overlap": 0.8333,
+        "field_overlap": null,
+        "brier": null
+      },
+      "fit_warning": "Short season: about 9.1 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution.; Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Weekly fits are noisier than final-field fits. Early committee rankings include fewer data points, more unresolved conference-champion paths, and more subjective projection. Weekly preference shifts should be treated as directional signals, not precise estimates.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit",
+        "Short season",
+        "Weekly fit (noisier)"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Short season: about 9.1 games per team even from week 1 (for example the 2020 COVID season). Component scores rest on fewer games than a normal season, so interpret this fit with extra caution."
+      },
+      "teams_helped": [
+        {
+          "team": "Arizona State",
+          "committee_rank": 21,
+          "baseline_rank": 40,
+          "fitted_rank": 22,
+          "rank_delta": 18
+        },
+        {
+          "team": "Missouri",
+          "committee_rank": 23,
+          "baseline_rank": 42,
+          "fitted_rank": 30,
+          "rank_delta": 12
+        },
+        {
+          "team": "UNLV",
+          "committee_rank": 24,
+          "baseline_rank": 34,
+          "fitted_rank": 24,
+          "rank_delta": 10
+        },
+        {
+          "team": "Tulane",
+          "committee_rank": 20,
+          "baseline_rank": 33,
+          "fitted_rank": 23,
+          "rank_delta": 10
+        },
+        {
+          "team": "Washington State",
+          "committee_rank": null,
+          "baseline_rank": 27,
+          "fitted_rank": 21,
+          "rank_delta": 6
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Iowa",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 36,
+          "rank_delta": -11
+        },
+        {
+          "team": "Louisville",
+          "committee_rank": null,
+          "baseline_rank": 19,
+          "fitted_rank": 28,
+          "rank_delta": -9
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 29,
+          "rank_delta": -8
+        },
+        {
+          "team": "Notre Dame",
+          "committee_rank": 6,
+          "baseline_rank": 6,
+          "fitted_rank": 9,
+          "rank_delta": -3
+        },
+        {
+          "team": "Pittsburgh",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 26,
+          "rank_delta": -3
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 and SOR emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 4.68 to 2.36.",
+          "Teams moved toward their committee position: Arizona State, Missouri, UNLV."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 55pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2024,
+      "week": 13,
+      "fitted_weights": {
+        "resume": 0.7,
+        "predictive": 0.1,
+        "sor": 0.2,
+        "sos": 0.0
+      },
+      "near_optimal_count": 7,
+      "near_optimal_spread_pp": {
+        "resume": 20,
+        "predictive": 10,
+        "sor": 25,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.1,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.04,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.1,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 2.12,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.1,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.16,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.05,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.2,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.05,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 2.28,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.15,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.28,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.28,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 30,
+          "predictive": -20,
+          "sor": 0,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 45,
+          "predictive": -15,
+          "sor": -5,
+          "sos": -25
+        },
+        "prior_week": {
+          "resume": 15,
+          "predictive": -5,
+          "sor": -10,
+          "sos": 0
+        },
+        "historical_mean": {
+          "resume": 0,
+          "predictive": -1,
+          "sor": 5,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 2.04,
+        "spearman_top12": 0.8811,
+        "baseline_rank_error": 4.96,
+        "top12_overlap": 0.9167,
+        "field_overlap": null,
+        "brier": null
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Weekly fits are noisier than final-field fits. Early committee rankings include fewer data points, more unresolved conference-champion paths, and more subjective projection. Weekly preference shifts should be treated as directional signals, not precise estimates.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit",
+        "Weekly fit (noisier)"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Missouri",
+          "committee_rank": 21,
+          "baseline_rank": 46,
+          "fitted_rank": 27,
+          "rank_delta": 19
+        },
+        {
+          "team": "Army",
+          "committee_rank": null,
+          "baseline_rank": 35,
+          "fitted_rank": 19,
+          "rank_delta": 16
+        },
+        {
+          "team": "Arizona State",
+          "committee_rank": 16,
+          "baseline_rank": 30,
+          "fitted_rank": 16,
+          "rank_delta": 14
+        },
+        {
+          "team": "Colorado",
+          "committee_rank": 25,
+          "baseline_rank": 43,
+          "fitted_rank": 30,
+          "rank_delta": 13
+        },
+        {
+          "team": "Tulane",
+          "committee_rank": 17,
+          "baseline_rank": 31,
+          "fitted_rank": 21,
+          "rank_delta": 10
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "Kansas",
+          "committee_rank": null,
+          "baseline_rank": 22,
+          "fitted_rank": 57,
+          "rank_delta": -35
+        },
+        {
+          "team": "Oklahoma",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 37,
+          "rank_delta": -19
+        },
+        {
+          "team": "Louisville",
+          "committee_rank": null,
+          "baseline_rank": 10,
+          "fitted_rank": 25,
+          "rank_delta": -15
+        },
+        {
+          "team": "Michigan",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 35,
+          "rank_delta": -12
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 32,
+          "rank_delta": -8
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 4.96 to 2.04.",
+          "Teams moved toward their committee position: Missouri, Army, Arizona State."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 25pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2024,
+      "week": 14,
+      "fitted_weights": {
+        "resume": 0.65,
+        "predictive": 0.1,
+        "sor": 0.25,
+        "sos": 0.0
+      },
+      "near_optimal_count": 19,
+      "near_optimal_spread_pp": {
+        "resume": 40,
+        "predictive": 30,
+        "sor": 35,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.4,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.15,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.45,
+            "predictive": 0.15,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.15,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.1,
+            "sor": 0.35,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.1,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.05,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.15,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.05,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.2,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.05,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.1,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.2,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.0,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.1,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.6,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.6,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.3,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.6,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 25,
+          "predictive": -20,
+          "sor": 5,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 40,
+          "predictive": -15,
+          "sor": 0,
+          "sos": -25
+        },
+        "prior_week": {
+          "resume": -5,
+          "predictive": 0,
+          "sor": 5,
+          "sos": 0
+        },
+        "historical_mean": {
+          "resume": -5,
+          "predictive": -1,
+          "sor": 10,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 2.36,
+        "spearman_top12": 0.8671,
+        "baseline_rank_error": 5.0,
+        "top12_overlap": 1.0,
+        "field_overlap": null,
+        "brier": null
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Weekly fits are noisier than final-field fits. Early committee rankings include fewer data points, more unresolved conference-champion paths, and more subjective projection. Weekly preference shifts should be treated as directional signals, not precise estimates.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit",
+        "Weekly fit (noisier)"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Arizona State",
+          "committee_rank": 15,
+          "baseline_rank": 35,
+          "fitted_rank": 17,
+          "rank_delta": 18
+        },
+        {
+          "team": "Army",
+          "committee_rank": 24,
+          "baseline_rank": 34,
+          "fitted_rank": 18,
+          "rank_delta": 16
+        },
+        {
+          "team": "Memphis",
+          "committee_rank": 25,
+          "baseline_rank": 44,
+          "fitted_rank": 29,
+          "rank_delta": 15
+        },
+        {
+          "team": "Missouri",
+          "committee_rank": 19,
+          "baseline_rank": 38,
+          "fitted_rank": 26,
+          "rank_delta": 12
+        },
+        {
+          "team": "Illinois",
+          "committee_rank": 21,
+          "baseline_rank": 28,
+          "fitted_rank": 20,
+          "rank_delta": 8
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "USC",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 43,
+          "rank_delta": -19
+        },
+        {
+          "team": "Texas A&M",
+          "committee_rank": null,
+          "baseline_rank": 13,
+          "fitted_rank": 25,
+          "rank_delta": -12
+        },
+        {
+          "team": "Michigan",
+          "committee_rank": null,
+          "baseline_rank": 16,
+          "fitted_rank": 27,
+          "rank_delta": -11
+        },
+        {
+          "team": "Texas Tech",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 32,
+          "rank_delta": -9
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 17,
+          "fitted_rank": 24,
+          "rank_delta": -7
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 and SOR emphasis than the production baseline.",
+          "A lighter predictive and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 5.0 to 2.36.",
+          "Teams moved toward their committee position: Arizona State, Army, Memphis."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 40pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2024,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.9,
+        "predictive": 0.05,
+        "sor": 0.05,
+        "sos": 0.0
+      },
+      "near_optimal_count": 11,
+      "near_optimal_spread_pp": {
+        "resume": 45,
+        "predictive": 10,
+        "sor": 45,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.05,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 2.32,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.5,
+            "predictive": 0.05,
+            "sor": 0.45,
+            "sos": 0.0
+          },
+          "rank_error": 2.44,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.8,
+            "predictive": 0.05,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.05,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.9,
+            "predictive": 0.1,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.05,
+            "sor": 0.4,
+            "sos": 0.0
+          },
+          "rank_error": 2.48,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.52,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.75,
+            "predictive": 0.0,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.85,
+            "predictive": 0.1,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.95,
+            "predictive": 0.05,
+            "sor": 0.0,
+            "sos": 0.0
+          },
+          "rank_error": 2.56,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 50,
+          "predictive": -25,
+          "sor": -15,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 65,
+          "predictive": -20,
+          "sor": -20,
+          "sos": -25
+        },
+        "prior_week": {
+          "resume": 25,
+          "predictive": -5,
+          "sor": -20,
+          "sos": 0
+        },
+        "historical_mean": {
+          "resume": 20,
+          "predictive": -6,
+          "sor": -10,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 2.32,
+        "spearman_top12": 0.7902,
+        "baseline_rank_error": 4.88,
+        "top12_overlap": 0.8333,
+        "field_overlap": 0.8333,
+        "brier": 0.1625
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.; Fitted weights diverge sharply from the multi-season fitted mean; treat this season as a potential outlier.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Memphis",
+          "committee_rank": 25,
+          "baseline_rank": 43,
+          "fitted_rank": 25,
+          "rank_delta": 18
+        },
+        {
+          "team": "Missouri",
+          "committee_rank": 19,
+          "baseline_rank": 39,
+          "fitted_rank": 22,
+          "rank_delta": 17
+        },
+        {
+          "team": "Iowa State",
+          "committee_rank": 18,
+          "baseline_rank": 29,
+          "fitted_rank": 18,
+          "rank_delta": 11
+        },
+        {
+          "team": "Arizona State",
+          "committee_rank": 12,
+          "baseline_rank": 21,
+          "fitted_rank": 11,
+          "rank_delta": 10
+        },
+        {
+          "team": "Illinois",
+          "committee_rank": 20,
+          "baseline_rank": 31,
+          "fitted_rank": 21,
+          "rank_delta": 10
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "USC",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 54,
+          "rank_delta": -29
+        },
+        {
+          "team": "Texas A&M",
+          "committee_rank": null,
+          "baseline_rank": 14,
+          "fitted_rank": 30,
+          "rank_delta": -16
+        },
+        {
+          "team": "Michigan",
+          "committee_rank": null,
+          "baseline_rank": 16,
+          "fitted_rank": 31,
+          "rank_delta": -15
+        },
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 17,
+          "fitted_rank": 27,
+          "rank_delta": -10
+        },
+        {
+          "team": "Texas Tech",
+          "committee_rank": null,
+          "baseline_rank": 24,
+          "fitted_rank": 32,
+          "rank_delta": -8
+        }
+      ],
+      "focus_team_shifts": {},
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive, SOR, and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 4.88 to 2.32.",
+          "Teams moved toward their committee position: Memphis, Missouri, Iowa State."
+        ],
+        "does_not_explain": [
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 45pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    },
+    {
+      "research_only": true,
+      "objective": "rank_error_top25",
+      "search_step": 0.05,
+      "committee_rank_source": "historical_fixture",
+      "year": 2025,
+      "week": 15,
+      "fitted_weights": {
+        "resume": 0.65,
+        "predictive": 0.2,
+        "sor": 0.15,
+        "sos": 0.0
+      },
+      "near_optimal_count": 9,
+      "near_optimal_spread_pp": {
+        "resume": 15,
+        "predictive": 10,
+        "sor": 20,
+        "sos": 0
+      },
+      "near_optimal_region": [
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.2,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.12,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.15,
+            "sor": 0.15,
+            "sos": 0.0
+          },
+          "rank_error": 2.16,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.2,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.2,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.1,
+            "sos": 0.0
+          },
+          "rank_error": 2.2,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.15,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.24,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.55,
+            "predictive": 0.2,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.32,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.6,
+            "predictive": 0.1,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.15,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        },
+        {
+          "weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "rank_error": 2.36,
+          "spearman_top12": null
+        }
+      ],
+      "baseline_delta_pp": {
+        "production": {
+          "resume": 25,
+          "predictive": -10,
+          "sor": -5,
+          "sos": -10
+        },
+        "equal_weights": {
+          "resume": 40,
+          "predictive": -5,
+          "sor": -10,
+          "sos": -25
+        },
+        "historical_mean": {
+          "resume": -5,
+          "predictive": 9,
+          "sor": 0,
+          "sos": -4
+        }
+      },
+      "fit_quality": {
+        "rank_error": 2.12,
+        "spearman_top12": 0.979,
+        "baseline_rank_error": 3.76,
+        "top12_overlap": 1.0,
+        "field_overlap": 0.9167,
+        "brier": 0.1611
+      },
+      "fit_warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact.; Several nearby blends explain the committee almost equally well, so treat the deltas as directional rather than exact.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Edge-weight fit"
+      ],
+      "interpretation": {
+        "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+        "confidence": "directional",
+        "warning": "Edge-weight fit: one or more components are near 0% or above 50%; interpret as directional, not exact."
+      },
+      "teams_helped": [
+        {
+          "team": "Houston",
+          "committee_rank": 21,
+          "baseline_rank": 47,
+          "fitted_rank": 34,
+          "rank_delta": 13
+        },
+        {
+          "team": "Arizona",
+          "committee_rank": 17,
+          "baseline_rank": 34,
+          "fitted_rank": 24,
+          "rank_delta": 10
+        },
+        {
+          "team": "James Madison",
+          "committee_rank": 24,
+          "baseline_rank": 22,
+          "fitted_rank": 17,
+          "rank_delta": 5
+        },
+        {
+          "team": "Virginia",
+          "committee_rank": 19,
+          "baseline_rank": 27,
+          "fitted_rank": 23,
+          "rank_delta": 4
+        },
+        {
+          "team": "Georgia Tech",
+          "committee_rank": 22,
+          "baseline_rank": 26,
+          "fitted_rank": 22,
+          "rank_delta": 4
+        }
+      ],
+      "teams_hurt": [
+        {
+          "team": "LSU",
+          "committee_rank": null,
+          "baseline_rank": 23,
+          "fitted_rank": 36,
+          "rank_delta": -13
+        },
+        {
+          "team": "Washington",
+          "committee_rank": null,
+          "baseline_rank": 21,
+          "fitted_rank": 25,
+          "rank_delta": -4
+        },
+        {
+          "team": "South Florida",
+          "committee_rank": null,
+          "baseline_rank": 18,
+          "fitted_rank": 21,
+          "rank_delta": -3
+        },
+        {
+          "team": "Missouri",
+          "committee_rank": null,
+          "baseline_rank": 25,
+          "fitted_rank": 28,
+          "rank_delta": -3
+        },
+        {
+          "team": "Alabama",
+          "committee_rank": 9,
+          "baseline_rank": 6,
+          "fitted_rank": 9,
+          "rank_delta": -3
+        }
+      ],
+      "focus_team_shifts": {
+        "Miami": {
+          "team": "Miami",
+          "committee_rank": 10,
+          "baseline_rank": 12,
+          "fitted_rank": 12,
+          "rank_delta": 0
+        },
+        "Notre Dame": {
+          "team": "Notre Dame",
+          "committee_rank": 11,
+          "baseline_rank": 8,
+          "fitted_rank": 10,
+          "rank_delta": -2
+        }
+      },
+      "explanation_scope": {
+        "explains": [
+          "The committee's ranking is better approximated by a heavier r\u00e9sum\u00e9 emphasis than the production baseline.",
+          "A lighter predictive, SOR, and SOS emphasis fits the committee's order better than the baseline blend.",
+          "The fitted blend reduces mean absolute rank error against the committee from 3.76 to 2.12.",
+          "Teams moved toward their committee position: Houston, Arizona, James Madison."
+        ],
+        "does_not_explain": [
+          "The fitted blend still ranks Notre Dame above Miami: no searched reweighting of the four factors reproduces the committee's Miami-over-Notre-Dame ordering.",
+          "Sos collapses to ~0% in the fit. That more likely means the remaining components absorb its signal (r\u00e9sum\u00e9 and SOR already embed schedule treatment) than that the committee ignores it.",
+          "The r\u00e9sum\u00e9 weight sits at the edge of the searched simplex, so its exact magnitude is directional, not identified.",
+          "Several nearby blends fit almost equally well (component spread up to 20pp), so the exact split between components is not identifiable from this season alone.",
+          "Rank-error magnitudes are not yet comparable across seasons; treat cross-year fit-quality comparisons as an open question."
+        ]
+      }
+    }
+  ],
+  "public_case_2025": {
+    "committee_order": "Miami #10, Notre Dame #11 (Notre Dame first team out)",
+    "reproduces_committee_order": false,
+    "fitted_shift": {
+      "Miami": {
+        "committee_rank": 10,
+        "baseline_rank": 12,
+        "fitted_rank": 12,
+        "rank_delta": 0
+      },
+      "Notre Dame": {
+        "committee_rank": 11,
+        "baseline_rank": 8,
+        "fitted_rank": 10,
+        "rank_delta": -2
+      }
+    },
+    "baseline_delta_pp": {
+      "resume": 25,
+      "predictive": -10,
+      "sor": -5,
+      "sos": -10
+    },
+    "headline": "More r\u00e9sum\u00e9-heavy and less predictive-driven than the production baseline",
+    "explanation": "The fitted blend improves alignment with the committee's top 25 overall but still ranks Notre Dame above Miami, so it does not fully reproduce the committee's Miami-over-Notre-Dame ordering. That suggests this split may depend on factors outside the four-factor model (for example head-to-head context, best wins, or committee-specific judgment) or on a bubble-specific weighting. The fit does narrow the gap: Miami gains 2 positions on Notre Dame relative to the baseline."
+  },
+  "caveats": [
+    "The fitted weights are the closest transparent approximation to the committee's published rankings under Selection Room's four-factor model. They are not the committee's actual weights.",
+    "Research mode only: fitted weights never change production defaults.",
+    "Fitted weights are descriptive approximations, not normative recommendations and not the committee's secret formula.",
+    "Near-optimal regions mean multiple weight blends fit similarly; treat deltas as directional, not exact.",
+    "Weekly fits are noisier than final-field fits; early-season shifts are directional signals only."
+  ]
+}

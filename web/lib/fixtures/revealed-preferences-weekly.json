@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "research_only": true,
+  "generated_at": "2026-07-07T18:41:20.357204+00:00",
+  "production_baseline": {
+    "resume": 0.4,
+    "predictive": 0.3,
+    "sor": 0.2,
+    "sos": 0.1
+  },
+  "disclaimer": "Under Selection Room's four-factor model, the committee's published top 25 looks more r\u00e9sum\u00e9-heavy and less predictive-driven than Selection Room's baseline.",
+  "disclaimer_short": "These weights are descriptive approximations, not the committee's actual weights. Research-only; they do not change Selection Room's production model.",
+  "badge_explainers": {
+    "Edge-weight fit": "Edge-weight fit means one or more factors landed near 0% or very high, so interpret the direction more than the exact number.",
+    "Volatile weekly fit": "Fitted weights swing between releases this season; read the direction, not week-to-week magnitudes."
+  },
+  "seasons": [
+    {
+      "season": 2024,
+      "takeaway": "Across 6 releases, the committee's published top 25 looked more r\u00e9sum\u00e9-heavy than Selection Room's baseline in 5 of 6 fits and less predictive-driven in 6 of 6.",
+      "warning_badges": [
+        "Research-only",
+        "Directional, not exact",
+        "Volatile weekly fit"
+      ],
+      "weekly_fits": [
+        {
+          "research_only": true,
+          "ranking_release": 1,
+          "release_date": "2024-11-05",
+          "source": "College Football Playoff selection committee ranking released 2024-11-05; retrieved from CFBD /rankings (poll 'Playoff Committee Rankings', season 2024, regular season week 11)",
+          "games_through_week": 10,
+          "fitted_weights": {
+            "resume": 0.4,
+            "predictive": 0.05,
+            "sor": 0.55,
+            "sos": 0.0
+          },
+          "baseline_delta_pp": {
+            "production": {
+              "resume": 0,
+              "predictive": -25,
+              "sor": 35,
+              "sos": -10
+            },
+            "equal_weights": {
+              "resume": 15,
+              "predictive": -20,
+              "sor": 30,
+              "sos": -25
+            },
+            "historical_mean": {
+              "resume": -30,
+              "predictive": -6,
+              "sor": 40,
+              "sos": -4
+            }
+          },
+          "prior_release_delta_pp": null,
+          "fit_quality": {
+            "rank_error": 3.28,
+            "spearman_top12": 0.5944,
+            "baseline_rank_error": 4.48
+          },
+          "confidence": "directional",
+          "warning_badges": [
+            "Research-only",
+            "Directional, not exact",
+            "Edge-weight fit",
+            "Short season",
+            "Weekly fit (noisier)"
+          ]
+        },
+        {
+          "research_only": true,
+          "ranking_release": 2,
+          "release_date": "2024-11-12",
+          "source": "College Football Playoff selection committee ranking released 2024-11-12; retrieved from CFBD /rankings (poll 'Playoff Committee Rankings', season 2024, regular season week 12)",
+          "games_through_week": 11,
+          "fitted_weights": {
+            "resume": 0.7,
+            "predictive": 0.2,
+            "sor": 0.0,
+            "sos": 0.1
+          },
+          "baseline_delta_pp": {
+            "production": {
+              "resume": 30,
+              "predictive": -10,
+              "sor": -20,
+              "sos": 0
+            },
+            "equal_weights": {
+              "resume": 45,
+              "predictive": -5,
+              "sor": -25,
+              "sos": -15
+            },
+            "prior_week": {
+              "resume": 30,
+              "predictive": 15,
+              "sor": -55,
+              "sos": 10
+            },
+            "historical_mean": {
+              "resume": 0,
+              "predictive": 9,
+              "sor": -15,
+              "sos": 6
+            }
+          },
+          "prior_release_delta_pp": {
+            "resume": 30,
+            "predictive": 15,
+            "sor": -55,
+            "sos": 10
+          },
+          "fit_quality": {
+            "rank_error": 2.52,
+            "spearman_top12": 0.8881,
+            "baseline_rank_error": 3.56
+          },
+          "confidence": "directional",
+          "warning_badges": [
+            "Research-only",
+            "Directional, not exact",
+            "Edge-weight fit",
+            "Short season",
+            "Weekly fit (noisier)"
+          ]
+        },
+        {
+          "research_only": true,
+          "ranking_release": 3,
+          "release_date": "2024-11-19",
+          "source": "College Football Playoff selection committee ranking released 2024-11-19; retrieved from CFBD /rankings (poll 'Playoff Committee Rankings', season 2024, regular season week 13)",
+          "games_through_week": 12,
+          "fitted_weights": {
+            "resume": 0.55,
+            "predictive": 0.15,
+            "sor": 0.3,
+            "sos": 0.0
+          },
+          "baseline_delta_pp": {
+            "production": {
+              "resume": 15,
+              "predictive": -15,
+              "sor": 10,
+              "sos": -10
+            },
+            "equal_weights": {
+              "resume": 30,
+              "predictive": -10,
+              "sor": 5,
+              "sos": -25
+            },
+            "prior_week": {
+              "resume": -15,
+              "predictive": -5,
+              "sor": 30,
+              "sos": -10
+            },
+            "historical_mean": {
+              "resume": -15,
+              "predictive": 4,
+              "sor": 15,
+              "sos": -4
+            }
+          },
+          "prior_release_delta_pp": {
+            "resume": -15,
+            "predictive": -5,
+            "sor": 30,
+            "sos": -10
+          },
+          "fit_quality": {
+            "rank_error": 2.36,
+            "spearman_top12": 0.6783,
+            "baseline_rank_error": 4.68
+          },
+          "confidence": "directional",
+          "warning_badges": [
+            "Research-only",
+            "Directional, not exact",
+            "Edge-weight fit",
+            "Short season",
+            "Weekly fit (noisier)"
+          ]
+        },
+        {
+          "research_only": true,
+          "ranking_release": 4,
+          "release_date": "2024-11-26",
+          "source": "College Football Playoff selection committee ranking released 2024-11-26; retrieved from CFBD /rankings (poll 'Playoff Committee Rankings', season 2024, regular season week 14)",
+          "games_through_week": 13,
+          "fitted_weights": {
+            "resume": 0.7,
+            "predictive": 0.1,
+            "sor": 0.2,
+            "sos": 0.0
+          },
+          "baseline_delta_pp": {
+            "production": {
+              "resume": 30,
+              "predictive": -20,
+              "sor": 0,
+              "sos": -10
+            },
+            "equal_weights": {
+              "resume": 45,
+              "predictive": -15,
+              "sor": -5,
+              "sos": -25
+            },
+            "prior_week": {
+              "resume": 15,
+              "predictive": -5,
+              "sor": -10,
+              "sos": 0
+            },
+            "historical_mean": {
+              "resume": 0,
+              "predictive": -1,
+              "sor": 5,
+              "sos": -4
+            }
+          },
+          "prior_release_delta_pp": {
+            "resume": 15,
+            "predictive": -5,
+            "sor": -10,
+            "sos": 0
+          },
+          "fit_quality": {
+            "rank_error": 2.04,
+            "spearman_top12": 0.8811,
+            "baseline_rank_error": 4.96
+          },
+          "confidence": "directional",
+          "warning_badges": [
+            "Research-only",
+            "Directional, not exact",
+            "Edge-weight fit",
+            "Weekly fit (noisier)"
+          ]
+        },
+        {
+          "research_only": true,
+          "ranking_release": 5,
+          "release_date": "2024-12-03",
+          "source": "College Football Playoff selection committee ranking released 2024-12-03; retrieved from CFBD /rankings (poll 'Playoff Committee Rankings', season 2024, regular season week 15)",
+          "games_through_week": 14,
+          "fitted_weights": {
+            "resume": 0.65,
+            "predictive": 0.1,
+            "sor": 0.25,
+            "sos": 0.0
+          },
+          "baseline_delta_pp": {
+            "production": {
+              "resume": 25,
+              "predictive": -20,
+              "sor": 5,
+              "sos": -10
+            },
+            "equal_weights": {
+              "resume": 40,
+              "predictive": -15,
+              "sor": 0,
+              "sos": -25
+            },
+            "prior_week": {
+              "resume": -5,
+              "predictive": 0,
+              "sor": 5,
+              "sos": 0
+            },
+            "historical_mean": {
+              "resume": -5,
+              "predictive": -1,
+              "sor": 10,
+              "sos": -4
+            }
+          },
+          "prior_release_delta_pp": {
+            "resume": -5,
+            "predictive": 0,
+            "sor": 5,
+            "sos": 0
+          },
+          "fit_quality": {
+            "rank_error": 2.36,
+            "spearman_top12": 0.8671,
+            "baseline_rank_error": 5.0
+          },
+          "confidence": "directional",
+          "warning_badges": [
+            "Research-only",
+            "Directional, not exact",
+            "Edge-weight fit",
+            "Weekly fit (noisier)"
+          ]
+        },
+        {
+          "research_only": true,
+          "ranking_release": 6,
+          "release_date": "2024-12-08",
+          "source": "College Football Playoff selection committee ranking released 2024-12-08; retrieved from CFBD /rankings (poll 'Playoff Committee Rankings', season 2024, regular season week 16)",
+          "games_through_week": 15,
+          "fitted_weights": {
+            "resume": 0.9,
+            "predictive": 0.05,
+            "sor": 0.05,
+            "sos": 0.0
+          },
+          "baseline_delta_pp": {
+            "production": {
+              "resume": 50,
+              "predictive": -25,
+              "sor": -15,
+              "sos": -10
+            },
+            "equal_weights": {
+              "resume": 65,
+              "predictive": -20,
+              "sor": -20,
+              "sos": -25
+            },
+            "prior_week": {
+              "resume": 25,
+              "predictive": -5,
+              "sor": -20,
+              "sos": 0
+            },
+            "historical_mean": {
+              "resume": 20,
+              "predictive": -6,
+              "sor": -10,
+              "sos": -4
+            }
+          },
+          "prior_release_delta_pp": {
+            "resume": 25,
+            "predictive": -5,
+            "sor": -20,
+            "sos": 0
+          },
+          "fit_quality": {
+            "rank_error": 2.32,
+            "spearman_top12": 0.7902,
+            "baseline_rank_error": 4.88
+          },
+          "confidence": "directional",
+          "warning_badges": [
+            "Research-only",
+            "Directional, not exact",
+            "Edge-weight fit"
+          ]
+        }
+      ],
+      "volatility": {
+        "releases_compared": 5,
+        "mean_abs_shift_pp": {
+          "resume": 18.0,
+          "predictive": 6.0,
+          "sor": 24.0,
+          "sos": 4.0
+        },
+        "max_abs_shift_pp": {
+          "resume": 30,
+          "predictive": 15,
+          "sor": 55,
+          "sos": 10
+        },
+        "volatility_note": "Fitted weights moved by up to 55pp between releases this season. Treat week-over-week shifts as directional noise, not precise committee signal."
+      }
+    }
+  ],
+  "caveats": [
+    "The fitted weights are the closest transparent approximation to the committee's published rankings under Selection Room's four-factor model. They are not the committee's actual weights.",
+    "Research mode only: fitted weights never change production defaults.",
+    "Fitted weights are descriptive approximations, not normative recommendations and not the committee's secret formula.",
+    "Near-optimal regions mean multiple weight blends fit similarly; treat deltas as directional, not exact.",
+    "Weekly fits are noisier than final-field fits; early-season shifts are directional signals only."
+  ]
+}

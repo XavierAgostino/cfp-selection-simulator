@@ -1,9 +1,9 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   latestWeeklySeason,
-  loadRevealedWeekly,
   parseRevealedWeekly,
+  validateRevealedWeekly,
 } from "@/lib/revealedWeekly";
 import type { RevealedWeeklyPayload } from "@/lib/types";
 
@@ -146,14 +146,19 @@ describe("parseRevealedWeekly (fail closed)", () => {
   });
 });
 
-describe("env gate", () => {
-  afterEach(() => {
-    vi.unstubAllEnvs();
+describe("validateRevealedWeekly (object guard)", () => {
+  it("accepts an already-parsed contract-shaped object", () => {
+    expect(validateRevealedWeekly(validPayload())).not.toBeNull();
   });
 
-  it("loader returns null when NEXT_PUBLIC_ENABLE_REVEALED_PREFS is off", async () => {
-    vi.stubEnv("NEXT_PUBLIC_ENABLE_REVEALED_PREFS", "");
-    expect(await loadRevealedWeekly()).toBeNull();
+  it("returns null when the object is not marked research-only", () => {
+    expect(
+      validateRevealedWeekly({ ...validPayload(), research_only: false }),
+    ).toBeNull();
+  });
+
+  it("returns null for a non-object", () => {
+    expect(validateRevealedWeekly(undefined)).toBeNull();
   });
 });
 

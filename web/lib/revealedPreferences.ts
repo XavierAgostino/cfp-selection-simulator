@@ -1,24 +1,8 @@
-import { promises as fs } from "fs";
-import path from "path";
-
-import { REPO_DIR } from "@/lib/paths";
+import { getRevealedPreferencesData } from "@/lib/data";
 import type {
   RevealedPreferencesEntry,
   RevealedPreferencesPayload,
 } from "@/lib/types";
-
-/**
- * Research-only artifact. Read straight from the engine's output directory —
- * deliberately NOT from web/lib/fixtures or the /api/data routes, so it can
- * never ship to production by accident (see docs/api-contracts.md).
- */
-const ARTIFACT_PATH = path.join(
-  REPO_DIR,
-  "data",
-  "output",
-  "calibration",
-  "revealed-preferences.json",
-);
 
 const ENTRY_REQUIRED_KEYS = [
   "research_only",
@@ -75,8 +59,19 @@ function isPayload(value: unknown): value is RevealedPreferencesPayload {
 }
 
 /**
- * Fail-closed parse: null on malformed JSON, off-contract shape, or a payload
- * not marked research-only. Pure so the guard is unit-testable.
+ * Fail-closed guard over an already-parsed value: returns the payload only
+ * when it matches the frozen contract and is marked research-only, else null.
+ * Pure, so the guard is unit-testable independent of the fetch.
+ */
+export function validateRevealedPreferences(
+  value: unknown,
+): RevealedPreferencesPayload | null {
+  return isPayload(value) ? value : null;
+}
+
+/**
+ * Fail-closed parse from raw JSON text: null on malformed JSON or off-contract
+ * shape. Retained for unit tests; the loader validates the parsed object.
  */
 export function parseRevealedPreferences(
   raw: string | null,
@@ -88,33 +83,20 @@ export function parseRevealedPreferences(
   } catch {
     return null;
   }
-  return isPayload(parsed) ? parsed : null;
+  return validateRevealedPreferences(parsed);
 }
 
 /**
- * Env gate on top of the debug query param: the hidden research UI only
- * renders when NEXT_PUBLIC_ENABLE_REVEALED_PREFS=true. The query param alone
- * is not protection if the app is ever deployed with a readable artifact.
- */
-export function revealedPreferencesEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_ENABLE_REVEALED_PREFS === "true";
-}
-
-/**
- * Fail-closed loader: returns null when the env gate is off or the artifact
- * is missing, unreadable, malformed, off-contract, or not marked
- * research-only. Callers must render nothing at all on null — no fallback
- * copy, no partial card.
+ * Fail-closed loader: reads revealed-preferences.json through /api/data (the
+ * committed fixture path, so it renders on Vercel) and returns null when the
+ * artifact is absent, malformed, off-contract, or not marked research-only.
+ * Callers must render nothing at all on null: no fallback copy, no partial
+ * card.
  */
 export async function loadRevealedPreferences(): Promise<RevealedPreferencesPayload | null> {
-  if (!revealedPreferencesEnabled()) return null;
-  let raw: string;
-  try {
-    raw = await fs.readFile(ARTIFACT_PATH, "utf-8");
-  } catch {
-    return null;
-  }
-  return parseRevealedPreferences(raw);
+  const raw = await getRevealedPreferencesData();
+  if (raw === null) return null;
+  return validateRevealedPreferences(raw);
 }
 
 /** The v1 card renders the 2025 final fit only. */

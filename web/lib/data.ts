@@ -114,3 +114,29 @@ export async function getValidationData(): Promise<ValidationPayload | null> {
     throw err;
   }
 }
+
+/**
+ * Research-only Committee Tendencies artifacts. Served through the same
+ * /api/data path as every other repo-level file (seeded from
+ * web/lib/fixtures on both local and hosted), so the caller can render the
+ * public cards without depending on a gitignored calibration directory.
+ * Returned unvalidated: revealedPreferences/revealedWeekly run the fail-closed
+ * contract guard before anything renders. Null when the artifact is absent.
+ */
+export async function getRevealedPreferencesData(): Promise<unknown | null> {
+  try {
+    return await fetchJson<unknown>("revealed-preferences.json");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}
+
+export async function getRevealedWeeklyData(): Promise<unknown | null> {
+  try {
+    return await fetchJson<unknown>("revealed-preferences-weekly.json");
+  } catch (err) {
+    if (err instanceof NotFoundError) return null;
+    throw err;
+  }
+}

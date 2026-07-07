@@ -129,11 +129,11 @@ export function CommitteeTendenciesWeeklyTracker({
   );
 
   return (
-    <div className="rounded-xl border border-dashed border-border bg-card px-4 py-4 sm:px-5">
+    <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
       <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <span className={metricLabel}>
-            Committee Tendencies &mdash; {season.season} Weekly Tracker
+            Committee Tendencies: {season.season} Weekly Tracker
           </span>
           <WarningBadges
             badges={season.warning_badges}
@@ -188,7 +188,7 @@ export function CommitteeTendenciesWeeklyTracker({
               <tr className="border-b border-border text-left text-xs text-muted-foreground">
                 <th className="py-1.5 pr-4 font-medium">Factor</th>
                 <th className="py-1.5 pr-4 font-medium">Baseline</th>
-                <th className="py-1.5 pr-4 font-medium">Committee-fit approximation</th>
+                <th className="py-1.5 pr-4 font-medium">Best-fit approximation</th>
                 <th className="py-1.5 pr-4 font-medium">Shift</th>
                 <th className="py-1.5 font-medium">vs prior release</th>
               </tr>

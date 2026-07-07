@@ -5,8 +5,10 @@ import { ProjectedFieldPanel } from "@/components/dashboard/ProjectedFieldPanel"
 import { FirstRoundMatchups } from "@/components/dashboard/FirstRoundMatchups";
 import { BubbleSnapshotStrip } from "@/components/dashboard/BubbleSnapshotStrip";
 import { CommitteeSnapshotCard } from "@/components/committee/CommitteeSnapshotCard";
+import { CommitteeTendenciesTeaser } from "@/components/dashboard/CommitteeTendenciesTeaser";
 import { EmptyState } from "@/components/common/EmptyState";
 import { getRunFile, NotFoundError } from "@/lib/data";
+import { loadRevealedPreferences } from "@/lib/revealedPreferences";
 import { formatScore } from "@/lib/format";
 import type {
   BracketPayload,
@@ -52,10 +54,11 @@ async function loadCommittee(
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const { run } = await searchParams;
   const stem = run ?? null;
-  const [field, bracket, committee] = await Promise.all([
+  const [field, bracket, committee, revealed] = await Promise.all([
     loadField(stem),
     loadBracket(stem),
     loadCommittee(stem),
+    loadRevealedPreferences(),
   ]);
 
   return (
@@ -105,6 +108,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               />
               {committee ? (
                 <CommitteeSnapshotCard data={committee} stem={stem} />
+              ) : null}
+              {revealed ? (
+                <CommitteeTendenciesTeaser takeaway={revealed.disclaimer} />
               ) : null}
             </div>
           </div>

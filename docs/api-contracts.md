@@ -417,13 +417,20 @@ empty state (no proxy values).
 Fixture: `web/lib/fixtures/validation.json` (seeded by `pnpm seed-fixtures`).
 Contract tests: `tests/test_validation_contract.py`.
 
-## revealed-preferences.json (research-only, not served)
+## revealed-preferences.json (research-only, public Committee Tendencies)
 
 Revealed committee preferences fit artifact, written by `sroom fit-preferences`
-(`src/calibration/revealed_preferences_outputs.py`). **This artifact is
-research-only and is never copied into `web/lib/fixtures/` or served by the
-public data routes without an explicit review decision.** It lives at
-`data/output/calibration/revealed-preferences.json` (gitignored, local only).
+(`src/calibration/revealed_preferences_outputs.py`). The engine writes it to
+`data/output/calibration/revealed-preferences.json` (gitignored). A reviewed
+snapshot is committed to `web/lib/fixtures/revealed-preferences.json` and rides
+the same seed pipeline as every other repo-level artifact (`seed-fixtures.mjs`
+→ `data/output/api/`; `seed-hosted-catalog.mjs` → Supabase bucket), so the
+public Committee Tendencies cards read it through `/api/data/revealed-preferences.json`.
+**Refresh the committed fixture only from a reviewed engine run.** The
+`research_only` marker and the fail-closed consumer stay the safety net, but a
+stale fixture would show stale findings. To regenerate: copy the freshly built
+`data/output/calibration/revealed-preferences.json` over the fixture, then
+re-run the seed.
 
 Consumer rule (fail closed): any UI reading this file must render nothing at
 all if the file is missing, the JSON is malformed, the keys deviate from this
@@ -508,12 +515,16 @@ the root, entry, and public-case key sets; changing any key requires updating
 that fixture and this document together. Contract tests:
 `tests/test_revealed_preferences.py`.
 
-## revealed-preferences-weekly.json (research-only, not served)
+## revealed-preferences-weekly.json (research-only, public Committee Tendencies)
 
 Written alongside `revealed-preferences.json` only when a season has two or
-more weekly fits (`fit-preferences --weeks all`). Same access rules as the
-final-fit artifact: research-only, gitignored, never served by `/api/data`,
-never promoted to `web/lib/fixtures/`. Weekly fits are keyed by committee
+more weekly fits (`fit-preferences --weeks all`). Same access path as the
+final-fit artifact: a reviewed snapshot is committed to
+`web/lib/fixtures/revealed-preferences-weekly.json`, seeded into
+`data/output/api/` and the Supabase bucket, and served through
+`/api/data/revealed-preferences-weekly.json` behind the same fail-closed guard.
+Only real weekly data ships: a season needs two or more curated committee
+releases to appear (2024 is the only such season today). Weekly fits are keyed by committee
 release identity, not an ambiguous "week": release X is fit against only the
 games available before that release (`games_through_week`). Release metadata
 comes from the curated fixtures in `tests/fixtures/cfp_weekly/`

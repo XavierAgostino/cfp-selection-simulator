@@ -1,10 +1,9 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   finalFit2025,
-  loadRevealedPreferences,
   parseRevealedPreferences,
-  revealedPreferencesEnabled,
+  validateRevealedPreferences,
 } from "@/lib/revealedPreferences";
 import type { RevealedPreferencesPayload } from "@/lib/types";
 
@@ -121,23 +120,20 @@ describe("parseRevealedPreferences (fail closed)", () => {
   });
 });
 
-describe("env gate (NEXT_PUBLIC_ENABLE_REVEALED_PREFS)", () => {
-  afterEach(() => {
-    vi.unstubAllEnvs();
+describe("validateRevealedPreferences (object guard)", () => {
+  it("accepts an already-parsed contract-shaped object", () => {
+    expect(validateRevealedPreferences(validPayload())).not.toBeNull();
   });
 
-  it("is disabled unless the flag is exactly 'true'", () => {
-    vi.stubEnv("NEXT_PUBLIC_ENABLE_REVEALED_PREFS", "");
-    expect(revealedPreferencesEnabled()).toBe(false);
-    vi.stubEnv("NEXT_PUBLIC_ENABLE_REVEALED_PREFS", "1");
-    expect(revealedPreferencesEnabled()).toBe(false);
-    vi.stubEnv("NEXT_PUBLIC_ENABLE_REVEALED_PREFS", "true");
-    expect(revealedPreferencesEnabled()).toBe(true);
+  it("returns null when the object is not marked research-only", () => {
+    expect(
+      validateRevealedPreferences({ ...validPayload(), research_only: false }),
+    ).toBeNull();
   });
 
-  it("loader returns null when the gate is off, even if an artifact exists", async () => {
-    vi.stubEnv("NEXT_PUBLIC_ENABLE_REVEALED_PREFS", "");
-    expect(await loadRevealedPreferences()).toBeNull();
+  it("returns null for a non-object", () => {
+    expect(validateRevealedPreferences(null)).toBeNull();
+    expect(validateRevealedPreferences("nope")).toBeNull();
   });
 });
 

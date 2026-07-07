@@ -1,27 +1,9 @@
-import { promises as fs } from "fs";
-import path from "path";
-
-import { REPO_DIR } from "@/lib/paths";
-import { revealedPreferencesEnabled } from "@/lib/revealedPreferences";
+import { getRevealedWeeklyData } from "@/lib/data";
 import type {
   RevealedWeeklyFit,
   RevealedWeeklyPayload,
   RevealedWeeklySeason,
 } from "@/lib/types";
-
-/**
- * Research-only weekly volatility artifact. Like revealed-preferences.json it
- * is read straight from the engine's output directory — never from
- * web/lib/fixtures or /api/data — so it cannot ship by accident
- * (see docs/api-contracts.md).
- */
-const ARTIFACT_PATH = path.join(
-  REPO_DIR,
-  "data",
-  "output",
-  "calibration",
-  "revealed-preferences-weekly.json",
-);
 
 function isWeights(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
@@ -89,8 +71,19 @@ function isPayload(value: unknown): value is RevealedWeeklyPayload {
 }
 
 /**
- * Fail-closed parse: null on malformed JSON, off-contract shape, or a payload
- * not marked research-only. Pure so the guard is unit-testable.
+ * Fail-closed guard over an already-parsed value: returns the payload only
+ * when it matches the contract and is marked research-only, else null. Pure so
+ * the guard is unit-testable independent of the fetch.
+ */
+export function validateRevealedWeekly(
+  value: unknown,
+): RevealedWeeklyPayload | null {
+  return isPayload(value) ? value : null;
+}
+
+/**
+ * Fail-closed parse from raw JSON text: null on malformed JSON or off-contract
+ * shape. Retained for unit tests; the loader validates the parsed object.
  */
 export function parseRevealedWeekly(
   raw: string | null,
@@ -102,25 +95,20 @@ export function parseRevealedWeekly(
   } catch {
     return null;
   }
-  return isPayload(parsed) ? parsed : null;
+  return validateRevealedWeekly(parsed);
 }
 
 /**
- * Fail-closed loader: returns null when the env gate is off
- * (NEXT_PUBLIC_ENABLE_REVEALED_PREFS, shared with the final-fit card) or the
- * artifact is missing, unreadable, malformed, off-contract, or not marked
- * research-only. Callers must render nothing at all on null — no fallback
+ * Fail-closed loader: reads revealed-preferences-weekly.json through /api/data
+ * (the committed fixture path, so it renders on Vercel) and returns null when
+ * the artifact is absent, malformed, off-contract, or not marked
+ * research-only. Callers must render nothing at all on null: no fallback
  * copy, no partial tracker.
  */
 export async function loadRevealedWeekly(): Promise<RevealedWeeklyPayload | null> {
-  if (!revealedPreferencesEnabled()) return null;
-  let raw: string;
-  try {
-    raw = await fs.readFile(ARTIFACT_PATH, "utf-8");
-  } catch {
-    return null;
-  }
-  return parseRevealedWeekly(raw);
+  const raw = await getRevealedWeeklyData();
+  if (raw === null) return null;
+  return validateRevealedWeekly(raw);
 }
 
 /** The v1 tracker renders the most recent season with weekly fits. */

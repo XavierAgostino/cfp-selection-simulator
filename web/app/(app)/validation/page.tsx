@@ -25,7 +25,7 @@ export const metadata = {
 };
 
 interface ValidationPageProps {
-  searchParams: Promise<{ run?: string; debug?: string }>;
+  searchParams: Promise<{ run?: string }>;
 }
 
 async function loadValidation(): Promise<ValidationPayload | null> {
@@ -33,16 +33,13 @@ async function loadValidation(): Promise<ValidationPayload | null> {
 }
 
 /**
- * Hidden research card, only behind ?debug=revealed and only when the local
- * research artifact passes the fail-closed loader. Renders nothing otherwise.
+ * Public Committee Tendencies card. Renders only when the committed research
+ * artifact passes the fail-closed loader; renders nothing otherwise.
  */
-async function loadRevealed(
-  debug: string | undefined,
-): Promise<{
+async function loadRevealed(): Promise<{
   payload: RevealedPreferencesPayload;
   entry: RevealedPreferencesEntry;
 } | null> {
-  if (debug !== "revealed") return null;
   const payload = await loadRevealedPreferences();
   if (!payload) return null;
   const entry = finalFit2025(payload);
@@ -50,14 +47,11 @@ async function loadRevealed(
   return { payload, entry };
 }
 
-/** Hidden weekly tracker, same gate as the final-fit card: fail closed. */
-async function loadRevealedWeeklySeason(
-  debug: string | undefined,
-): Promise<{
+/** Public weekly tracker; same fail-closed contract as the final-fit card. */
+async function loadRevealedWeeklySeason(): Promise<{
   payload: RevealedWeeklyPayload;
   season: RevealedWeeklySeason;
 } | null> {
-  if (debug !== "revealed") return null;
   const payload = await loadRevealedWeekly();
   if (!payload) return null;
   const season = latestWeeklySeason(payload);
@@ -78,13 +72,13 @@ async function loadCommittee(
 }
 
 export default async function ValidationPage({ searchParams }: ValidationPageProps) {
-  const { run, debug } = await searchParams;
+  const { run } = await searchParams;
   const stem = run ?? null;
   const [data, committee, revealed, revealedWeekly] = await Promise.all([
     loadValidation(),
     loadCommittee(stem),
-    loadRevealed(debug),
-    loadRevealedWeeklySeason(debug),
+    loadRevealed(),
+    loadRevealedWeeklySeason(),
   ]);
 
   return (
@@ -99,20 +93,21 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
       </header>
 
       {revealed ? (
-        <section className="flex flex-col gap-3">
+        <section
+          id="committee-tendencies"
+          className="flex scroll-mt-24 flex-col gap-3"
+        >
+          <h2 className={sectionTitle}>Committee Tendencies</h2>
           <CommitteeTendenciesCard
             payload={revealed.payload}
             entry={revealed.entry}
           />
-        </section>
-      ) : null}
-
-      {revealedWeekly ? (
-        <section className="flex flex-col gap-3">
-          <CommitteeTendenciesWeeklyTracker
-            payload={revealedWeekly.payload}
-            season={revealedWeekly.season}
-          />
+          {revealedWeekly ? (
+            <CommitteeTendenciesWeeklyTracker
+              payload={revealedWeekly.payload}
+              season={revealedWeekly.season}
+            />
+          ) : null}
         </section>
       ) : null}
 
