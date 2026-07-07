@@ -134,9 +134,9 @@ https://www.selectionroom.org/validation
 
 Approved sentence, verbatim, nothing added:
 
-> Under Selection Room's four-factor model, the committee's published top 25 is
-> best approximated by a more resume-heavy and less predictive-driven blend
-> than baseline.
+> Under Selection Room's four-factor model, the committee's published top 25
+> looks more resume-heavy and less predictive-driven than Selection Room's
+> baseline.
 
 Framing when it goes public: research mode, directional confidence only,
 badges rendered from the artifact, never a claim about the committee's actual

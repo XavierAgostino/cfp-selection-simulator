@@ -141,8 +141,8 @@ Canonical phrasing for the cross-season result, suitable for docs or a future
 Committee Tendencies card:
 
 > Across the cleaned 2024 and 2025 final rankings, the committee's published
-> top 25 is best approximated by a more résumé-heavy and less predictive-driven
-> blend than Selection Room's production baseline. Because several near-optimal
+> top 25 looks more résumé-heavy and less predictive-driven than Selection
+> Room's production baseline. Because several near-optimal
 > blends fit similarly, especially in 2024, these deltas should be interpreted
 > directionally rather than as exact committee weights.
 

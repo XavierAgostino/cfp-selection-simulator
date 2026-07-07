@@ -168,10 +168,15 @@ def test_weekly_volatility_payload(
         "sos": 0.1,
     }
 
+    assert "descriptive approximations" in payload["disclaimer_short"]
+    assert "Edge-weight fit" in payload["badge_explainers"]
+
     seasons = payload["seasons"]
     assert len(seasons) == 1
     season = seasons[0]
     assert season["season"] == 2025
+    assert season["takeaway"].startswith("Across 2 releases")
+    assert season["warning_badges"][0] == "Research-only"
 
     fits = season["weekly_fits"]
     assert [fit["games_through_week"] for fit in fits] == [12, FINAL_CFP_RANKING_WEEK]

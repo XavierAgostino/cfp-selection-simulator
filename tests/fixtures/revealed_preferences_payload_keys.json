@@ -1,7 +1,9 @@
 {
   "root": [
+    "badge_explainers",
     "caveats",
     "disclaimer",
+    "disclaimer_short",
     "entries",
     "generated_at",
     "production_baseline",

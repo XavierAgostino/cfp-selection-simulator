@@ -182,6 +182,8 @@ def test_artifact_payload_contract(tmp_path: Path):
     assert payload["research_only"] is True
     assert payload["schema_version"] == 1
     assert "published top 25" in payload["disclaimer"]
+    assert "descriptive approximations" in payload["disclaimer_short"]
+    assert "Edge-weight fit" in payload["badge_explainers"]
     assert payload["warning_badges"][0] == "Research-only"
     assert len(payload["entries"]) == 1
     entry = payload["entries"][0]

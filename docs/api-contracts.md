@@ -429,8 +429,8 @@ Consumer rule (fail closed): any UI reading this file must render nothing at
 all if the file is missing, the JSON is malformed, the keys deviate from this
 contract, or `research_only` is not `true`. No fallback copy may be invented
 in TypeScript; every rendered sentence and badge comes from the artifact
-(`disclaimer`, `warning_badges`, `caveats`, `interpretation`,
-`explanation_scope`, `public_case_2025`).
+(`disclaimer`, `disclaimer_short`, `badge_explainers`, `warning_badges`,
+`caveats`, `interpretation`, `explanation_scope`, `public_case_2025`).
 
 ```jsonc
 {
@@ -439,7 +439,11 @@ in TypeScript; every rendered sentence and badge comes from the artifact
   "generated_at": "...",
   "requested_years": [2014, 2025],
   "production_baseline": { "resume": 0.4, "predictive": 0.3, "sor": 0.2, "sos": 0.1 },
-  "disclaimer": "Under Selection Room's four-factor model, the committee's published top 25 is best approximated by ...",
+  "disclaimer": "Under Selection Room's four-factor model, the committee's published top 25 looks more ...",
+  "disclaimer_short": "These weights are descriptive approximations, ...",  // default-visible compact-card copy
+  "badge_explainers": {                // render-ready hover/expander copy per jargon badge
+    "Edge-weight fit": "Edge-weight fit means one or more factors landed near 0% or very high, ..."
+  },
   "warning_badges": ["Research-only", "Directional, not exact", "Edge-weight fit"],
   "entries": [                         // one per (year, week) fit
     {
@@ -523,9 +527,16 @@ carry `null` release fields.
   "generated_at": "ISO-8601 UTC",
   "production_baseline": { "resume": 0.4, "predictive": 0.3, "sor": 0.2, "sos": 0.1 },
   "disclaimer": "...",                    // same canonical sentence as the final-fit artifact
+  "disclaimer_short": "...",              // same compact-card copy as the final-fit artifact
+  "badge_explainers": { /* ... */ },      // same shape as the final-fit artifact
   "seasons": [
     {
       "season": 2024,
+      "takeaway": "Across 6 releases, ...",  // render-ready season sentence; only says
+                                             // "consistently" when every fit agrees
+      "warning_badges": ["Research-only", "Directional, not exact", "Volatile weekly fit"],
+                                             // season-level; "Volatile weekly fit" only when
+                                             // volatility_note is present
       "weekly_fits": [                    // ordered by games_through_week
         {
           "research_only": true,

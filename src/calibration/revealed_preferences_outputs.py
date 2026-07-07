@@ -27,8 +27,15 @@ SCHEMA_VERSION = 1
 # never re-declare it in TypeScript or import it across languages.
 PUBLIC_DISCLAIMER = (
     "Under Selection Room's four-factor model, the committee's published top 25 "
-    "is best approximated by a more résumé-heavy and less predictive-driven "
-    "blend than baseline."
+    "looks more résumé-heavy and less predictive-driven than Selection Room's "
+    "baseline."
+)
+
+# Short default-visible disclaimer for compact cards; the full caveats list
+# stays in the artifact for the expandable methodology section.
+PUBLIC_DISCLAIMER_SHORT = (
+    "These weights are descriptive approximations, not the committee's actual "
+    "weights. Research-only; they do not change Selection Room's production model."
 )
 
 BADGE_RESEARCH_ONLY = "Research-only"
@@ -37,6 +44,20 @@ BADGE_EDGE_FIT = "Edge-weight fit"
 BADGE_SHORT_SEASON = "Short season"
 BADGE_INCOMPLETE_COVERAGE = "Incomplete season coverage"
 BADGE_WEEKLY_FIT = "Weekly fit (noisier)"
+BADGE_VOLATILE_WEEKLY = "Volatile weekly fit"
+
+# Render-ready hover/expander copy for jargon badges; frontends never author
+# their own badge explanations.
+BADGE_EXPLAINERS = {
+    BADGE_EDGE_FIT: (
+        "Edge-weight fit means one or more factors landed near 0% or very high, "
+        "so interpret the direction more than the exact number."
+    ),
+    BADGE_VOLATILE_WEEKLY: (
+        "Fitted weights swing between releases this season; read the direction, "
+        "not week-to-week magnitudes."
+    ),
+}
 
 # A season whose fitted weights swing at least this much between consecutive
 # releases gets a render-ready volatility downgrade note in the weekly artifact.
@@ -272,11 +293,31 @@ def build_revealed_preferences_payload(
         "requested_years": result.requested_years,
         "production_baseline": _weights_dict(result.production_baseline),
         "disclaimer": PUBLIC_DISCLAIMER,
+        "disclaimer_short": PUBLIC_DISCLAIMER_SHORT,
+        "badge_explainers": BADGE_EXPLAINERS,
         "warning_badges": root_badges,
         "entries": entries,
         "public_case_2025": public_case,
         "caveats": CAVEATS,
     }
+
+
+def _season_takeaway(production_deltas: List[Dict[str, int]]) -> str:
+    """One render-ready season sentence; only claims 'consistently' when true."""
+    n = len(production_deltas)
+    resume_up = sum(1 for delta in production_deltas if delta.get("resume", 0) > 0)
+    predictive_down = sum(1 for delta in production_deltas if delta.get("predictive", 0) < 0)
+    if resume_up == n and predictive_down == n:
+        return (
+            f"Across {n} releases, the committee's published top 25 consistently "
+            "looked more résumé-heavy and less predictive-driven than Selection "
+            "Room's baseline."
+        )
+    return (
+        f"Across {n} releases, the committee's published top 25 looked more "
+        f"résumé-heavy than Selection Room's baseline in {resume_up} of {n} fits "
+        f"and less predictive-driven in {predictive_down} of {n}."
+    )
 
 
 def _prior_release_delta_pp(prev: FitResult, curr: FitResult) -> Dict[str, int]:
@@ -360,15 +401,35 @@ def build_weekly_volatility_payload(
             # never author their own volatility copy (see docs/api-contracts.md).
             "volatility_note": (
                 (
-                    f"Fitted weights move by up to {max_shift}pp between releases "
-                    "this season; treat week-over-week shifts as directional noise, "
-                    "not committee signal."
+                    f"Fitted weights moved by up to {max_shift}pp between releases "
+                    "this season. Treat week-over-week shifts as directional noise, "
+                    "not precise committee signal."
                 )
                 if max_shift >= VOLATILITY_NOTE_THRESHOLD_PP
                 else None
             ),
         }
-        seasons.append({"season": year, "weekly_fits": weekly_fits, "volatility": volatility})
+
+        production_deltas: List[Dict[str, int]] = []
+        for fit in fits:
+            delta = fit.baseline_delta_pp.get("production")
+            if isinstance(delta, dict):
+                production_deltas.append(delta)
+        season_badges = [BADGE_RESEARCH_ONLY]
+        if any(fit.interpretation.confidence == "directional" for fit in fits):
+            season_badges.append(BADGE_DIRECTIONAL)
+        if volatility["volatility_note"]:
+            season_badges.append(BADGE_VOLATILE_WEEKLY)
+
+        seasons.append(
+            {
+                "season": year,
+                "takeaway": _season_takeaway(production_deltas),
+                "warning_badges": season_badges,
+                "weekly_fits": weekly_fits,
+                "volatility": volatility,
+            }
+        )
 
     if not seasons:
         return None
@@ -378,6 +439,8 @@ def build_weekly_volatility_payload(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "production_baseline": _weights_dict(result.production_baseline),
         "disclaimer": PUBLIC_DISCLAIMER,
+        "disclaimer_short": PUBLIC_DISCLAIMER_SHORT,
+        "badge_explainers": BADGE_EXPLAINERS,
         "seasons": seasons,
         "caveats": CAVEATS,
     }
