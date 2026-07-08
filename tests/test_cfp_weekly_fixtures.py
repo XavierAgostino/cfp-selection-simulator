@@ -153,7 +153,7 @@ def test_weekly_volatility_payload(
         return games, frame
 
     monkeypatch.setattr(rp, "_prepare_season", _fake_prepare)
-    result = run_revealed_preferences([2025], weeks="all", verbose=False)
+    result = run_revealed_preferences([2025], weeks="all", api_key="test", verbose=False)
     assert len(result.evaluated_entries) >= 2
 
     payload = build_weekly_volatility_payload(result)
@@ -238,5 +238,5 @@ def test_volatility_payload_none_for_final_only(
         return games, frame
 
     monkeypatch.setattr(rp, "_prepare_season", _fake_prepare)
-    result = run_revealed_preferences([2025], weeks=None, verbose=False)
+    result = run_revealed_preferences([2025], weeks=None, api_key="test", verbose=False)
     assert build_weekly_volatility_payload(result) is None

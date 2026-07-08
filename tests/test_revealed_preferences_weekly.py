@@ -71,7 +71,7 @@ def test_weekly_drift_payload_has_multiple_weeks(
 
     monkeypatch.setattr(rp, "_prepare_season", _fake_prepare)
 
-    result = run_revealed_preferences([2025], weeks="all", verbose=False)
+    result = run_revealed_preferences([2025], weeks="all", api_key="test", verbose=False)
     assert len(result.evaluated_entries) >= 2
     weeks_fit = sorted({e.week for e in result.evaluated_entries})
     assert 12 in weeks_fit
@@ -115,7 +115,7 @@ def test_early_week_sets_directional_confidence(
         return games, frame
 
     monkeypatch.setattr(rp, "_prepare_season", _fake_prepare)
-    result = run_revealed_preferences([2025], weeks=12, verbose=False)
+    result = run_revealed_preferences([2025], weeks=12, api_key="test", verbose=False)
     fit = result.evaluated_entries[0]
     assert fit.week == 12
     assert fit.interpretation.confidence == "directional"
