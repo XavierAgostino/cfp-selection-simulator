@@ -2,17 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import {
-  BookOpenText,
-  FlaskConical,
-  LayoutDashboard,
-  ListOrdered,
-  type LucideIcon,
-  Network,
-  Search,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { FlaskConical, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,17 +21,6 @@ import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { PRIMARY_NAV } from "@/lib/nav";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
 import type { RunSummary } from "@/lib/types";
-
-/** Per-route icon for the navigation group. */
-const NAV_ICONS: Record<string, LucideIcon> = {
-  "/dashboard": LayoutDashboard,
-  "/bracket": Network,
-  "/rankings": ListOrdered,
-  "/bubble": Sparkles,
-  "/scenario-lab": FlaskConical,
-  "/methodology": BookOpenText,
-  "/validation": ShieldCheck,
-};
 
 /** Cmd+K palette: jump to a page, an existing run, or a team's resume. */
 export function CommandMenu() {
@@ -123,19 +102,15 @@ export function CommandMenu() {
           <CommandEmpty>No matches found.</CommandEmpty>
 
           <CommandGroup heading="Go to">
-            {PRIMARY_NAV.map(({ href, label }) => {
-              const Icon = NAV_ICONS[href] ?? LayoutDashboard;
-              return (
-                <CommandItem
-                  key={href}
-                  value={`page ${label}`}
-                  onSelect={() => go(() => router.push(href))}
-                >
-                  <Icon />
-                  {label}
-                </CommandItem>
-              );
-            })}
+            {PRIMARY_NAV.map(({ href, label }) => (
+              <CommandItem
+                key={href}
+                value={`page ${label}`}
+                onSelect={() => go(() => router.push(href))}
+              >
+                {label}
+              </CommandItem>
+            ))}
           </CommandGroup>
 
           {runs.length > 0 ? (
