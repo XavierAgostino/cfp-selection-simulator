@@ -1,8 +1,14 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { ValidationTerm } from "@/components/explain/ValidationTerm";
 import {
   ValidationTeamChip,
@@ -34,7 +40,9 @@ import {
   selectionVerdict,
 } from "@/lib/validationFormat";
 import type {
+  CommitteeValidationRow,
   PredictiveValidationRow,
+  SelectionValidationRow,
   ValidationPayload,
 } from "@/lib/types";
 import { metricLabel, metricValueXl } from "@/lib/typography";
@@ -228,6 +236,240 @@ function ValidationArtifactFooter({ data }: { data: ValidationPayload }) {
   );
 }
 
+function CommitteeSeasonBlock({ row }: { row: CommitteeValidationRow }) {
+  return (
+    <div className="rounded-lg border border-border/60 bg-secondary/30 p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm font-semibold tabular-nums text-foreground">
+          {row.year}
+        </span>
+        {row.is_outlier ? <OutlierChip /> : null}
+        <span className="ml-auto text-xs text-muted-foreground">
+          Spearman (top-12){" "}
+          <span className="font-semibold tabular-nums text-foreground">
+            {num(row.spearman_top12, 2)}
+          </span>
+        </span>
+      </div>
+      <p className="mt-2 text-xs leading-relaxed text-foreground/90">
+        {committeeVerdict(row)}
+      </p>
+      <div className="mt-2 grid gap-3 sm:grid-cols-2">
+        <div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <ValidationTerm term="top12_overlap" className="normal-case" />
+            <span className="font-semibold tabular-nums text-foreground">
+              {row.top12_overlap_label} ({pct(row.top12_overlap_ratio)})
+            </span>
+          </div>
+          <Meter ratio={row.top12_overlap_ratio} tone="gold" className="mt-1.5" />
+        </div>
+        <div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <ValidationTerm term="bubble_overlap" className="normal-case" />
+            <span className="font-semibold tabular-nums text-foreground">
+              {row.bubble_overlap_label} ({pct(row.bubble_overlap_ratio)})
+            </span>
+          </div>
+          <Meter ratio={row.bubble_overlap_ratio} className="mt-1.5" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SelectionSeasonBlock({ row }: { row: SelectionValidationRow }) {
+  return (
+    <div className="rounded-lg border border-border/60 bg-secondary/30 p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm font-semibold tabular-nums text-foreground">
+          {row.year}
+        </span>
+        <Badge variant="chip-neutral">
+          {row.rule_target}
+        </Badge>
+        {row.is_outlier ? <OutlierChip /> : null}
+        <Badge
+          variant={row.correct_field_size ? "chip-green" : "chip-red"}
+          className="ml-auto"
+        >
+          {formatValidationFieldSizeLabel(row.correct_field_size)}
+        </Badge>
+      </div>
+      {/* One-glance digest before the prose: scannable across seasons. */}
+      <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-semibold tabular-nums text-foreground">
+        {selectionDigest(row).map((fragment, i) => (
+          <span key={fragment} className="inline-flex items-center gap-2">
+            {i > 0 ? (
+              <span aria-hidden className="font-normal text-muted-foreground/40">
+                &middot;
+              </span>
+            ) : null}
+            {fragment}
+          </span>
+        ))}
+      </p>
+      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+        {selectionVerdict(row)}
+      </p>
+
+      <div className="mt-2">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <ValidationTerm term="field_overlap" className="normal-case" />
+          <span className="font-semibold tabular-nums text-foreground">
+            {row.field_overlap_label} ({pct(row.field_overlap_ratio)})
+          </span>
+        </div>
+        <Meter ratio={row.field_overlap_ratio} tone="gold" className="mt-1.5" />
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs">
+        <ValidationTeamChipGroup
+          label="Model added:"
+          teams={row.false_positives}
+          role="model_added"
+          year={row.year}
+          ruleTarget={row.rule_target}
+        />
+        <ValidationTeamChipGroup
+          label="Model dropped:"
+          teams={row.false_negatives}
+          role="model_dropped"
+          year={row.year}
+          ruleTarget={row.rule_target}
+        />
+        {row.first_team_out_ref || row.first_team_out_sim ? (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-muted-foreground">First team out:</span>
+            {row.first_team_out_ref ? (
+              <ValidationTeamChip
+                team={row.first_team_out_ref}
+                role="committee_first_out"
+                year={row.year}
+                ruleTarget={row.rule_target}
+              />
+            ) : (
+              <span className="text-muted-foreground">Committee none</span>
+            )}
+            <span className="text-muted-foreground">·</span>
+            {row.first_team_out_sim ? (
+              <ValidationTeamChip
+                team={row.first_team_out_sim}
+                role="model_first_out"
+                year={row.year}
+                ruleTarget={row.rule_target}
+              />
+            ) : (
+              <span className="text-muted-foreground">Model none</span>
+            )}
+          </div>
+        ) : null}
+        {row.seeding_within_one !== null ? (
+          <div className="flex items-center gap-1.5">
+            <ValidationTerm term="seeds_within_one" className="normal-case" />
+            <span className="font-semibold tabular-nums text-foreground">
+              {pct(row.seeding_within_one)}
+            </span>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function PredictiveSeasonBlock({
+  year,
+  rows,
+}: {
+  year: number;
+  rows: PredictiveValidationRow[];
+}) {
+  const composite = rows.find((r) => r.model === "composite");
+  const baselines = rows.filter((r) => r.model !== "composite");
+  return (
+    <div className="rounded-lg border border-border/60 bg-secondary/30 p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-semibold tabular-nums text-foreground">
+          {year}
+        </span>
+        {composite ? (
+          <span className="text-xs text-muted-foreground">
+            {formatPredictiveBaselineLabel(composite.model)} win accuracy{" "}
+            <span className="font-semibold tabular-nums text-foreground">
+              {pct(composite.win_accuracy)}
+            </span>
+          </span>
+        ) : null}
+      </div>
+      <p className="mt-2 text-xs leading-relaxed text-foreground/90">
+        {predictiveVerdict(year, rows)}
+      </p>
+      <div className="mt-2 flex flex-col gap-1.5">
+        {[...(composite ? [composite] : []), ...baselines].map((r) => {
+          const isComposite = r.model === "composite";
+          return (
+            <div
+              key={r.model}
+              className="grid grid-cols-[5.5rem_1fr_auto] items-center gap-3 text-xs"
+            >
+              <PredictiveModelLabel model={r.model} />
+              <Meter
+                ratio={r.win_accuracy}
+                tone={isComposite ? "gold" : "neutral"}
+              />
+              <span className="tabular-nums text-muted-foreground">
+                {pct(r.win_accuracy)} · Brier {num(r.brier_score)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** How many of the most recent seasons stay expanded in each historical card. */
+const EXPANDED_SEASON_COUNT = 3;
+
+/**
+ * Tucks the earlier seasons of a historical card behind a toggle so the three
+ * per-season cards do not each repeat all eleven seasons at full height.
+ * Chronological order is preserved: the collapsed run sits above the
+ * always-visible recent seasons.
+ */
+function CollapsedEarlierSeasons({
+  years,
+  gapClass = "gap-3",
+  children,
+}: {
+  years: number[];
+  gapClass?: string;
+  children: ReactNode;
+}) {
+  if (years.length === 0) return null;
+  const label =
+    years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : `${years[0]}`;
+  return (
+    <Collapsible className="flex flex-col">
+      <CollapsibleTrigger className="group flex items-center gap-1.5 self-start text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
+        <ChevronDown
+          aria-hidden
+          className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-data-[panel-open]:rotate-180"
+        />
+        <span className="group-data-[panel-open]:hidden">
+          Show earlier seasons ({label})
+        </span>
+        <span className="hidden group-data-[panel-open]:inline">
+          Hide earlier seasons ({label})
+        </span>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className={cn("flex flex-col pt-3", gapClass)}>{children}</div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
 export function ValidationDashboard({
   data,
   embedded = false,
@@ -247,6 +489,20 @@ export function ValidationDashboard({
     list.push(row);
     predictiveByYear.set(row.year, list);
   }
+
+  // Ascending splits for the three historical cards: the earlier run collapses,
+  // the most recent EXPANDED_SEASON_COUNT seasons stay expanded.
+  const committeeRows = [...data.committee].sort((a, b) => a.year - b.year);
+  const committeeEarlier = committeeRows.slice(0, -EXPANDED_SEASON_COUNT);
+  const committeeRecent = committeeRows.slice(-EXPANDED_SEASON_COUNT);
+  const selectionRows = [...data.selection].sort((a, b) => a.year - b.year);
+  const selectionEarlier = selectionRows.slice(0, -EXPANDED_SEASON_COUNT);
+  const selectionRecent = selectionRows.slice(-EXPANDED_SEASON_COUNT);
+  const predictiveYears = [...predictiveByYear.entries()].sort(
+    ([a], [b]) => a - b,
+  );
+  const predictiveEarlier = predictiveYears.slice(0, -EXPANDED_SEASON_COUNT);
+  const predictiveRecent = predictiveYears.slice(-EXPANDED_SEASON_COUNT);
 
   return (
     <div className={embedded ? "flex flex-col gap-4" : "flex flex-col gap-6"}>
@@ -325,47 +581,13 @@ export function ValidationDashboard({
             </p>
           </CardHeader>
           <CardContent className="flex flex-col gap-3 px-4">
-            {data.committee.map((row) => (
-              <div
-                key={row.year}
-                className="rounded-lg border border-border/60 bg-secondary/30 p-3"
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-semibold tabular-nums text-foreground">
-                    {row.year}
-                  </span>
-                  {row.is_outlier ? <OutlierChip /> : null}
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    Spearman (top-12){" "}
-                    <span className="font-semibold tabular-nums text-foreground">
-                      {num(row.spearman_top12, 2)}
-                    </span>
-                  </span>
-                </div>
-                <p className="mt-2 text-xs leading-relaxed text-foreground/90">
-                  {committeeVerdict(row)}
-                </p>
-                <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <ValidationTerm term="top12_overlap" className="normal-case" />
-                      <span className="font-semibold tabular-nums text-foreground">
-                        {row.top12_overlap_label} ({pct(row.top12_overlap_ratio)})
-                      </span>
-                    </div>
-                    <Meter ratio={row.top12_overlap_ratio} tone="gold" className="mt-1.5" />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <ValidationTerm term="bubble_overlap" className="normal-case" />
-                      <span className="font-semibold tabular-nums text-foreground">
-                        {row.bubble_overlap_label} ({pct(row.bubble_overlap_ratio)})
-                      </span>
-                    </div>
-                    <Meter ratio={row.bubble_overlap_ratio} className="mt-1.5" />
-                  </div>
-                </div>
-              </div>
+            <CollapsedEarlierSeasons years={committeeEarlier.map((r) => r.year)}>
+              {committeeEarlier.map((row) => (
+                <CommitteeSeasonBlock key={row.year} row={row} />
+              ))}
+            </CollapsedEarlierSeasons>
+            {committeeRecent.map((row) => (
+              <CommitteeSeasonBlock key={row.year} row={row} />
             ))}
           </CardContent>
         </Card>
@@ -383,104 +605,13 @@ export function ValidationDashboard({
             </CardHeader>
           ) : null}
           <CardContent className={cn("flex flex-col gap-3 px-4", embedded && "py-4")}>
-            {data.selection.map((row) => (
-              <div
-                key={row.year}
-                className="rounded-lg border border-border/60 bg-secondary/30 p-3"
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-semibold tabular-nums text-foreground">
-                    {row.year}
-                  </span>
-                  <Badge variant="chip-neutral">
-                    {row.rule_target}
-                  </Badge>
-                  {row.is_outlier ? <OutlierChip /> : null}
-                  <Badge
-                    variant={row.correct_field_size ? "chip-green" : "chip-red"}
-                    className="ml-auto"
-                  >
-                    {formatValidationFieldSizeLabel(row.correct_field_size)}
-                  </Badge>
-                </div>
-                {/* One-glance digest before the prose: scannable across seasons. */}
-                <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-semibold tabular-nums text-foreground">
-                  {selectionDigest(row).map((fragment, i) => (
-                    <span key={fragment} className="inline-flex items-center gap-2">
-                      {i > 0 ? (
-                        <span aria-hidden className="font-normal text-muted-foreground/40">
-                          &middot;
-                        </span>
-                      ) : null}
-                      {fragment}
-                    </span>
-                  ))}
-                </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-                  {selectionVerdict(row)}
-                </p>
-
-                <div className="mt-2">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <ValidationTerm term="field_overlap" className="normal-case" />
-                    <span className="font-semibold tabular-nums text-foreground">
-                      {row.field_overlap_label} ({pct(row.field_overlap_ratio)})
-                    </span>
-                  </div>
-                  <Meter ratio={row.field_overlap_ratio} tone="gold" className="mt-1.5" />
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs">
-                  <ValidationTeamChipGroup
-                    label="Model added:"
-                    teams={row.false_positives}
-                    role="model_added"
-                    year={row.year}
-                    ruleTarget={row.rule_target}
-                  />
-                  <ValidationTeamChipGroup
-                    label="Model dropped:"
-                    teams={row.false_negatives}
-                    role="model_dropped"
-                    year={row.year}
-                    ruleTarget={row.rule_target}
-                  />
-                  {row.first_team_out_ref || row.first_team_out_sim ? (
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="text-muted-foreground">First team out:</span>
-                      {row.first_team_out_ref ? (
-                        <ValidationTeamChip
-                          team={row.first_team_out_ref}
-                          role="committee_first_out"
-                          year={row.year}
-                          ruleTarget={row.rule_target}
-                        />
-                      ) : (
-                        <span className="text-muted-foreground">Committee none</span>
-                      )}
-                      <span className="text-muted-foreground">·</span>
-                      {row.first_team_out_sim ? (
-                        <ValidationTeamChip
-                          team={row.first_team_out_sim}
-                          role="model_first_out"
-                          year={row.year}
-                          ruleTarget={row.rule_target}
-                        />
-                      ) : (
-                        <span className="text-muted-foreground">Model none</span>
-                      )}
-                    </div>
-                  ) : null}
-                  {row.seeding_within_one !== null ? (
-                    <div className="flex items-center gap-1.5">
-                      <ValidationTerm term="seeds_within_one" className="normal-case" />
-                      <span className="font-semibold tabular-nums text-foreground">
-                        {pct(row.seeding_within_one)}
-                      </span>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
+            <CollapsedEarlierSeasons years={selectionEarlier.map((r) => r.year)}>
+              {selectionEarlier.map((row) => (
+                <SelectionSeasonBlock key={row.year} row={row} />
+              ))}
+            </CollapsedEarlierSeasons>
+            {selectionRecent.map((row) => (
+              <SelectionSeasonBlock key={row.year} row={row} />
             ))}
           </CardContent>
         </Card>
@@ -505,57 +636,17 @@ export function ValidationDashboard({
             </p>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 px-4">
-            {[...predictiveByYear.entries()]
-              .sort(([a], [b]) => a - b)
-              .map(([year, rows]) => {
-                const composite = rows.find((r) => r.model === "composite");
-                const baselines = rows.filter((r) => r.model !== "composite");
-                return (
-                  <div
-                    key={year}
-                    className="rounded-lg border border-border/60 bg-secondary/30 p-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold tabular-nums text-foreground">
-                        {year}
-                      </span>
-                      {composite ? (
-                        <span className="text-xs text-muted-foreground">
-                          {formatPredictiveBaselineLabel(composite.model)} win accuracy{" "}
-                          <span className="font-semibold tabular-nums text-foreground">
-                            {pct(composite.win_accuracy)}
-                          </span>
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="mt-2 text-xs leading-relaxed text-foreground/90">
-                      {predictiveVerdict(year, rows)}
-                    </p>
-                    <div className="mt-2 flex flex-col gap-1.5">
-                      {[...(composite ? [composite] : []), ...baselines].map(
-                        (r) => {
-                          const isComposite = r.model === "composite";
-                          return (
-                            <div
-                              key={r.model}
-                              className="grid grid-cols-[5.5rem_1fr_auto] items-center gap-3 text-xs"
-                            >
-                              <PredictiveModelLabel model={r.model} />
-                              <Meter
-                                ratio={r.win_accuracy}
-                                tone={isComposite ? "gold" : "neutral"}
-                              />
-                              <span className="tabular-nums text-muted-foreground">
-                                {pct(r.win_accuracy)} · Brier {num(r.brier_score)}
-                              </span>
-                            </div>
-                          );
-                        },
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+            <CollapsedEarlierSeasons
+              years={predictiveEarlier.map(([year]) => year)}
+              gapClass="gap-4"
+            >
+              {predictiveEarlier.map(([year, rows]) => (
+                <PredictiveSeasonBlock key={year} year={year} rows={rows} />
+              ))}
+            </CollapsedEarlierSeasons>
+            {predictiveRecent.map(([year, rows]) => (
+              <PredictiveSeasonBlock key={year} year={year} rows={rows} />
+            ))}
           </CardContent>
         </Card>
       ) : null}
