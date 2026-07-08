@@ -8,7 +8,9 @@ import {
   LoaderCircle,
   Play,
   RotateCcw,
+  TriangleAlert,
 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -364,9 +366,10 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
       {/* ---- Results ------------------------------------------------------ */}
       <div className="min-w-0">
         {run.phase === "failed" ? (
-          <div className="rounded-xl border border-tag-red-border bg-tag-red-bg/40 px-5 py-4 text-sm text-tag-red-text">
-            {run.error}
-          </div>
+          <Alert variant="destructive">
+            <TriangleAlert />
+            <AlertDescription>{run.error}</AlertDescription>
+          </Alert>
         ) : null}
 
         {run.running ? (
@@ -384,9 +387,12 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
         ) : null}
 
         {diffError ? (
-          <div className="rounded-xl border border-tag-red-border bg-tag-red-bg/40 px-5 py-4 text-sm text-tag-red-text">
-            Could not load the comparison ({diffError}).
-          </div>
+          <Alert variant="destructive">
+            <TriangleAlert />
+            <AlertDescription>
+              Could not load the comparison ({diffError}).
+            </AlertDescription>
+          </Alert>
         ) : null}
 
         {diff && !run.running ? (

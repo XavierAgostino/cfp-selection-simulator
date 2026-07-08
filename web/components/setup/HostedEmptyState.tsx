@@ -1,13 +1,22 @@
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
 export function HostedEmptyState() {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 py-16 text-center">
-      <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-        No hosted runs are available yet
-      </h1>
-      <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-        Sign in with GitHub and start a run from Run Analysis. Completed runs will
-        appear here once artifacts are uploaded.
-      </p>
-    </div>
+    <Empty className="min-h-[60vh] py-16">
+      <EmptyHeader className="max-w-md">
+        <EmptyTitle className="text-2xl font-semibold tracking-tight text-foreground">
+          No hosted runs are available yet
+        </EmptyTitle>
+        <EmptyDescription className="leading-relaxed">
+          Sign in with GitHub and start a run from Run Analysis. Completed runs
+          will appear here once artifacts are uploaded.
+        </EmptyDescription>
+      </EmptyHeader>
+    </Empty>
   );
 }

@@ -9,6 +9,7 @@ import {
   Info,
 } from "lucide-react";
 import type { AuditPhase } from "@/lib/types";
+import { Empty, EmptyDescription, EmptyHeader } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
 const STEP_LABELS: Record<string, string> = {
@@ -58,9 +59,13 @@ export function SelectionAuditTimeline({
 
   if (visiblePhases.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">
-        No audit trail available for this run.
-      </p>
+      <Empty className="py-8">
+        <EmptyHeader>
+          <EmptyDescription>
+            No audit trail available for this run.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
