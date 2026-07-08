@@ -7,6 +7,7 @@ import { ConferenceBadge, ConferenceCaption } from "@/components/team/Conference
 import { ScoreBars } from "@/components/team/ScoreBars";
 import { ResumeStabilityBlock } from "@/components/team/ResumeStabilityBlock";
 import { ResumeScheduleList } from "@/components/team/ResumeScheduleList";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatRecord } from "@/lib/format";
 import { recordColumnTooltip, recordSummaryLine } from "@/lib/recordMeta";
@@ -143,13 +144,13 @@ function WhyInConcerns({ resume }: { resume: TeamResume }) {
 
 function SummaryResumeNotice() {
   return (
-    <div className="rounded-lg border border-border bg-secondary/40 px-3 py-2.5 text-sm text-muted-foreground">
-      <p className="font-medium text-foreground">Summary resume</p>
-      <p className="mt-1 leading-relaxed">
+    <Alert>
+      <AlertTitle>Summary resume</AlertTitle>
+      <AlertDescription>
         Detailed schedule and selection case are available for projected field and
         bubble teams. Core ranking, record, and score data are shown here.
-      </p>
-    </div>
+      </AlertDescription>
+    </Alert>
   );
 }
 
