@@ -15,7 +15,7 @@ import type {
 import { metricLabel } from "@/lib/typography";
 
 const FACTOR_ROWS: { key: keyof FittedWeights; label: string }[] = [
-  { key: "resume", label: "Résumé" },
+  { key: "resume", label: "Resume" },
   { key: "predictive", label: "Predictive" },
   { key: "sor", label: "SOR" },
   { key: "sos", label: "SOS" },

@@ -277,14 +277,17 @@ export function ResumeContent({ resume, recordMeta, variant, footer }: ResumeCon
           <div className="flex flex-col gap-6">{caseColumn}</div>
           <Card>
             <CardHeader>
-              <CardTitle>Schedule résumé</CardTitle>
+              <CardTitle>Schedule resume</CardTitle>
               <CardDescription>
                 FBS games only. Bye weeks and FCS opponents are not shown.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-5">
               {hasResults ? (
-                <div className="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+                // Stacked, never side-by-side: the page container caps this
+                // card around ~580px, so half-width columns truncate opponent
+                // names at every viewport.
+                <div className="flex flex-col gap-4">
                   {rankedWins.length > 0 ? (
                     <div className="flex flex-col gap-1">
                       <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
