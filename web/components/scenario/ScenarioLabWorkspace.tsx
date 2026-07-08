@@ -126,7 +126,7 @@ function ScenarioPresetChips({
       <p className="mt-2 text-xs leading-5 text-muted-foreground">
         {active
           ? active.description
-          : "Custom weights. Presets are starting points; fine-tune with the sliders below."}
+          : "Custom weights. Presets are starting points; adjust further under Fine-tune weights."}
       </p>
     </div>
   );
@@ -434,11 +434,12 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
           <Card className="min-h-64 gap-0 px-6 py-8">
             <div className="flex flex-col items-center text-center">
               <h2 className={sectionTitle}>
-                Reweight the model
+                Test a selection assumption
               </h2>
               <p className={`${bodyMuted} mt-2 max-w-md`}>
-                Shift how much the four components drive the composite, then run a
-                scenario to compare against the base run.
+                Start from a preset, or fine-tune how much the four components
+                drive the composite, then run a scenario to compare against the
+                base run.
               </p>
             </div>
 

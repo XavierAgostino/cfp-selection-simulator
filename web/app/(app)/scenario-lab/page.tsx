@@ -29,9 +29,10 @@ export default async function ScenarioLabPage() {
       <header>
         <h1 className={pageTitle}>Scenario Lab</h1>
         <p className={pageDescription}>
-          Change how much each component drives the composite, then re-run
-          selection to compare against the base weights. Every result is a
-          projected reordering under different assumptions, not a win probability.
+          Test different selection assumptions, from simple presets to
+          fine-grained weight controls, then re-run selection to compare against
+          the base weights. Every result is a projected reordering under those
+          assumptions, not a win probability.
         </p>
       </header>
 

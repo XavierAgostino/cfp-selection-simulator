@@ -1,8 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { ChevronDown } from "lucide-react";
 import { MetricTooltip } from "@/components/explain/InfoTooltip";
 import { ScenarioLabTerm } from "@/components/explain/ScenarioLabTerm";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Tooltip,
   TooltipContent,
@@ -41,6 +47,8 @@ interface WeightSlidersProps {
  * The Scenario Lab control surface: a live stacked proportion bar over four
  * sliders. Moving any slider rebalances the others so the four weights always
  * sum to 100 — the model only ever reweights, it never invents probability.
+ * The bar stays visible as feedback for preset picks; the individual sliders
+ * are the advanced layer and collapse behind a "Fine-tune weights" toggle.
  */
 export function WeightSliders({ percents, onChange, disabled }: WeightSlidersProps) {
   const [activeKey, setActiveKey] = React.useState<(typeof WEIGHT_KEYS)[number] | null>(
@@ -99,65 +107,76 @@ export function WeightSliders({ percents, onChange, disabled }: WeightSlidersPro
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        {METRICS.map((metric) => {
-          const value = percents[metric.key];
-          const isActive = activeKey === metric.key;
-          const isDimmed = activeKey != null && !isActive;
+      <Collapsible className="flex flex-col">
+        <CollapsibleTrigger className="group flex items-center gap-1.5 self-start text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <ChevronDown
+            aria-hidden
+            className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-data-[panel-open]:rotate-180"
+          />
+          Fine-tune weights
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="flex flex-col gap-4 pt-3">
+            {METRICS.map((metric) => {
+              const value = percents[metric.key];
+              const isActive = activeKey === metric.key;
+              const isDimmed = activeKey != null && !isActive;
 
-          return (
-            <div
-              key={metric.key}
-              className={cn(
-                "-mx-2 flex flex-col gap-1.5 rounded-md px-2 py-1.5 transition-all duration-200",
-                isActive && "bg-secondary/60 ring-1 ring-foreground/10",
-                isDimmed && "opacity-50",
-              )}
-              onMouseEnter={() => setActiveKey(metric.key)}
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <div className="flex items-baseline gap-2">
-                  <span
+              return (
+                <div
+                  key={metric.key}
+                  className={cn(
+                    "-mx-2 flex flex-col gap-1.5 rounded-md px-2 py-1.5 transition-all duration-200",
+                    isActive && "bg-secondary/60 ring-1 ring-foreground/10",
+                    isDimmed && "opacity-50",
+                  )}
+                  onMouseEnter={() => setActiveKey(metric.key)}
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <div className="flex items-baseline gap-2">
+                      <span
+                        className={cn(
+                          "inline-block size-2.5 rounded-full ring-1 ring-foreground/10 transition-transform duration-200",
+                          isActive && "scale-125 ring-foreground/25",
+                        )}
+                        style={{ backgroundColor: metric.color }}
+                        aria-hidden
+                      />
+                      <MetricTooltip
+                        metric={metric.metric}
+                        className="text-sm font-semibold text-foreground"
+                      />
+                    </div>
+                    <span className="font-mono text-sm font-semibold tabular-nums text-foreground">
+                      {value}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={value}
+                    disabled={disabled}
+                    aria-label={`${metric.metric} weight, ${value} percent`}
+                    onChange={(event) =>
+                      onChange(
+                        redistributePercents(percents, metric.key, Number(event.target.value)),
+                      )
+                    }
+                    style={{ accentColor: metric.color }}
                     className={cn(
-                      "inline-block size-2.5 rounded-full ring-1 ring-foreground/10 transition-transform duration-200",
-                      isActive && "scale-125 ring-foreground/25",
+                      "h-1.5 w-full cursor-pointer appearance-none rounded-full bg-bar-track outline-none",
+                      "focus-visible:ring-2 focus-visible:ring-ring/50",
+                      disabled && "cursor-not-allowed opacity-50",
                     )}
-                    style={{ backgroundColor: metric.color }}
-                    aria-hidden
-                  />
-                  <MetricTooltip
-                    metric={metric.metric}
-                    className="text-sm font-semibold text-foreground"
                   />
                 </div>
-                <span className="font-mono text-sm font-semibold tabular-nums text-foreground">
-                  {value}%
-                </span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={1}
-                value={value}
-                disabled={disabled}
-                aria-label={`${metric.metric} weight, ${value} percent`}
-                onChange={(event) =>
-                  onChange(
-                    redistributePercents(percents, metric.key, Number(event.target.value)),
-                  )
-                }
-                style={{ accentColor: metric.color }}
-                className={cn(
-                  "h-1.5 w-full cursor-pointer appearance-none rounded-full bg-bar-track outline-none",
-                  "focus-visible:ring-2 focus-visible:ring-ring/50",
-                  disabled && "cursor-not-allowed opacity-50",
-                )}
-              />
-            </div>
-          );
-        })}
-      </div>
+              );
+            })}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
