@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { WeightSliders } from "@/components/scenario/WeightSliders";
 import { ScenarioDiffView } from "@/components/scenario/ScenarioDiffView";
 import { ScenarioLabTerm } from "@/components/explain/ScenarioLabTerm";
@@ -40,7 +41,6 @@ import {
   weightsScenarioId,
   type WeightPercents,
 } from "@/lib/scenarioWeights";
-import { cn } from "@/lib/utils";
 import type { RunSummary } from "@/lib/types";
 import { bodyMuted, sectionTitle } from "@/lib/typography";
 import {
@@ -73,11 +73,12 @@ async function fetchDiff(baseStem: string, scenarioStem: string): Promise<Scenar
 }
 
 /**
- * Named starting points for the sliders. Each preset is a hypothesis about
- * what a committee might value; picking one just sets the sliders, so it can
- * be tweaked further before launching.
+ * Named starting points for the sliders, presented as the primary control: a
+ * single-select list where each row pairs the philosophy with its weight
+ * split. Picking one just sets the sliders, so it can be tweaked further
+ * before launching.
  */
-function ScenarioPresetChips({
+function ScenarioPresetPicker({
   percents,
   onSelect,
   disabled,
@@ -91,38 +92,33 @@ function ScenarioPresetChips({
   return (
     <div className="mb-4">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Presets
+        Selection philosophy
       </p>
-      <div className="flex flex-wrap gap-1.5">
-        {SCENARIO_PRESETS.map((preset) => {
-          const isActive = active?.id === preset.id;
-          return (
-            <InfoTooltip
-              key={preset.id}
-              title={preset.label}
-              content={`${preset.description} (${preset.percents.resume}/${preset.percents.predictive}/${preset.percents.sor}/${preset.percents.sos})`}
-              side="top"
-            >
-              <button
-                type="button"
-                disabled={disabled}
-                onClick={() => onSelect({ ...preset.percents })}
-                aria-pressed={isActive}
-                className={cn(
-                  "rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-                  isActive
-                    ? "border-foreground/30 bg-secondary font-semibold text-foreground"
-                    : "border-border bg-transparent text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
-                  disabled && "cursor-not-allowed opacity-50",
-                )}
-              >
-                {preset.label}
-              </button>
-            </InfoTooltip>
-          );
-        })}
-      </div>
+      <ToggleGroup
+        orientation="vertical"
+        spacing={1}
+        className="w-full"
+        value={active ? [active.id] : []}
+        onValueChange={(value) => {
+          const preset = SCENARIO_PRESETS.find((p) => p.id === value[0]);
+          if (preset) onSelect({ ...preset.percents });
+        }}
+        disabled={disabled}
+      >
+        {SCENARIO_PRESETS.map((preset) => (
+          <ToggleGroupItem
+            key={preset.id}
+            value={preset.id}
+            className="h-auto w-full justify-between gap-3 px-3 py-2"
+          >
+            <span className="text-sm">{preset.label}</span>
+            <span className="font-mono text-xs tabular-nums text-muted-foreground">
+              {preset.percents.resume}/{preset.percents.predictive}/
+              {preset.percents.sor}/{preset.percents.sos}
+            </span>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
       <p className="mt-2 text-xs leading-5 text-muted-foreground">
         {active
           ? active.description
@@ -237,7 +233,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
             </Select>
           </div>
 
-          <ScenarioPresetChips
+          <ScenarioPresetPicker
             percents={percents}
             onSelect={setPercents}
             disabled={run.running}
