@@ -7,8 +7,17 @@ import { ConferenceBadge, ConferenceCaption } from "@/components/team/Conference
 import { ScoreBars } from "@/components/team/ScoreBars";
 import { ResumeStabilityBlock } from "@/components/team/ResumeStabilityBlock";
 import { ResumeScheduleList } from "@/components/team/ResumeScheduleList";
+import { CollapsibleSchedule } from "@/components/team/CollapsibleSchedule";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { formatRecord } from "@/lib/format";
 import { recordColumnTooltip, recordSummaryLine } from "@/lib/recordMeta";
 import type { RecordMeta, TeamResume } from "@/lib/types";
@@ -74,6 +83,67 @@ function ResumeHeader({
         <div className="mt-1 flex items-center gap-2">
           <BidBadge bidType={resume.bid_type} />
           <SeedBadge seed={resume.seed} isBye={(resume.seed ?? 99) <= 4} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Larger identity block for the standalone team page: logo, name, and a single meta line. */
+function TeamPageHero({
+  resume,
+  recordMeta,
+}: {
+  resume: TeamResume;
+  recordMeta?: RecordMeta | null;
+}) {
+  const recordCaption = recordSummaryLine(recordMeta);
+  const recordTooltip = recordColumnTooltip(recordMeta);
+  return (
+    <div className="flex items-start gap-4">
+      <TeamLogoTile
+        team={resume.team}
+        logoUrl={resume.logo_url}
+        abbreviation={resume.abbreviation}
+        primaryColor={resume.primary_color}
+        size={64}
+      />
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            {resume.team}
+          </h1>
+          {resume.is_conference_champion ? (
+            <ConferenceBadge
+              conference={resume.conference}
+              isChampion
+              championOf={resume.champion_of}
+              size="lg"
+            />
+          ) : null}
+        </div>
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-sm text-muted-foreground">
+          <span className="font-semibold tabular-nums text-foreground">
+            #{resume.rank}
+          </span>
+          <BidBadge bidType={resume.bid_type} />
+          {resume.seed !== null ? (
+            <SeedBadge seed={resume.seed} isBye={(resume.seed ?? 99) <= 4} />
+          ) : null}
+          {!resume.is_conference_champion ? (
+            <ConferenceCaption conference={resume.conference} />
+          ) : null}
+          <span>
+            {formatRecord(resume.record)}
+            {recordCaption ? (
+              <span
+                className="ml-1 text-xs underline decoration-dotted underline-offset-2"
+                title={recordTooltip}
+              >
+                ({recordCaption})
+              </span>
+            ) : null}
+          </span>
         </div>
       </div>
     </div>
@@ -158,27 +228,91 @@ function SummaryResumeNotice() {
 export function ResumeContent({ resume, recordMeta, variant, footer }: ResumeContentProps) {
   const isSummary = resume.detail_level === "summary";
   if (variant === "page") {
-    return (
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-        <div className="flex flex-col gap-6">
-          <ResumeHeader resume={resume} recordMeta={recordMeta} />
-          {isSummary ? <SummaryResumeNotice /> : null}
-          <div className="rounded-xl bg-card/60 p-4">
+    // Wins over ranked opponents (best first) and every loss — the games that
+    // most shape the selection case, surfaced above the full schedule.
+    const rankedWins = resume.schedule
+      .filter((game) => game.result === "W" && game.opponent_rank !== null)
+      .sort((a, b) => (a.opponent_rank ?? 0) - (b.opponent_rank ?? 0));
+    const losses = resume.schedule.filter((game) => game.result === "L");
+    const hasResults = rankedWins.length > 0 || losses.length > 0;
+
+    // The "case" stack: is this team in (status), why (team case), and the
+    // score profile behind it. Reused for summary and full layouts.
+    const caseColumn = (
+      <>
+        <ResumeStabilityBlock team={resume.team} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Team case</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <WhyInConcerns resume={resume} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Score profile</CardTitle>
+          </CardHeader>
+          <CardContent>
             <ScoreBars resume={resume} />
-          </div>
-          <ResumeStabilityBlock team={resume.team} />
-          <WhyInConcerns resume={resume} />
+          </CardContent>
+        </Card>
+      </>
+    );
+
+    if (isSummary) {
+      return (
+        <div className="flex flex-col gap-6">
+          <TeamPageHero resume={resume} recordMeta={recordMeta} />
+          <SummaryResumeNotice />
+          <div className="flex flex-col gap-6">{caseColumn}</div>
         </div>
-        {!isSummary ? (
-          <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Schedule
-            </h3>
-            <div className="rounded-xl bg-secondary/30 px-4 py-1">
-              <ResumeScheduleList schedule={resume.schedule} />
-            </div>
-          </div>
-        ) : null}
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-6">
+        <TeamPageHero resume={resume} recordMeta={recordMeta} />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+          <div className="flex flex-col gap-6">{caseColumn}</div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Schedule résumé</CardTitle>
+              <CardDescription>
+                FBS games only. Bye weeks and FCS opponents are not shown.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-5">
+              {hasResults ? (
+                <div className="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+                  {rankedWins.length > 0 ? (
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Quality wins
+                      </h3>
+                      <ResumeScheduleList schedule={rankedWins} />
+                    </div>
+                  ) : null}
+                  {losses.length > 0 ? (
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-xs font-semibold uppercase tracking-wide text-accent-gold">
+                        Losses
+                      </h3>
+                      <ResumeScheduleList schedule={losses} />
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+              {hasResults ? <Separator /> : null}
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Full schedule
+                </h3>
+                <CollapsibleSchedule schedule={resume.schedule} />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
