@@ -11,6 +11,7 @@ import { TeamDrawerProvider } from "@/components/team/TeamDrawerProvider";
 import { themeBootstrapScript } from "@/lib/theme-bootstrap";
 import { getSiteUrl } from "@/lib/site";
 import { RootProvider } from "fumadocs-ui/provider/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -95,6 +96,7 @@ export default function RootLayout({
             </TooltipProvider>
           </RootProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
