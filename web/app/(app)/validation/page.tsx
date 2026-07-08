@@ -81,6 +81,16 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
     loadRevealedWeeklySeason(),
   ]);
 
+  // Sections in display order, proof-first: historical validation (measured
+  // against every season) leads, the single-run comparison follows, and the
+  // more experimental Committee Tendencies layer sits last. Only present
+  // sections get an on-page anchor link.
+  const sections = [
+    { id: "historical-validation", label: "Historical validation", present: Boolean(data) },
+    { id: "this-run", label: "This run vs the committee", present: Boolean(committee) },
+    { id: "committee-tendencies", label: "Committee Tendencies", present: Boolean(revealed) },
+  ].filter((section) => section.present);
+
   return (
     <div className="flex flex-col gap-6">
       <header>
@@ -91,6 +101,60 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
           completed games. Measured against history, not asserted.
         </p>
       </header>
+
+      {sections.length > 1 ? (
+        <nav
+          aria-label="On this page"
+          className="flex flex-wrap gap-1.5 border-b border-border pb-4 text-sm"
+        >
+          {sections.map((section) => (
+            <a
+              key={section.id}
+              href={`#${section.id}`}
+              className="rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {section.label}
+            </a>
+          ))}
+        </nav>
+      ) : null}
+
+      {data ? (
+        <section
+          id="historical-validation"
+          className="flex scroll-mt-24 flex-col gap-3"
+        >
+          <h2 className={sectionTitle}>Historical validation</h2>
+          <ValidationDashboard data={data} />
+        </section>
+      ) : (
+        <EmptyState
+          title="No validation run yet"
+          description="Validation replays historical seasons and scores the model against the real committee. Run it over the seasons you have data for, then reload this page."
+          action={
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary px-3 py-2 font-mono text-xs text-foreground">
+              <Terminal className="size-3.5 text-muted-foreground" />
+              sroom validate --years 2014:2024
+            </div>
+          }
+        />
+      )}
+
+      {committee ? (
+        <section id="this-run" className="flex scroll-mt-24 flex-col gap-3">
+          <div>
+            <h2 className={sectionTitle}>This run vs the committee</h2>
+            <p className="text-sm text-muted-foreground">
+              The current run&apos;s projection against the committee&apos;s
+              published final rankings for {committee.season}. Overlap measures
+              alignment with the committee, not whether the committee was
+              right.
+            </p>
+          </div>
+          <CommitteeTakeawayCard data={committee} />
+          <CommitteeComparisonPanel data={committee} />
+        </section>
+      ) : null}
 
       {revealed ? (
         <section
@@ -110,48 +174,6 @@ export default async function ValidationPage({ searchParams }: ValidationPagePro
           ) : null}
         </section>
       ) : null}
-
-      {committee ? (
-        <section className="flex flex-col gap-3">
-          <div>
-            <h2 className={sectionTitle}>This run vs the committee</h2>
-            <p className="text-sm text-muted-foreground">
-              The current run&apos;s projection against the committee&apos;s
-              published final rankings for {committee.season}. Overlap measures
-              alignment with the committee, not whether the committee was
-              right.
-            </p>
-          </div>
-          <CommitteeTakeawayCard data={committee} />
-          <CommitteeComparisonPanel data={committee} />
-        </section>
-      ) : null}
-
-      {data ? (
-        <section className="flex flex-col gap-3">
-          {committee ? (
-            <div>
-              <h2 className={sectionTitle}>Historical validation</h2>
-              <p className="text-sm text-muted-foreground">
-                The same comparison run across every completed season with
-                committee data.
-              </p>
-            </div>
-          ) : null}
-          <ValidationDashboard data={data} />
-        </section>
-      ) : (
-        <EmptyState
-          title="No validation run yet"
-          description="Validation replays historical seasons and scores the model against the real committee. Run it over the seasons you have data for, then reload this page."
-          action={
-            <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary px-3 py-2 font-mono text-xs text-foreground">
-              <Terminal className="size-3.5 text-muted-foreground" />
-              sroom validate --years 2014:2024
-            </div>
-          }
-        />
-      )}
     </div>
   );
 }
