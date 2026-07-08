@@ -99,9 +99,9 @@ function ResidualTable({ publicCase }: { publicCase: RevealedPublicCase }) {
 }
 
 /**
- * Hidden research card (debug=revealed only). Every sentence and badge is
- * rendered from revealed-preferences.json; nothing is authored here beyond
- * structural section labels. The caller must fail closed: no payload, no card.
+ * Public Committee Tendencies card. Every sentence and badge is rendered from
+ * revealed-preferences.json; nothing is authored here beyond structural section
+ * labels. The caller must fail closed: no payload, no card.
  */
 export function CommitteeTendenciesCard({
   payload,

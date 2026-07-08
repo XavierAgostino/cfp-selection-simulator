@@ -425,3 +425,20 @@
   background: rgba(255, 255, 255, 0.05);
   color: var(--foreground);
 }
+
+/*
+ * Honor the OS "reduce motion" preference globally: collapse animations and
+ * transitions to near-instant and disable smooth scrolling. This backstops the
+ * per-component motion variants (e.g. the run-status pings guarded with
+ * motion-safe/motion-reduce) so no decorative motion slips through.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

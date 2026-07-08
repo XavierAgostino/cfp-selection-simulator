@@ -1,6 +1,14 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  ChevronDown,
+  CircleDashed,
+  CircleDot,
+  type LucideIcon,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -32,11 +40,19 @@ import { cn } from "@/lib/utils";
 
 const AGREEMENT_CHIP: Record<
   CommitteeAgreement,
-  { label: string; variant: "chip-green" | "chip-gold" | "chip-red" } | null
+  {
+    label: string;
+    variant: "chip-green" | "chip-gold" | "chip-red";
+    icon: LucideIcon;
+  } | null
 > = {
-  both_in: { label: "In both fields", variant: "chip-green" },
-  model_only: { label: "Model only", variant: "chip-gold" },
-  committee_only: { label: "Committee only", variant: "chip-red" },
+  both_in: { label: "In both fields", variant: "chip-green", icon: Check },
+  model_only: { label: "Model only", variant: "chip-gold", icon: CircleDot },
+  committee_only: {
+    label: "Committee only",
+    variant: "chip-red",
+    icon: CircleDashed,
+  },
   both_out: null,
 };
 
@@ -45,7 +61,13 @@ function AgreementChip({ agreement }: { agreement: CommitteeAgreement }) {
   if (!chip) {
     return <span className="text-xs text-muted-foreground">Out in both</span>;
   }
-  return <Badge variant={chip.variant}>{chip.label}</Badge>;
+  const Icon = chip.icon;
+  return (
+    <Badge variant={chip.variant} className="gap-1">
+      <Icon className="size-3" aria-hidden />
+      {chip.label}
+    </Badge>
+  );
 }
 
 /** Signed rank shift; positive = the model ranks the team higher than the committee. */
@@ -270,7 +292,10 @@ function LegendChip({ agreement }: { agreement: CommitteeAgreement }) {
         }
       >
         {chip ? (
-          <Badge variant={chip.variant}>{chip.label}</Badge>
+          <Badge variant={chip.variant} className="gap-1">
+            <chip.icon className="size-3" aria-hidden />
+            {chip.label}
+          </Badge>
         ) : (
           <span className="text-xs text-muted-foreground">Out in both</span>
         )}

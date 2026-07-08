@@ -81,8 +81,8 @@ function MethodologyNotes({
 }
 
 /**
- * Hidden research tracker (debug=revealed only). Selector is by committee
- * release identity, never raw game week. Every sentence and badge comes from
+ * Public Committee Tendencies weekly tracker. Selector is by committee release
+ * identity, never raw game week. Every sentence and badge comes from
  * revealed-preferences-weekly.json; only structural labels live here. The
  * caller must fail closed: no payload, no tracker.
  */

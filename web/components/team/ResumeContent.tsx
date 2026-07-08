@@ -4,6 +4,7 @@ import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { BidBadge } from "@/components/team/BidBadge";
 import { SeedBadge } from "@/components/team/SeedBadge";
 import { ConferenceBadge, ConferenceCaption } from "@/components/team/ConferenceBadge";
+import { InfoTooltip } from "@/components/explain/InfoTooltip";
 import { ScoreBars } from "@/components/team/ScoreBars";
 import { ResumeStabilityBlock } from "@/components/team/ResumeStabilityBlock";
 import { ResumeScheduleList } from "@/components/team/ResumeScheduleList";
@@ -19,7 +20,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { formatRecord } from "@/lib/format";
-import { recordColumnTooltip, recordSummaryLine } from "@/lib/recordMeta";
+import { recordColumnTooltip, recordScopeNote, recordSummaryLine } from "@/lib/recordMeta";
 import type { RecordMeta, TeamResume } from "@/lib/types";
 
 interface ResumeContentProps {
@@ -40,6 +41,7 @@ function ResumeHeader({
 }) {
   const recordCaption = recordSummaryLine(recordMeta);
   const recordTooltip = recordColumnTooltip(recordMeta);
+  const recordScope = recordScopeNote(recordMeta);
   return (
     <div className="flex items-start gap-3">
       <TeamLogoTile
@@ -72,14 +74,16 @@ function ResumeHeader({
         <p className="text-sm text-muted-foreground">
           {formatRecord(resume.record)}
           {recordCaption ? (
-            <span
-              className="ml-1 text-xs underline decoration-dotted underline-offset-2"
-              title={recordTooltip}
-            >
-              ({recordCaption})
-            </span>
+            <InfoTooltip content={recordTooltip}>
+              <span className="ml-1 cursor-help text-xs underline decoration-dotted underline-offset-2">
+                ({recordCaption})
+              </span>
+            </InfoTooltip>
           ) : null}
         </p>
+        {recordScope ? (
+          <p className="text-xs text-muted-foreground/80">{recordScope}</p>
+        ) : null}
         <div className="mt-1 flex items-center gap-2">
           <BidBadge bidType={resume.bid_type} />
           <SeedBadge seed={resume.seed} isBye={(resume.seed ?? 99) <= 4} />
@@ -99,6 +103,7 @@ function TeamPageHero({
 }) {
   const recordCaption = recordSummaryLine(recordMeta);
   const recordTooltip = recordColumnTooltip(recordMeta);
+  const recordScope = recordScopeNote(recordMeta);
   return (
     <div className="flex items-start gap-4">
       <TeamLogoTile
@@ -136,15 +141,17 @@ function TeamPageHero({
           <span>
             {formatRecord(resume.record)}
             {recordCaption ? (
-              <span
-                className="ml-1 text-xs underline decoration-dotted underline-offset-2"
-                title={recordTooltip}
-              >
-                ({recordCaption})
-              </span>
+              <InfoTooltip content={recordTooltip}>
+                <span className="ml-1 cursor-help text-xs underline decoration-dotted underline-offset-2">
+                  ({recordCaption})
+                </span>
+              </InfoTooltip>
             ) : null}
           </span>
         </div>
+        {recordScope ? (
+          <p className="text-xs text-muted-foreground/80">{recordScope}</p>
+        ) : null}
       </div>
     </div>
   );
@@ -338,6 +345,9 @@ export function ResumeContent({ resume, recordMeta, variant, footer }: ResumeCon
               <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Schedule
               </h3>
+              <p className="text-xs text-muted-foreground">
+                FBS games only. Bye weeks and FCS opponents are not shown.
+              </p>
               <div className="rounded-xl bg-secondary/30 px-4">
                 <ResumeScheduleList schedule={resume.schedule} />
               </div>

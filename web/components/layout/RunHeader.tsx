@@ -199,7 +199,7 @@ function RunAnalysisLocked({ nextOpen }: { nextOpen: Date }) {
       </span>
       <span className="inline-flex items-center gap-1.5 pr-0.5 text-[11px] text-muted-foreground/70">
         <span className="relative flex size-1.5" aria-hidden>
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-tag-gold-dot opacity-60" />
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-tag-gold-dot opacity-60 motion-reduce:animate-none" />
           <span className="relative inline-flex size-1.5 rounded-full bg-tag-gold-dot" />
         </span>
         Projections resume {opensLabel}

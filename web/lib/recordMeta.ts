@@ -38,6 +38,22 @@ export function recordColumnTooltip(meta: RecordMeta | null | undefined): string
   return parts.join(" ");
 }
 
+/**
+ * Short, always-visible scope note for a record: the plain-language version of
+ * recordColumnTooltip's key qualifier, so the FBS/FCS basis is readable without
+ * hovering (touch and keyboard users never see a `title` tooltip).
+ */
+export function recordScopeNote(meta: RecordMeta | null | undefined): string | null {
+  if (!meta) return null;
+  if (meta.record_label === "demo_record" || meta.is_demo_fixture) {
+    return "Partial sample, not a full-season record";
+  }
+  if (meta.record_label === "model_window_record") {
+    return `Model window only (weeks ${meta.record_start_week}–${meta.through_week})`;
+  }
+  return "FBS opponents only; FCS games excluded";
+}
+
 /** Short caption for resume headers (week window + label). */
 export function recordSummaryLine(meta: RecordMeta | null | undefined): string | null {
   if (!meta) return null;
