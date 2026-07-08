@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { CommitteeWeightTrendSparklines } from "@/components/validation/CommitteeWeightTrendSparklines";
 import { WarningBadges } from "@/components/validation/WarningBadges";
 import type {
   FittedWeights,
@@ -141,42 +142,15 @@ export function CommitteeTendenciesWeeklyTracker({
           </table>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-border/50 pt-3">
-          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Season trend
-          </span>
-          <div className="overflow-x-auto">
-            <table className="w-full max-w-lg text-sm tabular-nums">
-              <thead>
-                <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                  <th className="py-1.5 pr-4 font-medium">Factor</th>
-                  {fits.map((candidate) => (
-                    <th
-                      key={candidate.games_through_week}
-                      className="py-1.5 pr-4 font-medium"
-                    >
-                      {releaseLabel(candidate)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {FACTOR_ROWS.map(({ key, label }) => (
-                  <tr key={key} className="border-b border-border/50 last:border-0">
-                    <td className="py-1.5 pr-4 font-semibold text-foreground">{label}</td>
-                    {fits.map((candidate) => (
-                      <td
-                        key={candidate.games_through_week}
-                        className="py-1.5 pr-4"
-                      >
-                        {pct(candidate.fitted_weights[key])}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="border-t border-border/50 pt-3">
+          <CommitteeWeightTrendSparklines
+            fits={fits.map((candidate) => ({
+              label: releaseLabel(candidate),
+              date: candidate.release_date,
+              weights: candidate.fitted_weights,
+            }))}
+            selectedIndex={selectedIndex}
+          />
         </div>
 
         {volatility.volatility_note ? (
