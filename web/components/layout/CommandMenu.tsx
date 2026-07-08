@@ -19,6 +19,7 @@ import { TeamLogoTile } from "@/components/team/TeamLogoTile";
 import { useRankings } from "@/components/team/useRankings";
 import { useTeamDrawer } from "@/components/team/TeamDrawerProvider";
 import { PRIMARY_NAV } from "@/lib/nav";
+import { cn } from "@/lib/utils";
 import type { RunCatalogResponse } from "@/lib/runCatalog";
 import type { RunSummary } from "@/lib/types";
 
@@ -47,6 +48,12 @@ export function CommandMenu() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
+        // fumadocs' RootProvider registers its own Cmd/Ctrl+K search on
+        // `window`. This listener is on `document`, which fires first in the
+        // bubble phase, so stopping propagation here keeps the fumadocs search
+        // from also opening on app pages. Docs pages don't mount this menu, so
+        // their fumadocs Cmd+K keeps working.
+        event.stopPropagation();
         setHasOpened(true);
         setOpen((prev) => !prev);
       }
@@ -83,7 +90,15 @@ export function CommandMenu() {
         variant="outline"
         size="sm"
         onClick={show}
-        className="gap-2 font-normal text-muted-foreground"
+        aria-hidden={open}
+        tabIndex={open ? -1 : undefined}
+        className={cn(
+          "gap-2 font-normal text-muted-foreground",
+          // Hide the resting trigger while the palette is open so only the
+          // dialog's search bar shows (otherwise the button sits blurred
+          // behind the light overlay and reads as a second search bar).
+          open && "invisible",
+        )}
       >
         <Search data-icon="inline-start" />
         <span className="hidden sm:inline">Search</span>
