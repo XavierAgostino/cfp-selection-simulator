@@ -43,7 +43,7 @@ export function PageBreadcrumbs() {
   if (crumbs.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="mb-6">
+    <nav aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-1 text-xs leading-none">
         {crumbs.map((crumb, index) => {
           const isLast = index === crumbs.length - 1;

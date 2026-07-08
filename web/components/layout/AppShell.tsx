@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { CommandMenu } from "@/components/layout/CommandMenu";
 import { PageBreadcrumbs } from "@/components/layout/PageBreadcrumbs";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +24,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           : "max-w-6xl px-4 sm:px-6",
       )}
     >
-      <PageBreadcrumbs />
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <PageBreadcrumbs />
+        <CommandMenu />
+      </div>
       {children}
     </main>
   );
