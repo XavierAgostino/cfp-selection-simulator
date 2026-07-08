@@ -459,3 +459,35 @@
     opacity: 0;
   }
 }
+
+/*
+ * Landing entrance motion.
+ * `landing-rise` powers the hero's staggered on-load reveal; per-element delays
+ * are set inline. `backwards` fill holds the hidden start state through the
+ * delay so nothing flashes before it animates.
+ * `reveal-on-scroll` eases section content up as it scrolls into view, but only
+ * where scroll-driven timelines are supported AND motion is welcome. Everywhere
+ * else the rule never applies, so content simply renders in place and can never
+ * get stuck hidden. The global reduced-motion backstop above also collapses
+ * `landing-rise` to instant.
+ */
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+.landing-rise {
+  animation: landing-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-scroll {
+      animation: landing-rise 1s linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}

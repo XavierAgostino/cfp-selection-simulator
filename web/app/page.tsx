@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { FinalCtaSection } from "@/components/landing/FinalCtaSection";
-import { LandingFeatureSections } from "@/components/landing/LandingFeatureSections";
+import { LandingAudienceSection } from "@/components/landing/LandingAudienceSection";
+import { LandingCommitteeTendenciesPreview } from "@/components/landing/LandingCommitteeTendenciesPreview";
 import { LandingHero } from "@/components/landing/LandingHero";
+import { LandingProblemPromises } from "@/components/landing/LandingProblemPromises";
+import { LandingProductSurfaces } from "@/components/landing/LandingProductSurfaces";
+import { LandingSelectionFlow } from "@/components/landing/LandingSelectionFlow";
+import { LandingValidationStrip } from "@/components/landing/LandingValidationStrip";
 import { getLandingPreviewData } from "@/lib/landing-data";
 
 export const metadata: Metadata = {
@@ -16,7 +21,12 @@ export default async function LandingPage() {
   return (
     <div className="overflow-x-hidden bg-background">
       <LandingHero data={data} />
-      <LandingFeatureSections data={data} />
+      <LandingProblemPromises />
+      <LandingSelectionFlow data={data} />
+      <LandingProductSurfaces data={data} />
+      <LandingCommitteeTendenciesPreview data={data.committeeTendencies} />
+      <LandingValidationStrip data={data.validationHeadlines} />
+      <LandingAudienceSection />
       <FinalCtaSection />
     </div>
   );
