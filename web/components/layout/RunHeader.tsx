@@ -4,6 +4,7 @@ import { RunHeaderActions } from "@/components/layout/RunHeaderActions";
 import { RunFreshness } from "@/components/layout/RunFreshness";
 import { RunSourceBadge } from "@/components/layout/RunSourceBadge";
 import { RunSwitcher } from "@/components/layout/RunSwitcher";
+import { Card } from "@/components/ui/card";
 import { getRuns, NotFoundError } from "@/lib/data";
 import {
   formatWeightsLabeled,
@@ -39,7 +40,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
 
   if (!runs) {
     return (
-      <header className="mb-8 rounded-xl border border-border/60 bg-card px-5 py-4 sm:px-6">
+      <Card className="mb-8 gap-0 px-5 py-4 sm:px-6">
         <p className="text-sm text-muted-foreground">
           No run data yet. Run the pipeline to populate{" "}
           <code className="rounded bg-secondary px-1.5 py-0.5 text-xs text-foreground">
@@ -47,7 +48,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
           </code>
           .
         </p>
-      </header>
+      </Card>
     );
   }
 
@@ -59,7 +60,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
   if (!run) {
     const fallback = runs.runs.find((r) => r.stem === runs.latest.stem) ?? runs.runs[0];
     return (
-      <header className="mb-8 rounded-xl border border-border/60 bg-card px-5 py-4 sm:px-6">
+      <Card className="mb-8 gap-0 px-5 py-4 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
             Unknown run. Pick one that exists.
@@ -78,7 +79,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
             />
           )}
         </div>
-      </header>
+      </Card>
     );
   }
 
@@ -100,7 +101,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
   const ContextIcon = isSample ? TriangleAlert : Info;
 
   return (
-    <header className="mb-8 rounded-xl border border-border/60 bg-card px-5 py-5 sm:px-6">
+    <Card className="mb-8 gap-0 px-5 py-5 sm:px-6">
       {/* Top row: dominant source signal (left), actions (right, stacks on mobile) */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <RunSourceBadge tone={badge.tone} label={badge.label} />
@@ -166,7 +167,7 @@ export async function RunHeader({ stem }: RunHeaderProps) {
           </div>
         </div>
       </details>
-    </header>
+    </Card>
   );
 }
 

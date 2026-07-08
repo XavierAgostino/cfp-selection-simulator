@@ -13,6 +13,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -217,7 +218,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
     <div className="grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
       {/* ---- Control panel ------------------------------------------------ */}
       <div className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
-        <div className="rounded-xl border border-border/60 bg-card px-5 py-4">
+        <Card className="gap-0 px-5 py-4">
           <div className="mb-4 flex flex-col gap-1">
             <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <ScenarioLabTerm term="base_run" className="normal-case" />
@@ -334,11 +335,11 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
               </p>
             ) : null}
           </div>
-        </div>
+        </Card>
 
         {/* Compare an already-generated scenario */}
         {scenarioRuns.length > 0 ? (
-          <div className="rounded-xl border border-border/60 bg-card px-5 py-4">
+          <Card className="gap-0 px-5 py-4">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Saved scenarios
             </p>
@@ -359,7 +360,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
                 </li>
               ))}
             </ul>
-          </div>
+          </Card>
         ) : null}
       </div>
 
@@ -373,7 +374,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
         ) : null}
 
         {run.running ? (
-          <div className="rounded-xl border border-border/60 bg-card px-5 py-4">
+          <Card className="gap-0 px-5 py-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <LoaderCircle className="size-4 animate-spin" />
               Simulating the {scenarioId} scenario: reranking, reselecting, reseeding…
@@ -383,7 +384,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
                 {run.logLines.join("\n")}
               </pre>
             ) : null}
-          </div>
+          </Card>
         ) : null}
 
         {diffError ? (
@@ -430,7 +431,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
         ) : null}
 
         {!diff && !run.running && run.phase !== "failed" && !diffError ? (
-          <div className="flex min-h-64 flex-col rounded-xl border border-border/60 bg-card px-6 py-8">
+          <Card className="min-h-64 gap-0 px-6 py-8">
             <div className="flex flex-col items-center text-center">
               <h2 className={sectionTitle}>
                 Reweight the model
@@ -460,7 +461,7 @@ export function ScenarioLabWorkspace({ runs, latestStem }: ScenarioLabWorkspaceP
                 ))}
               </ul>
             </div>
-          </div>
+          </Card>
         ) : null}
       </div>
     </div>
