@@ -8,6 +8,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { WarningBadges } from "@/components/validation/WarningBadges";
 import type {
   FittedWeights,
   RevealedWeeklyFit,
@@ -39,31 +40,6 @@ function releaseLabel(fit: RevealedWeeklyFit): string {
   if (fit.games_through_week === FINAL_CFP_RANKING_WEEK) return "Final";
   if (fit.ranking_release !== null) return `Release ${fit.ranking_release}`;
   return `Through wk ${fit.games_through_week}`;
-}
-
-/** Badge pill; explainer copy comes from the artifact's badge_explainers. */
-function WarningBadges({
-  badges,
-  explainers,
-}: {
-  badges: string[];
-  explainers: Record<string, string>;
-}) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {badges.map((badge) => (
-        <span
-          key={badge}
-          title={explainers[badge]}
-          className={`rounded-full border border-border bg-secondary/60 px-2 py-0.5 text-[11px] font-medium text-muted-foreground ${
-            explainers[badge] ? "cursor-help" : ""
-          }`}
-        >
-          {badge}
-        </span>
-      ))}
-    </div>
-  );
 }
 
 /** Short disclaimer stays visible; the full caveat stack collapses. */
